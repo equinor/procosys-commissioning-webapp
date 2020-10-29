@@ -20,17 +20,6 @@ export const login = async () => {
     if (!getCurrentUser()) MSAL.loginRedirect({ scopes: scopes });
 };
 
-export const isLoggedIn = async (): Promise<boolean> => {
-    const account = MSAL.getAllAccounts()[0];
-    if (account != null) return false;
-    try {
-        await MSAL.acquireTokenSilent({ account, scopes });
-        return true;
-    } catch {
-        return false;
-    }
-};
-
 export const getCurrentUser = (): Msal.AccountInfo | null => {
     const account = MSAL.getAllAccounts()[0];
     if (!account) return null;

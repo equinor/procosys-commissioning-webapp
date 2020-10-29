@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { Project } from '../components/pages/SelectProject';
 import { Plant } from '../contexts/PlantAndProjectContext';
+
 import PascalCaseConverter from '../utils/PascalCaseConverter';
-import slugify from '../utils/Slugify';
 import * as auth from './authService';
 
 const baseURL = 'https://procosyswebapiqp.equinor.com/api/';
@@ -27,14 +28,25 @@ export const getPlants = async () => {
         const { data } = await axios.get(
             baseURL + 'Plants?includePlantsWithoutAccess=false&api-version=4.1'
         );
-        const camelCasedResponse = PascalCaseConverter.objectToCamelCase(
-            data
-        ) as Plant[];
-        const camelCasedResponseWithSlug = camelCasedResponse.map((plant) => ({
-            ...plant,
-            slug: plant.id.substr(4),
-        }));
-        return Promise.resolve(camelCasedResponseWithSlug);
+        const camelCasedResponse = PascalCaseConverter.objectToCamelCase(data);
+        const camelCasedResponseWithSlug = camelCasedResponse.map(
+            (plant: Plant) => ({
+                ...plant,
+                slug: plant.id.substr(4),
+            })
+        );
+        return camelCasedResponseWithSlug as Plant[];
+    } catch (error) {
+        return Promise.reject(error);
+    }
+};
+
+export const getProjectsForPlant = async (plantId: string) => {
+    try {
+        const { data } = await axios.get(
+            baseURL + `Projects?plantId=${plantId}&api-version=4.1`
+        );
+        return PascalCaseConverter.objectToCamelCase(data) as Project[];
     } catch (error) {
         return Promise.reject(error);
     }

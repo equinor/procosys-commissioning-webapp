@@ -1,37 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import * as api from '../../services/api';
+import { WideButton } from './SelectPlant';
 
-type Project = {
-    name: string;
+export type Project = {
+    description: string;
     id: number;
+    title: string;
 };
 
+interface ParamTypes {
+    plant: string;
+}
+
 const SelectProject = () => {
-    const lala = useParams();
-    console.log(lala);
-    const [selectedProject, setSelectedProject] = useState<Project>({
-        name: 'default',
-        id: 0,
-    });
-    const [projects, setProjects] = useState([
-        { name: 'Vannprosjekt', id: 1 },
-        { name: 'Brannprosjekt', id: 2 },
-    ]);
+    const { plant } = useParams<ParamTypes>();
+    const [projects, setProjects] = useState<Project[]>([]);
     const projectsToRender = projects.map((project) => (
-        <Link
-            to={`/project=${project.name}`}
-            key={project.id}
-            onClick={(e: React.MouseEvent) => setSelectedProject(project)}
-        >
-            SELECT {project.name}
+        <Link to={`/${plant}/${project.title}`} key={project.id}>
+            <WideButton color="secondary" variant="outlined">
+                {project.description}
+            </WideButton>
+            <br />
         </Link>
     ));
-    return (
-        <div>
-            {projectsToRender}
-            <p>Selected: {selectedProject.name}</p>
-        </div>
-    );
+    useEffect(() => {
+        const populateProjects = async () => {
+            try {
+                const projectsFromApi = await api.getProjectsForPlant(
+                    'PCS$' + plant
+                );
+                setProjects(projectsFromApi);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        populateProjects();
+    }, []);
+    return <div>{projectsToRender}</div>;
 };
 
 export default SelectProject;

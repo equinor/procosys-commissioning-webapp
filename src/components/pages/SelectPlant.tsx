@@ -3,6 +3,15 @@ import { Link } from 'react-router-dom';
 import { Plant } from '../../contexts/PlantAndProjectContext';
 import * as api from '../../services/api';
 import { Button } from '@equinor/eds-core-react';
+import styled from 'styled-components';
+
+export const WideButton = styled(Button)`
+    width: 100%;
+    text-align: left;
+    border-radius: 0;
+    border: none;
+    border-top: 1px solid;
+`;
 
 const SelectPlant = () => {
     const [selectedPlant, setSelectedPlant] = useState<Plant>({
@@ -13,11 +22,13 @@ const SelectPlant = () => {
     const [plants, setPlants] = useState<Plant[]>([]);
     const plantsToRender = plants.map((plant) => (
         <Link
-            to={`/plant=${plant.slug}`}
+            to={`/${plant.slug}`}
             key={plant.id}
             onClick={(e: React.MouseEvent) => setSelectedPlant(plant)}
         >
-            <Button>{plant.title}</Button>
+            <WideButton color="secondary" variant="outlined">
+                {plant.title}
+            </WideButton>
             <br />
         </Link>
     ));
@@ -33,12 +44,7 @@ const SelectPlant = () => {
         }
     }, []);
 
-    return (
-        <div>
-            {plantsToRender}
-            <p>Selected: {selectedPlant.title}</p>
-        </div>
-    );
+    return <>{plantsToRender}</>;
 };
 
 export default SelectPlant;

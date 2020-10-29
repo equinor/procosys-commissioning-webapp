@@ -8,12 +8,12 @@ export interface Plant {
 
 export type Project = {
     id: number;
-    name: string;
+    description: string;
 };
 
 const defaultProject: Project = {
     id: 0,
-    name: 'default project',
+    description: 'default project',
 };
 
 const defaultPlant: Plant = {
