@@ -1,6 +1,7 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useContext, useEffect, useState } from 'react';
+import { useParams, useRouteMatch } from 'react-router-dom';
 import * as api from '../services/api';
-import { AsyncStatus } from './UserContext';
+import UserContext, { AsyncStatus } from './UserContext';
 
 export interface Plant {
     id: string;
@@ -12,6 +13,11 @@ export interface Plant {
 export type Project = {
     id: number;
     description: string;
+};
+
+export type Params = {
+    plant: string;
+    project: string;
 };
 
 type PlantContextProps = {
@@ -36,7 +42,7 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
     const [fetchPermissionsStatus, setfetchPermissionsStatus] = useState(
         AsyncStatus.LOADING
     );
-
+    // Load permissions once plant is selected
     useEffect(() => {
         if (selectedPlant) {
             (async () => {

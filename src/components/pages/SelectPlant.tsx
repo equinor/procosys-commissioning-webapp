@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { Button, Icon, Typography } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import UserContext from '../../contexts/UserContext';
@@ -8,22 +8,21 @@ import { H3 } from '../../style/text';
 
 const SelectPlantWrapper = styled.main`
     display: flex;
-
     flex-wrap: wrap;
 `;
 
 export const WideButton = styled(Button)`
-    width: fit-content;
+    flex: 1 0 auto;
     display: flex;
-    margin: 10px;
+    margin: 7px;
     height: 50px;
-    text-align: left;
 `;
 
 const SelectPlant = () => {
     const { availablePlants } = useContext(UserContext);
     const { setSelectedPlant } = useContext(PlantContext);
     const { push } = useHistory();
+
     const plantsToRender = availablePlants.map((plant) => (
         <WideButton
             color="secondary"

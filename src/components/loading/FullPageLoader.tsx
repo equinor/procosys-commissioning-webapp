@@ -59,9 +59,9 @@ type FullPageLoaderProps = {
 const FullPageLoader = ({ text, withNavbar }: FullPageLoaderProps) => {
     return (
         <>
-            {withNavbar ? <NavbarSkeleton /> : <ContentSkeleton />}
+            {withNavbar && <NavbarSkeleton />}
             <Typography
-                variant="h2"
+                variant="h3"
                 color={'secondary'}
                 token={{ textAlign: 'center' }}
             >

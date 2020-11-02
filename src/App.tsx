@@ -1,26 +1,23 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Navbar from './components/navigation/Navbar';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import SelectPlant from './components/pages/SelectPlant';
-import HomePage from './components/pages/HomePage';
 import SelectProject from './components/pages/SelectProject';
 import { PlantContextProvider } from './contexts/PlantContext';
 import { UserContextProvider } from './contexts/UserContext';
-import * as auth from './services/authService';
 import SearchPage from './components/pages/SearchPage';
 
 function App() {
     return (
         <>
-            <UserContextProvider>
-                <PlantContextProvider>
-                    <Router>
+            <Router>
+                <UserContextProvider>
+                    <PlantContextProvider>
                         <Navbar />
                         <Switch>
-                            <Route exact path="/" component={HomePage} />
                             <Route
                                 exact
-                                path="/select-plant"
+                                path={['/select-plant', '/']}
                                 component={SelectPlant}
                             />
                             <Route
@@ -49,9 +46,9 @@ function App() {
                             PUNCH (:plant/:package/:punch)
                       */}
                         </Switch>
-                    </Router>
-                </PlantContextProvider>
-            </UserContextProvider>
+                    </PlantContextProvider>
+                </UserContextProvider>
+            </Router>
         </>
     );
 }
