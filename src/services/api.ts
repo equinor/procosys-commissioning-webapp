@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Project } from '../components/pages/SelectProject';
-import { Plant } from '../contexts/PlantAndProjectContext';
+import { Plant } from '../contexts/PlantContext';
 
 import PascalCaseConverter from '../utils/PascalCaseConverter';
 import * as auth from './authService';
@@ -47,6 +47,17 @@ export const getProjectsForPlant = async (plantId: string) => {
             baseURL + `Projects?plantId=${plantId}&api-version=4.1`
         );
         return PascalCaseConverter.objectToCamelCase(data) as Project[];
+    } catch (error) {
+        return Promise.reject(error);
+    }
+};
+
+export const getPermissionsForPlant = async (plantId: string) => {
+    try {
+        const { data } = await axios.get(
+            baseURL + `Permissions?plantId=${plantId}&api-version=4.1`
+        );
+        return data as string[];
     } catch (error) {
         return Promise.reject(error);
     }

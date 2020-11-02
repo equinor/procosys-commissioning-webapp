@@ -4,15 +4,16 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import SelectPlant from './components/pages/SelectPlant';
 import HomePage from './components/pages/HomePage';
 import SelectProject from './components/pages/SelectProject';
-import PlantAndProjectProvider from './contexts/PlantAndProjectContext';
-import AuthProvider, { useAuthContext } from './contexts/AuthContext';
+import { PlantContextProvider } from './contexts/PlantContext';
+import { UserContextProvider } from './contexts/UserContext';
 import * as auth from './services/authService';
+import SearchPage from './components/pages/SearchPage';
 
 function App() {
     return (
         <>
-            <AuthProvider>
-                <PlantAndProjectProvider>
+            <UserContextProvider>
+                <PlantContextProvider>
                     <Router>
                         <Navbar />
                         <Switch>
@@ -30,7 +31,7 @@ function App() {
                             <Route
                                 exact
                                 path="/:plant/:project"
-                                component={HomePage}
+                                component={SearchPage}
                             />
 
                             {/* 
@@ -49,8 +50,8 @@ function App() {
                       */}
                         </Switch>
                     </Router>
-                </PlantAndProjectProvider>
-            </AuthProvider>
+                </PlantContextProvider>
+            </UserContextProvider>
         </>
     );
 }

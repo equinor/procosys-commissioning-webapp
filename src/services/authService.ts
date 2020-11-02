@@ -26,6 +26,10 @@ export const getCurrentUser = (): Msal.AccountInfo | null => {
     return account;
 };
 
+export const getUserName = (): string | undefined => {
+    return getCurrentUser()?.username;
+};
+
 export const getAccessToken = async () => {
     try {
         const account = MSAL.getAllAccounts()[0];

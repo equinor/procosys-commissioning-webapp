@@ -1,50 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Plant } from '../../contexts/PlantAndProjectContext';
-import * as api from '../../services/api';
-import { Button } from '@equinor/eds-core-react';
+import React, { useContext, useEffect, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { Button, Icon, Typography } from '@equinor/eds-core-react';
 import styled from 'styled-components';
+import UserContext from '../../contexts/UserContext';
+import PlantContext from '../../contexts/PlantContext';
+import { H3 } from '../../style/text';
+
+const SelectPlantWrapper = styled.main`
+    display: flex;
+
+    flex-wrap: wrap;
+`;
 
 export const WideButton = styled(Button)`
-    width: 100%;
+    width: fit-content;
+    display: flex;
+    margin: 10px;
+    height: 50px;
     text-align: left;
-    border-radius: 0;
-    border: none;
-    border-top: 1px solid;
 `;
 
 const SelectPlant = () => {
-    const [selectedPlant, setSelectedPlant] = useState<Plant>({
-        title: 'default',
-        id: '',
-        slug: '',
-    });
-    const [plants, setPlants] = useState<Plant[]>([]);
-    const plantsToRender = plants.map((plant) => (
-        <Link
-            to={`/${plant.slug}`}
+    const { availablePlants } = useContext(UserContext);
+    const { setSelectedPlant } = useContext(PlantContext);
+    const { push } = useHistory();
+    const plantsToRender = availablePlants.map((plant) => (
+        <WideButton
+            color="secondary"
             key={plant.id}
-            onClick={(e: React.MouseEvent) => setSelectedPlant(plant)}
+            onClick={() => {
+                setSelectedPlant(plant);
+                push(`/${plant.slug}`);
+            }}
         >
-            <WideButton color="secondary" variant="outlined">
-                {plant.title}
-            </WideButton>
-            <br />
-        </Link>
+            {plant.title}
+            <Icon name="chevron_right" title="chevron right" />
+        </WideButton>
     ));
 
-    useEffect(() => {
-        if (plants.length < 1) {
-            const populatePlants = async () => {
-                const plantsFromAPI = await api.getPlants();
-                console.log(plantsFromAPI);
-                setPlants(plantsFromAPI);
-            };
-            populatePlants();
-        }
-    }, []);
-
-    return <>{plantsToRender}</>;
+    return (
+        <>
+            <H3 style={{ textAlign: 'center' }}>Select plant</H3>
+            <SelectPlantWrapper>{plantsToRender}</SelectPlantWrapper>
+        </>
+    );
 };
 
 export default SelectPlant;
