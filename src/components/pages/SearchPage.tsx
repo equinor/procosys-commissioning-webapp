@@ -4,19 +4,28 @@ import withAccessControl from '../../security/withAccessControl';
 import PlantContext from '../../contexts/PlantContext';
 import { AsyncStatus } from '../../contexts/UserContext';
 import FullPageLoader from '../loading/FullPageLoader';
+import styled from 'styled-components';
+import { tokens } from '@equinor/eds-tokens';
+
+const SearchPageWrapper = styled.main`
+    padding: 4%;
+    h4 {
+        ${tokens.typography.heading.h6}
+    }
+`;
 
 const SearchPage = () => {
     const [searchInput, setSearchInput] = useState('');
 
     return (
-        <>
+        <SearchPageWrapper>
             <Typography variant="h4">Search for a comm package: </Typography>
             <Search
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     setSearchInput(e.target.value)
                 }
             />
-        </>
+        </SearchPageWrapper>
     );
 };
 

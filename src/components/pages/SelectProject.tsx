@@ -13,9 +13,10 @@ export type Project = {
     title: string;
 };
 
-interface ParamTypes {
+export type ParamTypes = {
     plant: string;
-}
+    project: string;
+};
 
 const SelectProject = () => {
     const { plant } = useParams<ParamTypes>();

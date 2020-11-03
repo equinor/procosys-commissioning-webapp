@@ -10,8 +10,8 @@ import SearchPage from './components/pages/SearchPage';
 function App() {
     return (
         <>
-            <Router>
-                <UserContextProvider>
+            <UserContextProvider>
+                <Router>
                     <PlantContextProvider>
                         <Navbar />
                         <Switch>
@@ -47,8 +47,8 @@ function App() {
                       */}
                         </Switch>
                     </PlantContextProvider>
-                </UserContextProvider>
-            </Router>
+                </Router>
+            </UserContextProvider>
         </>
     );
 }
