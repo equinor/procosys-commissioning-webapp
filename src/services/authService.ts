@@ -2,7 +2,7 @@ import * as Msal from '@azure/msal-browser';
 
 const msalConfig = {
     auth: {
-        clientId: process.env.REACT_APP_MSAL_CLIENT_ID as string,
+        clientId: 'fb57fb35-f927-4271-9976-342070cb9f54',
         authority:
             'https://login.microsoftonline.com/3aa4a235-b6e2-48d5-9195-7fcf05b459b0/',
         redirectURI: 'http://localhost:3000',
