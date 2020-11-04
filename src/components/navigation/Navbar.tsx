@@ -9,7 +9,7 @@ const Navbar = () => {
     return (
         <NavbarWrapper>
             <TopBar>
-                <Link to="/select-plant">
+                <Link to="/">
                     <Button variant="ghost">
                         <Icon name={'menu'} title="Hamburger menu" />
                     </Button>

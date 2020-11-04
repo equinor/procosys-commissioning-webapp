@@ -1,10 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
-import { Button, Icon, Typography } from '@equinor/eds-core-react';
+import React, { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
+import { Button, Icon } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import UserContext from '../../contexts/UserContext';
-import PlantContext from '../../contexts/PlantContext';
-import { H3 } from '../../style/text';
 
 const SelectPlantWrapper = styled.main`
     display: flex;
@@ -12,23 +10,22 @@ const SelectPlantWrapper = styled.main`
 `;
 
 export const WideButton = styled(Button)`
-    flex: 1 0 auto;
     display: flex;
+    width: 100%;
     margin: 7px;
     height: 50px;
 `;
 
 const SelectPlant = () => {
     const { availablePlants } = useContext(UserContext);
-    const { setSelectedPlant } = useContext(PlantContext);
     const { push } = useHistory();
 
     const plantsToRender = availablePlants.map((plant) => (
         <WideButton
+            variant="outlined"
             color="secondary"
             key={plant.id}
             onClick={() => {
-                setSelectedPlant(plant);
                 push(`/${plant.slug}`);
             }}
         >
@@ -39,7 +36,7 @@ const SelectPlant = () => {
 
     return (
         <>
-            <H3 style={{ textAlign: 'center' }}>Select plant</H3>
+            <p>Select plant</p>
             <SelectPlantWrapper>{plantsToRender}</SelectPlantWrapper>
         </>
     );
