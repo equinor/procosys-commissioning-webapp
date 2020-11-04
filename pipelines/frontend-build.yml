@@ -21,7 +21,7 @@ variables:
    value: procosys/comm-webapp
 
 stages:
-build_and_test stage. Yarn test, Docker build, tag and push
+#build_and_test stage. Yarn test, Docker build, tag and push
 - stage: build_and_test
   displayName: 'Build & Test'
   variables:
