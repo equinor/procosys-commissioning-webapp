@@ -21,11 +21,11 @@ variables:
    value: procosys/comm-webapp
 
 stages:
-#build_and_test stage. Yarn test, Docker build, tag and push
-- stage: build_and_test
-  displayName: 'Build & Test'
+# Build Stage
+- stage: build
+  displayName: 'Build'
   variables:
-    envName: 'build_and_test'
+    envName: 'build'
     serviceConnection: '${{ variables.nonProdServiceConnection }}'
     containerRegistry: '${{ variables.containerRegistryName }}'
     envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
@@ -33,10 +33,26 @@ stages:
     dockerRegistryServiceConnection: '$(dockerRegistryServiceConnectionName)'
 
   jobs:
+  # Docker Build
   - template: /templates/pipelines/dockerbuild-comm-webapp.yml@templates
     parameters:
-      deploymentName: 'docker_build_push'
       dependsOn: ''
+      deploymentName: 'docker_build'
+      condition: and(always(), eq(variables['Build.Reason'], 'PullRequest'))
+      buildCommand: build
+      envGroup: '${{ variables.envGroupName }}'
+      dockerfilePath: '${{ variables.dockerfilePath }}'
+      buildContext: '$(Build.SourcesDirectory)'
+      repository: '${{ variables.repositoryName }}'
+      dockerRegistryServiceConnection: '$(dockerRegistryServiceConnectionName)'
+
+  # Docker Build and Push
+  - template: /templates/pipelines/dockerbuild-comm-webapp.yml@templates
+    parameters:
+      dependsOn: ''
+      deploymentName: 'docker_build_push'
+      condition: and(always(), ne(variables['Build.Reason'], 'PullRequest'))
+      buildCommand: buildAndPush
       envGroup: '${{ variables.envGroupName }}'
       dockerfilePath: '${{ variables.dockerfilePath }}'
       buildContext: '$(Build.SourcesDirectory)'
@@ -45,8 +61,8 @@ stages:
 
 # Deploy to dev environment
 - stage: dev
-  displayName: 'Deploy to dev'
-  dependsOn: 'build_and_test'
+  displayName: 'Deploy to Dev'
+  dependsOn: 'build'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
   variables:
     envName: 'dev'
@@ -56,6 +72,7 @@ stages:
     containerRegistry: '${{ variables.containerRegistryName }}'
 
   jobs:
+  # Deploy to AKS
   - template: /templates/pipelines/kubernetes/comm-webapp-deploy.yml@templates
     parameters:
       deploymentName: 'deploy_to_k8s'
@@ -69,8 +86,8 @@ stages:
 
 # Deploy to test environment
 - stage: test
-  displayName: 'Deploy to test'
-  dependsOn: 'build_and_test'
+  displayName: 'Deploy to Test'
+  dependsOn: 'build'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   variables:
     envName: 'test'
@@ -80,6 +97,7 @@ stages:
     containerRegistry: '${{ variables.containerRegistryName }}'
 
   jobs:
+  # Deploy to AKS
   - template: /templates/pipelines/kubernetes/comm-webapp-deploy.yml@templates
     parameters:
       deploymentName: 'deploy_to_k8s'
@@ -93,7 +111,7 @@ stages:
 
 # Deploy to prod environment
 - stage: prod
-  displayName: 'Deploy to prod'
+  displayName: 'Deploy to Prod'
   dependsOn: 'test'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   variables:
@@ -104,6 +122,7 @@ stages:
     containerRegistry: '${{ variables.containerRegistryName }}'
 
   jobs:
+  # Deploy to AKS
   - template: /templates/pipelines/kubernetes/comm-webapp-deploy.yml@templates
     parameters:
       deploymentName: 'deploy_to_k8s'
