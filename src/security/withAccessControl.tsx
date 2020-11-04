@@ -11,6 +11,7 @@ const withAccessControl = (
     const [hasAccess, setHasAccess] = useState<boolean>(false);
     const { permissions, fetchPermissionsStatus } = useContext(PlantContext);
 
+    alert('reached permissions');
     useEffect(() => {
         if (
             requiredPermissions.every((item) => permissions.indexOf(item) >= 0)

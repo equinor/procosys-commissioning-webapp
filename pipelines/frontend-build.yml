@@ -2,6 +2,7 @@ trigger:
   branches:
     include:
     - main
+    - dev
 
 resources:
   repositories:
@@ -20,7 +21,7 @@ variables:
    value: procosys/comm-webapp
 
 stages:
-# build_and_test stage. Yarn test, Docker build, tag and push
+#build_and_test stage. Yarn test, Docker build, tag and push
 - stage: build_and_test
   displayName: 'Build & Test'
   variables:
@@ -42,26 +43,74 @@ stages:
       repository: '${{ variables.repositoryName }}'
       dockerRegistryServiceConnection: '$(dockerRegistryServiceConnectionName)'
 
-# # Deploy to dev environment
-# - stage: dev
-#   displayName: 'Deploy to dev'
-#   dependsOn: 'build_and_test'
-#   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-#   variables:
-#     envName: 'dev'
-#     envRg: '${{ variables.envRgName }}'
-#     envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
-#     serviceConnection: '${{ variables.nonProdServiceConnection }}'
-#     containerRegistry: '${{ variables.containerRegistryName }}'
+# Deploy to dev environment
+- stage: dev
+  displayName: 'Deploy to dev'
+  dependsOn: 'build_and_test'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+  variables:
+    envName: 'dev'
+    envRg: '${{ variables.envRgName }}'
+    envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
+    serviceConnection: '${{ variables.nonProdServiceConnection }}'
+    containerRegistry: '${{ variables.containerRegistryName }}'
 
-#   jobs:
-#   - template: /templates/pipelines/kubernetes/comm-webapp-deploy.yml@templates
-#     parameters:
-#       deploymentName: 'deploy_to_k8s'
-#       dependsOn: ''
-#       serviceConnection: '${{ variables.serviceConnection }}'
-#       env: '${{ variables.envName }}'
-#       envRg: '${{ variables.aksRgName }}'
-#       envGroup: '${{ variables.envGroupName }}'
-#       dockerImage: '${{ variables.containerRegistry }}.azurecr.io/${{ variables.repositoryName }}:$(Build.BuildId)'
-#       clusterName: '${{ variables.aksTestName }}'
+  jobs:
+  - template: /templates/pipelines/kubernetes/comm-webapp-deploy.yml@templates
+    parameters:
+      deploymentName: 'deploy_to_k8s'
+      dependsOn: ''
+      serviceConnection: '${{ variables.serviceConnection }}'
+      env: '${{ variables.envName }}'
+      envRg: '${{ variables.aksRgName }}'
+      envGroup: '${{ variables.envGroupName }}'
+      dockerImage: '${{ variables.containerRegistry }}.azurecr.io/${{ variables.repositoryName }}:$(Build.BuildId)'
+      clusterName: '${{ variables.aksTestName }}'
+
+# Deploy to test environment
+- stage: test
+  displayName: 'Deploy to test'
+  dependsOn: 'build_and_test'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  variables:
+    envName: 'test'
+    envRg: '${{ variables.envRgName }}'
+    envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
+    serviceConnection: '${{ variables.nonProdServiceConnection }}'
+    containerRegistry: '${{ variables.containerRegistryName }}'
+
+  jobs:
+  - template: /templates/pipelines/kubernetes/comm-webapp-deploy.yml@templates
+    parameters:
+      deploymentName: 'deploy_to_k8s'
+      dependsOn: ''
+      serviceConnection: '${{ variables.serviceConnection }}'
+      env: '${{ variables.envName }}'
+      envRg: '${{ variables.aksRgName }}'
+      envGroup: '${{ variables.envGroupName }}'
+      dockerImage: '${{ variables.containerRegistry }}.azurecr.io/${{ variables.repositoryName }}:$(Build.BuildId)'
+      clusterName: '${{ variables.aksTestName }}'
+
+# Deploy to prod environment
+- stage: prod
+  displayName: 'Deploy to prod'
+  dependsOn: 'test'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  variables:
+    envName: 'prod'
+    envRg: '${{ variables.envRgName }}'
+    envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
+    serviceConnection: '${{ variables.prodServiceConnection }}'
+    containerRegistry: '${{ variables.containerRegistryName }}'
+
+  jobs:
+  - template: /templates/pipelines/kubernetes/comm-webapp-deploy.yml@templates
+    parameters:
+      deploymentName: 'deploy_to_k8s'
+      dependsOn: ''
+      serviceConnection: '${{ variables.serviceConnection }}'
+      env: '${{ variables.envName }}'
+      envRg: '${{ variables.aksRgName }}'
+      envGroup: '${{ variables.envGroupName }}'
+      dockerImage: '${{ variables.containerRegistry }}.azurecr.io/${{ variables.repositoryName }}:$(Build.BuildId)'
+      clusterName: '${{ variables.aksProdName }}'
