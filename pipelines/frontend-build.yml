@@ -59,7 +59,7 @@ stages:
       repository: '${{ variables.repositoryName }}'
       dockerRegistryServiceConnection: '$(dockerRegistryServiceConnectionName)'
 
-# Deploy to dev environment
+# Deploy to Dev
 - stage: dev
   displayName: 'Deploy to Dev'
   dependsOn: 'build'
@@ -84,7 +84,7 @@ stages:
       dockerImage: '${{ variables.containerRegistry }}.azurecr.io/${{ variables.repositoryName }}:$(Build.BuildId)'
       clusterName: '${{ variables.aksTestName }}'
 
-# Deploy to test environment
+# Deploy to Test
 - stage: test
   displayName: 'Deploy to Test'
   dependsOn: 'build'
@@ -109,7 +109,7 @@ stages:
       dockerImage: '${{ variables.containerRegistry }}.azurecr.io/${{ variables.repositoryName }}:$(Build.BuildId)'
       clusterName: '${{ variables.aksTestName }}'
 
-# Deploy to prod environment
+# Deploy to Prod
 - stage: prod
   displayName: 'Deploy to Prod'
   dependsOn: 'test'
