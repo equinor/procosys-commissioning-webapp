@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, ReactElement } from 'react';
-import FullPageLoader from '../components/loading/FullPageLoader';
+import SkeletonLoadingPage from '../components/loading/SkeletonLoadingPage';
 import PlantContext from '../contexts/PlantContext';
 import { AsyncStatus } from '../contexts/UserContext';
 import { H3 } from '../style/text';
@@ -10,8 +10,6 @@ const withAccessControl = (
 ) => (props: JSX.IntrinsicAttributes) => {
     const [hasAccess, setHasAccess] = useState<boolean>(false);
     const { permissions, fetchPermissionsStatus } = useContext(PlantContext);
-
-    alert('reached permissions');
     useEffect(() => {
         if (
             requiredPermissions.every((item) => permissions.indexOf(item) >= 0)
@@ -23,7 +21,7 @@ const withAccessControl = (
     }, [permissions]);
 
     if (fetchPermissionsStatus === AsyncStatus.LOADING) {
-        return <FullPageLoader text={'Loading permissions...'} />;
+        return <SkeletonLoadingPage text={'Loading permissions...'} />;
     }
 
     if (fetchPermissionsStatus === AsyncStatus.ERROR) {
