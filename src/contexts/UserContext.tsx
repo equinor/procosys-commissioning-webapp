@@ -1,8 +1,9 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import * as auth from '../services/authService';
 import * as API from '../services/api';
-import FullPageLoader from '../components/loading/FullPageLoader';
+import SkeletonLoadingPage from '../components/loading/SkeletonLoadingPage';
 import { Plant } from './PlantContext';
+import LoadingPage from '../components/loading/LoadingPage';
 
 type UserContextProps = {
     userName: string;
@@ -40,9 +41,10 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
     }, []);
 
     if (fetchPlantsStatus === AsyncStatus.LOADING) {
-        return <FullPageLoader withNavbar text={'Loading available plants'} />;
+        return <LoadingPage loadingText={'Loading available plants . . .'} />;
     }
-    if (fetchPlantsStatus === AsyncStatus.ERROR) return <p>ERROR</p>;
+    if (fetchPlantsStatus === AsyncStatus.ERROR)
+        return <p>Could not load available plants</p>;
     return (
         <UserContext.Provider
             value={{

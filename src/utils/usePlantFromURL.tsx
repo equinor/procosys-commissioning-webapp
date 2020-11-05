@@ -3,7 +3,9 @@ import UserContext from '../contexts/UserContext';
 
 const usePlantFromURL = (slug: string) => {
     const { availablePlants } = useContext(UserContext);
-    return availablePlants.find((plant) => plant.slug === slug);
+    const matchedPlant = availablePlants.find((plant) => plant.slug === slug);
+    if (matchedPlant === undefined) return null;
+    return matchedPlant;
 };
 
 export default usePlantFromURL;
