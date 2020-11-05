@@ -1,11 +1,13 @@
-import {
-    Card,
-    LinearProgress,
-    Typography,
-    TopBar,
-} from '@equinor/eds-core-react';
+import { Card } from '@equinor/eds-core-react';
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
+
+const SkeletonLoadingPageWrapper = styled.main`
+    & h3 {
+        margin-top: 24px;
+        text-align: center;
+    }
+`;
 
 const load = keyframes`
     from {
@@ -41,33 +43,20 @@ const BaseSkeleton = styled(Card)`
     }
 `;
 
-const NavbarSkeleton = styled(TopBar)`
-    margin-bottom: 50px;
-`;
-
 const ContentSkeleton = styled(BaseSkeleton)`
     width: 85%;
     height: 50px;
     margin: 15px auto 15px auto;
 `;
 
-type FullPageLoaderProps = {
+type SkeletonLoadingPageProps = {
     text: string;
-    withNavbar?: boolean;
 };
 
-const FullPageLoader = ({ text, withNavbar }: FullPageLoaderProps) => {
+const SkeletonLoadingPage = ({ text }: SkeletonLoadingPageProps) => {
     return (
-        <>
-            {withNavbar && <NavbarSkeleton />}
-            <Typography
-                variant="h3"
-                color={'secondary'}
-                token={{ textAlign: 'center' }}
-            >
-                {text}
-            </Typography>
-
+        <SkeletonLoadingPageWrapper>
+            <h3>{text}</h3>
             <ContentSkeleton />
             <ContentSkeleton />
             <ContentSkeleton />
@@ -76,8 +65,8 @@ const FullPageLoader = ({ text, withNavbar }: FullPageLoaderProps) => {
             <ContentSkeleton />
             <ContentSkeleton />
             <ContentSkeleton />
-        </>
+        </SkeletonLoadingPageWrapper>
     );
 };
 
-export default FullPageLoader;
+export default SkeletonLoadingPage;

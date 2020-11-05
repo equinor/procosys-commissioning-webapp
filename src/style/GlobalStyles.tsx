@@ -1,26 +1,30 @@
-import styled, { CSSObject } from 'styled-components';
+import { CSSObject } from 'styled-components';
 import { tokens } from '@equinor/eds-tokens';
+import { createGlobalStyle } from 'styled-components';
 
-const GlobalStyles = styled.div`
-    & h1 {
+const GlobalStyles = createGlobalStyle`
+    body { 
+        margin: 0;
+    }
+    h1 {
         ${tokens.typography.heading.h1 as CSSObject}
     }
-    & h2 {
+    h2 {
         ${tokens.typography.heading.h2 as CSSObject}
     }
-    & h3 {
+    h3 {
         ${tokens.typography.heading.h3 as CSSObject}
     }
-    & h4 {
+    h4 {
         ${tokens.typography.heading.h4 as CSSObject}
     }
-    & h5 {
+    h5 {
         ${tokens.typography.heading.h5 as CSSObject}
     }
-    & h6 {
+    h6 {
         ${tokens.typography.heading.h6 as CSSObject}
     }
-    & p {
+    p {
         ${tokens.typography.paragraph.body_short as CSSObject}
     }
 `;

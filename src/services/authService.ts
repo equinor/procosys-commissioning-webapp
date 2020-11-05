@@ -1,4 +1,5 @@
 import * as Msal from '@azure/msal-browser';
+import { AsyncStatus } from '../contexts/UserContext';
 
 const msalConfig = {
     auth: {
@@ -39,18 +40,34 @@ export const getAccessToken = async () => {
         });
         return Promise.resolve(silentTokenResponse.accessToken);
     } catch (error) {
-        console.log('Token acquisition failed: ', error);
+        console.log('Token acquisition failed');
         return Promise.reject(error as Msal.AuthError);
     }
 };
 
-export const handleLogin = async () => {
+const isLoggedIn = async () => {
+    const cachedAccount = MSAL.getAllAccounts()[0];
+    if (cachedAccount == null) return Promise.reject('hehe');
     try {
-        const redirectFromSigninResponse = await MSAL.handleRedirectPromise();
-        if (redirectFromSigninResponse !== null)
-            return alert('Login was succesful');
-        login();
+        // User is able to get accessToken, no login required
+        await getAccessToken();
+        console.log('got access TOKEN');
+        return Promise.resolve();
     } catch {
-        alert('Login failed');
+        return Promise.reject('hehehe');
+    }
+};
+
+export const handleLogin = async () => {
+    const redirectFromSigninResponse = await MSAL.handleRedirectPromise();
+    if (redirectFromSigninResponse !== null) {
+        return Promise.resolve(AsyncStatus.SUCCESS);
+    }
+    try {
+        await isLoggedIn();
+        return Promise.resolve(AsyncStatus.SUCCESS);
+    } catch {
+        login();
+        return Promise.reject(AsyncStatus.ERROR);
     }
 };
