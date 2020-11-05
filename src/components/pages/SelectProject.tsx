@@ -5,15 +5,25 @@ import PlantContext, { Plant } from '../../contexts/PlantContext';
 import { AsyncStatus } from '../../contexts/UserContext';
 import * as api from '../../services/api';
 import { H3 } from '../../style/text';
-import FullPageLoader from '../loading/FullPageLoader';
+import SkeletonLoadingPage from '../loading/SkeletonLoadingPage';
 import { WideButton } from './SelectPlant';
 import usePlantFromURL from '../../utils/usePlantFromURL';
+import { Icon } from '@equinor/eds-core-react';
+import styled from 'styled-components';
 
 export type Project = {
     description: string;
     id: number;
     title: string;
 };
+
+const SelectProjectWrapper = styled.main`
+    display: flex;
+    flex-direction: column;
+    & h3 {
+        text-align: center;
+    }
+`;
 
 const SelectProject = () => {
     const { plant: plantInPath } = useParams<ParamTypes>();
@@ -23,7 +33,7 @@ const SelectProject = () => {
         AsyncStatus.LOADING
     );
     const currentPlant = usePlantFromURL(plantInPath);
-
+    const { setSelectedPlant } = useContext(PlantContext);
     const projectsToRender = projects.map((project) => (
         <WideButton
             color="secondary"
@@ -36,6 +46,10 @@ const SelectProject = () => {
     ));
 
     useEffect(() => {
+        setSelectedPlant(currentPlant);
+    }, []);
+
+    useEffect(() => {
         (async () => {
             setFetchProjectsStatus(AsyncStatus.LOADING);
             try {
@@ -45,7 +59,7 @@ const SelectProject = () => {
                 setProjects(projectsFromApi);
                 setFetchProjectsStatus(AsyncStatus.SUCCESS);
             } catch (error) {
-                console.log(error);
+                console.log('Could not get projects');
                 setFetchProjectsStatus(AsyncStatus.ERROR);
             }
         })();
@@ -62,7 +76,7 @@ const SelectProject = () => {
 
     if (fetchProjectsStatus === AsyncStatus.LOADING) {
         return (
-            <FullPageLoader
+            <SkeletonLoadingPage
                 text={`Loading projects for ${currentPlant!.title}`}
             />
         );
@@ -70,21 +84,19 @@ const SelectProject = () => {
 
     if (fetchProjectsStatus === AsyncStatus.SUCCESS) {
         return (
-            <>
+            <SelectProjectWrapper>
                 {projectsToRender.length > 0 ? (
                     <>
-                        <H3 style={{ margin: '20px 0', textAlign: 'center' }}>
-                            Select Project
-                        </H3>
+                        <h3>Select Project</h3>
                         {projectsToRender}
                     </>
                 ) : (
-                    <H3>No projects available for this plant</H3>
+                    <h3>No projects available for this plant</h3>
                 )}
-            </>
+            </SelectProjectWrapper>
         );
     }
-    return <H3>Error getting projects</H3>;
+    return <h3>Error getting projects</h3>;
 };
 
 export default SelectProject;
