@@ -4,16 +4,20 @@ import { Button, Icon } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import UserContext from '../../contexts/UserContext';
 
-const SelectPlantWrapper = styled.main`
+export const SelectPlantWrapper = styled.main`
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    & h3 {
+        text-align: center;
+        margin-bottom: 18px;
+    }
 `;
 
 export const WideButton = styled(Button)`
     display: flex;
-    width: 100%;
     margin: 7px;
     height: 50px;
+    text-align: left;
 `;
 
 const SelectPlant = () => {
@@ -35,10 +39,10 @@ const SelectPlant = () => {
     ));
 
     return (
-        <>
-            <p>Select plant</p>
-            <SelectPlantWrapper>{plantsToRender}</SelectPlantWrapper>
-        </>
+        <SelectPlantWrapper>
+            <h3>Select plant</h3>
+            {plantsToRender}
+        </SelectPlantWrapper>
     );
 };
 

@@ -1,32 +1,20 @@
-import React, { ChangeEvent, useContext, useState } from 'react';
-import { Search, Typography } from '@equinor/eds-core-react';
+import React, { ChangeEvent, useState } from 'react';
+import { Search } from '@equinor/eds-core-react';
 import withAccessControl from '../../security/withAccessControl';
-import PlantContext from '../../contexts/PlantContext';
-import { AsyncStatus } from '../../contexts/UserContext';
-import FullPageLoader from '../loading/FullPageLoader';
 import styled from 'styled-components';
-import { tokens } from '@equinor/eds-tokens';
-
-const BREAKPOINTS = {
-    mobile: '@media (max-width: 800px)',
-};
 
 const SearchPageWrapper = styled.main`
     padding: 4%;
-    h4 {
-        ${tokens.typography.heading.h6}
-    }
-    ${BREAKPOINTS.mobile} {
-        background-color: red;
+    & h3 {
+        text-align: center;
     }
 `;
 
 const SearchPage = () => {
     const [searchInput, setSearchInput] = useState('');
-    alert('REACHED SEARCH');
     return (
         <SearchPageWrapper>
-            <Typography variant="h4">Search for a comm package: </Typography>
+            <h3>Search for a comm package: </h3>
             <Search
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     setSearchInput(e.target.value)
