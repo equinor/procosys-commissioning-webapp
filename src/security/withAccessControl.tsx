@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useContext, ReactElement } from 'react';
-import SkeletonLoadingPage from '../components/loading/SkeletonLoadingPage';
 import PlantContext from '../contexts/PlantContext';
-import { AsyncStatus } from '../contexts/UserContext';
 import { H3 } from '../style/text';
 
 const withAccessControl = (
@@ -9,7 +7,7 @@ const withAccessControl = (
     requiredPermissions: string[] = []
 ) => (props: JSX.IntrinsicAttributes) => {
     const [hasAccess, setHasAccess] = useState<boolean>(false);
-    const { permissions, fetchPermissionsStatus } = useContext(PlantContext);
+    const { permissions } = useContext(PlantContext);
     useEffect(() => {
         if (
             requiredPermissions.every((item) => permissions.indexOf(item) >= 0)
@@ -19,14 +17,6 @@ const withAccessControl = (
             setHasAccess(false);
         }
     }, [permissions]);
-
-    if (fetchPermissionsStatus === AsyncStatus.LOADING) {
-        return <SkeletonLoadingPage text={'Loading permissions...'} />;
-    }
-
-    if (fetchPermissionsStatus === AsyncStatus.ERROR) {
-        return <H3>Error loading permissions</H3>;
-    }
 
     if (hasAccess) {
         return <WrappedComponent {...props} />;

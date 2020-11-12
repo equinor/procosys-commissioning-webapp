@@ -1,7 +1,10 @@
-import React, { ReactNode, useContext, useEffect, useState } from 'react';
-import { useParams, useRouteMatch } from 'react-router-dom';
+import React, { ReactNode, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { ParamTypes } from '../App';
 import * as api from '../services/api';
-import UserContext, { AsyncStatus } from './UserContext';
+import { Project } from '../services/api';
+import usePlantFromURL from '../utils/usePlantFromURL';
+import { AsyncStatus } from './UserContext';
 
 export interface Plant {
     id: string;
@@ -10,23 +13,19 @@ export interface Plant {
     projects?: Project[];
 }
 
-export type Project = {
-    id: number;
-    description: string;
-};
-
 export type Params = {
     plant: string;
     project: string;
 };
 
 type PlantContextProps = {
-    fetchPermissionsStatus: AsyncStatus;
+    fetchProjectsAndPermissionsStatus: AsyncStatus;
     permissions: string[];
-    selectedPlant: Plant | null;
-    setSelectedPlant: (selectedPlant: Plant | null) => void;
-    selectedProject: Project | null;
-    setSelectedProject: (selectedProject: Project | null) => void;
+    currentPlant: Plant | null;
+    setCurrentPlant: (currentPlant: Plant | null) => void;
+    currentProject: Project | null;
+    setCurrentProject: (currentProject: Project | null) => void;
+    availableProjects: Project[] | null;
 };
 
 const PlantContext = React.createContext({} as PlantContextProps);
@@ -34,41 +33,55 @@ const PlantContext = React.createContext({} as PlantContextProps);
 export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
     children,
 }) => {
-    const [selectedPlant, setSelectedPlant] = useState<Plant | null>(null);
-    const [selectedProject, setSelectedProject] = useState<Project | null>(
-        null
-    );
+    const { plant: plantInPath } = useParams<ParamTypes>();
+    const plantFromUrl = usePlantFromURL(plantInPath);
+    const [currentPlant, setCurrentPlant] = useState<Plant | null>(null);
+    const [currentProject, setCurrentProject] = useState<Project | null>(null);
+    const [availableProjects, setAvailableProjects] = useState<
+        Project[] | null
+    >(null);
     const [permissions, setPermissions] = useState<string[]>([]);
-    const [fetchPermissionsStatus, setfetchPermissionsStatus] = useState(
-        AsyncStatus.LOADING
-    );
+    const [
+        fetchProjectsAndPermissionsStatus,
+        setFetchProjectsAndPermissionsStatus,
+    ] = useState(AsyncStatus.LOADING);
+
+    useEffect(() => {
+        setCurrentPlant(plantFromUrl);
+    }, [plantFromUrl]);
+
     // Load permissions once plant is selected
     useEffect(() => {
-        if (selectedPlant) {
+        if (currentPlant) {
             (async () => {
-                setfetchPermissionsStatus(AsyncStatus.LOADING);
+                setFetchProjectsAndPermissionsStatus(AsyncStatus.LOADING);
                 try {
-                    const permissionsFromApi = await api.getPermissionsForPlant(
-                        selectedPlant!.id
+                    const projectsFromApi = await api.getProjectsForPlant(
+                        currentPlant.id
                     );
+                    const permissionsFromApi = await api.getPermissionsForPlant(
+                        currentPlant.id
+                    );
+                    setAvailableProjects(projectsFromApi);
                     setPermissions(permissionsFromApi);
-                    setfetchPermissionsStatus(AsyncStatus.SUCCESS);
+                    setFetchProjectsAndPermissionsStatus(AsyncStatus.SUCCESS);
                 } catch (error) {
-                    setfetchPermissionsStatus(AsyncStatus.ERROR);
+                    setFetchProjectsAndPermissionsStatus(AsyncStatus.ERROR);
                 }
             })();
         }
-    }, [selectedPlant]);
+    }, [currentPlant]);
 
     return (
         <PlantContext.Provider
             value={{
-                fetchPermissionsStatus,
+                fetchProjectsAndPermissionsStatus,
                 permissions,
-                setSelectedPlant,
-                selectedPlant,
-                setSelectedProject,
-                selectedProject,
+                setCurrentPlant,
+                currentPlant,
+                setCurrentProject,
+                currentProject,
+                availableProjects,
             }}
         >
             {children}
