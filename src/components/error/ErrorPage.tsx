@@ -4,6 +4,11 @@ import { Banner } from '@equinor/eds-core-react';
 import { COLORS } from '../../style/GlobalStyles';
 import EdsIcon from '../EdsIcon';
 
+interface CommError {
+    errorTitle?: string;
+    errorDescription?: string;
+}
+
 const ErrorPageWrapper = styled.main`
     padding: 0 4%;
     display: flex;
@@ -20,12 +25,7 @@ const ErrorPageWrapper = styled.main`
     }
 `;
 
-type Error = {
-    errorTitle: string;
-    errorDescription: string;
-};
-
-const ErrorPage = ({ errorTitle, errorDescription }: Error) => {
+const ErrorPage = ({ errorTitle, errorDescription }: CommError) => {
     return (
         <ErrorPageWrapper>
             <h3>{errorTitle}</h3>
