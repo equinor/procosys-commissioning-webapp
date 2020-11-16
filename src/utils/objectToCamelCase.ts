@@ -28,6 +28,4 @@ const objectToCamelCase = (input: Record<string, any>): Record<string, any> => {
     return input;
 };
 
-const exports = { stringToCamelCase, objectToCamelCase };
-
-export default exports;
+export default objectToCamelCase;

@@ -20,7 +20,6 @@ const withUserContext = (
             <UserContext.Provider
                 value={{
                     availablePlants: plants,
-                    userName: 'Tester',
                     fetchPlantsStatus: asyncStatus,
                 }}
             >
