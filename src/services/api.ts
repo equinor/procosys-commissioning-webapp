@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Plant } from '../contexts/PlantContext';
-import PascalCaseConverter from '../utils/PascalCaseConverter';
+import objectToCamelCase from '../utils/objectToCamelCase';
 import * as auth from './authService';
 
 const baseURL = 'https://procosyswebapiqp.equinor.com/api/';
@@ -27,7 +27,7 @@ export const getPlants = async () => {
         const { data } = await axios.get(
             baseURL + 'Plants?includePlantsWithoutAccess=false&api-version=4.1'
         );
-        const camelCasedResponse = PascalCaseConverter.objectToCamelCase(data);
+        const camelCasedResponse = objectToCamelCase(data);
         const camelCasedResponseWithSlug = camelCasedResponse.map(
             (plant: Plant) => ({
                 ...plant,
@@ -45,7 +45,7 @@ export const getProjectsForPlant = async (plantId: string) => {
         const { data } = await axios.get(
             baseURL + `Projects?plantId=${plantId}&api-version=4.1`
         );
-        return PascalCaseConverter.objectToCamelCase(data) as Project[];
+        return objectToCamelCase(data) as Project[];
     } catch (error) {
         return Promise.reject(error);
     }
