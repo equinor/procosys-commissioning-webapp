@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import React from 'react';
-import UserContext, { AsyncStatus } from '../../../contexts/UserContext';
+import { AsyncStatus } from '../../../contexts/UserContext';
 import SelectProject from '../SelectProject';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Project } from '../../../services/api';
