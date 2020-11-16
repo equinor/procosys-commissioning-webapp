@@ -1,10 +1,10 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ParamTypes } from '../App';
 import * as api from '../services/api';
 import { Project } from '../services/api';
-import usePlantFromURL from '../utils/usePlantFromURL';
-import { AsyncStatus } from './UserContext';
+import matchPlantFromURL from '../utils/matchPlantFromURL';
+import UserContext, { AsyncStatus } from './UserContext';
 
 export interface Plant {
     id: string;
@@ -21,10 +21,7 @@ export type Params = {
 type PlantContextProps = {
     fetchProjectsAndPermissionsStatus: AsyncStatus;
     permissions: string[];
-    currentPlant: Plant | null;
-    setCurrentPlant: (currentPlant: Plant | null) => void;
-    currentProject: Project | null;
-    setCurrentProject: (currentProject: Project | null) => void;
+    currentPlant: Plant | undefined;
     availableProjects: Project[] | null;
 };
 
@@ -33,10 +30,9 @@ const PlantContext = React.createContext({} as PlantContextProps);
 export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
     children,
 }) => {
-    const { plant: plantInPath } = useParams<ParamTypes>();
-    const plantFromUrl = usePlantFromURL(plantInPath);
-    const [currentPlant, setCurrentPlant] = useState<Plant | null>(null);
-    const [currentProject, setCurrentProject] = useState<Project | null>(null);
+    const { plant: plantInURL } = useParams<ParamTypes>();
+    const [currentPlant, setCurrentPlant] = useState<Plant | undefined>();
+    const { availablePlants } = useContext(UserContext);
     const [availableProjects, setAvailableProjects] = useState<
         Project[] | null
     >(null);
@@ -47,29 +43,29 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
     ] = useState(AsyncStatus.LOADING);
 
     useEffect(() => {
-        setCurrentPlant(plantFromUrl);
-    }, [plantFromUrl]);
+        if (availablePlants.length < 1) return;
+        setCurrentPlant(matchPlantFromURL(availablePlants, plantInURL));
+    }, [availablePlants, plantInURL]);
 
-    // Load permissions once plant is selected
     useEffect(() => {
-        if (currentPlant) {
-            (async () => {
-                setFetchProjectsAndPermissionsStatus(AsyncStatus.LOADING);
-                try {
-                    const projectsFromApi = await api.getProjectsForPlant(
-                        currentPlant.id
-                    );
-                    const permissionsFromApi = await api.getPermissionsForPlant(
-                        currentPlant.id
-                    );
-                    setAvailableProjects(projectsFromApi);
-                    setPermissions(permissionsFromApi);
-                    setFetchProjectsAndPermissionsStatus(AsyncStatus.SUCCESS);
-                } catch (error) {
-                    setFetchProjectsAndPermissionsStatus(AsyncStatus.ERROR);
-                }
-            })();
-        }
+        if (!currentPlant) return;
+        (async () => {
+            setFetchProjectsAndPermissionsStatus(AsyncStatus.LOADING);
+            try {
+                const [
+                    projectsFromApi,
+                    permissionsFromApi,
+                ] = await Promise.all([
+                    api.getProjectsForPlant(currentPlant.id),
+                    await api.getPermissionsForPlant(currentPlant.id),
+                ]);
+                setAvailableProjects(projectsFromApi);
+                setPermissions(permissionsFromApi);
+                setFetchProjectsAndPermissionsStatus(AsyncStatus.SUCCESS);
+            } catch (error) {
+                setFetchProjectsAndPermissionsStatus(AsyncStatus.ERROR);
+            }
+        })();
     }, [currentPlant]);
 
     return (
@@ -77,10 +73,7 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
             value={{
                 fetchProjectsAndPermissionsStatus,
                 permissions,
-                setCurrentPlant,
                 currentPlant,
-                setCurrentProject,
-                currentProject,
                 availableProjects,
             }}
         >
