@@ -1,27 +1,42 @@
 import React, { useState, useEffect, useContext, ReactElement } from 'react';
+import ErrorPage from '../components/error/ErrorPage';
+import SkeletonLoadingPage from '../components/loading/SkeletonLoadingPage';
 import PlantContext from '../contexts/PlantContext';
-import { H3 } from '../style/text';
+import { AsyncStatus } from '../contexts/UserContext';
 
 const withAccessControl = (
     WrappedComponent: () => ReactElement,
     requiredPermissions: string[] = []
 ) => (props: JSX.IntrinsicAttributes) => {
-    const [hasAccess, setHasAccess] = useState<boolean>(false);
     const { permissions } = useContext(PlantContext);
+    const [checkPermissionsStatus, setCheckPermissionsStatus] = useState(
+        AsyncStatus.LOADING
+    );
     useEffect(() => {
+        if (permissions.length < 1) return;
         if (
             requiredPermissions.every((item) => permissions.indexOf(item) >= 0)
         ) {
-            setHasAccess(true);
+            setCheckPermissionsStatus(AsyncStatus.SUCCESS);
         } else {
-            setHasAccess(false);
+            setCheckPermissionsStatus(AsyncStatus.ERROR);
         }
     }, [permissions]);
 
-    if (hasAccess) {
+    if (checkPermissionsStatus === AsyncStatus.LOADING) {
+        return <SkeletonLoadingPage text="Checking permissions . . ." />;
+    }
+
+    if (checkPermissionsStatus === AsyncStatus.SUCCESS) {
         return <WrappedComponent {...props} />;
     }
-    return <H3>You do not have access to this resource</H3>;
+
+    return (
+        <ErrorPage
+            errorTitle="No access"
+            errorDescription="You do not have permission to view this resource"
+        />
+    );
 };
 
 export default withAccessControl;
