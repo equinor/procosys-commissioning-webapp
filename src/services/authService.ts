@@ -6,7 +6,6 @@ const msalConfig = {
         clientId: 'fb57fb35-f927-4271-9976-342070cb9f54',
         authority:
             'https://login.microsoftonline.com/3aa4a235-b6e2-48d5-9195-7fcf05b459b0/',
-        redirectURI: 'http://localhost:3000',
     },
 };
 
@@ -47,14 +46,13 @@ export const getAccessToken = async () => {
 
 const isLoggedIn = async () => {
     const cachedAccount = MSAL.getAllAccounts()[0];
-    if (cachedAccount == null) return Promise.reject('hehe');
+    if (cachedAccount == null) return Promise.reject();
     try {
         // User is able to get accessToken, no login required
         await getAccessToken();
-        console.log('got access TOKEN');
         return Promise.resolve();
     } catch {
-        return Promise.reject('hehehe');
+        return Promise.reject();
     }
 };
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AsyncStatus } from '../contexts/UserContext';
 import { handleLogin } from '../services/authService';
 

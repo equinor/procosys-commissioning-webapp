@@ -27,6 +27,9 @@ const GlobalStyles = createGlobalStyle`
     p {
         ${tokens.typography.paragraph.body_short as CSSObject}
     }
+    a {
+        ${tokens.typography.paragraph.body_short_link as CSSObject}
+    }
 `;
 
 export const BREAKPOINT = {
@@ -36,5 +39,7 @@ export const BREAKPOINT = {
     lg: `@media (max-width: 1280px)`,
     xl: `@media (max-width: 1920px)`,
 };
+
+export const COLORS = tokens.colors;
 
 export default GlobalStyles;

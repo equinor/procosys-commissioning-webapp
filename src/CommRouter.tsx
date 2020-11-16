@@ -4,12 +4,10 @@ import { PlantContextProvider } from './contexts/PlantContext';
 import SearchPage from './components/pages/SearchPage';
 import SelectProject from './components/pages/SelectProject';
 import { ParamTypes } from './App';
-import SelectPlant from './components/pages/SelectPlant';
 
 const CommRouter = () => {
     const { path } = useRouteMatch();
     const { plant } = useParams<ParamTypes>();
-    console.log(path);
     return (
         <PlantContextProvider>
             <Switch key={plant}>

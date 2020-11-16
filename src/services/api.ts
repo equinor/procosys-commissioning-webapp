@@ -1,15 +1,14 @@
 import axios from 'axios';
-import { Project } from '../components/pages/SelectProject';
 import { Plant } from '../contexts/PlantContext';
-
 import PascalCaseConverter from '../utils/PascalCaseConverter';
 import * as auth from './authService';
 
 const baseURL = 'https://procosyswebapiqp.equinor.com/api/';
 
-type PlantResponse = {
-    Id: string;
-    Title: string;
+export type Project = {
+    description: string;
+    id: number;
+    title: string;
 };
 
 axios.interceptors.request.use(async (request) => {
