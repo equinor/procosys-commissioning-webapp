@@ -3,36 +3,35 @@ import { SelectPlantWrapper, SelectorButton } from '../SelectPlant';
 import { AsyncStatus } from '../../../contexts/UserContext';
 import ErrorPage from '../../error/ErrorPage';
 import PageHeader from '../../PageHeader';
-import React from 'react';
+import React, { useContext } from 'react';
 import SkeletonLoadingPage from '../../loading/SkeletonLoadingPage';
 import { useHistory } from 'react-router-dom';
-import useSelectProject from './useSelectProject';
 import EdsIcon from '../../EdsIcon';
+import PlantContext from '../../../contexts/PlantContext';
 
 const SelectProject = () => {
     const {
-        projects,
-        fetchProjectsStatus,
-        plantInPath,
+        availableProjects: projects,
         currentPlant,
-    } = useSelectProject();
+        fetchProjectsAndPermissionsStatus,
+    } = useContext(PlantContext);
     const history = useHistory();
 
-    const projectsToRender = projects.map((project) => (
+    const projectsToRender = projects?.map((project) => (
         <SelectorButton
             key={project.id}
-            to={`/${plantInPath}/${project.title}`}
+            to={`/${currentPlant?.slug}/${project.title}`}
         >
             <p>{project.title}</p>
             <EdsIcon name="chevron_right" title="chevron right" />
         </SelectorButton>
     ));
 
-    if (fetchProjectsStatus === AsyncStatus.LOADING) {
+    if (fetchProjectsAndPermissionsStatus === AsyncStatus.LOADING) {
         return <SkeletonLoadingPage text={`Loading projects . . .`} />;
     }
 
-    if (fetchProjectsStatus === AsyncStatus.ERROR) {
+    if (fetchProjectsAndPermissionsStatus === AsyncStatus.ERROR) {
         return (
             <ErrorPage
                 errorTitle="Error: Unable to load projects"
@@ -41,16 +40,7 @@ const SelectProject = () => {
         );
     }
 
-    if (fetchProjectsStatus === AsyncStatus.SUCCESS && !currentPlant) {
-        return (
-            <ErrorPage
-                errorTitle="Error: Could not find plant in URL"
-                errorDescription="Could not find the plant specified in the URL. Please check your permissions, or whether your URL is correct"
-            />
-        );
-    }
-
-    if (projectsToRender.length < 1) {
+    if (projectsToRender!.length < 1) {
         return (
             <SelectPlantWrapper>
                 <PageHeader text="No projects to show" />

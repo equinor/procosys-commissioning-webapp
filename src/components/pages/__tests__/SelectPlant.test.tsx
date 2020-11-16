@@ -5,7 +5,7 @@ import UserContext, { AsyncStatus } from '../../../contexts/UserContext';
 import SelectPlant from '../SelectPlant';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-const plants: Plant[] = [
+export const plants: Plant[] = [
     { id: 'One', title: 'Test plant 1', slug: 'this-is-a-slug' },
     { id: 'Two', title: 'Test plant 2', slug: 'yet-another-slug' },
 ];

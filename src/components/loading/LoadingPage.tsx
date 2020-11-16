@@ -1,5 +1,5 @@
 import React from 'react';
-import { LinearProgress, StarProgress } from '@equinor/eds-core-react';
+import { StarProgress } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 
 const LoadingPageWrapper = styled.main`

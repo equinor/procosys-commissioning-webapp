@@ -16,7 +16,7 @@ const Navbar = () => {
     return (
         <NavbarWrapper>
             <TopBar>
-                <img src={logo} />
+                <img src={logo} alt="Procosys Logo" />
                 <p> </p>
                 <Link to="/">
                     <Button variant="ghost">

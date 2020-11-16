@@ -11,11 +11,6 @@ export type Project = {
     title: string;
 };
 
-type PlantResponse = {
-    Id: string;
-    Title: string;
-};
-
 axios.interceptors.request.use(async (request) => {
     try {
         const token = await auth.getAccessToken();
