@@ -40,18 +40,6 @@ const SelectProject = () => {
         );
     }
 
-    if (
-        fetchProjectsAndPermissionsStatus === AsyncStatus.SUCCESS &&
-        !currentPlant
-    ) {
-        return (
-            <ErrorPage
-                errorTitle="Error: Could not find plant in URL"
-                errorDescription="Could not find the plant specified in the URL. Please check your permissions, or whether your URL is correct"
-            />
-        );
-    }
-
     if (projectsToRender!.length < 1) {
         return (
             <SelectPlantWrapper>
