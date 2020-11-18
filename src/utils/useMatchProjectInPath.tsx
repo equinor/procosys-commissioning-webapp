@@ -13,12 +13,16 @@ class MatchProjectError extends Error {
 }
 
 const useMatchProjectInPath = () => {
-    const { currentPlant, availableProjects } = useContext(PlantContext);
+    const {
+        currentPlant,
+        availableProjects,
+        currentProject,
+        setCurrentProject,
+    } = useContext(PlantContext);
     const { project: projectInPath } = useParams<ParamTypes>();
     const [matchProjectStatus, setMatchProjectStatus] = useState(
         AsyncStatus.LOADING
     );
-    const [currentProject, setCurrentProject] = useState<Project | undefined>();
     useEffect(() => {
         if (!currentPlant || !availableProjects) return;
         const matchedProject = availableProjects.find(

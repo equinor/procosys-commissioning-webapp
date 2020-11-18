@@ -23,6 +23,8 @@ type PlantContextProps = {
     permissions: string[];
     currentPlant: Plant | undefined;
     availableProjects: Project[] | null;
+    currentProject: Project | undefined;
+    setCurrentProject: (project: Project) => void;
 };
 
 const PlantContext = React.createContext({} as PlantContextProps);
@@ -37,6 +39,7 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
         Project[] | null
     >(null);
     const [permissions, setPermissions] = useState<string[]>([]);
+    const [currentProject, setCurrentProject] = useState<Project | undefined>();
     const [
         fetchProjectsAndPermissionsStatus,
         setFetchProjectsAndPermissionsStatus,
@@ -75,6 +78,8 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
                 permissions,
                 currentPlant,
                 availableProjects,
+                currentProject,
+                setCurrentProject,
             }}
         >
             {children}
