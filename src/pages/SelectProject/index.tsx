@@ -1,13 +1,13 @@
 import { Button } from '@equinor/eds-core-react';
-import { SelectPlantWrapper, SelectorButton } from '../SelectPlant';
-import { AsyncStatus } from '../../../contexts/UserContext';
-import ErrorPage from '../../error/ErrorPage';
-import PageHeader from '../../PageHeader';
 import React, { useContext } from 'react';
-import SkeletonLoadingPage from '../../loading/SkeletonLoadingPage';
 import { useHistory } from 'react-router-dom';
-import EdsIcon from '../../EdsIcon';
-import PlantContext from '../../../contexts/PlantContext';
+import EdsIcon from '../../components/EdsIcon';
+import ErrorPage from '../../components/error/ErrorPage';
+import SkeletonLoadingPage from '../../components/loading/SkeletonLoadingPage';
+import PageHeader from '../../components/PageHeader';
+import PlantContext from '../../contexts/PlantContext';
+import { AsyncStatus } from '../../contexts/UserContext';
+import { SelectPlantWrapper, SelectorButton } from '../SelectPlant';
 
 const SelectProject = () => {
     const {

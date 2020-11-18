@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { ParamTypes } from '../App';
-import PlantContext from '../contexts/PlantContext';
-import { AsyncStatus } from '../contexts/UserContext';
-import { Project } from '../services/api';
+import { ParamTypes } from '../../App';
+import PlantContext from '../../contexts/PlantContext';
+import { AsyncStatus } from '../../contexts/UserContext';
 
 class MatchProjectError extends Error {
     constructor(message: string) {
