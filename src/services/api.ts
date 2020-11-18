@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { CancelToken } from 'axios';
 import { Plant } from '../contexts/PlantContext';
 import objectToCamelCase from '../utils/objectToCamelCase';
 import * as auth from './authService';
@@ -9,6 +9,20 @@ export type Project = {
     description: string;
     id: number;
     title: string;
+};
+
+export type CommPackageFromSearch = {
+    id: number;
+    commPkgNo: string;
+    description: string;
+    commStatus: string;
+    commissioningHandoverStatus: string;
+    operationHandoverStatus: string;
+};
+
+export type CommPackageSearchResults = {
+    maxAvailable: number;
+    items: CommPackageFromSearch[];
 };
 
 axios.interceptors.request.use(async (request) => {
@@ -59,5 +73,23 @@ export const getPermissionsForPlant = async (plantId: string) => {
         return data as string[];
     } catch (error) {
         return Promise.reject(error);
+    }
+};
+
+export const searchForCommPackage = async (
+    query: string,
+    projectId: number,
+    plantId: string,
+    cancelToken?: CancelToken
+) => {
+    try {
+        const { data } = await axios.get(
+            baseURL +
+                `CommPkg/Search?plantId=${plantId}&startsWithCommPkgNo=${query}&includeClosedProjects=false&projectId=${projectId}&api-version=4.1`,
+            { cancelToken }
+        );
+        return objectToCamelCase(data) as CommPackageSearchResults;
+    } catch (err) {
+        return Promise.reject(err);
     }
 };
