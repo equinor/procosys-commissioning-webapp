@@ -4,7 +4,7 @@ import withAccessControl from '../../security/withAccessControl';
 import styled from 'styled-components';
 import { AsyncStatus } from '../../contexts/UserContext';
 import useSearchPageFacade, { SearchStatus } from './useSearchPageFacade';
-import SkeletonLoadingPage from '../../components/loading/SkeletonLoadingPage';
+import SkeletonLoadingPage from '../../components/loading/SkeletonLoader';
 import SearchResults from '../../components/SearchResults';
 import useMatchProjectInPath from './useMatchProjectInPath';
 
@@ -28,16 +28,23 @@ const SearchPage = () => {
         return <SkeletonLoadingPage text={`Loading project . . .`} />;
     }
 
-    return (
-        <SearchPageWrapper>
-            {searchStatus === SearchStatus.SUCCESS ? (
+    const searchHeaderToRender = () => {
+        if (searchStatus === SearchStatus.SUCCESS) {
+            return (
                 <h4>
                     Displaying {hits.items.length} out of {hits.maxAvailable}{' '}
                     packages
                 </h4>
-            ) : (
-                <h4>Find a Commissioning Package</h4>
-            )}
+            );
+        }
+        if (searchStatus === SearchStatus.LOADING) {
+            return <h4>Loading . . .</h4>;
+        }
+        return <h4>Find a Commissioning Package</h4>;
+    };
+    return (
+        <SearchPageWrapper>
+            {searchHeaderToRender()}
             <Search
                 placeholder={'For example: "1002-D01"'}
                 value={query}
