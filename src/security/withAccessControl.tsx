@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, ReactElement } from 'react';
 import ErrorPage from '../components/error/ErrorPage';
-import SkeletonLoadingPage from '../components/loading/SkeletonLoadingPage';
+import SkeletonLoader from '../components/loading/SkeletonLoader';
 import PlantContext from '../contexts/PlantContext';
 import { AsyncStatus } from '../contexts/UserContext';
 
@@ -24,7 +24,7 @@ const withAccessControl = (
     }, [permissions]);
 
     if (checkPermissionsStatus === AsyncStatus.LOADING) {
-        return <SkeletonLoadingPage text="Checking permissions . . ." />;
+        return <SkeletonLoader text="Checking permissions . . ." />;
     }
 
     if (checkPermissionsStatus === AsyncStatus.SUCCESS) {
