@@ -3,7 +3,7 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
 const SkeletonLoadingPageWrapper = styled.main`
-    & h4 {
+    & h3 {
         margin-top: 24px;
         text-align: center;
     }
@@ -50,13 +50,13 @@ const ContentSkeleton = styled(BaseSkeleton)`
 `;
 
 type SkeletonLoadingPageProps = {
-    text: string;
+    text?: string;
 };
 
 const SkeletonLoadingPage = ({ text }: SkeletonLoadingPageProps) => {
     return (
         <SkeletonLoadingPageWrapper>
-            <h4>{text}</h4>
+            {text && <h3>{text}</h3>}
             <ContentSkeleton />
             <ContentSkeleton />
             <ContentSkeleton />
