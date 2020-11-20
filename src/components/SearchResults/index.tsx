@@ -2,9 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { SearchStatus } from '../../pages/SearchPage/useSearchPageFacade';
 import { CommPackageFromSearch } from '../../services/api';
-import SkeletonLoadingPage from '../loading/SkeletonLoadingPage';
-import LeftGreen from '../../assets/img/status/left_green.png';
-import RightGreen from '../../assets/img/status/right_green.png';
+import SkeletonLoadingPage from '../loading/SkeletonLoader';
+import PackageStatusIcon from '../PackageStatusIcon';
 
 const SearchResult = styled.article`
     width: 100%;
@@ -42,7 +41,7 @@ type SearchResultsProps = {
 
 const SearchResults = ({ searchStatus, commPackages }: SearchResultsProps) => {
     if (searchStatus === SearchStatus.LOADING) {
-        return <SkeletonLoadingPage text="Searching . . ." />;
+        return <SkeletonLoadingPage />;
     }
     if (searchStatus === SearchStatus.SUCCESS && commPackages.length > 0) {
         return (
@@ -51,17 +50,9 @@ const SearchResults = ({ searchStatus, commPackages }: SearchResultsProps) => {
                     return (
                         <SearchResult key={commPackage.id}>
                             <StatusImageWrapper>
-                                <img
-                                    src={LeftGreen}
-                                    alt={
-                                        'Comm package status indicator, left side'
-                                    }
-                                />
-                                <img
-                                    src={RightGreen}
-                                    alt={
-                                        'Comm package status indicator, right side'
-                                    }
+                                <PackageStatusIcon
+                                    mcStatus={commPackage.mcStatus}
+                                    commStatus={commPackage.commStatus}
                                 />
                             </StatusImageWrapper>
 
@@ -87,7 +78,9 @@ const SearchResults = ({ searchStatus, commPackages }: SearchResultsProps) => {
     }
     return (
         <SearchResultsWrapper>
-            <h4>No packages found for this search</h4>
+            <p>
+                <i>No packages found for this search</i>
+            </p>
         </SearchResultsWrapper>
     );
 };
