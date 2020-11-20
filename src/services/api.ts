@@ -15,6 +15,7 @@ export type CommPackageFromSearch = {
     id: number;
     commPkgNo: string;
     description: string;
+    mcStatus: string;
     commStatus: string;
     commissioningHandoverStatus: string;
     operationHandoverStatus: string;
