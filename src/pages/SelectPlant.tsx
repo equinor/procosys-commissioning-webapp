@@ -1,31 +1,38 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import UserContext, { AsyncStatus } from '../../contexts/UserContext';
-import { COLORS } from '../../style/GlobalStyles';
-import PageHeader from '../PageHeader';
-import LoadingPage from '../loading/LoadingPage';
-import ErrorPage from '../error/ErrorPage';
-import EdsIcon from '../EdsIcon';
+import EdsIcon from '../components/EdsIcon';
+import ErrorPage from '../components/error/ErrorPage';
+import LoadingPage from '../components/loading/LoadingPage';
+import UserContext, { AsyncStatus } from '../contexts/UserContext';
+import { COLORS } from '../style/GlobalStyles';
+import PageHeader from '../components/PageHeader';
 
 export const SelectPlantWrapper = styled.main`
     display: flex;
     flex-direction: column;
+    & button {
+        border-radius: 0;
+    }
 `;
 
 export const SelectorButton = styled(Link)`
     display: flex;
     border-top: 2px solid ${COLORS.ui.background__light.hex};
-    height: 60px;
     justify-content: space-between;
     align-items: center;
     text-decoration: none;
-    padding: 0 4%;
+    padding: 20px 4%;
+    position: relative;
     & p {
-        margin: 0;
+        margin: 0 30px 0 0;
     }
     &:hover {
         background-color: ${COLORS.interactive.secondary__highlight.hex};
+    }
+    & svg {
+        position: absolute;
+        right: 10px;
     }
 `;
 

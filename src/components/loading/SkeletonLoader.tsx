@@ -44,19 +44,19 @@ const BaseSkeleton = styled(Card)`
 `;
 
 const ContentSkeleton = styled(BaseSkeleton)`
-    width: 85%;
+    width: 92%;
     height: 50px;
     margin: 15px auto 15px auto;
 `;
 
 type SkeletonLoadingPageProps = {
-    text: string;
+    text?: string;
 };
 
 const SkeletonLoadingPage = ({ text }: SkeletonLoadingPageProps) => {
     return (
         <SkeletonLoadingPageWrapper>
-            <h3>{text}</h3>
+            {text && <h3>{text}</h3>}
             <ContentSkeleton />
             <ContentSkeleton />
             <ContentSkeleton />

@@ -1,12 +1,12 @@
 import React from 'react';
 import Navbar from './components/navigation/Navbar';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import SelectPlant from './components/pages/SelectPlant';
 import { AsyncStatus, UserContextProvider } from './contexts/UserContext';
 import CommRouter from './CommRouter';
 import useAuthHandler from './utils/useAuthHandler';
 import LoadingPage from './components/loading/LoadingPage';
 import ErrorBoundary from './components/error/ErrorBoundary';
+import SelectPlant from './pages/SelectPlant';
 
 export type ParamTypes = {
     plant: string;

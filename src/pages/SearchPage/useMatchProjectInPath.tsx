@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { ParamTypes } from '../App';
-import PlantContext from '../contexts/PlantContext';
-import { AsyncStatus } from '../contexts/UserContext';
-import { Project } from '../services/api';
+import { ParamTypes } from '../../App';
+import PlantContext from '../../contexts/PlantContext';
+import { AsyncStatus } from '../../contexts/UserContext';
 
 class MatchProjectError extends Error {
     constructor(message: string) {
@@ -13,12 +12,16 @@ class MatchProjectError extends Error {
 }
 
 const useMatchProjectInPath = () => {
-    const { currentPlant, availableProjects } = useContext(PlantContext);
+    const {
+        currentPlant,
+        availableProjects,
+        currentProject,
+        setCurrentProject,
+    } = useContext(PlantContext);
     const { project: projectInPath } = useParams<ParamTypes>();
     const [matchProjectStatus, setMatchProjectStatus] = useState(
         AsyncStatus.LOADING
     );
-    const [currentProject, setCurrentProject] = useState<Project | undefined>();
     useEffect(() => {
         if (!currentPlant || !availableProjects) return;
         const matchedProject = availableProjects.find(

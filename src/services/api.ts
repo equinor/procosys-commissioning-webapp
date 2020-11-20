@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios, { CancelToken } from 'axios';
 import { Plant } from '../contexts/PlantContext';
-import PascalCaseConverter from '../utils/PascalCaseConverter';
+import objectToCamelCase from '../utils/objectToCamelCase';
 import * as auth from './authService';
 
 const baseURL = 'https://procosyswebapiqp.equinor.com/api/';
@@ -9,6 +9,21 @@ export type Project = {
     description: string;
     id: number;
     title: string;
+};
+
+export type CommPackageFromSearch = {
+    id: number;
+    commPkgNo: string;
+    description: string;
+    mcStatus: string;
+    commStatus: string;
+    commissioningHandoverStatus: string;
+    operationHandoverStatus: string;
+};
+
+export type CommPackageSearchResults = {
+    maxAvailable: number;
+    items: CommPackageFromSearch[];
 };
 
 axios.interceptors.request.use(async (request) => {
@@ -27,7 +42,7 @@ export const getPlants = async () => {
         const { data } = await axios.get(
             baseURL + 'Plants?includePlantsWithoutAccess=false&api-version=4.1'
         );
-        const camelCasedResponse = PascalCaseConverter.objectToCamelCase(data);
+        const camelCasedResponse = objectToCamelCase(data);
         const camelCasedResponseWithSlug = camelCasedResponse.map(
             (plant: Plant) => ({
                 ...plant,
@@ -45,7 +60,7 @@ export const getProjectsForPlant = async (plantId: string) => {
         const { data } = await axios.get(
             baseURL + `Projects?plantId=${plantId}&api-version=4.1`
         );
-        return PascalCaseConverter.objectToCamelCase(data) as Project[];
+        return objectToCamelCase(data) as Project[];
     } catch (error) {
         return Promise.reject(error);
     }
@@ -59,5 +74,23 @@ export const getPermissionsForPlant = async (plantId: string) => {
         return data as string[];
     } catch (error) {
         return Promise.reject(error);
+    }
+};
+
+export const searchForCommPackage = async (
+    query: string,
+    projectId: number,
+    plantId: string,
+    cancelToken?: CancelToken
+) => {
+    try {
+        const { data } = await axios.get(
+            baseURL +
+                `CommPkg/Search?plantId=${plantId}&startsWithCommPkgNo=${query}&includeClosedProjects=false&projectId=${projectId}&api-version=4.1`,
+            { cancelToken }
+        );
+        return objectToCamelCase(data) as CommPackageSearchResults;
+    } catch (err) {
+        return Promise.reject(err);
     }
 };

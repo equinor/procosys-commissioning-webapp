@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import React from 'react';
-import { Plant } from '../../../contexts/PlantContext';
-import UserContext, { AsyncStatus } from '../../../contexts/UserContext';
+import { Plant } from '../../contexts/PlantContext';
+import UserContext, { AsyncStatus } from '../../contexts/UserContext';
 import SelectPlant from '../SelectPlant';
 import { BrowserRouter as Router } from 'react-router-dom';
 
@@ -20,7 +20,6 @@ const withUserContext = (
             <UserContext.Provider
                 value={{
                     availablePlants: plants,
-                    userName: 'Tester',
                     fetchPlantsStatus: asyncStatus,
                 }}
             >

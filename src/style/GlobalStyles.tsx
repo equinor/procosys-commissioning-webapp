@@ -1,4 +1,4 @@
-import { CSSObject } from 'styled-components';
+import styled, { CSSObject } from 'styled-components';
 import { tokens } from '@equinor/eds-tokens';
 import { createGlobalStyle } from 'styled-components';
 
@@ -30,6 +30,12 @@ const GlobalStyles = createGlobalStyle`
     a {
         ${tokens.typography.paragraph.body_short_link as CSSObject}
     }
+`;
+
+const ParagraphOverlineImport = styled.p(tokens.typography.paragraph.overline);
+
+export const ParagraphOverline = styled(ParagraphOverlineImport)`
+    margin: 0;
 `;
 
 export const BREAKPOINT = {
