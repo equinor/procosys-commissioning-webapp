@@ -34,7 +34,6 @@ class ErrorBoundary extends React.Component<ErrorProps, ErrorState> {
 
     render(): React.ReactChild {
         if (this.state.hasError) {
-            console.log('NAVN:::: ', this.state.name);
             return (
                 <ErrorPage
                     errorTitle={this.state.name}

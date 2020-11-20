@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 import React from 'react';
-import { AsyncStatus } from '../../../contexts/UserContext';
+import { AsyncStatus } from '../../contexts/UserContext';
 import SelectProject from '../SelectProject';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { Project } from '../../../services/api';
-import PlantContext from '../../../contexts/PlantContext';
+import { Project } from '../../services/api';
+import PlantContext from '../../contexts/PlantContext';
 import { plants } from './SelectPlant.test';
 
 const projects: Project[] = [
@@ -21,6 +21,8 @@ const withUserContext = (
         <Router>
             <PlantContext.Provider
                 value={{
+                    currentProject: projects[1],
+                    setCurrentProject: () => {},
                     availableProjects: projects,
                     fetchProjectsAndPermissionsStatus: asyncStatus,
                     permissions: [],
