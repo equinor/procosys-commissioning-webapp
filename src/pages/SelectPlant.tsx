@@ -19,16 +19,20 @@ export const SelectPlantWrapper = styled.main`
 export const SelectorButton = styled(Link)`
     display: flex;
     border-top: 2px solid ${COLORS.ui.background__light.hex};
-    height: 60px;
     justify-content: space-between;
     align-items: center;
     text-decoration: none;
-    padding: 0 4%;
+    padding: 20px 4%;
+    position: relative;
     & p {
-        margin: 0;
+        margin: 0 30px 0 0;
     }
     &:hover {
         background-color: ${COLORS.interactive.secondary__highlight.hex};
+    }
+    & svg {
+        position: absolute;
+        right: 10px;
     }
 `;
 
