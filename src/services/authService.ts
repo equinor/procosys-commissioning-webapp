@@ -9,12 +9,16 @@ const msalConfig = {
     },
 };
 
-export const MSAL = new Msal.PublicClientApplication(msalConfig);
+const MSAL = new Msal.PublicClientApplication(msalConfig);
 
 const scopes = [
     'api://47641c40-0135-459b-8ab4-459e68dc8d08/web_api',
     'User.Read',
 ];
+
+export const logout = async () => {
+    return await MSAL.logout();
+};
 
 export const login = async () => {
     if (!getCurrentUser()) MSAL.loginRedirect({ scopes: scopes });
