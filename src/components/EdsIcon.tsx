@@ -3,11 +3,12 @@ import {
     chevron_right,
     arrow_drop_down,
     error_outlined,
+    close,
 } from '@equinor/eds-icons';
 import { Icon } from '@equinor/eds-core-react';
 import React from 'react';
 
-Icon.add({ menu, chevron_right, arrow_drop_down, error_outlined });
+Icon.add({ menu, chevron_right, arrow_drop_down, error_outlined, close });
 
 type IconProps = {
     name?: string;

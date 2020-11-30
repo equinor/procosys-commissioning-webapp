@@ -41,7 +41,7 @@ type SearchResultsProps = {
 
 const SearchResults = ({ searchStatus, commPackages }: SearchResultsProps) => {
     if (searchStatus === SearchStatus.LOADING) {
-        return <SkeletonLoadingPage />;
+        return <SkeletonLoadingPage fullWidth />;
     }
     if (searchStatus === SearchStatus.SUCCESS && commPackages.length > 0) {
         return (
