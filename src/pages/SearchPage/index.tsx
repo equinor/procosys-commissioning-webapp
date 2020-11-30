@@ -2,14 +2,11 @@ import React, { ChangeEvent } from 'react';
 import { Search } from '@equinor/eds-core-react';
 import withAccessControl from '../../security/withAccessControl';
 import styled from 'styled-components';
-import { AsyncStatus } from '../../contexts/UserContext';
 import useSearchPageFacade, { SearchStatus } from './useSearchPageFacade';
-import SkeletonLoadingPage from '../../components/loading/SkeletonLoader';
 import SearchResults from '../../components/SearchResults';
-import useMatchProjectInPath from './useMatchProjectInPath';
 
 const SearchPageWrapper = styled.main`
-    padding: 4%;
+    padding: 12px 4%;
     & h4 {
         text-align: center;
         margin-top: 20px;
@@ -21,13 +18,7 @@ const SearchPageWrapper = styled.main`
 `;
 
 const SearchPage = () => {
-    const { matchProjectStatus } = useMatchProjectInPath();
     const { hits, searchStatus, query, setQuery } = useSearchPageFacade();
-
-    if (matchProjectStatus === AsyncStatus.LOADING) {
-        return <SkeletonLoadingPage text={`Loading project . . .`} />;
-    }
-
     const searchHeaderToRender = () => {
         if (searchStatus === SearchStatus.SUCCESS) {
             return (
