@@ -1,16 +1,18 @@
 import React from 'react';
-import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { PlantContextProvider } from './contexts/PlantContext';
-import { ParamTypes } from './App';
 import SelectProject from './pages/SelectProject';
 import SearchPage from './pages/SearchPage';
+import SelectPlant from './pages/SelectPlant';
+import Navbar from './components/navigation/Navbar';
 
 const CommRouter = () => {
     const { path } = useRouteMatch();
-    const { plant } = useParams<ParamTypes>();
     return (
         <PlantContextProvider>
-            <Switch key={plant}>
+            <Navbar />
+            <Switch>
+                <Route exact path={'/'} component={SelectPlant} />
                 <Route exact path={'/:plant'} component={SelectProject} />
                 <Route path={`${path}/:project`} component={SearchPage} />
             </Switch>
