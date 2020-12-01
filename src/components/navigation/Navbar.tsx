@@ -4,7 +4,7 @@ import { TopBar, Button } from '@equinor/eds-core-react';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/img/procosys-logo.svg';
 import EdsIcon from '../EdsIcon';
-import { useSpring } from 'react-spring/web';
+import { useSpring } from 'react-spring';
 import SideMenu from './SideMenu';
 
 const NavbarWrapper = styled.nav`

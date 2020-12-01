@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { animated, AnimatedValue } from 'react-spring';
 import { Icon, Button } from '@equinor/eds-core-react';
 import * as auth from '../../services/authService';
-import useClickOutside from '../../utils/useClickOutside';
 import EdsIcon from '../EdsIcon';
 import { useHistory, useParams } from 'react-router-dom';
 import { CommParams } from '../../App';
