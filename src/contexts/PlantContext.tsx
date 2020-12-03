@@ -1,18 +1,12 @@
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { CommParams } from '../App';
+import LoadingPage from '../components/loading/LoadingPage';
 import * as api from '../services/api';
-import { Project } from '../services/api';
+import { Plant, Project } from '../services/apiTypes';
 import matchPlantInURL from '../utils/matchPlantInURL';
 import matchProjectInURL from '../utils/matchProjectInURL';
 import UserContext, { AsyncStatus } from './UserContext';
-
-export interface Plant {
-    id: string;
-    title: string;
-    slug: string;
-    projects?: Project[];
-}
 
 export type PlantContextProps = {
     fetchProjectsAndPermissionsStatus: AsyncStatus;
@@ -73,6 +67,12 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
         })();
     }, [currentPlant]);
 
+    const renderChildren = () => {
+        if (plantInURL && !currentPlant) return false;
+        if (projectInURL && !currentProject) return false;
+        return true;
+    };
+
     return (
         <PlantContext.Provider
             value={{
@@ -83,7 +83,11 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
                 currentProject,
             }}
         >
-            {children}
+            {renderChildren() ? (
+                children
+            ) : (
+                <LoadingPage loadingText={'Loading plant from URL'} />
+            )}
         </PlantContext.Provider>
     );
 };
