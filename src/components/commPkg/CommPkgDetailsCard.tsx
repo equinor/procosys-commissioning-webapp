@@ -11,7 +11,7 @@ const DetailsWrapper = styled.div`
     grid-row-gap: 15px;
     border-bottom: 1px solid lightgrey;
     padding: 15px;
-    background-color: #f9f9f9;
+    background-color: #effeff;
 `;
 
 const Description = styled.div`
