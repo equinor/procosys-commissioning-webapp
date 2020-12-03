@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useReducer, useState } from 'react';
 import * as api from '../../services/api';
 import axios, { CancelToken } from 'axios';
 import PlantContext from '../../contexts/PlantContext';
+import { CommPkgSearchResults } from '../../services/apiTypes';
 
 export enum SearchStatus {
     INACTIVE,
@@ -12,12 +13,12 @@ export enum SearchStatus {
 
 type SearchState = {
     searchStatus: SearchStatus;
-    hits: api.CommPackageSearchResults;
+    hits: CommPkgSearchResults;
 };
 
 type Action =
     | { type: 'FETCH_START' }
-    | { type: 'FETCH_SUCCESS'; payload: api.CommPackageSearchResults }
+    | { type: 'FETCH_SUCCESS'; payload: CommPkgSearchResults }
     | { type: 'FETCH_ERROR'; error: string }
     | { type: 'FETCH_INACTIVE' };
 

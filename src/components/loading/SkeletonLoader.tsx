@@ -43,28 +43,35 @@ const BaseSkeleton = styled(Card)`
     }
 `;
 
-const ContentSkeleton = styled(BaseSkeleton)`
-    width: 92%;
+const SkeletonRow = styled(BaseSkeleton)<{ fullWidth: boolean }>`
+    width: ${(props) => (props.fullWidth ? '100%' : '92%')};
     height: 50px;
     margin: 15px auto 15px auto;
 `;
 
 type SkeletonLoadingPageProps = {
     text?: string;
+    fullWidth?: boolean;
+    nrOfRows?: number;
 };
 
-const SkeletonLoadingPage = ({ text }: SkeletonLoadingPageProps) => {
+const SkeletonLoadingPage = ({
+    text,
+    fullWidth,
+    nrOfRows = 10,
+}: SkeletonLoadingPageProps) => {
+    const SkeletonRowsToRender: JSX.Element[] = [];
+
+    for (let i = 0; i < nrOfRows; i++) {
+        SkeletonRowsToRender.push(
+            <SkeletonRow key={i} fullWidth={fullWidth} />
+        );
+    }
+
     return (
         <SkeletonLoadingPageWrapper>
             {text && <h3>{text}</h3>}
-            <ContentSkeleton />
-            <ContentSkeleton />
-            <ContentSkeleton />
-            <ContentSkeleton />
-            <ContentSkeleton />
-            <ContentSkeleton />
-            <ContentSkeleton />
-            <ContentSkeleton />
+            {SkeletonRowsToRender}
         </SkeletonLoadingPageWrapper>
     );
 };

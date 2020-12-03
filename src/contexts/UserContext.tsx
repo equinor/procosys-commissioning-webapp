@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import * as API from '../services/api';
-import { Plant } from './PlantContext';
+import { Plant } from '../services/apiTypes';
 
 type UserContextProps = {
     availablePlants: Plant[];
