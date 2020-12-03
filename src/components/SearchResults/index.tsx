@@ -1,11 +1,14 @@
 import React from 'react';
+import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
+import { CommParams } from '../../App';
 import { SearchStatus } from '../../pages/SearchPage/useSearchPageFacade';
-import { CommPackageFromSearch } from '../../services/api';
+import { CommPkgPreview } from '../../services/apiTypes';
 import SkeletonLoadingPage from '../loading/SkeletonLoader';
 import PackageStatusIcon from '../PackageStatusIcon';
 
 const SearchResult = styled.article`
+    cursor: pointer;
     width: 100%;
     display: flex;
     align-items: center;
@@ -18,6 +21,9 @@ const SearchResult = styled.article`
         margin: 12px;
         white-space: nowrap;
         width: 120px;
+    }
+    &:hover {
+        opacity: 0.7;
     }
 `;
 
@@ -36,10 +42,12 @@ const StatusImageWrapper = styled.div`
 
 type SearchResultsProps = {
     searchStatus: SearchStatus;
-    commPackages: CommPackageFromSearch[];
+    commPackages: CommPkgPreview[];
 };
 
 const SearchResults = ({ searchStatus, commPackages }: SearchResultsProps) => {
+    const history = useHistory();
+    const { project } = useParams<CommParams>();
     if (searchStatus === SearchStatus.LOADING) {
         return <SkeletonLoadingPage fullWidth />;
     }
@@ -48,7 +56,14 @@ const SearchResults = ({ searchStatus, commPackages }: SearchResultsProps) => {
             <SearchResultsWrapper>
                 {commPackages.map((commPackage) => {
                     return (
-                        <SearchResult key={commPackage.id}>
+                        <SearchResult
+                            onClick={() =>
+                                history.push(
+                                    `${project}/${commPackage.commPkgNo}`
+                                )
+                            }
+                            key={commPackage.id}
+                        >
                             <StatusImageWrapper>
                                 <PackageStatusIcon
                                     mcStatus={commPackage.mcStatus}
