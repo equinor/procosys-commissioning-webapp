@@ -1,12 +1,9 @@
 import { render } from '@testing-library/react';
 import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { withPlantContext } from '../../../pages/__tests__/SelectProject.test';
 import Navbar from '../Navbar';
 
-jest.mock('../../EdsIcon', () => (name: string) => <div>{name}</div>);
-jest.mock('../../../assets/img/procosys-logo.svg', () => ({
-    logo: () => <img />,
-}));
 jest.mock('react-spring', () => ({
     useSpring: jest.fn().mockImplementation(() => [{ mockProp: 1 }, jest.fn()]),
     animated: {
@@ -17,13 +14,11 @@ jest.mock('react-spring', () => ({
 
 describe('<SideMenu/>', () => {
     it('returns a navbar container', () => {
-        const { container } = render(<Navbar />);
+        const { container } = render(
+            <Router>
+                <Navbar />
+            </Router>
+        );
         expect(container).toBeDefined();
-    });
-    it('Renders Procosys logo', () => {
-        const { getByText } = withPlantContext({
-            Component: <Navbar />,
-        });
-        expect(getByText('procosys-logo')).toBeInTheDocument();
     });
 });
