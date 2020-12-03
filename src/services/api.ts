@@ -1,30 +1,17 @@
 import axios, { CancelToken } from 'axios';
-import { Plant } from '../contexts/PlantContext';
 import objectToCamelCase from '../utils/objectToCamelCase';
+import {
+    ChecklistPreview,
+    CommPkg,
+    CommPkgSearchResults,
+    Plant,
+    Project,
+    PunchPreview,
+    TaskPreview,
+} from './apiTypes';
 import * as auth from './authService';
 
 const baseURL = 'https://procosyswebapiqp.equinor.com/api/';
-
-export type Project = {
-    description: string;
-    id: number;
-    title: string;
-};
-
-export type CommPackageFromSearch = {
-    id: number;
-    commPkgNo: string;
-    description: string;
-    mcStatus: string;
-    commStatus: string;
-    commissioningHandoverStatus: string;
-    operationHandoverStatus: string;
-};
-
-export type CommPackageSearchResults = {
-    maxAvailable: number;
-    items: CommPackageFromSearch[];
-};
 
 axios.interceptors.request.use(async (request) => {
     try {
@@ -89,8 +76,61 @@ export const searchForCommPackage = async (
                 `CommPkg/Search?plantId=${plantId}&startsWithCommPkgNo=${query}&includeClosedProjects=false&projectId=${projectId}&api-version=4.1`,
             { cancelToken }
         );
-        return objectToCamelCase(data) as CommPackageSearchResults;
-    } catch (err) {
-        return Promise.reject(err);
+
+        return objectToCamelCase(data) as CommPkgSearchResults;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+};
+
+export const getCommPackageDetails = async (
+    plantId: string,
+    commPkgNumber: string,
+    projectName: string
+) => {
+    try {
+        const { data } = await axios.get(
+            baseURL +
+                `CommPkg/ByCommPkgNos?plantId=${plantId}&commPkgNos=${commPkgNumber}&projectName=${projectName}&api-version=4.1
+`
+        );
+        return objectToCamelCase(data[0]) as CommPkg;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+};
+
+export const getScope = async (plantId: string, commPkgId: number) => {
+    try {
+        const { data } = await axios.get(
+            baseURL +
+                `CommPkg/CheckLists?plantId=${plantId}&commPkgId=${commPkgId}&api-version=4.1`
+        );
+        return objectToCamelCase(data) as ChecklistPreview[];
+    } catch (error) {
+        return Promise.reject(error);
+    }
+};
+
+export const getTasks = async (plantId: string, commPkgId: number) => {
+    try {
+        const { data } = await axios.get(
+            baseURL +
+                `CommPkg/Tasks?plantId=${plantId}&commPkgId=${commPkgId}&api-version=4.1`
+        );
+        return objectToCamelCase(data) as TaskPreview[];
+    } catch (error) {
+        return Promise.reject(error);
+    }
+};
+export const getPunchList = async (plantId: string, commPkgId: number) => {
+    try {
+        const { data } = await axios.get(
+            baseURL +
+                `CommPkg/PunchList?plantId=${plantId}&commPkgId=${commPkgId}&api-version=4.1`
+        );
+        return objectToCamelCase(data) as PunchPreview[];
+    } catch (error) {
+        return Promise.reject(error);
     }
 };

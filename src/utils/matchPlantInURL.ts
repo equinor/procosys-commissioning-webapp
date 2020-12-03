@@ -1,4 +1,4 @@
-import { Plant } from '../contexts/PlantContext';
+import { Plant } from '../services/apiTypes';
 
 class URLError extends Error {
     constructor(message: string) {
@@ -7,7 +7,7 @@ class URLError extends Error {
     }
 }
 
-const matchPlantFromURL = (availablePlants: Plant[], plantFromURL: string) => {
+const matchPlantInURL = (availablePlants: Plant[], plantFromURL: string) => {
     if (availablePlants.length < 1) return;
     const matchedPlant = availablePlants.find(
         (plant) => plant.slug === plantFromURL
@@ -20,4 +20,4 @@ const matchPlantFromURL = (availablePlants: Plant[], plantFromURL: string) => {
     return matchedPlant;
 };
 
-export default matchPlantFromURL;
+export default matchPlantInURL;
