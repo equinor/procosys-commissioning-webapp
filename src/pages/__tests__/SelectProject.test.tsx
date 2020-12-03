@@ -3,9 +3,9 @@ import React from 'react';
 import { AsyncStatus } from '../../contexts/UserContext';
 import SelectProject from '../SelectProject';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { Project } from '../../services/api';
-import PlantContext, { Plant } from '../../contexts/PlantContext';
+import PlantContext from '../../contexts/PlantContext';
 import { plants } from './SelectPlant.test';
+import { Plant, Project } from '../../services/apiTypes';
 
 export const projects: Project[] = [
     { id: 1, title: 'Test project 1', description: 'this-is-a-description' },

@@ -3,11 +3,18 @@ import LoadingPage from '../components/loading/LoadingPage';
 import * as api from '../services/api';
 import { CommParams } from '../App';
 import { useParams } from 'react-router-dom';
-import { ChecklistPreview, CommPkg } from '../services/apiTypes';
+import {
+    ChecklistPreview,
+    CommPkg,
+    PunchPreview,
+    TaskPreview,
+} from '../services/apiTypes';
 
 export type PlantContextProps = {
     details: CommPkg;
     scope: ChecklistPreview[];
+    tasks: TaskPreview[];
+    punchList: PunchPreview[];
 };
 
 const CommPackageContext = React.createContext({} as PlantContextProps);
@@ -17,6 +24,9 @@ export const CommPackageContextProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
     const [details, setDetails] = useState<CommPkg>();
     const [scope, setScope] = useState<ChecklistPreview[]>();
+    const [tasks, setTasks] = useState<TaskPreview[]>();
+    const [punchList, setPunchList] = useState<PunchPreview[]>();
+
     const {
         plant: plantInURL,
         project: projectInURL,
@@ -37,15 +47,22 @@ export const CommPackageContextProvider: React.FC<{ children: ReactNode }> = ({
     useEffect(() => {
         if (!details) return;
         (async () => {
-            const scopeFromAPI = await api.getScope(
-                `PCS$${plantInURL}`,
-                details.id
-            );
+            const [
+                scopeFromAPI,
+                tasksFromAPI,
+                punchListFromAPI,
+            ] = await Promise.all([
+                api.getScope(`PCS$${plantInURL}`, details.id),
+                api.getTasks(`PCS$${plantInURL}`, details.id),
+                api.getPunchList(`PCS$${plantInURL}`, details.id),
+            ]);
             setScope(scopeFromAPI);
+            setTasks(tasksFromAPI);
+            setPunchList(punchListFromAPI);
         })();
     }, [plantInURL, details]);
 
-    if (!details || !scope)
+    if (!details || !scope || !tasks || !punchList)
         return (
             <LoadingPage loadingText={'Loading commissioning package . . .'} />
         );
@@ -55,6 +72,8 @@ export const CommPackageContextProvider: React.FC<{ children: ReactNode }> = ({
             value={{
                 details,
                 scope,
+                punchList,
+                tasks,
             }}
         >
             {children}

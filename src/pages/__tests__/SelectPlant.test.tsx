@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react';
 import React from 'react';
-import { Plant } from '../../contexts/PlantContext';
 import UserContext, { AsyncStatus } from '../../contexts/UserContext';
 import SelectPlant from '../SelectPlant';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { Plant } from '../../services/apiTypes';
 
 export const plants: Plant[] = [
     { id: 'One', title: 'Test plant 1', slug: 'this-is-a-slug' },

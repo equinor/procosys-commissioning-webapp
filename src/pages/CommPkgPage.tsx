@@ -2,24 +2,14 @@ import React, { useContext } from 'react';
 import CommPkgDetailsCard from '../components/commPkg/CommPkgDetailsCard';
 import CommPackageContext from '../contexts/CommPackageContext';
 import CommPkgFooter from '../components/commPkg/CommPkgFooter';
-import {
-    Route,
-    Switch,
-    useHistory,
-    useParams,
-    useRouteMatch,
-} from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import Scope from '../components/commPkg/Scope';
 import Tasks from '../components/commPkg/Tasks';
 import PunchList from '../components/commPkg/PunchList';
-import { CommParams } from '../App';
 
 const CommPkgPage = () => {
-    const { details } = useContext(CommPackageContext);
-    const { params } = useRouteMatch();
-    const { plant, project, commPkg } = useParams<CommParams>();
-    const { location } = useHistory();
-    console.log('Location: ', location);
+    const { details, scope, punchList, tasks } = useContext(CommPackageContext);
+    const { path } = useRouteMatch();
     return (
         <>
             <CommPkgDetailsCard
@@ -29,26 +19,19 @@ const CommPkgPage = () => {
                 pkgNumber={details.commPkgNo}
             />
             <Switch>
+                <Redirect exact path={path} to={`${path}/scope`} />
+                <Route exact path={`${path}/scope`} component={Scope} />
+                <Route exact path={`${path}/tasks`} component={Tasks} />
                 <Route
                     exact
-                    path={`${plant}/${project}/${commPkg}/scope`}
-                    component={Scope}
-                />
-                <Route
-                    exact
-                    path={`${plant}/${project}/${commPkg}/tasks`}
-                    component={Tasks}
-                />
-                <Route
-                    exact
-                    path={`${plant}/${project}/${commPkg}/punch-list`}
+                    path={`${path}/punch-list`}
                     component={PunchList}
                 />
             </Switch>
             <CommPkgFooter
-                numberOfChecklists={4212}
-                numberOfPunches={10}
-                numberOfTasks={100}
+                numberOfChecklists={scope.length}
+                numberOfPunches={tasks.length}
+                numberOfTasks={punchList.length}
             />
         </>
     );

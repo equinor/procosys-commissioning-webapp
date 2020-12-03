@@ -10,6 +10,8 @@ import {
     list,
     paste,
     view_list,
+    remove,
+    check_circle_outlined,
 } from '@equinor/eds-icons';
 import { Icon } from '@equinor/eds-core-react';
 import React from 'react';
@@ -26,6 +28,8 @@ Icon.add({
     list,
     paste,
     view_list,
+    remove,
+    check_circle_outlined,
 });
 
 type IconProps = {
