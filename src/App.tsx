@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { AsyncStatus, UserContextProvider } from './contexts/UserContext';
-import CommRouter from './CommRouter';
+import GeneralRouter from './GeneralRouter';
 import useAuthHandler from './utils/useAuthHandler';
 import LoadingPage from './components/loading/LoadingPage';
 import ErrorBoundary from './components/error/ErrorBoundary';
@@ -9,6 +9,7 @@ import ErrorBoundary from './components/error/ErrorBoundary';
 export type CommParams = {
     plant: string;
     project: string;
+    commPkg: string;
 };
 
 function App() {
@@ -24,7 +25,7 @@ function App() {
                     <Switch>
                         <Route
                             path="/:plant?/:project?"
-                            component={CommRouter}
+                            component={GeneralRouter}
                         />
                         <Route render={() => <h1>404</h1>} />
                     </Switch>

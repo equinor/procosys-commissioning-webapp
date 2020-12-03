@@ -5,16 +5,20 @@ import SelectProject from './pages/SelectProject';
 import SearchPage from './pages/SearchPage';
 import SelectPlant from './pages/SelectPlant';
 import Navbar from './components/navigation/Navbar';
+import CommPkgRouter from './CommPkgRouter';
 
 const CommRouter = () => {
-    const { path } = useRouteMatch();
     return (
         <PlantContextProvider>
             <Navbar />
             <Switch>
                 <Route exact path={'/'} component={SelectPlant} />
                 <Route exact path={'/:plant'} component={SelectProject} />
-                <Route path={`${path}/:project`} component={SearchPage} />
+                <Route exact path={`/:plant/:project`} component={SearchPage} />
+                <Route
+                    path={`/:plant/:project/:commPkg`}
+                    component={CommPkgRouter}
+                />
             </Switch>
         </PlantContextProvider>
     );
