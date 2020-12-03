@@ -2,25 +2,28 @@ import React from 'react';
 import styled from 'styled-components';
 import EdsIcon from '../EdsIcon';
 import { Button } from '@equinor/eds-core-react';
-import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
-import { CommParams } from '../../App';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 const CommPkgFooterWrapper = styled.div`
     width: 100%;
     position: fixed;
     bottom: 0;
     left: 0;
+    background-color: white;
     border-top: 1px solid lightgrey;
     display: flex;
-    & button {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 33%;
-        height: 70px;
-        & p {
-            margin: 0;
-        }
+`;
+
+const FooterButton = styled(Button)<{ active: boolean }>`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    height: 70px;
+    background-color: ${(props) =>
+        props.active ? 'rgba(222, 237, 238, 1)' : 'initial'};
+    & p {
+        margin: 0;
     }
 `;
 
@@ -55,13 +58,13 @@ const CommPkgFooter = ({
     numberOfPunches,
 }: CommPkgFooterProps) => {
     const history = useHistory();
-    const { plant, project, commPkg } = useParams<CommParams>();
-    const { location } = useHistory();
+    const { url } = useRouteMatch();
     return (
         <CommPkgFooterWrapper>
-            <Button
+            <FooterButton
+                active={history.location.pathname.includes('/scope')}
                 variant="ghost"
-                onClick={() => history.push(`${location.pathname}/scope`)}
+                onClick={() => history.push(`${url}/scope`)}
             >
                 <EdsIcon name="list" />
                 <ButtonText>
@@ -72,10 +75,11 @@ const CommPkgFooter = ({
                         </ItemCount>
                     )}
                 </ButtonText>
-            </Button>
-            <Button
+            </FooterButton>
+            <FooterButton
+                active={history.location.pathname.includes('/tasks')}
                 variant="ghost"
-                onClick={() => history.push(`${location.pathname}/tasks`)}
+                onClick={() => history.push(`${url}/tasks`)}
             >
                 <EdsIcon name="paste" />
                 <ButtonText>
@@ -86,8 +90,12 @@ const CommPkgFooter = ({
                         </ItemCount>
                     )}
                 </ButtonText>
-            </Button>
-            <Button variant="ghost" onClick={() => history.push(`/punch-list`)}>
+            </FooterButton>
+            <FooterButton
+                active={history.location.pathname.includes('/punch-list')}
+                variant="ghost"
+                onClick={() => history.push(`${url}/punch-list`)}
+            >
                 <EdsIcon name="view_list" />
                 <ButtonText>
                     <p>Punches</p>
@@ -97,7 +105,7 @@ const CommPkgFooter = ({
                         </ItemCount>
                     )}
                 </ButtonText>
-            </Button>
+            </FooterButton>
         </CommPkgFooterWrapper>
     );
 };
