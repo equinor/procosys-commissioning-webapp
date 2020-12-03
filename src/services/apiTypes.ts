@@ -50,3 +50,25 @@ export type ChecklistPreview = {
     isRestrictedForUser: boolean;
     hasElectronicForm: boolean;
 };
+
+export type PunchPreview = {
+    id: number;
+    status: string;
+    description: string;
+    systemModule: string;
+    tagDescription: string;
+    tagId: number;
+    tagNo: string;
+    isRestrictedForUser: boolean;
+    cleared: boolean;
+    rejected: boolean;
+    statusControlledBySwcr: boolean;
+};
+
+export type TaskPreview = {
+    id: number;
+    number: string;
+    title: string;
+    chapter: string;
+    isSigned: boolean;
+};

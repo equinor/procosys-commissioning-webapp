@@ -3,10 +3,11 @@ import objectToCamelCase from '../utils/objectToCamelCase';
 import {
     ChecklistPreview,
     CommPkg,
-    CommPkgPreview,
     CommPkgSearchResults,
     Plant,
     Project,
+    PunchPreview,
+    TaskPreview,
 } from './apiTypes';
 import * as auth from './authService';
 
@@ -106,6 +107,29 @@ export const getScope = async (plantId: string, commPkgId: number) => {
                 `CommPkg/CheckLists?plantId=${plantId}&commPkgId=${commPkgId}&api-version=4.1`
         );
         return objectToCamelCase(data) as ChecklistPreview[];
+    } catch (error) {
+        return Promise.reject(error);
+    }
+};
+
+export const getTasks = async (plantId: string, commPkgId: number) => {
+    try {
+        const { data } = await axios.get(
+            baseURL +
+                `CommPkg/Tasks?plantId=${plantId}&commPkgId=${commPkgId}&api-version=4.1`
+        );
+        return objectToCamelCase(data) as TaskPreview[];
+    } catch (error) {
+        return Promise.reject(error);
+    }
+};
+export const getPunchList = async (plantId: string, commPkgId: number) => {
+    try {
+        const { data } = await axios.get(
+            baseURL +
+                `CommPkg/PunchList?plantId=${plantId}&commPkgId=${commPkgId}&api-version=4.1`
+        );
+        return objectToCamelCase(data) as PunchPreview[];
     } catch (error) {
         return Promise.reject(error);
     }
