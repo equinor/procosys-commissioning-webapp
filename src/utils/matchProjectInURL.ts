@@ -1,4 +1,4 @@
-import { Project } from '../services/api';
+import { Project } from '../services/apiTypes';
 
 class URLError extends Error {
     constructor(message: string) {
@@ -11,8 +11,6 @@ const matchProjectInURL = (
     availableProjects: Project[],
     projectInURL: string
 ) => {
-    console.log('IN URL:', projectInURL);
-    console.log('AVAILABLEE PROJECTS:', availableProjects);
     const matchedProject = availableProjects.find(
         (project) => project.title === projectInURL
     );

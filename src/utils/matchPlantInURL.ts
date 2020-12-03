@@ -1,4 +1,4 @@
-import { Plant } from '../contexts/PlantContext';
+import { Plant } from '../services/apiTypes';
 
 class URLError extends Error {
     constructor(message: string) {
