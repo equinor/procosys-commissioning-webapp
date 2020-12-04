@@ -8,20 +8,30 @@ const PageHeaderWrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    & h3 {
-        margin: 24px 0 0 0;
+    & h2 {
+        margin: 0;
     }
     & svg {
         margin: -5px 0 18px 0;
     }
+    & h6 {
+        margin: 24px 0 0 0;
+        color: #6f6f6f;
+    }
 `;
 type PageHeaderProps = {
     text: string;
+    plantName?: string;
 };
-const PageHeader = ({ text }: PageHeaderProps) => {
+const PageHeader = ({ text, plantName }: PageHeaderProps) => {
     return (
         <PageHeaderWrapper>
-            <h3>{text}</h3>
+            {plantName && (
+                <h6>
+                    <i>plantName</i>
+                </h6>
+            )}
+            <h2>{text}</h2>
             <EdsIcon name="arrow_drop_down" title="Caret down" />
         </PageHeaderWrapper>
     );

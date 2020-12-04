@@ -49,7 +49,7 @@ const SelectProject = () => {
             <SelectPlantWrapper>
                 <PageHeader text="No projects to show" />
                 <Button onClick={() => history.push('/')}>
-                    Select a different plant
+                    <p>Select a different plant</p>
                 </Button>
             </SelectPlantWrapper>
         );
@@ -57,7 +57,10 @@ const SelectProject = () => {
 
     return (
         <SelectPlantWrapper>
-            <PageHeader text={'Select project'} />
+            <PageHeader
+                text={'Select project'}
+                plantName={currentPlant?.title}
+            />
             {projectsToRender}
         </SelectPlantWrapper>
     );
