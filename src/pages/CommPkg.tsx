@@ -1,18 +1,18 @@
 import React, { useContext } from 'react';
-import CommPkgDetailsCard from '../components/commPkg/CommPkgDetailsCard';
-import CommPackageContext from '../contexts/CommPackageContext';
-import CommPkgFooter from '../components/commPkg/CommPkgFooter';
+import DetailsCard from '../components/commPkg/DetailsCard';
+import CommPkgContext from '../contexts/CommPkgContext';
+import NavigationFooter from '../components/commPkg/NavigationFooter';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import Scope from '../components/commPkg/Scope';
 import Tasks from '../components/commPkg/Tasks';
 import PunchList from '../components/commPkg/PunchList';
 
-const CommPkgPage = () => {
-    const { details, scope, punchList, tasks } = useContext(CommPackageContext);
+const CommPkg = () => {
+    const { details, scope, punchList, tasks } = useContext(CommPkgContext);
     const { path } = useRouteMatch();
     return (
         <>
-            <CommPkgDetailsCard
+            <DetailsCard
                 MCStatus={details.mcStatus}
                 commStatus={details.commStatus}
                 description={details.description}
@@ -28,7 +28,7 @@ const CommPkgPage = () => {
                     component={PunchList}
                 />
             </Switch>
-            <CommPkgFooter
+            <NavigationFooter
                 numberOfChecklists={scope.length}
                 numberOfPunches={tasks.length}
                 numberOfTasks={punchList.length}
@@ -37,4 +37,4 @@ const CommPkgPage = () => {
     );
 };
 
-export default CommPkgPage;
+export default CommPkg;

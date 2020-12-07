@@ -1,12 +1,12 @@
 import React from 'react';
-import { CommPackageContextProvider } from './contexts/CommPackageContext';
-import CommPkgPage from './pages/CommPkgPage';
+import { CommPkgContextProvider } from './contexts/CommPkgContext';
+import CommPkg from './pages/CommPkg';
 
 const CommPkgRouter = () => {
     return (
-        <CommPackageContextProvider>
-            <CommPkgPage />
-        </CommPackageContextProvider>
+        <CommPkgContextProvider>
+            <CommPkg />
+        </CommPkgContextProvider>
     );
 };
 
