@@ -1,7 +1,6 @@
 import { render } from '@testing-library/react';
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { withPlantContext } from '../../../pages/__tests__/SelectProject.test';
 import Navbar from '../Navbar';
 
 jest.mock('react-spring', () => ({
