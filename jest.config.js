@@ -7,10 +7,10 @@ module.exports = {
     ],
     transform: {
         '^.+\\.(js|ts|tsx)$': 'ts-jest',
-        '^.+\\.svg$': '<rootDir>/svgTransform.js',
+        '^.+\\.(svg|png)$': '<rootDir>/src/test/imgTransform.js',
     },
     globals: {
         crypto: require('crypto'),
     },
-    setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
+    setupFilesAfterEnv: ['<rootDir>/src/test/setupTests.ts'],
 };
