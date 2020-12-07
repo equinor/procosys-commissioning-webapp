@@ -91,10 +91,24 @@ const SearchResults = ({ searchStatus, commPackages }: SearchResultsProps) => {
             </SearchResultsWrapper>
         );
     }
+
+    if (searchStatus === SearchStatus.ERROR) {
+        return (
+            <SearchResultsWrapper>
+                <p>
+                    <i>
+                        An error occurred, please refresh this page and try
+                        again.
+                    </i>
+                </p>
+            </SearchResultsWrapper>
+        );
+    }
+
     return (
         <SearchResultsWrapper>
             <p>
-                <i>No packages found for this search</i>
+                <i>No packages found for this search.</i>
             </p>
         </SearchResultsWrapper>
     );
