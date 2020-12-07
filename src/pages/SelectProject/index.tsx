@@ -38,8 +38,8 @@ const SelectProject = () => {
     if (fetchProjectsAndPermissionsStatus === AsyncStatus.ERROR) {
         return (
             <ErrorPage
-                errorTitle="Error: Unable to load projects"
-                errorDescription="There might be a problem with your connection or your permissions"
+                title="Error: Unable to load projects"
+                description="There might be a problem with your connection or your permissions"
             />
         );
     }

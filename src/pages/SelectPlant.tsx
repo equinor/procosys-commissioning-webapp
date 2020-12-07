@@ -53,16 +53,16 @@ const SelectPlant = () => {
     if (fetchPlantsStatus === AsyncStatus.ERROR)
         return (
             <ErrorPage
-                errorTitle="Error: Could not load plants"
-                errorDescription="We were unable to get a list of available plants. Please check your connection, sign in with a different user or refresh this page."
+                title="Error: Could not load plants"
+                description="We were unable to get a list of available plants. Please check your connection, sign in with a different user or refresh this page."
             ></ErrorPage>
         );
 
     if (plantsToRender.length < 1) {
         return (
             <ErrorPage
-                errorTitle="No plants to show"
-                errorDescription="We were able to connect to the server, but there are no plants to show. Make sure you're logged in correctly, and that you have the necessary permissions"
+                title="No plants to show"
+                description="We were able to connect to the server, but there are no plants to show. Make sure you're logged in correctly, and that you have the necessary permissions"
             ></ErrorPage>
         );
     }
