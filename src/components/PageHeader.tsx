@@ -28,7 +28,7 @@ const PageHeader = ({ text, plantName }: PageHeaderProps) => {
         <PageHeaderWrapper>
             {plantName && (
                 <h6>
-                    <i>plantName</i>
+                    <i>{plantName}</i>
                 </h6>
             )}
             <h2>{text}</h2>
