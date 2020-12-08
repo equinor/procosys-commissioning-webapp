@@ -45,7 +45,7 @@ type IconProps = {
 const EdsIcon = ({
     name,
     title,
-    color,
+    color = 'black',
     rotation,
     size,
     alt = name,
