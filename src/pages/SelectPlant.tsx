@@ -69,7 +69,7 @@ const SelectPlant = () => {
 
     return (
         <SelectPlantWrapper>
-            <PageHeader text={'Select plant'} />
+            <PageHeader title={'Select plant'} />
             {plantsToRender}
         </SelectPlantWrapper>
     );

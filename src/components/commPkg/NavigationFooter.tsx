@@ -10,7 +10,7 @@ const CommPkgFooterWrapper = styled.div`
     bottom: 0;
     left: 0;
     background-color: white;
-    border-top: 1px solid lightgrey;
+    border-top: 2px solid #f5f5f5;
     display: flex;
 `;
 

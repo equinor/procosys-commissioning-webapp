@@ -30,8 +30,8 @@ const CommPkg = () => {
             </Switch>
             <NavigationFooter
                 numberOfChecklists={scope.length}
-                numberOfPunches={tasks.length}
-                numberOfTasks={punchList.length}
+                numberOfPunches={punchList.length}
+                numberOfTasks={tasks.length}
             />
         </>
     );

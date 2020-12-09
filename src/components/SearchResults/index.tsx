@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { CommParams } from '../../App';
 import { SearchStatus } from '../../pages/SearchPage/useSearchPageFacade';

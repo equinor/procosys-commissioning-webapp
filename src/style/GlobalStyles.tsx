@@ -30,6 +30,9 @@ const GlobalStyles = createGlobalStyle`
     a {
         ${tokens.typography.paragraph.body_short_link as CSSObject}
     }
+    label {
+        ${tokens.typography.input.label as CSSObject}
+    }
 `;
 
 const ParagraphOverlineImport = styled.p(tokens.typography.paragraph.overline);

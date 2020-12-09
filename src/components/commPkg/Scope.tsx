@@ -7,8 +7,8 @@ import * as getStatusIcon from '../../utils/getStatusIcon';
 import { ParagraphOverline } from '../../style/GlobalStyles';
 import EdsIcon from '../EdsIcon';
 
-const ScopeWrapper = styled.div`
-    padding-bottom: 100px;
+export const CommPkgListWrapper = styled.div`
+    padding-bottom: 70px;
     & h3 {
         text-align: center;
         margin-top: 16px;
@@ -23,15 +23,16 @@ export const PreviewButton = styled(Link)`
     text-decoration: none;
     justify-content: space-between;
     & img {
-        height: 15px;
+        max-width: 30px;
         object-fit: contain;
         flex: 0.25;
     }
-    & div {
+    & > div {
         margin-left: 16px;
         flex: 3;
         & p {
             margin: 0;
+            text-overflow: ellipsis;
         }
     }
     & svg {
@@ -48,9 +49,9 @@ const Scope = () => {
     const { scope } = useContext(CommPkgContext);
     const scopeToRender = scope.map((checklist) => (
         <PreviewButton key={checklist.id} to={``}>
-            {getStatusIcon.scopeStatus(checklist.status)}
+            {getStatusIcon.completionStatus(checklist.status)}
             <div>
-                <ParagraphOverline>{checklist.tagNo}</ParagraphOverline>
+                <label>{checklist.tagNo}</label>
                 <p>{checklist.tagDescription}</p>
             </div>
             <FormulaTypeText>{checklist.formularType}</FormulaTypeText>
@@ -59,11 +60,11 @@ const Scope = () => {
     ));
     if (scope.length < 1)
         return (
-            <ScopeWrapper>
+            <CommPkgListWrapper>
                 <h3>The scope is empty</h3>
-            </ScopeWrapper>
+            </CommPkgListWrapper>
         );
-    return <ScopeWrapper>{scopeToRender}</ScopeWrapper>;
+    return <CommPkgListWrapper>{scopeToRender}</CommPkgListWrapper>;
 };
 
 export default Scope;

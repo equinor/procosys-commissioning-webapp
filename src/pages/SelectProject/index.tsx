@@ -7,7 +7,6 @@ import SkeletonLoadingPage from '../../components/loading/SkeletonLoader';
 import PageHeader from '../../components/PageHeader';
 import PlantContext from '../../contexts/PlantContext';
 import { AsyncStatus } from '../../contexts/UserContext';
-import { ParagraphOverline } from '../../style/GlobalStyles';
 import { SelectPlantWrapper, SelectorButton } from '../SelectPlant';
 
 const SelectProject = () => {
@@ -24,7 +23,7 @@ const SelectProject = () => {
             to={`/${currentPlant?.slug}/${project.title}`}
         >
             <div>
-                <ParagraphOverline>{project.title}</ParagraphOverline>
+                <label>{project.title}</label>
                 <p>{project.description}</p>
             </div>
             <EdsIcon name="chevron_right" title="chevron right" />
@@ -47,7 +46,7 @@ const SelectProject = () => {
     if (projectsToRender!.length < 1) {
         return (
             <SelectPlantWrapper>
-                <PageHeader text="No projects to show" />
+                <PageHeader title="No projects to show" />
                 <Button onClick={() => history.push('/')}>
                     <p>Select a different plant</p>
                 </Button>
@@ -58,8 +57,8 @@ const SelectProject = () => {
     return (
         <SelectPlantWrapper>
             <PageHeader
-                text={'Select project'}
-                plantName={currentPlant?.title}
+                title={'Select project'}
+                subtitle={currentPlant?.title}
             />
             {projectsToRender}
         </SelectPlantWrapper>
