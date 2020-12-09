@@ -1,3 +1,10 @@
+export enum CompletionStatus {
+    OS = 'OS',
+    PA = 'PA',
+    PB = 'PB',
+    OK = 'OK',
+}
+
 export type Project = {
     description: string;
     id: number;
@@ -11,15 +18,15 @@ export interface Plant {
     projects?: Project[];
 }
 
-export type CommPkgPreview = {
+export interface CommPkgPreview {
     id: number;
     commPkgNo: string;
     description: string;
-    mcStatus: string;
-    commStatus: string;
+    mcStatus: CompletionStatus;
+    commStatus: CompletionStatus;
     commissioningHandoverStatus: string;
     operationHandoverStatus: string;
-};
+}
 
 export type CommPkgSearchResults = {
     maxAvailable: number;
@@ -30,8 +37,8 @@ export type CommPkg = {
     id: number;
     commPkgNo: string;
     description: string;
-    commStatus: string;
-    mcStatus: string;
+    commStatus: CompletionStatus;
+    mcStatus: CompletionStatus;
     mcPkgCount: number;
     mcPkgsAcceptedByCommissioning: number;
     mcPkgsAcceptedByOperation: number;
@@ -44,7 +51,7 @@ export type ChecklistPreview = {
     id: number;
     tagNo: string;
     tagDescription: string;
-    status: string;
+    status: CompletionStatus;
     formularType: string;
     formularGroup: string;
     isRestrictedForUser: boolean;
@@ -53,7 +60,7 @@ export type ChecklistPreview = {
 
 export type PunchPreview = {
     id: number;
-    status: string;
+    status: CompletionStatus;
     description: string;
     systemModule: string;
     tagDescription: string;

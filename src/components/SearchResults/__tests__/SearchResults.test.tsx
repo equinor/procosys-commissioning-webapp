@@ -2,7 +2,7 @@ import { render, within } from '@testing-library/react';
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { SearchStatus } from '../../../pages/SearchPage/useSearchPageFacade';
-import { CommPkgPreview } from '../../../services/apiTypes';
+import { CommPkgPreview, CompletionStatus } from '../../../services/apiTypes';
 import SearchPage from '../index';
 
 const testCommPkgPreview: CommPkgPreview[] = [
@@ -10,8 +10,8 @@ const testCommPkgPreview: CommPkgPreview[] = [
         id: 1,
         commPkgNo: 'Test comm pkg number',
         description: 'Test description',
-        mcStatus: 'Test MCStatus',
-        commStatus: 'Test CommStatus',
+        mcStatus: CompletionStatus.OK,
+        commStatus: CompletionStatus.OK,
         commissioningHandoverStatus: 'OK',
         operationHandoverStatus: 'OK',
     },

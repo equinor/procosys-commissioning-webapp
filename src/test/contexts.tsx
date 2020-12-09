@@ -7,6 +7,7 @@ import UserContext, { AsyncStatus } from '../contexts/UserContext';
 import {
     ChecklistPreview,
     CommPkg,
+    CompletionStatus,
     Plant,
     Project,
     PunchPreview,
@@ -27,8 +28,8 @@ export const testDetails: CommPkg = {
     id: 1,
     commPkgNo: 'Test commPkgNo',
     description: 'Test commPkg description',
-    commStatus: 'Test commStatus',
-    mcStatus: 'Test mcStatus',
+    commStatus: CompletionStatus.OK,
+    mcStatus: CompletionStatus.OK,
     mcPkgCount: 1,
     mcPkgsAcceptedByCommissioning: 1,
     mcPkgsAcceptedByOperation: 1,
@@ -59,7 +60,7 @@ export const testScope: ChecklistPreview[] = [
         id: 1,
         tagNo: 'Test tag number',
         tagDescription: 'Test tag description',
-        status: 'PO',
+        status: CompletionStatus.OK,
         formularGroup: 'Test formular group',
         formularType: 'Test formular type',
         isRestrictedForUser: false,
@@ -70,7 +71,7 @@ export const testScope: ChecklistPreview[] = [
 export const testPunchList: PunchPreview[] = [
     {
         id: 1,
-        status: 'PO',
+        status: CompletionStatus.OK,
         description: 'Test punch description',
         systemModule: 'Test punch system module',
         tagId: 1,

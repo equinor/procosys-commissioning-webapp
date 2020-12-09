@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import React from 'react';
+import { CompletionStatus } from '../../../services/apiTypes';
 import DetailsCard from '../DetailsCard';
 
 describe('<DetailsCard />', () => {
@@ -8,12 +9,12 @@ describe('<DetailsCard />', () => {
             <DetailsCard
                 description="CommPkgDescription"
                 pkgNumber="CommPkgNumber"
-                MCStatus="MCStatus"
-                commStatus="CommStatus"
+                MCStatus={CompletionStatus.OK}
+                commStatus={CompletionStatus.OK}
             />
         );
         expect(getByText('CommPkgDescription')).toBeInTheDocument();
         expect(getByText('CommPkgNumber')).toBeInTheDocument();
-        expect(getByText('MCStatus')).toBeInTheDocument();
+        expect(getByText('MC Status')).toBeInTheDocument();
     });
 });

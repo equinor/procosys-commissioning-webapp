@@ -1,34 +1,38 @@
 import React from 'react';
 import styled from 'styled-components';
+import { CompletionStatus } from '../../services/apiTypes';
 import EdsIcon from '../EdsIcon';
 import PackageStatusIcon from '../PackageStatusIcon';
+import { Button } from '@equinor/eds-core-react';
+import useBookmarks from '../../services/useBookmarks';
 
 const DetailsWrapper = styled.div`
     display: grid;
-    grid-template-columns: repeat(3, 1fr) repeat(2, 0.5fr);
+    grid-template-columns: repeat(2, 1fr) repeat(2, 0.5fr);
     grid-template-rows: repeat(2);
     grid-column-gap: 15px;
     grid-row-gap: 15px;
-    border-bottom: 1px solid lightgrey;
+    border-bottom: 1px solid #f5f5f5;
     padding: 15px;
     background-color: #effeff;
 `;
 
 const Description = styled.div`
-    grid-area: 1 / 1 / 2 / 4;
+    grid-area: 1 / 1 / 2 / 5;
     & p {
         margin: 0;
     }
 `;
 const StatusIconWrapper = styled.div`
-    grid-area: 1 / 4 / 2 / 5;
+    grid-area: 2 / 3 / 2 / 4;
+    text-align: center;
     & img {
         height: 20px;
-        margin-top: 3px;
+        margin-top: 8px;
     }
 `;
 const BookmarkIconWrapper = styled.div`
-    grid-area: 1 / 5 / 2 / 6;
+    grid-area: 2 / 4 / 2 / 4;
     & svg {
         transform: scaleY(1);
     }
@@ -40,21 +44,17 @@ const CommPkgNumberWrapper = styled.div`
     }
 `;
 const MCStatusWrapper = styled.div`
-    grid-area: 2 / 3 / 3 / 5;
+    grid-area: 2 / 2 / 3 / 3;
     & p {
         margin: 0;
     }
-`;
-const GreyText = styled.span`
-    color: #838383;
-    margin-right: 5px;
 `;
 
 type CommPkgDetailsCardProps = {
     description: string;
     pkgNumber: string;
-    MCStatus: string;
-    commStatus: string;
+    MCStatus: CompletionStatus;
+    commStatus: CompletionStatus;
 };
 
 const DetailsCard = ({
@@ -63,6 +63,7 @@ const DetailsCard = ({
     MCStatus,
     commStatus,
 }: CommPkgDetailsCardProps) => {
+    const { isBookmarked, toggleBookmark } = useBookmarks(pkgNumber);
     return (
         <DetailsWrapper>
             <Description>
@@ -75,17 +76,21 @@ const DetailsCard = ({
                 />
             </StatusIconWrapper>
             <BookmarkIconWrapper>
-                <EdsIcon name={'bookmark_outlined'} />
+                <Button variant="ghost" onClick={toggleBookmark}>
+                    <EdsIcon
+                        name={
+                            isBookmarked
+                                ? 'bookmark_filled'
+                                : 'bookmark_outlined'
+                        }
+                    />
+                </Button>
             </BookmarkIconWrapper>
             <CommPkgNumberWrapper>
-                <p>
-                    <GreyText>PKG:</GreyText> {pkgNumber}
-                </p>
+                <label>PKG number:</label> <p>{pkgNumber}</p>
             </CommPkgNumberWrapper>
             <MCStatusWrapper>
-                <p>
-                    <GreyText>MC Status:</GreyText> {MCStatus}
-                </p>
+                <label>MC Status:</label> <p>{MCStatus}</p>
             </MCStatusWrapper>
         </DetailsWrapper>
     );
