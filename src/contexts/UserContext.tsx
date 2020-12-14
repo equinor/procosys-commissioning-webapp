@@ -1,4 +1,6 @@
 import React, { ReactNode, useEffect, useState } from 'react';
+import ErrorPage from '../components/error/ErrorPage';
+import LoadingPage from '../components/loading/LoadingPage';
 import * as API from '../services/api';
 import { Plant } from '../services/apiTypes';
 
@@ -36,6 +38,17 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
         })();
     }, []);
 
+    if (fetchPlantsStatus === AsyncStatus.LOADING) {
+        return <LoadingPage loadingText={'Loading available plants . . .'} />;
+    }
+    if (fetchPlantsStatus === AsyncStatus.ERROR) {
+        return (
+            <ErrorPage
+                title="Error: Could not load plants"
+                description="We were unable to get a list of available plants. Please check your connection, sign in with a different user or refresh this page."
+            ></ErrorPage>
+        );
+    }
     return (
         <UserContext.Provider
             value={{

@@ -58,9 +58,7 @@ const SearchResults = ({ searchStatus, commPackages }: SearchResultsProps) => {
                     return (
                         <SearchResult
                             onClick={() =>
-                                history.push(
-                                    `${project}/${commPackage.commPkgNo}`
-                                )
+                                history.push(`${commPackage.commPkgNo}`)
                             }
                             key={commPackage.id}
                         >

@@ -7,6 +7,7 @@ import EdsIcon from '../EdsIcon';
 import { useHistory, useParams } from 'react-router-dom';
 import { CommParams } from '../../App';
 import PlantContext from '../../contexts/PlantContext';
+import { StorageKey } from '../../services/useBookmarks';
 
 const SideMenuWrapper = styled(animated.aside)`
     width: 297px;
@@ -106,6 +107,8 @@ const SideMenu = ({
                     <p>Selected plant:</p>
                     <Button
                         onClick={() => {
+                            window.localStorage.removeItem(StorageKey.PLANT);
+                            window.localStorage.removeItem(StorageKey.PROJECT);
                             setDrawerIsOpen(false);
                             history.push('/');
                         }}
@@ -120,6 +123,9 @@ const SideMenu = ({
                             <Button
                                 color="secondary"
                                 onClick={() => {
+                                    window.localStorage.removeItem(
+                                        StorageKey.PROJECT
+                                    );
                                     setDrawerIsOpen(false);
                                     history.push(`/${params.plant}`);
                                 }}
