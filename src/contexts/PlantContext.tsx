@@ -1,9 +1,10 @@
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { CommParams } from '../App';
 import LoadingPage from '../components/loading/LoadingPage';
 import * as api from '../services/api';
 import { Plant, Project } from '../services/apiTypes';
+import { StorageKey } from '../services/useBookmarks';
 import matchPlantInURL from '../utils/matchPlantInURL';
 import matchProjectInURL from '../utils/matchProjectInURL';
 import UserContext, { AsyncStatus } from './UserContext';
@@ -24,6 +25,7 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
     const { plant: plantInURL, project: projectInURL } = useParams<
         CommParams
     >();
+    const history = useHistory();
     const [currentPlant, setCurrentPlant] = useState<Plant | undefined>();
     const { availablePlants } = useContext(UserContext);
     const [availableProjects, setAvailableProjects] = useState<Project[]>([]);
@@ -35,7 +37,24 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
     ] = useState(AsyncStatus.LOADING);
 
     useEffect(() => {
-        if (!plantInURL) setCurrentProject(undefined);
+        const plantInStorage = window.localStorage.getItem(StorageKey.PLANT);
+        const projectInStorage = window.localStorage.getItem(
+            StorageKey.PROJECT
+        );
+        if (plantInURL || !plantInStorage || !projectInStorage) return;
+        if (projectInStorage)
+            history.push(`/${plantInStorage}/${projectInStorage}`);
+    }, [plantInURL, projectInURL]);
+
+    useEffect(() => {
+        if (!plantInURL) return;
+        window.localStorage.setItem(StorageKey.PLANT, plantInURL);
+        if (!projectInURL) return;
+        window.localStorage.setItem(StorageKey.PROJECT, projectInURL);
+    }, [plantInURL, projectInURL]);
+
+    useEffect(() => {
+        if (!plantInURL) setCurrentPlant(undefined);
         if (availablePlants.length < 1) return;
         setCurrentPlant(matchPlantInURL(availablePlants, plantInURL));
     }, [availablePlants, plantInURL]);
@@ -73,23 +92,23 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
         return true;
     };
 
-    return (
-        <PlantContext.Provider
-            value={{
-                fetchProjectsAndPermissionsStatus,
-                permissions,
-                currentPlant,
-                availableProjects,
-                currentProject,
-            }}
-        >
-            {renderChildren() ? (
-                children
-            ) : (
-                <LoadingPage loadingText={'Loading plant from URL'} />
-            )}
-        </PlantContext.Provider>
-    );
+    if (!renderChildren()) {
+        return <LoadingPage loadingText={'Loading plant from URL'} />;
+    } else {
+        return (
+            <PlantContext.Provider
+                value={{
+                    fetchProjectsAndPermissionsStatus,
+                    permissions,
+                    currentPlant,
+                    availableProjects,
+                    currentProject,
+                }}
+            >
+                {children}
+            </PlantContext.Provider>
+        );
+    }
 };
 
 export default PlantContext;

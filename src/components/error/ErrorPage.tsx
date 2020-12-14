@@ -5,8 +5,8 @@ import { COLORS } from '../../style/GlobalStyles';
 import EdsIcon from '../EdsIcon';
 
 interface CommError {
-    errorTitle?: string;
-    errorDescription?: string;
+    title?: string;
+    description?: string;
 }
 
 const ErrorPageWrapper = styled.main`
@@ -25,17 +25,17 @@ const ErrorPageWrapper = styled.main`
     }
 `;
 
-const ErrorPage = ({ errorTitle, errorDescription }: CommError) => {
+const ErrorPage = ({ title, description }: CommError) => {
     return (
         <ErrorPageWrapper>
-            <h3>{errorTitle}</h3>
+            <h3>{title}</h3>
             <Banner>
                 <EdsIcon
                     color={COLORS.interactive.danger__resting.hex}
                     name="error_outlined"
                     title="Error icon"
                 />
-                <p>{errorDescription}</p>
+                <p>{description}</p>
             </Banner>
         </ErrorPageWrapper>
     );

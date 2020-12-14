@@ -1,7 +1,6 @@
 import { render } from '@testing-library/react';
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { withPlantContext } from '../../../pages/__tests__/SelectProject.test';
 import Navbar from '../Navbar';
 
 jest.mock('react-spring', () => ({
@@ -13,12 +12,44 @@ jest.mock('react-spring', () => ({
 }));
 
 describe('<SideMenu/>', () => {
-    it('returns a navbar container', () => {
-        const { container } = render(
+    // it('Renders hamburger icon when no props are passed to left content', () => {
+    //     const { getAllByTitle } = render(
+    //         <Router>
+    //             <Navbar />
+    //         </Router>
+    //     );
+    //     expect(getAllByTitle('Menu')).toBeInTheDocument();
+    // });
+    it('Renders a back icon when left content is set to "back"', () => {
+        const { queryAllByTitle } = render(
+            <Router>
+                <Navbar leftContent="back" />
+            </Router>
+        );
+        expect(queryAllByTitle('Back')).toBeDefined();
+    });
+    it('Renders a procosys logo when right content is unspecified', () => {
+        const { getByAltText } = render(
             <Router>
                 <Navbar />
             </Router>
         );
-        expect(container).toBeDefined();
+        expect(getByAltText('ProCoSys logo')).toBeDefined();
+    });
+    it('Renders a search icon when right content is set to search', () => {
+        const { queryAllByTitle } = render(
+            <Router>
+                <Navbar rightContent="search" />
+            </Router>
+        );
+        expect(queryAllByTitle('Search')).toBeDefined();
+    });
+    it('Renders whatever text is passed in as mid content prop', () => {
+        const { getByText } = render(
+            <Router>
+                <Navbar midContent="Test midcontent" />
+            </Router>
+        );
+        expect(getByText('Test midcontent')).toBeDefined();
     });
 });

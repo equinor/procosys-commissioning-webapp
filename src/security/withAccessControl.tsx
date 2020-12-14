@@ -33,8 +33,8 @@ const withAccessControl = (
 
     return (
         <ErrorPage
-            errorTitle="No access"
-            errorDescription="You do not have permission to view this resource"
+            title="No access"
+            description="You do not have permission to view this resource"
         />
     );
 };

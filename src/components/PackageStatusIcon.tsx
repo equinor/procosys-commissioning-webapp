@@ -9,24 +9,25 @@ import rightYellow from '../assets/img/status/right_yellow.png';
 import rightGrey from '../assets/img/status/right_grey.png';
 import rightGreen from '../assets/img/status/right_green.png';
 import rightRed from '../assets/img/status/right_red.png';
+import { CompletionStatus } from '../services/apiTypes';
 
 type PackageStatusIconProps = {
-    mcStatus: string;
-    commStatus: string;
+    mcStatus: CompletionStatus;
+    commStatus: CompletionStatus;
 };
 
-const determineCommImage = (status: string) => {
-    if (status === 'OK') return leftGreen;
-    if (status === 'OS') return leftGrey;
-    if (status === 'PA') return leftRed;
-    if (status === 'PB') return leftYellow;
+const determineCommImage = (status: CompletionStatus) => {
+    if (status === CompletionStatus.OS) return leftGrey;
+    if (status === CompletionStatus.PA) return leftRed;
+    if (status === CompletionStatus.PB) return leftYellow;
+    if (status === CompletionStatus.OK) return leftGreen;
 };
 
-const determineMCImage = (status: string) => {
-    if (status === 'OK') return rightGreen;
-    if (status === 'OS') return rightGrey;
-    if (status === 'PA') return rightRed;
-    if (status === 'PB') return rightYellow;
+const determineMCImage = (status: CompletionStatus) => {
+    if (status === CompletionStatus.OS) return rightGrey;
+    if (status === CompletionStatus.PA) return rightRed;
+    if (status === CompletionStatus.PB) return rightYellow;
+    if (status === CompletionStatus.OK) return rightGreen;
 };
 
 const PackageStatusIcon = ({
