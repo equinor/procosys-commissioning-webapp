@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { AsyncStatus, UserContextProvider } from './contexts/UserContext';
 import GeneralRouter from './GeneralRouter';
-import useAuthHandler from './utils/useAuthHandler';
+import useAuthHandler from './services/useAuthHandler';
 import LoadingPage from './components/loading/LoadingPage';
 import ErrorBoundary from './components/error/ErrorBoundary';
 
@@ -36,11 +36,3 @@ function App() {
 }
 
 export default App;
-
-/* 
-Alternativ 1: 
-    Flytte plantcontext høyere opp
-    A: Eksportere setstates som setter params i plantContext
-    B: Lage hooks som setter current plant/project basert på useLocation pathen
-Alternativ 3: Wrappe alle komponenter som trenger navbar i en layout-komponent med navbaren inni
-Alternativ 4: Custom hook med context som maintainer state? */
