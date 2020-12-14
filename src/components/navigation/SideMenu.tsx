@@ -7,6 +7,7 @@ import EdsIcon from '../EdsIcon';
 import { useHistory, useParams } from 'react-router-dom';
 import { CommParams } from '../../App';
 import PlantContext from '../../contexts/PlantContext';
+import { StorageKey } from '../../services/useBookmarks';
 
 const SideMenuWrapper = styled(animated.aside)`
     width: 297px;
@@ -16,7 +17,7 @@ const SideMenuWrapper = styled(animated.aside)`
     left: 0;
     z-index: 1000;
     background-color: white;
-    border-right: 3px solid lightgrey;
+    border-right: 2px solid #f5f5f5;
 `;
 
 const TopContent = styled.div`
@@ -106,13 +107,15 @@ const SideMenu = ({
                     <p>Selected plant:</p>
                     <Button
                         onClick={() => {
+                            window.localStorage.removeItem(StorageKey.PLANT);
+                            window.localStorage.removeItem(StorageKey.PROJECT);
                             setDrawerIsOpen(false);
                             history.push('/');
                         }}
                         color="secondary"
                     >
                         {currentPlant ? currentPlant.title : 'None'}
-                        <EdsIcon name="chevron_right" />
+                        <EdsIcon name="chevron_right" color="white" />
                     </Button>
                     {currentPlant && (
                         <>
@@ -120,6 +123,9 @@ const SideMenu = ({
                             <Button
                                 color="secondary"
                                 onClick={() => {
+                                    window.localStorage.removeItem(
+                                        StorageKey.PROJECT
+                                    );
                                     setDrawerIsOpen(false);
                                     history.push(`/${params.plant}`);
                                 }}
@@ -127,7 +133,7 @@ const SideMenu = ({
                                 {currentProject
                                     ? currentProject.description
                                     : 'None'}
-                                <EdsIcon name="chevron_right" />
+                                <EdsIcon name="chevron_right" color="white" />
                             </Button>
                         </>
                     )}
@@ -138,27 +144,3 @@ const SideMenu = ({
 };
 
 export default SideMenu;
-
-// import React from "react";
-// import { animated } from "react-spring"
-// import "./menu.css";
-
-// export const MenuRight = ({ style }) => (
-//   <animated.div style={style} className="menu menu--right">
-//     <nav>
-//       <ul className="menu-list menu-list--right">
-//         <li className="menu-list-item menu-list-item--right">
-//           <a href="/">Home</a>
-//         </li>
-//         <li className="menu-list-item menu-list-item--right">
-//           <a href="/">About</a>
-//         </li>
-//         <li className="menu-list-item menu-list-item--right">
-//           <a href="/">Work</a>
-//         </li>
-//         <li className="menu-list-item menu-list-item--right">
-//           <a href="/">Contact</a>
-//         </li>
-//       </ul>
-//     </nav>
-//   </animated.div>

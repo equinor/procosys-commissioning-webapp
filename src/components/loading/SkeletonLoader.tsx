@@ -64,7 +64,15 @@ const SkeletonLoadingPage = ({
 
     for (let i = 0; i < nrOfRows; i++) {
         SkeletonRowsToRender.push(
-            <SkeletonRow key={i} fullWidth={fullWidth} />
+            i === 0 ? (
+                <SkeletonRow
+                    data-testid="skeleton-row"
+                    key={i}
+                    fullWidth={fullWidth}
+                />
+            ) : (
+                <SkeletonRow key={i} fullWidth={fullWidth} />
+            )
         );
     }
 

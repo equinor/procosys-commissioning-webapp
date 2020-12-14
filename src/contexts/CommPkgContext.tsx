@@ -10,16 +10,16 @@ import {
     TaskPreview,
 } from '../services/apiTypes';
 
-export type PlantContextProps = {
+export type CommPkgContextProps = {
     details: CommPkg;
     scope: ChecklistPreview[];
     tasks: TaskPreview[];
     punchList: PunchPreview[];
 };
 
-const CommPackageContext = React.createContext({} as PlantContextProps);
+const CommPkgContext = React.createContext({} as CommPkgContextProps);
 
-export const CommPackageContextProvider: React.FC<{ children: ReactNode }> = ({
+export const CommPkgContextProvider: React.FC<{ children: ReactNode }> = ({
     children,
 }) => {
     const [details, setDetails] = useState<CommPkg>();
@@ -68,7 +68,7 @@ export const CommPackageContextProvider: React.FC<{ children: ReactNode }> = ({
         );
 
     return (
-        <CommPackageContext.Provider
+        <CommPkgContext.Provider
             value={{
                 details,
                 scope,
@@ -77,8 +77,8 @@ export const CommPackageContextProvider: React.FC<{ children: ReactNode }> = ({
             }}
         >
             {children}
-        </CommPackageContext.Provider>
+        </CommPkgContext.Provider>
     );
 };
 
-export default CommPackageContext;
+export default CommPkgContext;

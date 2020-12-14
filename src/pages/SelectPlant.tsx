@@ -7,6 +7,7 @@ import LoadingPage from '../components/loading/LoadingPage';
 import UserContext, { AsyncStatus } from '../contexts/UserContext';
 import { COLORS } from '../style/GlobalStyles';
 import PageHeader from '../components/PageHeader';
+import Navbar from '../components/navigation/Navbar';
 
 export const SelectPlantWrapper = styled.main`
     display: flex;
@@ -46,32 +47,27 @@ const SelectPlant = () => {
         </SelectorButton>
     ));
 
-    if (fetchPlantsStatus === AsyncStatus.LOADING) {
-        return <LoadingPage loadingText={'Loading available plants . . .'} />;
-    }
-
-    if (fetchPlantsStatus === AsyncStatus.ERROR)
-        return (
-            <ErrorPage
-                errorTitle="Error: Could not load plants"
-                errorDescription="We were unable to get a list of available plants. Please check your connection, sign in with a different user or refresh this page."
-            ></ErrorPage>
-        );
+    let content = (
+        <>
+            <PageHeader title={'Select plant'} />
+            {plantsToRender}
+        </>
+    );
 
     if (plantsToRender.length < 1) {
-        return (
+        content = (
             <ErrorPage
-                errorTitle="No plants to show"
-                errorDescription="We were able to connect to the server, but there are no plants to show. Make sure you're logged in correctly, and that you have the necessary permissions"
+                title="No plants to show"
+                description="We were able to connect to the server, but there are no plants to show. Make sure you're logged in correctly, and that you have the necessary permissions"
             ></ErrorPage>
         );
     }
 
     return (
-        <SelectPlantWrapper>
-            <PageHeader text={'Select plant'} />
-            {plantsToRender}
-        </SelectPlantWrapper>
+        <>
+            <Navbar />
+            <SelectPlantWrapper>{content}</SelectPlantWrapper>
+        </>
     );
 };
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { withPlantContext } from '../../../pages/__tests__/SelectProject.test';
+import { withPlantContext } from '../../../test/contexts';
 import SideMenu from '../SideMenu';
 
 jest.mock('../../../services/authService', () => ({

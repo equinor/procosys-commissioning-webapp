@@ -36,8 +36,8 @@ class ErrorBoundary extends React.Component<ErrorProps, ErrorState> {
         if (this.state.hasError) {
             return (
                 <ErrorPage
-                    errorTitle={this.state.name}
-                    errorDescription={this.state.message}
+                    title={this.state.name}
+                    description={this.state.message}
                 />
             );
         }
