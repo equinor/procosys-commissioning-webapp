@@ -5,6 +5,7 @@ import EdsIcon from '../EdsIcon';
 import PackageStatusIcon from '../PackageStatusIcon';
 import { Button } from '@equinor/eds-core-react';
 import useBookmarks from '../../services/useBookmarks';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 const DetailsWrapper = styled.div`
     display: grid;
@@ -12,9 +13,8 @@ const DetailsWrapper = styled.div`
     grid-template-rows: repeat(2);
     grid-column-gap: 15px;
     grid-row-gap: 15px;
-    border-bottom: 1px solid #f5f5f5;
-    padding: 15px;
-    background-color: #effeff;
+    padding: 25px;
+    background-color: #f2fafa;
 `;
 
 const Description = styled.div`
@@ -50,33 +50,47 @@ const MCStatusWrapper = styled.div`
     }
 `;
 
-type CommPkgDetailsCardProps = {
+export type DetailsCardInfo = {
     description: string;
     pkgNumber: string;
     MCStatus: CompletionStatus;
     commStatus: CompletionStatus;
 };
 
-const DetailsCard = ({
-    description,
-    pkgNumber,
-    MCStatus,
-    commStatus,
-}: CommPkgDetailsCardProps) => {
-    const { isBookmarked, toggleBookmark } = useBookmarks(pkgNumber);
+type DetailsCardProps = {
+    details: DetailsCardInfo;
+    onBookmarksPage?: boolean;
+};
+
+const DetailsCard = ({ details, onBookmarksPage }: DetailsCardProps) => {
+    const history = useHistory();
+    const { url } = useRouteMatch();
+    const { isBookmarked, setIsBookmarked } = useBookmarks(details);
     return (
-        <DetailsWrapper>
+        <DetailsWrapper
+            onClick={
+                onBookmarksPage
+                    ? () => history.push(`${url}/${details.pkgNumber}`)
+                    : () => {}
+            }
+        >
             <Description>
-                <p>{description}</p>
+                <p>{details.description}</p>
             </Description>
             <StatusIconWrapper>
                 <PackageStatusIcon
-                    mcStatus={MCStatus}
-                    commStatus={commStatus}
+                    mcStatus={details.MCStatus}
+                    commStatus={details.commStatus}
                 />
             </StatusIconWrapper>
             <BookmarkIconWrapper>
-                <Button variant="ghost" onClick={toggleBookmark}>
+                <Button
+                    variant="ghost"
+                    onClick={(e: React.MouseEvent<HTMLElement>) => {
+                        e.stopPropagation();
+                        setIsBookmarked(!isBookmarked);
+                    }}
+                >
                     <EdsIcon
                         name={
                             isBookmarked
@@ -87,10 +101,10 @@ const DetailsCard = ({
                 </Button>
             </BookmarkIconWrapper>
             <CommPkgNumberWrapper>
-                <label>PKG number:</label> <p>{pkgNumber}</p>
+                <label>PKG number:</label> <p>{details.pkgNumber}</p>
             </CommPkgNumberWrapper>
             <MCStatusWrapper>
-                <label>MC Status:</label> <p>{MCStatus}</p>
+                <label>MC Status:</label> <p>{details.MCStatus}</p>
             </MCStatusWrapper>
         </DetailsWrapper>
     );
