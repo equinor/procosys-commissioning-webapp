@@ -6,15 +6,20 @@ import SearchPage from './pages/SearchPage';
 import SelectPlant from './pages/SelectPlant';
 import Navbar from './components/navigation/Navbar';
 import CommPkgRouter from './CommPkgRouter';
+import Bookmarks from './pages/Bookmarks';
 
 const CommRouter = () => {
     return (
         <PlantContextProvider>
-            <Navbar />
             <Switch>
                 <Route exact path={'/'} component={SelectPlant} />
                 <Route exact path={'/:plant'} component={SelectProject} />
-                <Route exact path={`/:plant/:project`} component={SearchPage} />
+                <Route exact path={`/:plant/:project`} component={Bookmarks} />
+                <Route
+                    exact
+                    path={`/:plant/:project/search`}
+                    component={SearchPage}
+                />
                 <Route
                     path={`/:plant/:project/:commPkg`}
                     component={CommPkgRouter}

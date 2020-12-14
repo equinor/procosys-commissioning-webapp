@@ -4,6 +4,7 @@ import withAccessControl from '../../security/withAccessControl';
 import styled from 'styled-components';
 import useSearchPageFacade, { SearchStatus } from './useSearchPageFacade';
 import SearchResults from '../../components/SearchResults';
+import Navbar from '../../components/navigation/Navbar';
 
 const SearchPageWrapper = styled.main`
     padding: 12px 4%;
@@ -34,20 +35,23 @@ const SearchPage = () => {
         return <h4>Find a Commissioning Package</h4>;
     };
     return (
-        <SearchPageWrapper>
-            {searchHeaderToRender()}
-            <Search
-                placeholder={'For example: "1002-D01"'}
-                value={query}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setQuery(e.target.value)
-                }
-            />
-            <SearchResults
-                commPackages={hits.items}
-                searchStatus={searchStatus}
-            />
-        </SearchPageWrapper>
+        <>
+            <Navbar leftContent={'back'} />
+            <SearchPageWrapper>
+                {searchHeaderToRender()}
+                <Search
+                    placeholder={'For example: "1002-D01"'}
+                    value={query}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        setQuery(e.target.value)
+                    }
+                />
+                <SearchResults
+                    commPackages={hits.items}
+                    searchStatus={searchStatus}
+                />
+            </SearchPageWrapper>
+        </>
     );
 };
 

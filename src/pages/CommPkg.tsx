@@ -6,17 +6,21 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import Scope from '../components/commPkg/Scope';
 import Tasks from '../components/commPkg/Tasks';
 import PunchList from '../components/commPkg/PunchList';
+import Navbar from '../components/navigation/Navbar';
 
 const CommPkg = () => {
     const { details, scope, punchList, tasks } = useContext(CommPkgContext);
     const { path } = useRouteMatch();
     return (
         <>
+            <Navbar leftContent="back" />
             <DetailsCard
-                MCStatus={details.mcStatus}
-                commStatus={details.commStatus}
-                description={details.description}
-                pkgNumber={details.commPkgNo}
+                details={{
+                    MCStatus: details.mcStatus,
+                    commStatus: details.commStatus,
+                    description: details.description,
+                    pkgNumber: details.commPkgNo,
+                }}
             />
             <Switch>
                 <Redirect exact path={path} to={`${path}/scope`} />

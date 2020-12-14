@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import EdsIcon from '../../components/EdsIcon';
 import ErrorPage from '../../components/error/ErrorPage';
 import SkeletonLoadingPage from '../../components/loading/SkeletonLoader';
+import Navbar from '../../components/navigation/Navbar';
 import PageHeader from '../../components/PageHeader';
 import PlantContext from '../../contexts/PlantContext';
 import { AsyncStatus } from '../../contexts/UserContext';
@@ -30,12 +31,22 @@ const SelectProject = () => {
         </SelectorButton>
     ));
 
+    let content = (
+        <>
+            <PageHeader
+                title={'Select project'}
+                subtitle={currentPlant?.title}
+            />
+            {projectsToRender}
+        </>
+    );
+
     if (fetchProjectsAndPermissionsStatus === AsyncStatus.LOADING) {
-        return <SkeletonLoadingPage text={`Loading projects . . .`} />;
+        content = <SkeletonLoadingPage text={`Loading projects . . .`} />;
     }
 
     if (fetchProjectsAndPermissionsStatus === AsyncStatus.ERROR) {
-        return (
+        content = (
             <ErrorPage
                 title="Error: Unable to load projects"
                 description="There might be a problem with your connection or your permissions"
@@ -43,25 +54,25 @@ const SelectProject = () => {
         );
     }
 
-    if (projectsToRender!.length < 1) {
-        return (
-            <SelectPlantWrapper>
+    if (
+        fetchProjectsAndPermissionsStatus === AsyncStatus.SUCCESS &&
+        projectsToRender!.length < 1
+    ) {
+        content = (
+            <>
                 <PageHeader title="No projects to show" />
                 <Button onClick={() => history.push('/')}>
-                    <p>Select a different plant</p>
+                    Select a different plant
                 </Button>
-            </SelectPlantWrapper>
+            </>
         );
     }
 
     return (
-        <SelectPlantWrapper>
-            <PageHeader
-                title={'Select project'}
-                subtitle={currentPlant?.title}
-            />
-            {projectsToRender}
-        </SelectPlantWrapper>
+        <>
+            <Navbar />
+            <SelectPlantWrapper>{content}</SelectPlantWrapper>
+        </>
     );
 };
 
