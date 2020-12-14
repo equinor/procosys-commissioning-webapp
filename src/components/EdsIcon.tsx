@@ -52,7 +52,6 @@ const EdsIcon = ({
     color = 'black',
     rotation,
     size,
-    alt = name,
 }: IconProps): JSX.Element => {
     return (
         <Icon
@@ -61,7 +60,6 @@ const EdsIcon = ({
             color={color}
             rotation={rotation}
             size={size}
-            alt={alt}
         />
     );
 };
