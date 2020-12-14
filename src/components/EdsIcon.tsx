@@ -12,6 +12,8 @@ import {
     view_list,
     remove,
     check_circle_outlined,
+    arrow_back,
+    search,
 } from '@equinor/eds-icons';
 import { Icon } from '@equinor/eds-core-react';
 import React from 'react';
@@ -30,6 +32,8 @@ Icon.add({
     view_list,
     remove,
     check_circle_outlined,
+    arrow_back,
+    search,
 });
 
 type IconProps = {
