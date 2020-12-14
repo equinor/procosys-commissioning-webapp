@@ -8,13 +8,16 @@ const PageHeaderWrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
     & h2 {
+        text-align: center;
         margin: 24px 0 0 0;
     }
     & svg {
         margin: -5px 0 18px 0;
     }
     & h6 {
+        text-align: center;
         margin: 0 0 5px 0;
     }
 `;

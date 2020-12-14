@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Button } from '@equinor/eds-core-react';
-import { Link, useHistory, useRouteMatch } from 'react-router-dom';
+import { Link, useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import logo from '../../assets/img/procosys-logo.svg';
 import EdsIcon from '../EdsIcon';
 import { useSpring } from 'react-spring';
 import SideMenu from './SideMenu';
+import { CommParams } from '../../App';
 
 const NavbarWrapper = styled.nav`
     height: 54px;
@@ -13,7 +14,7 @@ const NavbarWrapper = styled.nav`
     justify-content: space-between;
     align-items: center;
     border-bottom: 2px solid #fafafa;
-    padding: 4px 18px 4px 6px;
+    padding: 4px 6px 4px 6px;
     & img {
         width: 24px;
         height: 24px;
@@ -50,17 +51,13 @@ const Navbar = ({
         if (option === 'hamburger') {
             return (
                 <Button variant="ghost" onClick={() => setDrawerIsOpen(true)}>
-                    <EdsIcon
-                        name={'menu'}
-                        color="#555"
-                        title="Hamburger menu"
-                    />
+                    <EdsIcon name={'menu'} color="#555" title="Menu" />
                 </Button>
             );
         }
         return (
             <Button variant="ghost" onClick={() => history.goBack()}>
-                <EdsIcon name={'arrow_back'} title="Go back icon" />
+                <EdsIcon name={'arrow_back'} title="Back" />
             </Button>
         );
     };
@@ -68,9 +65,9 @@ const Navbar = ({
     const determineRightContent = (option: string) => {
         if (option === 'logo') {
             return (
-                <Link to="/">
-                    <img src={logo} alt="Procosys Logo" />
-                </Link>
+                <Button variant="ghost" onClick={() => history.push(`/`)}>
+                    <img src={logo} alt="ProCoSys logo" />
+                </Button>
             );
         }
         if (option === 'search') {
@@ -79,7 +76,7 @@ const Navbar = ({
                     variant="ghost"
                     onClick={() => history.push(`${url}/search`)}
                 >
-                    <EdsIcon name={'search'} title="Search icon" />
+                    <EdsIcon name={'search'} title="Search" />
                 </Button>
             );
         }

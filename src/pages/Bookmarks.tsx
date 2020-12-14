@@ -22,7 +22,7 @@ const BookmarksWrapper = styled.main`
 const Bookmarks = () => {
     const { url } = useRouteMatch();
     const history = useHistory();
-    const { currentProject } = useContext(PlantContext);
+    const { currentProject, currentPlant } = useContext(PlantContext);
     const bookmarks = getCurrentBookmarks(currentProject!.id.toString());
     const bookmarksToDisplay = bookmarks.map((bookmark) => (
         <DetailsCard
@@ -39,12 +39,13 @@ const Bookmarks = () => {
 
     let content = (
         <>
-            <PageHeader title={'Bookmarks'} />
+            <PageHeader title={'Bookmarks'} subtitle={currentPlant?.title} />
             {bookmarksToDisplay}
         </>
     );
 
-    if (bookmarks.length < 1) content = <h3>No bookmarks to display.</h3>;
+    if (bookmarks.length < 1)
+        content = <PageHeader title="No bookmarks to display" />;
     return (
         <>
             <Navbar rightContent="search" />

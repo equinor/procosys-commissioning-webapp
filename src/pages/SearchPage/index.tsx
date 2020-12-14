@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import useSearchPageFacade, { SearchStatus } from './useSearchPageFacade';
 import SearchResults from '../../components/SearchResults';
 import Navbar from '../../components/navigation/Navbar';
+import PageHeader from '../../components/PageHeader';
 
 const SearchPageWrapper = styled.main`
     padding: 12px 4%;
@@ -32,7 +33,7 @@ const SearchPage = () => {
         if (searchStatus === SearchStatus.LOADING) {
             return <h4>Loading . . .</h4>;
         }
-        return <h4>Find a Commissioning Package</h4>;
+        return <PageHeader title="Search" subtitle="Find a comm. pkg" />;
     };
     return (
         <>
