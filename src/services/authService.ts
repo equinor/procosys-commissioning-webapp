@@ -43,7 +43,8 @@ export const getAccessToken = async () => {
         });
         return Promise.resolve(silentTokenResponse.accessToken);
     } catch (error) {
-        console.log('Token acquisition failed');
+        console.log('Token acquisition failed, redirecting');
+        MSAL.loginRedirect({ scopes: scopes });
         return Promise.reject(error as Msal.AuthError);
     }
 };
