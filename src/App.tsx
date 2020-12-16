@@ -10,6 +10,9 @@ export type CommParams = {
     plant: string;
     project: string;
     commPkg: string;
+    checklistId: string;
+    task: string;
+    punch: string;
 };
 
 function App() {
