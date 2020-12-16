@@ -51,9 +51,9 @@ const Bookmarks = () => {
             <Navbar rightContent="search" />
             <BookmarksWrapper>
                 {content}
-                <Button onClick={() => history.push(`${url}/search`)}>
+                {/* <Button onClick={() => history.push(`${url}/search`)}>
                     Search for a Comm pkg
-                </Button>
+                </Button> */}
             </BookmarksWrapper>
         </>
     );

@@ -11,7 +11,7 @@ const PageHeaderWrapper = styled.div`
 
     & h2 {
         text-align: center;
-        margin: 24px 0 0 0;
+        margin: 12px 0 0 0;
     }
     & svg {
         margin: -5px 0 18px 0;

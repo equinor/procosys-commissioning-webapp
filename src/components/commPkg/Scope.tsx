@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import CommPkgContext from '../../contexts/CommPkgContext';
 import { COLORS } from '../../style/GlobalStyles';
@@ -39,14 +39,15 @@ export const PreviewButton = styled(Link)`
 `;
 
 const FormulaTypeText = styled.p`
-    margin: 0 16px;
+    padding-left: 12px;
     flex: 1;
 `;
 
 const Scope = () => {
     const { scope } = useContext(CommPkgContext);
+    const { url } = useRouteMatch();
     const scopeToRender = scope.map((checklist) => (
-        <PreviewButton key={checklist.id} to={``}>
+        <PreviewButton key={checklist.id} to={`${url}/${checklist.id}`}>
             {getStatusIcon.completionStatus(checklist.status)}
             <div>
                 <label>{checklist.tagNo}</label>
