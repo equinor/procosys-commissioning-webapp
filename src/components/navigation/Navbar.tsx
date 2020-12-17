@@ -83,9 +83,10 @@ const Navbar = ({
     const determineRightContent = (option: string) => {
         if (option === 'logo') {
             return (
-                <Button variant="ghost" onClick={() => history.push(`/`)}>
-                    <img src={logo} alt="ProCoSys logo" />
-                </Button>
+                <></>
+                // <Button variant="ghost" onClick={() => history.push(`/`)}>
+                //     <img src={logo} alt="ProCoSys logo" />
+                // </Button>
             );
         }
         if (option === 'search') {
@@ -99,7 +100,7 @@ const Navbar = ({
             );
         }
         if (option === 'newPunch') {
-            return <RightButton>New punch</RightButton>;
+            return <RightButton variant="ghost">New punch</RightButton>;
         }
         return <></>;
     };

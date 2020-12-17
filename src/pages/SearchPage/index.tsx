@@ -31,7 +31,7 @@ const SearchPage = () => {
             );
         }
         if (searchStatus === SearchStatus.LOADING) {
-            return <h4>Loading . . .</h4>;
+            return <h4>Loading</h4>;
         }
         return <PageHeader title="Search" subtitle="Find a comm. pkg" />;
     };

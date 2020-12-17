@@ -18,9 +18,9 @@ export type CommParams = {
 function App() {
     const authStatus = useAuthHandler();
     if (authStatus === AsyncStatus.LOADING)
-        return <LoadingPage loadingText={'Signing in . . .'} />;
+        return <LoadingPage loadingText={'Signing in'} />;
     if (authStatus === AsyncStatus.ERROR)
-        return <LoadingPage loadingText={'Redirecting to login . . .'} />;
+        return <LoadingPage loadingText={'Redirecting to login'} />;
     return (
         <UserContextProvider>
             <Router>

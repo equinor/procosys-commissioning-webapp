@@ -63,9 +63,7 @@ export const CommPkgContextProvider: React.FC<{ children: ReactNode }> = ({
     }, [plantInURL, details]);
 
     if (!details || !scope || !tasks || !punchList)
-        return (
-            <LoadingPage loadingText={'Loading commissioning package . . .'} />
-        );
+        return <LoadingPage loadingText={'Loading commissioning package'} />;
 
     return (
         <CommPkgContext.Provider

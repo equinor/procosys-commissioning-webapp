@@ -33,13 +33,15 @@ export const FooterButton = styled.button<{ active: boolean }>`
     max-width: 100px;
     margin: 0 15px 0 15px;
     padding: 20px 0 0 0;
-    transform: ${(props) => (props.active ? 'scale(1.1)' : '1')};
     opacity: ${(props) => (props.active ? '1' : '0.8')};
     background-color: ${(props) => (props.active ? `white` : 'white')};
     position: relative;
     & p {
         margin: 0;
         font-weight: ${(props) => (props.active ? 'initial' : 'initial')};
+        border-bottom: ${(props) =>
+            props.active ? '3px solid #555' : 'initial'};
+        margin-bottom: ${(props) => (props.active ? '3px' : 'initial')};
     }
     &:focus,
     &:hover,
@@ -61,6 +63,7 @@ const ItemCount = styled.span`
         text-align: center;
         font-size: 12px;
         color: black;
+        border: none;
     }
 `;
 

@@ -24,7 +24,7 @@ const withAccessControl = (
     }, [permissions]);
 
     if (checkPermissionsStatus === AsyncStatus.LOADING) {
-        return <SkeletonLoader text="Checking permissions . . ." />;
+        return <SkeletonLoader text="Checking permissions" />;
     }
 
     if (checkPermissionsStatus === AsyncStatus.SUCCESS) {
