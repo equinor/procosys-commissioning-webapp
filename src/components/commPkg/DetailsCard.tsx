@@ -6,15 +6,19 @@ import PackageStatusIcon from '../PackageStatusIcon';
 import { Button } from '@equinor/eds-core-react';
 import useBookmarks from '../../services/useBookmarks';
 import { useHistory, useRouteMatch } from 'react-router-dom';
+import { COLORS, SHADOW } from '../../style/GlobalStyles';
 
-const DetailsWrapper = styled.div`
+const DetailsWrapper = styled.div<{ onBookmarksPage?: Boolean }>`
     display: grid;
     grid-template-columns: repeat(2, 1fr) repeat(2, 0.5fr);
     grid-template-rows: repeat(2);
     grid-column-gap: 15px;
     grid-row-gap: 15px;
     padding: 25px;
-    background-color: #f2fafa;
+    box-shadow: ${SHADOW};
+    margin: ${(props) =>
+        props.onBookmarksPage ? '0 10px 10px 10px' : '5px 10px 0px 10px'};
+    /* background-color: ${COLORS.infographic.primary__moss_green_13.hex}; */
 `;
 
 const Description = styled.div`
@@ -62,12 +66,16 @@ type DetailsCardProps = {
     onBookmarksPage?: boolean;
 };
 
-const DetailsCard = ({ details, onBookmarksPage }: DetailsCardProps) => {
+const DetailsCard = ({
+    details,
+    onBookmarksPage = false,
+}: DetailsCardProps) => {
     const history = useHistory();
     const { url } = useRouteMatch();
     const { isBookmarked, setIsBookmarked } = useBookmarks(details);
     return (
         <DetailsWrapper
+            onBookmarksPage={onBookmarksPage}
             onClick={
                 onBookmarksPage
                     ? () => history.push(`${url}/${details.pkgNumber}`)

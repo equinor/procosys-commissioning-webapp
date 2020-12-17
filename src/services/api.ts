@@ -2,6 +2,7 @@ import axios, { CancelToken } from 'axios';
 import objectToCamelCase from '../utils/objectToCamelCase';
 import {
     ChecklistPreview,
+    ChecklistResponse,
     CommPkg,
     CommPkgSearchResults,
     Plant,
@@ -104,7 +105,7 @@ export const getScope = async (plantId: string, commPkgId: number) => {
     try {
         const { data } = await axios.get(
             baseURL +
-                `CommPkg/CheckLists?plantId=${plantId}&commPkgId=${commPkgId}&api-version=4.1`
+                `CommPkg/Checklists?plantId=${plantId}&commPkgId=${commPkgId}&api-version=4.1`
         );
         return objectToCamelCase(data) as ChecklistPreview[];
     } catch (error) {
@@ -130,6 +131,18 @@ export const getPunchList = async (plantId: string, commPkgId: number) => {
                 `CommPkg/PunchList?plantId=${plantId}&commPkgId=${commPkgId}&api-version=4.1`
         );
         return objectToCamelCase(data) as PunchPreview[];
+    } catch (error) {
+        return Promise.reject(error);
+    }
+};
+
+export const getChecklist = async (plantId: string, checklistId: string) => {
+    try {
+        const { data } = await axios.get(
+            baseURL +
+                `Checklist/Comm?plantId=PCS$${plantId}&checklistId=${checklistId}&api-version=4.1`
+        );
+        return objectToCamelCase(data) as ChecklistResponse;
     } catch (error) {
         return Promise.reject(error);
     }

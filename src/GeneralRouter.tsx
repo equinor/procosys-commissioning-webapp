@@ -4,7 +4,6 @@ import { PlantContextProvider } from './contexts/PlantContext';
 import SelectProject from './pages/SelectProject';
 import SearchPage from './pages/SearchPage';
 import SelectPlant from './pages/SelectPlant';
-import Navbar from './components/navigation/Navbar';
 import CommPkgRouter from './CommPkgRouter';
 import Bookmarks from './pages/Bookmarks';
 

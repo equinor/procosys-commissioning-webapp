@@ -39,7 +39,7 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
     }, []);
 
     if (fetchPlantsStatus === AsyncStatus.LOADING) {
-        return <LoadingPage loadingText={'Loading available plants . . .'} />;
+        return <LoadingPage loadingText={'Loading available plants'} />;
     }
     if (fetchPlantsStatus === AsyncStatus.ERROR) {
         return (
