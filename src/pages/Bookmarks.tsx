@@ -20,7 +20,10 @@ const BookmarksWrapper = styled.main`
         text-align: center;
     }
     & button {
-        border-radius: 0;
+        width: fit-content;
+        align-self: flex-end;
+        margin-right: 4%;
+        margin-top: 12px;
     }
 `;
 
@@ -61,11 +64,9 @@ const Bookmarks = () => {
             <BookmarksWrapper>
                 {content}
 
-                <BookmarksFooter>
-                    <Button onClick={() => history.push(`${url}/search`)}>
-                        Search for a Comm pkg
-                    </Button>
-                </BookmarksFooter>
+                <Button onClick={() => history.push(`${url}/search`)}>
+                    Find new Comm. pkg
+                </Button>
             </BookmarksWrapper>
         </>
     );

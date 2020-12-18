@@ -28,14 +28,6 @@ describe('<SideMenu/>', () => {
         );
         expect(queryAllByTitle('Back')).toBeDefined();
     });
-    it('Renders a procosys logo when right content is unspecified', () => {
-        const { getByAltText } = render(
-            <Router>
-                <Navbar />
-            </Router>
-        );
-        expect(getByAltText('ProCoSys logo')).toBeDefined();
-    });
     it('Renders a search icon when right content is set to search', () => {
         const { queryAllByTitle } = render(
             <Router>
@@ -51,5 +43,13 @@ describe('<SideMenu/>', () => {
             </Router>
         );
         expect(getByText('Test midcontent')).toBeDefined();
+    });
+    it('Renders new punch button when newPunch argument is passed', () => {
+        const { getByText } = render(
+            <Router>
+                <Navbar rightContent="newPunch" />
+            </Router>
+        );
+        expect(getByText('New punch')).toBeDefined();
     });
 });
