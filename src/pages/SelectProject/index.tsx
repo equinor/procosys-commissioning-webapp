@@ -42,7 +42,7 @@ const SelectProject = () => {
     );
 
     if (fetchProjectsAndPermissionsStatus === AsyncStatus.LOADING) {
-        content = <SkeletonLoadingPage text={`Loading projects . . .`} />;
+        content = <SkeletonLoadingPage text={`Loading projects`} />;
     }
 
     if (fetchProjectsAndPermissionsStatus === AsyncStatus.ERROR) {

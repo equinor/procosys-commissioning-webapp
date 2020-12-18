@@ -14,6 +14,10 @@ import {
     check_circle_outlined,
     arrow_back,
     search,
+    warning_outlined,
+    warning_filled,
+    radio_button_selected,
+    radio_button_unselected,
 } from '@equinor/eds-icons';
 import { Icon } from '@equinor/eds-core-react';
 import React from 'react';
@@ -34,6 +38,10 @@ Icon.add({
     check_circle_outlined,
     arrow_back,
     search,
+    warning_outlined,
+    warning_filled,
+    radio_button_selected,
+    radio_button_unselected,
 });
 
 type IconProps = {

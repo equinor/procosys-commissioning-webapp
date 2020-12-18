@@ -5,6 +5,7 @@ import { createGlobalStyle } from 'styled-components';
 const GlobalStyles = createGlobalStyle`
     body { 
         margin: 0;
+        padding-top: 63px;
     }
     h1 {
         ${tokens.typography.heading.h1 as CSSObject}
@@ -48,6 +49,9 @@ export const BREAKPOINT = {
     lg: `@media (max-width: 1280px)`,
     xl: `@media (max-width: 1920px)`,
 };
+
+export const SHADOW =
+    '0 0.3px 0.9px rgba(33, 41, 43, 0.04), 0 0.9px 3.1px rgba(33, 41, 43, 0.07), 0 4px 14px rgba(33, 41, 43, 0.1)';
 
 export const COLORS = tokens.colors;
 

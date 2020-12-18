@@ -18,6 +18,7 @@ export interface Plant {
     projects?: Project[];
 }
 
+//COMM PKG SEARCH
 export interface CommPkgPreview {
     id: number;
     commPkgNo: string;
@@ -32,6 +33,8 @@ export type CommPkgSearchResults = {
     maxAvailable: number;
     items: CommPkgPreview[];
 };
+
+// COMM PKG AND LISTS
 
 export type CommPkg = {
     id: number;
@@ -79,3 +82,69 @@ export type TaskPreview = {
     chapter: string;
     isSigned: boolean;
 };
+
+// CHECKLIST
+export interface ChecklistDetails {
+    id: number;
+    tagNo: string;
+    tagDescription: string;
+    responsibleCode: string;
+    responsibleDescription: string;
+    status: CompletionStatus;
+    systemModule: string;
+    formularType: string;
+    formularGroup: string;
+    comment: string;
+    signedByUser: string;
+    signedByFirstName: string;
+    signedByLastName: string;
+    signedAt: Date;
+    updatedAt: Date;
+    updatedByUser: string;
+    updatedByFirstName: string;
+    updatedByLastName: string;
+    isRestrictedForUser: boolean;
+    hasElectronicForm: boolean;
+}
+
+export interface ColumnLabel {
+    id: number;
+    label: string;
+}
+
+export interface Cell {
+    value: string;
+    unit: string;
+    columnId: number;
+}
+
+export interface Row {
+    id: number;
+    label: string;
+    cells: Cell[];
+}
+
+export interface MetaTable {
+    info: string;
+    columnLabels: ColumnLabel[];
+    rows: Row[];
+}
+
+export interface CheckItem {
+    id: number;
+    sequenceNumber: string;
+    text: string;
+    detailText: string;
+    isHeading: boolean;
+    hasImage: boolean;
+    imageFileId: number;
+    hasMetaTable: boolean;
+    metaTable: MetaTable;
+    isOk: boolean;
+    isNotApplicable: boolean;
+}
+
+export interface ChecklistResponse {
+    checkList: ChecklistDetails;
+    checkItems: CheckItem[];
+}

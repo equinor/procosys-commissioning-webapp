@@ -19,11 +19,11 @@ export const SelectPlantWrapper = styled.main`
 
 export const SelectorButton = styled(Link)`
     display: flex;
-    border-top: 2px solid ${COLORS.ui.background__light.hex};
     justify-content: space-between;
     align-items: center;
     text-decoration: none;
-    padding: 20px 4%;
+    padding: 16px 4%;
+    margin: 8px 10px;
     position: relative;
     & p {
         margin: 0 30px 0 0;

@@ -10,11 +10,16 @@ import { CommParams } from '../../App';
 
 const NavbarWrapper = styled.nav`
     height: 54px;
+    width: 100%;
+    background-color: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #fafafa;
-    padding: 4px 6px 4px 6px;
+    padding: 4px 6px 4px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
     & img {
         width: 24px;
         height: 24px;
@@ -29,6 +34,16 @@ type NavbarProps = {
     leftContent?: string;
     midContent?: string;
     rightContent?: string;
+};
+
+const RightButton = styled(Button)`
+    margin-right: 4%;
+`;
+
+const removeLastSubdirectory = (url: string) => {
+    const matched = url.match(/.*\//);
+    if (!matched) return '';
+    return matched[0].slice(0, -1);
 };
 
 const Navbar = ({
@@ -56,7 +71,10 @@ const Navbar = ({
             );
         }
         return (
-            <Button variant="ghost" onClick={() => history.goBack()}>
+            <Button
+                variant="ghost"
+                onClick={() => history.push(removeLastSubdirectory(url))}
+            >
                 <EdsIcon name={'arrow_back'} title="Back" />
             </Button>
         );
@@ -65,9 +83,10 @@ const Navbar = ({
     const determineRightContent = (option: string) => {
         if (option === 'logo') {
             return (
-                <Button variant="ghost" onClick={() => history.push(`/`)}>
-                    <img src={logo} alt="ProCoSys logo" />
-                </Button>
+                <></>
+                // <Button variant="ghost" onClick={() => history.push(`/`)}>
+                //     <img src={logo} alt="ProCoSys logo" />
+                // </Button>
             );
         }
         if (option === 'search') {
@@ -79,6 +98,9 @@ const Navbar = ({
                     <EdsIcon name={'search'} title="Search" />
                 </Button>
             );
+        }
+        if (option === 'newPunch') {
+            return <RightButton variant="ghost">New punch</RightButton>;
         }
         return <></>;
     };

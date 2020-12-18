@@ -13,7 +13,7 @@ const CommPkg = () => {
     const { path } = useRouteMatch();
     return (
         <>
-            <Navbar leftContent="back" />
+            <Navbar leftContent="back" midContent="" />
             <DetailsCard
                 details={{
                     MCStatus: details.mcStatus,
