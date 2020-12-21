@@ -7,10 +7,6 @@ import { Button } from '@equinor/eds-core-react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import PlantContext from '../contexts/PlantContext';
 import Navbar from '../components/navigation/Navbar';
-import NavigationFooter, {
-    CommPkgFooterWrapper,
-} from '../components/commPkg/NavigationFooter';
-import { SHADOW } from '../style/GlobalStyles';
 
 const BookmarksWrapper = styled.main`
     display: flex;
@@ -19,16 +15,13 @@ const BookmarksWrapper = styled.main`
     & h3 {
         text-align: center;
     }
-    & button {
-        width: fit-content;
-        align-self: flex-end;
-        margin-right: 4%;
-        margin-top: 12px;
-    }
 `;
 
-const BookmarksFooter = styled(CommPkgFooterWrapper)`
-    height: 60px;
+const SearchButton = styled(Button)`
+    width: fit-content;
+    align-self: flex-end;
+    margin-right: 4%;
+    margin-top: 12px;
 `;
 
 const Bookmarks = () => {
@@ -64,9 +57,9 @@ const Bookmarks = () => {
             <BookmarksWrapper>
                 {content}
 
-                <Button onClick={() => history.push(`${url}/search`)}>
+                <SearchButton onClick={() => history.push(`${url}/search`)}>
                     Find new Comm. pkg
-                </Button>
+                </SearchButton>
             </BookmarksWrapper>
         </>
     );

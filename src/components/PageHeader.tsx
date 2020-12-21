@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import EdsIcon from './EdsIcon';
 
-const PageHeaderWrapper = styled.div`
+const PageHeaderWrapper = styled.div<{ hasSubtitle: boolean }>`
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -11,14 +10,13 @@ const PageHeaderWrapper = styled.div`
 
     & h2 {
         text-align: center;
-        margin: 12px 0 0 0;
-    }
-    & svg {
-        margin: -5px 0 18px 0;
+        margin: ${(props) =>
+            props.hasSubtitle ? '12px 0 0 0' : '12px 0 24px 0'};
     }
     & h6 {
         text-align: center;
         margin: 0 0 5px 0;
+        margin-bottom: 24px;
     }
 `;
 type PageHeaderProps = {
@@ -27,10 +25,9 @@ type PageHeaderProps = {
 };
 const PageHeader = ({ title, subtitle }: PageHeaderProps) => {
     return (
-        <PageHeaderWrapper>
+        <PageHeaderWrapper hasSubtitle={!!subtitle}>
             <h2>{title}</h2>
             {subtitle && <h6>{subtitle}</h6>}
-            <EdsIcon name="arrow_drop_down" title="Caret down" />
         </PageHeaderWrapper>
     );
 };

@@ -33,7 +33,6 @@ const Checklist = () => {
                     plant,
                     checklistId
                 );
-                console.log(checklistResponse);
                 setCheckItems(checklistResponse.checkItems);
                 setChecklistDetails(checklistResponse.checkList);
                 setChecklistStatus(AsyncStatus.SUCCESS);

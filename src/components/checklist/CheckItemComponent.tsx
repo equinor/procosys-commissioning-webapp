@@ -32,27 +32,29 @@ const CheckItemComponent = ({ item }: CheckItemComponentProps) => {
         <EdsIcon name="radio_button_unselected" color="primary" />
     );
     return (
-        <CheckItemWrapper>
-            <p>{item.text}</p>
-            <RadioGroup>
-                {item.isOk ? (
-                    <Button variant="ghost">{radioButtonSelected}</Button>
-                ) : (
-                    <Button variant="ghost">{radioButtonUnselected}</Button>
-                )}
-                {item.isNotApplicable ? (
-                    <Button variant="ghost">{radioButtonSelected}</Button>
-                ) : (
-                    <Button variant="ghost">{radioButtonUnselected}</Button>
-                )}
-            </RadioGroup>
+        <>
+            <CheckItemWrapper>
+                <p>{item.text}</p>
+                <RadioGroup>
+                    {item.isOk ? (
+                        <Button variant="ghost">{radioButtonSelected}</Button>
+                    ) : (
+                        <Button variant="ghost">{radioButtonUnselected}</Button>
+                    )}
+                    {item.isNotApplicable ? (
+                        <Button variant="ghost">{radioButtonSelected}</Button>
+                    ) : (
+                        <Button variant="ghost">{radioButtonUnselected}</Button>
+                    )}
+                </RadioGroup>
+            </CheckItemWrapper>
             {item.metaTable && (
                 <MetaTable
                     labels={item.metaTable.columnLabels}
                     rows={item.metaTable.rows}
                 />
             )}
-        </CheckItemWrapper>
+        </>
     );
 };
 
