@@ -147,3 +147,70 @@ export const getChecklist = async (plantId: string, checklistId: string) => {
         return Promise.reject(error);
     }
 };
+
+export const postSetOk = async (
+    plantId: string,
+    checklistId: number,
+    checkItemId: number
+) => {
+    try {
+        await axios.post(
+            baseURL +
+                `CheckList/Item/SetOk?plantId=PCS$${plantId}&api-version=4.1`,
+            {
+                CheckListId: checklistId,
+                CheckItemId: checkItemId,
+            }
+        );
+        return Promise.resolve();
+    } catch (error) {
+        return Promise.reject(error);
+    }
+};
+
+export const postSetNA = async (
+    plantId: string,
+    checklistId: number,
+    checkItemId: number
+) => {
+    try {
+        await axios.post(
+            baseURL +
+                `CheckList/Item/SetNA?plantId=PCS$${plantId}&api-version=4.1`,
+            {
+                CheckListId: checklistId,
+                CheckItemId: checkItemId,
+            }
+        );
+        return Promise.resolve();
+    } catch (error) {
+        return Promise.reject(error);
+    }
+};
+
+export const putMetaTableCell = async (
+    plantId: string,
+    checkItemId: number,
+    checklistId: number,
+    columnId: number,
+    rowId: number,
+    value: string
+) => {
+    try {
+        await axios.put(
+            baseURL +
+                `CheckList/Item/MetaTableCell?plantId=PCS$${plantId}&api-version=4.1`,
+            {
+                CheckListId: checklistId,
+                CheckItemId: checkItemId,
+                ColumnId: columnId,
+                RowId: rowId,
+                Value: value,
+            }
+        );
+        return Promise.resolve();
+    } catch (error) {
+        console.log(error.message);
+        return Promise.reject(error.message);
+    }
+};
