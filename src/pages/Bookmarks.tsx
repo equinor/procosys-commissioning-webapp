@@ -7,6 +7,8 @@ import { Button } from '@equinor/eds-core-react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import PlantContext from '../contexts/PlantContext';
 import Navbar from '../components/navigation/Navbar';
+import { SHADOW } from '../style/GlobalStyles';
+import EdsIcon from '../components/EdsIcon';
 
 const BookmarksWrapper = styled.main`
     display: flex;
@@ -15,6 +17,16 @@ const BookmarksWrapper = styled.main`
     & h3 {
         text-align: center;
     }
+`;
+
+const NewBookmarkWrapper = styled.div`
+    height: 124px;
+    margin: 0 10px 10px 10px;
+    box-shadow: ${SHADOW};
+    border: 1px dashed #007079;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;
 
 const SearchButton = styled(Button)`
@@ -56,10 +68,12 @@ const Bookmarks = () => {
             <Navbar rightContent="search" />
             <BookmarksWrapper>
                 {content}
-
-                <SearchButton onClick={() => history.push(`${url}/search`)}>
-                    Find new Comm. pkg
-                </SearchButton>
+                <NewBookmarkWrapper>
+                    <Button onClick={() => history.push(`${url}/search`)}>
+                        <EdsIcon name="search" color="white" />
+                        Find comm. pkg
+                    </Button>
+                </NewBookmarkWrapper>
             </BookmarksWrapper>
         </>
     );
