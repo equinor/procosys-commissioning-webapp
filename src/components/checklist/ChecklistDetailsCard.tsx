@@ -16,6 +16,9 @@ const ChecklistDetailsCardWrapper = styled.div`
     align-items: center;
     box-shadow: ${SHADOW};
     & p {
+        &:first-of-type {
+            padding-right: 15px;
+        }
         margin: 0;
         flex: 3;
     }
