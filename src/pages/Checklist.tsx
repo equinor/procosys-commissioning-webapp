@@ -24,7 +24,13 @@ const Checklist = () => {
     const [checklistDetails, setChecklistDetails] = useState<
         ChecklistDetails
     >();
+    const [isSigned, setIsSigned] = useState(false);
     const { checklistId, plant } = useParams<CommParams>();
+
+    useEffect(() => {
+        if (!checklistDetails) return;
+        setIsSigned(!!checklistDetails.signedByFirstName);
+    }, [checklistDetails]);
 
     useEffect(() => {
         (async () => {
@@ -62,8 +68,15 @@ const Checklist = () => {
         content = (
             <ChecklistWrapper>
                 <ChecklistDetailsCard details={checklistDetails} />
-                <CheckItems items={checkItems} />
-                <ChecklistSignature details={checklistDetails} />
+                <CheckItems
+                    items={checkItems}
+                    details={checklistDetails}
+                    isSigned={isSigned}
+                />
+                <ChecklistSignature
+                    details={checklistDetails}
+                    setIsSigned={setIsSigned}
+                />
             </ChecklistWrapper>
         );
     }
