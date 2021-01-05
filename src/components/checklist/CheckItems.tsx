@@ -8,7 +8,7 @@ import DetailsCard from '../commPkg/DetailsCard';
 const CheckItemsWrapper = styled.div`
     & > div {
         &:first-child {
-            margin-top: 24px;
+            /* margin-top: 24px; */
         }
     }
 `;
@@ -20,10 +20,20 @@ type CheckItemsProps = {
 };
 
 const CheckItems = ({ items, details, isSigned }: CheckItemsProps) => {
-    const determineCheckItem = (item: CheckItem, index: number) => {
-        if (item.isHeading) return <CheckHeader text={item.text} />;
+    const determineCheckItem = (
+        item: CheckItem,
+        index: number,
+        nextItemIsHeading: boolean
+    ) => {
+        if (item.isHeading)
+            return (
+                <CheckHeader
+                    text={item.text}
+                    removeLabels={nextItemIsHeading}
+                />
+            );
         // Return "OK / NA" labels if the first check item is not a heading.
-        if (index === 0) return <CheckHeader text=" " />;
+        if (index === 0) return <CheckHeader text="" />;
         return (
             <CheckItemComponent
                 item={item}
@@ -32,11 +42,16 @@ const CheckItems = ({ items, details, isSigned }: CheckItemsProps) => {
             />
         );
     };
-    const itemsToDisplay = items.map((item, index) => (
-        <React.Fragment key={item.id}>
-            {determineCheckItem(item, index)}
-        </React.Fragment>
-    ));
+    const itemsToDisplay = items.map((item, index) => {
+        let nextItemIsHeading = items[index + 1]
+            ? items[index + 1].isHeading
+            : true;
+        return (
+            <React.Fragment key={item.id}>
+                {determineCheckItem(item, index, nextItemIsHeading)}
+            </React.Fragment>
+        );
+    });
     return <CheckItemsWrapper>{itemsToDisplay}</CheckItemsWrapper>;
 };
 
