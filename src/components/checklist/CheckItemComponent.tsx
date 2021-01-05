@@ -1,28 +1,38 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { CheckItem } from '../../services/apiTypes';
-import { Button } from '@equinor/eds-core-react';
-import EdsIcon from '../EdsIcon';
+import { Checkbox } from '@equinor/eds-core-react';
 import MetaTable from './MetaTable';
 import * as api from '../../services/api';
 import { CommParams } from '../../App';
 import { useParams } from 'react-router-dom';
+import CheckItemDescription from './CheckItemDescription';
 
 // This file has -Component suffixed to its name to avoid naming conflict with the CheckItem type.
 
 const CheckItemWrapper = styled.div`
+    margin-bottom: 18px;
+`;
+
+const DescriptionAndCheckWrapper = styled.div`
     display: flex;
     justify-content: space-between;
-    align-items: center;
+`;
+
+const LeftWrapper = styled.div`
     & > p {
         flex: auto;
+        margin: 0;
+        padding-top: 13px;
+        padding-bottom: 0;
     }
 `;
 
-const RadioGroup = styled.div`
-    flex: 0 0 116px;
+const CheckboxGroup = styled.div`
+    flex: 0 0 80px;
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
 `;
 
 type CheckItemComponentProps = {
@@ -37,7 +47,18 @@ const CheckItemComponent = ({ item, isSigned }: CheckItemComponentProps) => {
     const [isNA, setIsNA] = useState(item.isNotApplicable);
     const [isOk, setIsOk] = useState(item.isOk);
 
+    const clearCheckmarks = async () => {
+        try {
+            await api.postClear(plant, parseInt(checklistId), item.id);
+            setIsOk(false);
+            setIsNA(false);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     const handleSetNA = async () => {
+        if (isNA) return clearCheckmarks();
         try {
             await api.postSetNA(plant, parseInt(checklistId), item.id);
             setIsOk(false);
@@ -48,6 +69,7 @@ const CheckItemComponent = ({ item, isSigned }: CheckItemComponentProps) => {
     };
 
     const handleSetOk = async () => {
+        if (isOk) return clearCheckmarks();
         try {
             await api.postSetOk(plant, parseInt(checklistId), item.id);
             setIsNA(false);
@@ -57,41 +79,44 @@ const CheckItemComponent = ({ item, isSigned }: CheckItemComponentProps) => {
         }
     };
 
-    const radioButtonSelected = (
-        <EdsIcon name="check_circle_outlined" color="primary" />
-    );
-    const radioButtonUnselected = (
-        <EdsIcon name="radio_button_unselected" color="primary" />
-    );
     return (
         <>
             <CheckItemWrapper>
-                <p>{item.text}</p>
-                <RadioGroup>
-                    {isOk ? (
-                        <Button variant="ghost">{radioButtonSelected}</Button>
-                    ) : (
-                        <Button variant="ghost" onClick={handleSetOk}>
-                            {radioButtonUnselected}
-                        </Button>
-                    )}
-                    {isNA ? (
-                        <Button variant="ghost">{radioButtonSelected}</Button>
-                    ) : (
-                        <Button variant="ghost" onClick={handleSetNA}>
-                            {radioButtonUnselected}
-                        </Button>
-                    )}
-                </RadioGroup>
+                <DescriptionAndCheckWrapper>
+                    <LeftWrapper>
+                        <p>{item.text}</p>
+                        {item.detailText && (
+                            <CheckItemDescription
+                                description={item.detailText}
+                            />
+                        )}
+                    </LeftWrapper>
+                    <CheckboxGroup>
+                        <Checkbox
+                            disabled={isSigned}
+                            enterKeyHint
+                            onChange={handleSetOk}
+                            checked={isOk}
+                            label={''}
+                        />
+                        <Checkbox
+                            disabled={isSigned}
+                            enterKeyHint
+                            onChange={handleSetNA}
+                            checked={isNA}
+                            label={''}
+                        />
+                    </CheckboxGroup>
+                </DescriptionAndCheckWrapper>
+                {item.metaTable && (
+                    <MetaTable
+                        labels={item.metaTable.columnLabels}
+                        rows={item.metaTable.rows}
+                        isSigned={isSigned}
+                        checkItemId={item.id}
+                    />
+                )}
             </CheckItemWrapper>
-            {item.metaTable && (
-                <MetaTable
-                    labels={item.metaTable.columnLabels}
-                    rows={item.metaTable.rows}
-                    isSigned={isSigned}
-                    checkItemId={item.id}
-                />
-            )}
         </>
     );
 };
