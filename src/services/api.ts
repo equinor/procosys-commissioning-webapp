@@ -188,6 +188,26 @@ export const postSetNA = async (
     }
 };
 
+export const postClear = async (
+    plantId: string,
+    checklistId: number,
+    checkItemId: number
+) => {
+    try {
+        await axios.post(
+            baseURL +
+                `CheckList/Item/Clear?plantId=PCS$${plantId}&api-version=4.1`,
+            {
+                CheckListId: checklistId,
+                CheckItemId: checkItemId,
+            }
+        );
+        return Promise.resolve();
+    } catch (error) {
+        return Promise.reject(error);
+    }
+};
+
 export const putMetaTableCell = async (
     plantId: string,
     checkItemId: number,
@@ -207,6 +227,36 @@ export const putMetaTableCell = async (
                 RowId: rowId,
                 Value: value,
             }
+        );
+        return Promise.resolve();
+    } catch (error) {
+        console.log(error.message);
+        return Promise.reject(error.message);
+    }
+};
+
+export const postSign = async (plantId: string, checklistId: number) => {
+    try {
+        await axios.post(
+            baseURL +
+                `CheckList/Comm/Sign?plantId=PCS$${plantId}&api-version=4.1`,
+            checklistId,
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+        return Promise.resolve();
+    } catch (error) {
+        console.log(error.message);
+        return Promise.reject(error.message);
+    }
+};
+
+export const postUnsign = async (plantId: string, checklistId: number) => {
+    try {
+        await axios.post(
+            baseURL +
+                `CheckList/Comm/Unsign?plantId=PCS$${plantId}&api-version=4.1`,
+            checklistId,
+            { headers: { 'Content-Type': 'application/json' } }
         );
         return Promise.resolve();
     } catch (error) {
