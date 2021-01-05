@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ColumnLabel, Row } from '../../services/apiTypes';
 import styled from 'styled-components';
 import MetaTableCell from './MetaTableCell';
+import EdsIcon from '../EdsIcon';
 
 const MetaTableWrapper = styled.table`
     border-spacing: 4px;
@@ -16,7 +17,6 @@ const MetaTableWrapper = styled.table`
             text-align: center;
         }
     }
-
     & tbody {
         vertical-align: bottom;
         & th {
@@ -37,13 +37,22 @@ const MetaTableWrapper = styled.table`
     }
 `;
 
-const HorizontalScroll = styled.div<{ multipleColumns: boolean }>`
-    overflow: scroll;
-    padding: 0 18px 16px 24px;
-    margin-bottom: 24px;
-    border-left: 1px solid #007079;
-    border-bottom: 1px solid #007079;
-    border-color: #000 transparent transparent transparent;
+const HorizontalScroll = styled.div`
+    overflow-x: scroll;
+    padding: 10px 10px 0px 24px;
+    border-left: 4px solid #007079;
+    margin: 4px 0 24px 0;
+    & > div {
+        & > p {
+            margin: 0 4px 0 0;
+        }
+
+        background-color: #deecee;
+        padding: 4px 4px 4px 8px;
+        display: flex;
+        align-items: center;
+        width: fit-content;
+    }
 `;
 
 type MetaTableProps = {
@@ -54,6 +63,12 @@ type MetaTableProps = {
 };
 
 const MetaTable = ({ labels, rows, isSigned, checkItemId }: MetaTableProps) => {
+    const tableContainerRef = useRef<HTMLDivElement>(
+        document.createElement('div')
+    );
+    useEffect(() => console.log(tableContainerRef.current.scrollWidth), [
+        tableContainerRef,
+    ]);
     const headers = labels.map((label) => (
         <React.Fragment key={label.id}>
             {label && (
@@ -88,7 +103,7 @@ const MetaTable = ({ labels, rows, isSigned, checkItemId }: MetaTableProps) => {
     });
 
     return (
-        <HorizontalScroll multipleColumns={labels.length > 2}>
+        <HorizontalScroll ref={tableContainerRef}>
             <MetaTableWrapper>
                 {headers.length > 1 && (
                     <thead>
@@ -101,6 +116,15 @@ const MetaTable = ({ labels, rows, isSigned, checkItemId }: MetaTableProps) => {
 
                 <tbody>{rowsToDisplay}</tbody>
             </MetaTableWrapper>
+            {tableContainerRef.current.scrollWidth >
+                tableContainerRef.current.clientWidth && (
+                <div>
+                    <p>
+                        <i>Long table. Swipe right</i>
+                    </p>
+                    <EdsIcon name="arrow_drop_right" color="primary" />
+                </div>
+            )}
         </HorizontalScroll>
     );
 };
