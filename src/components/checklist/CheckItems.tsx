@@ -1,47 +1,58 @@
 import React from 'react';
 import styled from 'styled-components';
-import { CheckItem } from '../../services/apiTypes';
+import { CheckItem, ChecklistDetails } from '../../services/apiTypes';
 import CheckItemComponent from './CheckItemComponent';
+import CheckHeader from './CheckHeader';
+import DetailsCard from '../commPkg/DetailsCard';
 
-const GreyText = styled.p`
-    margin: 0;
-    color: #a2a2a2;
-`;
-
-const CheckHeader = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-top: 16px;
-    & div {
-        flex: 0 0 116px;
-        display: flex;
-        justify-content: space-around;
-    }
-    & h5 {
-        margin-bottom: 12px;
+const CheckItemsWrapper = styled.div`
+    & > div {
+        &:first-child {
+            /* margin-top: 24px; */
+        }
     }
 `;
 
 type CheckItemsProps = {
     items: CheckItem[];
+    details: ChecklistDetails;
+    isSigned: boolean;
 };
 
-const CheckItems = ({ items }: CheckItemsProps) => {
-    const itemsToDisplay = items.map((item, index) =>
-        item.isHeading ? (
-            <CheckHeader>
-                <h5>{item.text}</h5>
-                <div>
-                    <GreyText>OK</GreyText>
-                    <GreyText>NA</GreyText>
-                </div>
-            </CheckHeader>
-        ) : (
-            <CheckItemComponent item={item} />
-        )
-    );
-    return <div>{itemsToDisplay}</div>;
+const CheckItems = ({ items, details, isSigned }: CheckItemsProps) => {
+    const determineCheckItem = (
+        item: CheckItem,
+        index: number,
+        nextItemIsHeading: boolean
+    ) => {
+        if (item.isHeading)
+            return (
+                <CheckHeader
+                    text={item.text}
+                    removeLabels={nextItemIsHeading}
+                />
+            );
+        // Return "OK / NA" labels if the first check item is not a heading.
+        if (index === 0) return <CheckHeader text="" />;
+        return (
+            <CheckItemComponent
+                item={item}
+                checklistId={details.id}
+                isSigned={isSigned}
+            />
+        );
+    };
+    const itemsToDisplay = items.map((item, index) => {
+        let nextItemIsHeading = items[index + 1]
+            ? items[index + 1].isHeading
+            : true;
+        return (
+            <React.Fragment key={item.id}>
+                {determineCheckItem(item, index, nextItemIsHeading)}
+            </React.Fragment>
+        );
+    });
+    return <CheckItemsWrapper>{itemsToDisplay}</CheckItemsWrapper>;
 };
 
 export default CheckItems;

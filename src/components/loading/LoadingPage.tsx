@@ -26,7 +26,7 @@ const LoadingPage = ({ loadingText }: LoadingPageProps) => {
     return (
         <LoadingPageWrapper>
             <h1>{loadingText}</h1>
-            <StarProgress size="100px" />
+            <StarProgress height="100px" />
         </LoadingPageWrapper>
     );
 };

@@ -11,11 +11,27 @@ import CheckItems from '../components/checklist/CheckItems';
 import ChecklistSignature from '../components/checklist/ChecklistSignature';
 import ChecklistDetailsCard from '../components/checklist/ChecklistDetailsCard';
 import styled from 'styled-components';
+import EdsIcon from '../components/EdsIcon';
+import PageHeader from '../components/PageHeader';
 
 const ChecklistWrapper = styled.main`
     padding: 0 4%;
     display: flex;
     flex-direction: column;
+`;
+
+const IsSignedBanner = styled.div`
+    background-color: #deecee;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    margin-top: 16px;
+    & p {
+        margin: 0 0 0 12px;
+    }
+    & svg {
+        flex: 24px 0 0;
+    }
 `;
 
 const Checklist = () => {
@@ -24,7 +40,13 @@ const Checklist = () => {
     const [checklistDetails, setChecklistDetails] = useState<
         ChecklistDetails
     >();
+    const [isSigned, setIsSigned] = useState(false);
     const { checklistId, plant } = useParams<CommParams>();
+
+    useEffect(() => {
+        if (!checklistDetails) return;
+        setIsSigned(!!checklistDetails.signedByFirstName);
+    }, [checklistDetails]);
 
     useEffect(() => {
         (async () => {
@@ -33,7 +55,6 @@ const Checklist = () => {
                     plant,
                     checklistId
                 );
-                console.log(checklistResponse);
                 setCheckItems(checklistResponse.checkItems);
                 setChecklistDetails(checklistResponse.checkList);
                 setChecklistStatus(AsyncStatus.SUCCESS);
@@ -58,13 +79,31 @@ const Checklist = () => {
         checklistStatus === AsyncStatus.SUCCESS &&
         checklistDetails &&
         checklistDetails.id &&
-        checkItems.length > 0
+        checkItems.length
     ) {
         content = (
             <ChecklistWrapper>
+                <PageHeader title="Checklist (CPCL)" />
+                {isSigned && (
+                    <IsSignedBanner>
+                        <EdsIcon name="info_circle" />
+                        <p>
+                            This checklist is signed and cannot be edited.
+                            Unsign to make changes.
+                        </p>
+                    </IsSignedBanner>
+                )}
                 <ChecklistDetailsCard details={checklistDetails} />
-                <CheckItems items={checkItems} />
-                <ChecklistSignature details={checklistDetails} />
+                <CheckItems
+                    items={checkItems}
+                    details={checklistDetails}
+                    isSigned={isSigned}
+                />
+                <ChecklistSignature
+                    isSigned={isSigned}
+                    details={checklistDetails}
+                    setIsSigned={setIsSigned}
+                />
             </ChecklistWrapper>
         );
     }
