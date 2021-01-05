@@ -34,6 +34,10 @@ const UserInfo = styled.div`
     & p {
         margin: 0;
     }
+    & button {
+        width: fit-content;
+        margin-bottom: 24px;
+    }
 `;
 
 const UserNameText = styled.p`
@@ -53,13 +57,20 @@ const Backdrop = styled(animated.div)`
 `;
 
 const PlantInfo = styled.div`
+    & h4 {
+        margin: 0 0 12px 0;
+    }
+    & p {
+        margin: 16px 0 0 0;
+    }
+    & button {
+        width: fit-content;
+        margin-bottom: 24px;
+    }
     padding: 16px;
     display: flex;
     flex-direction: column;
     background-color: #fafafa;
-    & button {
-        display: flex;
-    }
 `;
 
 type SideMenuProps = {
@@ -105,6 +116,7 @@ const SideMenu = ({
                 </UserInfo>
                 <PlantInfo>
                     <p>Selected plant:</p>
+                    <h4>{currentPlant ? currentPlant.title : 'None'}</h4>
                     <Button
                         onClick={() => {
                             window.localStorage.removeItem(StorageKey.PLANT);
@@ -113,14 +125,21 @@ const SideMenu = ({
                             history.push('/');
                         }}
                         color="secondary"
+                        variant="contained"
                     >
-                        {currentPlant ? currentPlant.title : 'None'}
+                        Change plant
                         <EdsIcon name="chevron_right" color="white" />
                     </Button>
                     {currentPlant && (
                         <>
                             <p>Selected project:</p>
+                            <h4>
+                                {currentProject
+                                    ? currentProject.description
+                                    : 'None'}
+                            </h4>
                             <Button
+                                variant="contained"
                                 color="secondary"
                                 onClick={() => {
                                     window.localStorage.removeItem(
@@ -130,9 +149,7 @@ const SideMenu = ({
                                     history.push(`/${params.plant}`);
                                 }}
                             >
-                                {currentProject
-                                    ? currentProject.description
-                                    : 'None'}
+                                Change project
                                 <EdsIcon name="chevron_right" color="white" />
                             </Button>
                         </>

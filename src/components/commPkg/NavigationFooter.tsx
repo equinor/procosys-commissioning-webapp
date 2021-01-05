@@ -1,15 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 import EdsIcon from '../EdsIcon';
-import { Button } from '@equinor/eds-core-react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import { COLORS, SHADOW } from '../../style/GlobalStyles';
 
 export const CommPkgFooterWrapper = styled.div`
     width: 100%;
+    max-width: 650px;
     position: fixed;
     bottom: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     background-image: linear-gradient(
         to bottom,
         rgba(255, 255, 255, 0),

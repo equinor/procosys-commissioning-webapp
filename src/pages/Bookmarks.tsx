@@ -21,19 +21,12 @@ const BookmarksWrapper = styled.main`
 
 const NewBookmarkWrapper = styled.div`
     height: 124px;
-    margin: 0 10px 10px 10px;
+    margin: 0 4% 10px 4%;
     box-shadow: ${SHADOW};
     border: 1px dashed #007079;
     display: flex;
     justify-content: center;
     align-items: center;
-`;
-
-const SearchButton = styled(Button)`
-    width: fit-content;
-    align-self: flex-end;
-    margin-right: 4%;
-    margin-top: 12px;
 `;
 
 const Bookmarks = () => {
@@ -50,7 +43,7 @@ const Bookmarks = () => {
                 MCStatus: bookmark.MCStatus,
                 pkgNumber: bookmark.pkgNumber,
             }}
-            onBookmarksPage={true}
+            atBookmarksPage={true}
         />
     ));
 
@@ -64,7 +57,7 @@ const Bookmarks = () => {
     if (bookmarks.length < 1)
         content = <PageHeader title="No bookmarks to display" />;
     return (
-        <>
+        <main>
             <Navbar rightContent="search" />
             <BookmarksWrapper>
                 {content}
@@ -75,7 +68,7 @@ const Bookmarks = () => {
                     </Button>
                 </NewBookmarkWrapper>
             </BookmarksWrapper>
-        </>
+        </main>
     );
 };
 

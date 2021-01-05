@@ -3,8 +3,9 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
 const SkeletonLoadingPageWrapper = styled.main`
+    padding-top: 24px;
     & h3 {
-        margin-top: 24px;
+        margin: 0;
         text-align: center;
     }
 `;
@@ -68,10 +69,10 @@ const SkeletonLoadingPage = ({
                 <SkeletonRow
                     data-testid="skeleton-row"
                     key={i}
-                    fullWidth={fullWidth}
+                    fullWidth={fullWidth ? true : false}
                 />
             ) : (
-                <SkeletonRow key={i} fullWidth={fullWidth} />
+                <SkeletonRow key={i} fullWidth={fullWidth ? true : false} />
             )
         );
     }

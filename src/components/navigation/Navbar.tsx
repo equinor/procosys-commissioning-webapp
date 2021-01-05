@@ -11,14 +11,17 @@ import { CommParams } from '../../App';
 const NavbarWrapper = styled.nav`
     height: 54px;
     width: 100%;
+    max-width: 650px;
     background-color: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 4px 6px 4px 0;
+    box-sizing: border-box;
+    padding: 4px 2% 4px 2%;
     position: fixed;
     top: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 10;
     & img {
         width: 24px;
@@ -37,7 +40,7 @@ type NavbarProps = {
 };
 
 const RightButton = styled(Button)`
-    margin-right: 4%;
+    /* margin-right: 4%; */
 `;
 
 const removeLastSubdirectory = (url: string) => {
@@ -65,14 +68,17 @@ const Navbar = ({
     const determineLeftContent = (option: string) => {
         if (option === 'hamburger') {
             return (
-                <Button variant="ghost" onClick={() => setDrawerIsOpen(true)}>
+                <Button
+                    variant="ghost_icon"
+                    onClick={() => setDrawerIsOpen(true)}
+                >
                     <EdsIcon name={'menu'} color="#555" title="Menu" />
                 </Button>
             );
         }
         return (
             <Button
-                variant="ghost"
+                variant="ghost_icon"
                 onClick={() => history.push(removeLastSubdirectory(url))}
             >
                 <EdsIcon name={'arrow_back'} title="Back" />
@@ -92,7 +98,7 @@ const Navbar = ({
         if (option === 'search') {
             return (
                 <Button
-                    variant="ghost"
+                    variant="ghost_icon"
                     onClick={() => history.push(`${url}/search`)}
                 >
                     <EdsIcon name={'search'} title="Search" />

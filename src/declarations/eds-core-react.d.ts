@@ -1,1 +1,1 @@
-declare module '@equinor/eds-core-react';
+// declare module '@equinor/eds-core-react';

@@ -7,12 +7,17 @@ import Scope from '../components/commPkg/Scope';
 import Tasks from '../components/commPkg/Tasks';
 import PunchList from '../components/commPkg/PunchList';
 import Navbar from '../components/navigation/Navbar';
+import styled from 'styled-components';
+
+const CommPkgWrapper = styled.main`
+    padding-top: 12px;
+`;
 
 const CommPkg = () => {
     const { details, scope, punchList, tasks } = useContext(CommPkgContext);
     const { path } = useRouteMatch();
     return (
-        <>
+        <CommPkgWrapper>
             <Navbar leftContent="back" midContent="" />
             <DetailsCard
                 details={{
@@ -37,7 +42,7 @@ const CommPkg = () => {
                 numberOfPunches={punchList.length}
                 numberOfTasks={tasks.length}
             />
-        </>
+        </CommPkgWrapper>
     );
 };
 

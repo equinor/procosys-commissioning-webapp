@@ -90,9 +90,11 @@ const MetaTableCell = ({
                     'default'
                 }
                 onBlur={submitData}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setInputValue(e.target.value)
-                }
+                onChange={(
+                    event: React.ChangeEvent<
+                        HTMLTextAreaElement | HTMLInputElement
+                    >
+                ) => setInputValue(event.target.value)}
             />
             <HelperText>
                 <p>{helperText()}</p>
