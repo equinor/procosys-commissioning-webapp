@@ -8,7 +8,7 @@ import DetailsCard from '../commPkg/DetailsCard';
 const CheckItemsWrapper = styled.div`
     & > div {
         &:first-child {
-            /* margin-top: 24px; */
+            margin-top: 36px;
         }
     }
 `;

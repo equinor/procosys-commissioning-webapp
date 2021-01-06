@@ -6,8 +6,11 @@ const CheckHeaderWrapper = styled.div`
     justify-content: space-between;
     align-items: flex-end;
     margin-top: 48px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 2px dashed #deecee;
     & div {
-        flex: 0 0 95px;
+        flex: 0 0 98px;
         display: flex;
         justify-content: space-around;
     }

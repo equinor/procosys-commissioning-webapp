@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { CheckItem } from '../../services/apiTypes';
-import { Checkbox } from '@equinor/eds-core-react';
+import { Checkbox, Switch } from '@equinor/eds-core-react';
 import MetaTable from './MetaTable';
 import * as api from '../../services/api';
 import { CommParams } from '../../App';
@@ -10,21 +10,30 @@ import CheckItemDescription from './CheckItemDescription';
 
 // This file has -Component suffixed to its name to avoid naming conflict with the CheckItem type.
 
-const CheckItemWrapper = styled.div`
+const CheckItemWrapper = styled.div<{ disabled: boolean }>`
     margin-bottom: 18px;
+    border: ${(props) =>
+        props.disabled ? '2px solid #f7f7f7' : '2px solid #deecee'};
+    background-color: ${(props) =>
+        props.disabled ? '#f7f7f7' : 'transparent'};
+    transition: background-color 0.3s ease-out;
+    padding: 12px 0 12px 16px;
+    & p,
+    button {
+        color: ${(props) => (props.disabled ? '#7a7a7a' : 'initial')};
+    }
 `;
 
 const DescriptionAndCheckWrapper = styled.div`
     display: flex;
     justify-content: space-between;
+    align-items: center;
 `;
 
 const LeftWrapper = styled.div`
     & > p {
         flex: auto;
         margin: 0;
-        padding-top: 13px;
-        padding-bottom: 0;
     }
 `;
 
@@ -32,7 +41,6 @@ const CheckboxGroup = styled.div`
     flex: 0 0 80px;
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
 `;
 
 type CheckItemComponentProps = {
@@ -81,7 +89,7 @@ const CheckItemComponent = ({ item, isSigned }: CheckItemComponentProps) => {
 
     return (
         <>
-            <CheckItemWrapper>
+            <CheckItemWrapper disabled={isNA}>
                 <DescriptionAndCheckWrapper>
                     <LeftWrapper>
                         <p>{item.text}</p>
@@ -93,13 +101,13 @@ const CheckItemComponent = ({ item, isSigned }: CheckItemComponentProps) => {
                     </LeftWrapper>
                     <CheckboxGroup>
                         <Checkbox
-                            disabled={isSigned}
+                            disabled={isSigned || isNA}
                             enterKeyHint
                             onChange={handleSetOk}
                             checked={isOk}
                             label={''}
                         />
-                        <Checkbox
+                        <Switch
                             disabled={isSigned}
                             enterKeyHint
                             onChange={handleSetNA}
@@ -110,6 +118,7 @@ const CheckItemComponent = ({ item, isSigned }: CheckItemComponentProps) => {
                 </DescriptionAndCheckWrapper>
                 {item.metaTable && (
                     <MetaTable
+                        disabled={isNA || isSigned}
                         labels={item.metaTable.columnLabels}
                         rows={item.metaTable.rows}
                         isSigned={isSigned}

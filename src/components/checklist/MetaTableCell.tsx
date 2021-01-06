@@ -21,13 +21,13 @@ type MetaTableCellProps = {
     columnId: number;
     value: string;
     unit: string;
-    isSigned: boolean;
+    disabled: boolean;
 };
 
 const MetaTableCell = ({
     value,
     unit,
-    isSigned,
+    disabled,
     rowId,
     columnId,
     checkItemId,
@@ -82,8 +82,9 @@ const MetaTableCell = ({
             <TextField
                 id={rowId.toString() + columnId.toString() + 'textfield'}
                 meta={unit}
+                label={}
                 value={inputValue ? inputValue : ''}
-                disabled={isSigned}
+                disabled={disabled}
                 variant={
                     (submitStatus === AsyncStatus.ERROR && 'error') ||
                     (submitStatus === AsyncStatus.SUCCESS && 'success') ||

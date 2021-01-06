@@ -11,7 +11,7 @@ import { CommParams } from '../../App';
 const NavbarWrapper = styled.nav`
     height: 54px;
     width: 100%;
-    max-width: 650px;
+    max-width: 768px;
     background-color: #fff;
     display: flex;
     justify-content: space-between;
