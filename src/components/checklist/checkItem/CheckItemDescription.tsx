@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import EdsIcon from '../EdsIcon';
+import EdsIcon from '../../EdsIcon';
 
 const CheckItemDescriptionWrapper = styled.div`
     & button {

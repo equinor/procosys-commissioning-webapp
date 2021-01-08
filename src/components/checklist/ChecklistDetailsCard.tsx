@@ -9,8 +9,9 @@ const FormularTypeText = styled.p`
 `;
 
 const ChecklistDetailsCardWrapper = styled.div`
-    padding: 12px 0;
+    padding: 16px 0;
     margin-top: 16px;
+    margin-bottom: 32px;
     display: flex;
     justify-content: space-between;
     align-items: center;

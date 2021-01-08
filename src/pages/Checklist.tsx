@@ -94,7 +94,7 @@ const Checklist = () => {
                 )}
                 <ChecklistDetailsCard details={checklistDetails} />
                 <CheckItems
-                    items={checkItems}
+                    checkItems={checkItems}
                     details={checklistDetails}
                     isSigned={isSigned}
                 />

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ColumnLabel, Row } from '../../services/apiTypes';
+import { ColumnLabel, Row } from '../../../services/apiTypes';
 import styled from 'styled-components';
 import MetaTableCell from './MetaTableCell';
-import EdsIcon from '../EdsIcon';
+import EdsIcon from '../../EdsIcon';
 
 const MetaTableWrapper = styled.table`
     border-spacing: 4px;
@@ -39,9 +39,9 @@ const MetaTableWrapper = styled.table`
 
 const HorizontalScroll = styled.div`
     overflow-x: scroll;
-    padding: 0px 10px 0px 24px;
-    /* border-left: 4px solid #007079; */
-    margin: 0px 0 0px 0;
+    padding: 6px 10px 0px 24px;
+    border-left: 2px solid #deecee;
+    margin-top: 6px;
     & > div {
         & > p {
             margin: 0 4px 0 0;
@@ -95,13 +95,14 @@ const MetaTable = ({ labels, rows, disabled, checkItemId }: MetaTableProps) => {
                     columnId={cell.columnId}
                     unit={cell.unit}
                     value={cell.value}
+                    label={row.cells.length < 2 ? row.label : ''}
                 />
             );
         });
         return (
             <tr key={row.id}>
                 <th>
-                    <p>{row.label}</p>
+                    <p>{row.cells.length > 1 && row.label}</p>
                 </th>
                 {cells}
             </tr>
