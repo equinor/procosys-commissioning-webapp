@@ -106,7 +106,14 @@ const Navbar = ({
             );
         }
         if (option === 'newPunch') {
-            return <RightButton variant="ghost">New punch</RightButton>;
+            return (
+                <RightButton
+                    variant="ghost"
+                    onClick={() => history.push(`${url}/new-punch`)}
+                >
+                    New punch
+                </RightButton>
+            );
         }
         return <></>;
     };
