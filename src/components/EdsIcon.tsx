@@ -22,6 +22,8 @@ import {
     swap_horizontal,
     arrow_drop_right,
     info_circle,
+    checkbox,
+    checkbox_outline,
 } from '@equinor/eds-icons';
 import { Icon } from '@equinor/eds-core-react';
 import React from 'react';
@@ -50,6 +52,8 @@ Icon.add({
     swap_horizontal,
     arrow_drop_right,
     info_circle,
+    checkbox,
+    checkbox_outline,
 });
 
 type IconProps = {

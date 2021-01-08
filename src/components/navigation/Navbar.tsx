@@ -11,7 +11,7 @@ import { CommParams } from '../../App';
 const NavbarWrapper = styled.nav`
     height: 54px;
     width: 100%;
-    max-width: 650px;
+    max-width: 768px;
     background-color: #fff;
     display: flex;
     justify-content: space-between;
@@ -106,7 +106,14 @@ const Navbar = ({
             );
         }
         if (option === 'newPunch') {
-            return <RightButton variant="ghost">New punch</RightButton>;
+            return (
+                <RightButton
+                    variant="ghost"
+                    onClick={() => history.push(`${url}/new-punch`)}
+                >
+                    New punch
+                </RightButton>
+            );
         }
         return <></>;
     };

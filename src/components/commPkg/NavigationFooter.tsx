@@ -5,7 +5,7 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 
 export const CommPkgFooterWrapper = styled.div`
     width: 100%;
-    max-width: 650px;
+    max-width: 768px;
     position: fixed;
     bottom: 0;
     left: 50%;

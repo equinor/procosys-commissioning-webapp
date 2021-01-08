@@ -7,7 +7,7 @@ const GlobalStyles = createGlobalStyle`
         margin: 0 auto;
         padding-top: 54px;
         background-color: #deecee;
-        max-width: 650px;
+        max-width: 768px;
     }
     h1 {
         ${tokens.typography.heading.h1 as CSSObject}

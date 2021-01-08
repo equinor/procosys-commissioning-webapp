@@ -20,13 +20,9 @@ const BookmarksWrapper = styled.main`
 `;
 
 const NewBookmarkWrapper = styled.div`
-    height: 124px;
-    margin: 0 4% 10px 4%;
-    box-shadow: ${SHADOW};
-    border: 1px dashed #007079;
+    margin: 12px 4% 10px 4%;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-end;
 `;
 
 const Bookmarks = () => {

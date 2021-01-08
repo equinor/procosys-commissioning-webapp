@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';
-import EdsIcon from '../EdsIcon';
+import EdsIcon from '../../EdsIcon';
 
 const CheckItemDescriptionWrapper = styled.div`
-    margin-bottom: 2px;
     & button {
         margin: 0;
         padding: 0;
@@ -12,10 +10,14 @@ const CheckItemDescriptionWrapper = styled.div`
         background: none;
         display: flex;
         align-items: center;
-        color: #007079;
+
+        & p {
+            margin: 0;
+            color: #007079;
+        }
     }
-    & p {
-        margin: 8px 0px 0px 0px;
+    & > p {
+        margin: 8px 0px 8px 0px;
         padding-left: 24px;
         border-left: 4px solid #deecee;
         color: #6c6c6c;
@@ -31,7 +33,7 @@ const CheckItemDescription = ({ description }: CheckItemDescriptionProps) => {
     return (
         <CheckItemDescriptionWrapper>
             <button onClick={() => setShowInfo((current) => !current)}>
-                {showInfo ? 'Less details' : 'More details'}{' '}
+                <p>{showInfo ? 'Hide details' : 'Show details'}</p>
                 <EdsIcon
                     name={showInfo ? 'chevron_down' : 'chevron_right'}
                     size={16}

@@ -6,8 +6,11 @@ const CheckHeaderWrapper = styled.div`
     justify-content: space-between;
     align-items: flex-end;
     margin-top: 48px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #deecee;
     & div {
         flex: 0 0 95px;
+        padding-right: 6px;
         display: flex;
         justify-content: space-around;
     }
@@ -31,7 +34,7 @@ const CheckHeader = ({ text, removeLabels }: CheckHeaderProps) => {
         <CheckHeaderWrapper>
             <h4>{text}</h4>
             <div>
-                <GreyText>{!removeLabels && 'OK'}</GreyText>
+                <GreyText>{!removeLabels && 'Check'}</GreyText>
                 <GreyText>{!removeLabels && 'NA'}</GreyText>
             </div>
         </CheckHeaderWrapper>

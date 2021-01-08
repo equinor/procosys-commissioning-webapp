@@ -1,30 +1,38 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { CheckItem } from '../../services/apiTypes';
-import { Checkbox } from '@equinor/eds-core-react';
+import { CheckItem } from '../../../services/apiTypes';
+import { Checkbox, Switch } from '@equinor/eds-core-react';
 import MetaTable from './MetaTable';
-import * as api from '../../services/api';
-import { CommParams } from '../../App';
+import * as api from '../../../services/api';
+import { CommParams } from '../../../App';
 import { useParams } from 'react-router-dom';
 import CheckItemDescription from './CheckItemDescription';
 
 // This file has -Component suffixed to its name to avoid naming conflict with the CheckItem type.
 
-const CheckItemWrapper = styled.div`
-    margin-bottom: 18px;
+const CheckItemWrapper = styled.div<{ disabled: boolean }>`
+    background-color: ${(props) =>
+        props.disabled ? 'transparent' : 'transparent'};
+    padding: 12px 0 12px 0;
+    margin-top: 12px;
+    & p,
+    button {
+        color: ${(props) => (props.disabled ? '#777777' : 'initial')};
+    }
+    transition: background-color 0.2s ease-in-out;
+    transition: color 0.2s ease-in-out;
 `;
 
 const DescriptionAndCheckWrapper = styled.div`
     display: flex;
     justify-content: space-between;
+    align-items: center;
 `;
 
 const LeftWrapper = styled.div`
     & > p {
         flex: auto;
         margin: 0;
-        padding-top: 13px;
-        padding-bottom: 0;
     }
 `;
 
@@ -32,48 +40,52 @@ const CheckboxGroup = styled.div`
     flex: 0 0 80px;
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
 `;
 
 type CheckItemComponentProps = {
     item: CheckItem;
+    updateNA: (value: boolean, checkItemId: number) => void;
+    updateOk: (value: boolean, checkItemId: number) => void;
     checklistId: number;
     isSigned: boolean;
 };
 
-const CheckItemComponent = ({ item, isSigned }: CheckItemComponentProps) => {
+const CheckItemComponent = ({
+    item,
+    isSigned,
+    updateNA,
+    updateOk,
+}: CheckItemComponentProps) => {
     const { checklistId } = useParams<CommParams>();
     const { plant } = useParams<CommParams>();
-    const [isNA, setIsNA] = useState(item.isNotApplicable);
-    const [isOk, setIsOk] = useState(item.isOk);
 
     const clearCheckmarks = async () => {
         try {
             await api.postClear(plant, parseInt(checklistId), item.id);
-            setIsOk(false);
-            setIsNA(false);
+            updateOk(false, item.id);
+            updateNA(false, item.id);
         } catch (error) {
             console.log(error);
         }
     };
 
     const handleSetNA = async () => {
-        if (isNA) return clearCheckmarks();
+        if (item.isNotApplicable) return clearCheckmarks();
         try {
             await api.postSetNA(plant, parseInt(checklistId), item.id);
-            setIsOk(false);
-            setIsNA(true);
+            updateOk(false, item.id);
+            updateNA(true, item.id);
         } catch (error) {
             console.log(error);
         }
     };
 
     const handleSetOk = async () => {
-        if (isOk) return clearCheckmarks();
+        if (item.isOk) return clearCheckmarks();
         try {
             await api.postSetOk(plant, parseInt(checklistId), item.id);
-            setIsNA(false);
-            setIsOk(true);
+            updateNA(false, item.id);
+            updateOk(true, item.id);
         } catch (error) {
             console.log(error);
         }
@@ -81,7 +93,7 @@ const CheckItemComponent = ({ item, isSigned }: CheckItemComponentProps) => {
 
     return (
         <>
-            <CheckItemWrapper>
+            <CheckItemWrapper disabled={item.isNotApplicable}>
                 <DescriptionAndCheckWrapper>
                     <LeftWrapper>
                         <p>{item.text}</p>
@@ -93,23 +105,24 @@ const CheckItemComponent = ({ item, isSigned }: CheckItemComponentProps) => {
                     </LeftWrapper>
                     <CheckboxGroup>
                         <Checkbox
-                            disabled={isSigned}
+                            disabled={isSigned || item.isNotApplicable}
                             enterKeyHint
                             onChange={handleSetOk}
-                            checked={isOk}
+                            checked={item.isOk}
                             label={''}
                         />
                         <Checkbox
                             disabled={isSigned}
                             enterKeyHint
                             onChange={handleSetNA}
-                            checked={isNA}
+                            checked={item.isNotApplicable}
                             label={''}
                         />
                     </CheckboxGroup>
                 </DescriptionAndCheckWrapper>
-                {item.metaTable && (
+                {item.metaTable && !item.isNotApplicable && (
                     <MetaTable
+                        disabled={item.isNotApplicable || isSigned}
                         labels={item.metaTable.columnLabels}
                         rows={item.metaTable.rows}
                         isSigned={isSigned}

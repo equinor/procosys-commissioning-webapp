@@ -83,7 +83,6 @@ const Checklist = () => {
     ) {
         content = (
             <ChecklistWrapper>
-                <PageHeader title="Checklist (CPCL)" />
                 {isSigned && (
                     <IsSignedBanner>
                         <EdsIcon name="info_circle" />
@@ -95,7 +94,7 @@ const Checklist = () => {
                 )}
                 <ChecklistDetailsCard details={checklistDetails} />
                 <CheckItems
-                    items={checkItems}
+                    checkItems={checkItems}
                     details={checklistDetails}
                     isSigned={isSigned}
                 />

@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from 'react';
-import { ColumnLabel, Row } from '../../services/apiTypes';
+import React, { useEffect, useRef, useState } from 'react';
+import { ColumnLabel, Row } from '../../../services/apiTypes';
 import styled from 'styled-components';
 import MetaTableCell from './MetaTableCell';
-import EdsIcon from '../EdsIcon';
+import EdsIcon from '../../EdsIcon';
 
 const MetaTableWrapper = styled.table`
     border-spacing: 4px;
@@ -39,16 +39,16 @@ const MetaTableWrapper = styled.table`
 
 const HorizontalScroll = styled.div`
     overflow-x: scroll;
-    padding: 10px 10px 0px 24px;
-    border-left: 4px solid #007079;
-    margin: 4px 0 24px 0;
+    padding: 6px 10px 0px 24px;
+    border-left: 2px solid #deecee;
+    margin-top: 6px;
     & > div {
         & > p {
             margin: 0 4px 0 0;
         }
-
         background-color: #deecee;
         padding: 4px 4px 4px 8px;
+        margin-bottom: 12px;
         display: flex;
         align-items: center;
         width: fit-content;
@@ -60,15 +60,21 @@ type MetaTableProps = {
     rows: Row[];
     isSigned: boolean;
     checkItemId: number;
+    disabled: boolean;
 };
 
-const MetaTable = ({ labels, rows, isSigned, checkItemId }: MetaTableProps) => {
+const MetaTable = ({ labels, rows, disabled, checkItemId }: MetaTableProps) => {
+    const [tableIsScrollable, setTableIsScrollable] = useState(false);
     const tableContainerRef = useRef<HTMLDivElement>(
         document.createElement('div')
     );
-    useEffect(() => console.log(tableContainerRef.current.scrollWidth), [
-        tableContainerRef,
-    ]);
+    useEffect(() => {
+        setTableIsScrollable(
+            tableContainerRef.current.scrollWidth >
+                tableContainerRef.current.clientWidth
+        );
+    }, [tableContainerRef]);
+
     const headers = labels.map((label) => (
         <React.Fragment key={label.id}>
             {label && (
@@ -83,19 +89,20 @@ const MetaTable = ({ labels, rows, isSigned, checkItemId }: MetaTableProps) => {
             return (
                 <MetaTableCell
                     key={cell.columnId.toString() + row.id.toString()}
-                    isSigned={isSigned}
+                    disabled={disabled}
                     checkItemId={checkItemId}
                     rowId={row.id}
                     columnId={cell.columnId}
                     unit={cell.unit}
                     value={cell.value}
+                    label={row.cells.length < 2 ? row.label : ''}
                 />
             );
         });
         return (
             <tr key={row.id}>
                 <th>
-                    <p>{row.label}</p>
+                    <p>{row.cells.length > 1 && row.label}</p>
                 </th>
                 {cells}
             </tr>
@@ -116,8 +123,7 @@ const MetaTable = ({ labels, rows, isSigned, checkItemId }: MetaTableProps) => {
 
                 <tbody>{rowsToDisplay}</tbody>
             </MetaTableWrapper>
-            {tableContainerRef.current.scrollWidth >
-                tableContainerRef.current.clientWidth && (
+            {tableIsScrollable && (
                 <div>
                     <p>
                         <i>Long table. Swipe right</i>

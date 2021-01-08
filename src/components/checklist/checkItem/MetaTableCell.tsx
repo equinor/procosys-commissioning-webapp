@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { TextField } from '@equinor/eds-core-react';
-import { CommParams } from '../../App';
+import { CommParams } from '../../../App';
 import { useParams } from 'react-router-dom';
-import * as api from '../../services/api';
-import { AsyncStatus } from '../../contexts/UserContext';
+import * as api from '../../../services/api';
+import { AsyncStatus } from '../../../contexts/UserContext';
 import styled from 'styled-components';
 
 const HelperText = styled.div`
@@ -21,16 +21,18 @@ type MetaTableCellProps = {
     columnId: number;
     value: string;
     unit: string;
-    isSigned: boolean;
+    disabled: boolean;
+    label: string;
 };
 
 const MetaTableCell = ({
     value,
     unit,
-    isSigned,
+    disabled,
     rowId,
     columnId,
     checkItemId,
+    label,
 }: MetaTableCellProps) => {
     const { checklistId, plant } = useParams<CommParams>();
     const [inputValue, setInputValue] = useState(value);
@@ -67,14 +69,8 @@ const MetaTableCell = ({
     const helperText = () => {
         if (submitStatus === AsyncStatus.ERROR) return 'Unable to save.';
         if (submitStatus === AsyncStatus.LOADING) return 'Saving data...';
-        if (submitStatus === AsyncStatus.SUCCESS) return 'Success.';
+        if (submitStatus === AsyncStatus.SUCCESS) return 'Data saved.';
         return '';
-    };
-
-    const determineVariant = () => {
-        if (submitStatus === AsyncStatus.ERROR) return 'error';
-        if (submitStatus === AsyncStatus.SUCCESS) return 'success';
-        return 'default';
     };
 
     return (
@@ -82,8 +78,9 @@ const MetaTableCell = ({
             <TextField
                 id={rowId.toString() + columnId.toString() + 'textfield'}
                 meta={unit}
+                label={label}
                 value={inputValue ? inputValue : ''}
-                disabled={isSigned}
+                disabled={disabled}
                 variant={
                     (submitStatus === AsyncStatus.ERROR && 'error') ||
                     (submitStatus === AsyncStatus.SUCCESS && 'success') ||
