@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { CheckItem, ChecklistDetails } from '../../services/apiTypes';
-import CheckItemComponent from './CheckItemComponent';
+import CheckItemComponent from './checkItem/CheckItemComponent';
 import CheckHeader from './CheckHeader';
-import DetailsCard from '../commPkg/DetailsCard';
+import CheckAllButton from './CheckAllButton';
 
 const CheckItemsWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    & div:first-of-type {
+        margin-top: 0;
+    }
     & > div {
         &:first-child {
             margin-top: 36px;
@@ -14,12 +19,34 @@ const CheckItemsWrapper = styled.div`
 `;
 
 type CheckItemsProps = {
-    items: CheckItem[];
+    checkItems: CheckItem[];
     details: ChecklistDetails;
     isSigned: boolean;
 };
 
-const CheckItems = ({ items, details, isSigned }: CheckItemsProps) => {
+const CheckItems = ({ checkItems, details, isSigned }: CheckItemsProps) => {
+    const [items, setItems] = useState(checkItems);
+
+    const updateNA = (value: boolean, checkItemId: number) => {
+        setItems((items) =>
+            items.map((existingItem) =>
+                existingItem.id === checkItemId
+                    ? { ...existingItem, isNotApplicable: value }
+                    : existingItem
+            )
+        );
+    };
+
+    const updateOk = (value: boolean, checkItemId: number) => {
+        setItems((items) =>
+            items.map((existingItem) =>
+                existingItem.id === checkItemId
+                    ? { ...existingItem, isOk: value }
+                    : existingItem
+            )
+        );
+    };
+
     const determineCheckItem = (
         item: CheckItem,
         index: number,
@@ -37,11 +64,14 @@ const CheckItems = ({ items, details, isSigned }: CheckItemsProps) => {
         return (
             <CheckItemComponent
                 item={item}
+                updateNA={updateNA}
+                updateOk={updateOk}
                 checklistId={details.id}
                 isSigned={isSigned}
             />
         );
     };
+
     const itemsToDisplay = items.map((item, index) => {
         let nextItemIsHeading = items[index + 1]
             ? items[index + 1].isHeading
@@ -52,7 +82,13 @@ const CheckItems = ({ items, details, isSigned }: CheckItemsProps) => {
             </React.Fragment>
         );
     });
-    return <CheckItemsWrapper>{itemsToDisplay}</CheckItemsWrapper>;
+
+    return (
+        <CheckItemsWrapper>
+            {!isSigned && <CheckAllButton items={items} updateOk={updateOk} />}
+            {itemsToDisplay}
+        </CheckItemsWrapper>
+    );
 };
 
 export default CheckItems;
