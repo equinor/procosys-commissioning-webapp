@@ -21,7 +21,7 @@ const ChecklistWrapper = styled.main`
 `;
 
 const IsSignedBanner = styled.div`
-    background-color: #deecee;
+    /* background-color: #deecee; */
     padding: 12px 16px;
     display: flex;
     align-items: center;

@@ -11,9 +11,10 @@ const ChecklistWrapper = styled.div`
     display: flex;
     flex-direction: column;
     margin: 25px 0;
-    box-shadow: ${SHADOW};
+    /* box-shadow: ${SHADOW}; */
+    /* background-color: #deecee; */
     box-sizing: border-box;
-    padding: 20px;
+    /* padding: 20px; */
     & button {
         width: 100%;
         margin-top: 15px;

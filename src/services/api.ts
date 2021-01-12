@@ -5,9 +5,13 @@ import {
     ChecklistResponse,
     CommPkg,
     CommPkgSearchResults,
+    NewPunch,
     Plant,
     Project,
+    PunchCategory,
+    PunchOrganization,
     PunchPreview,
+    PunchType,
     TaskPreview,
 } from './apiTypes';
 import * as auth from './authService';
@@ -261,6 +265,58 @@ export const postUnsign = async (plantId: string, checklistId: number) => {
         return Promise.resolve();
     } catch (error) {
         console.log(error.message);
+        return Promise.reject(error.message);
+    }
+};
+
+export const getPunchCategories = async (plantId: string) => {
+    try {
+        const { data } = await axios.get(
+            baseURL +
+                `PunchListItem/Categories?plantId=PCS$${plantId}&api-version=4.1`
+        );
+        return objectToCamelCase(data) as PunchCategory[];
+    } catch (error) {
+        console.log(error);
+        return Promise.reject(error.message);
+    }
+};
+
+export const getPunchTypes = async (plantId: string) => {
+    try {
+        const { data } = await axios.get(
+            baseURL +
+                `PunchListItem/Types?plantId=PCS$${plantId}&api-version=4.1`
+        );
+        return objectToCamelCase(data) as PunchType[];
+    } catch (error) {
+        console.log(error);
+        return Promise.reject(error.message);
+    }
+};
+
+export const getPunchOrganizations = async (plantId: string) => {
+    try {
+        const { data } = await axios.get(
+            baseURL +
+                `PunchListItem/Organizations?plantId=PCS$${plantId}&api-version=4.1`
+        );
+        return objectToCamelCase(data) as PunchOrganization[];
+    } catch (error) {
+        console.log(error);
+        return Promise.reject(error.message);
+    }
+};
+
+export const postNewPunch = async (plantId: string, newPunchData: NewPunch) => {
+    try {
+        await axios.post(
+            baseURL + `PunchListItem?plantId=PCS$${plantId}&api-version=4.1`,
+            newPunchData
+        );
+        return Promise.resolve();
+    } catch (error) {
+        console.log(error);
         return Promise.reject(error.message);
     }
 };

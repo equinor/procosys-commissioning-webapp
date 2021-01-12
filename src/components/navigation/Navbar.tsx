@@ -13,6 +13,7 @@ const NavbarWrapper = styled.nav`
     width: 100%;
     max-width: 768px;
     background-color: #fff;
+    border-bottom: 1px solid #deecee;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -78,10 +79,11 @@ const Navbar = ({
         }
         return (
             <Button
-                variant="ghost_icon"
+                variant="ghost"
                 onClick={() => history.push(removeLastSubdirectory(url))}
             >
                 <EdsIcon name={'arrow_back'} title="Back" />
+                CommPkg
             </Button>
         );
     };

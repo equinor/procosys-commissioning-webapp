@@ -17,7 +17,7 @@ const SideMenuWrapper = styled(animated.aside)`
     left: 0;
     z-index: 1000;
     background-color: white;
-    border-right: 2px solid #f5f5f5;
+    border-right: 2px solid #deecee;
 `;
 
 const TopContent = styled.div`
@@ -70,7 +70,7 @@ const PlantInfo = styled.div`
     padding: 16px;
     display: flex;
     flex-direction: column;
-    background-color: #fafafa;
+    background-color: #deecee;
 `;
 
 type SideMenuProps = {
@@ -106,11 +106,7 @@ const SideMenu = ({
                 <UserInfo>
                     <p>Signed in as:</p>
                     <UserNameText>{auth.getUserName()}</UserNameText>
-                    <Button
-                        variant="outlined"
-                        color="secondary"
-                        onClick={auth.logout}
-                    >
+                    <Button variant="outlined" onClick={auth.logout}>
                         Sign out
                     </Button>
                 </UserInfo>
@@ -124,8 +120,6 @@ const SideMenu = ({
                             setDrawerIsOpen(false);
                             history.push('/');
                         }}
-                        color="secondary"
-                        variant="contained"
                     >
                         Change plant
                         <EdsIcon name="chevron_right" color="white" />
@@ -139,8 +133,6 @@ const SideMenu = ({
                                     : 'None'}
                             </h4>
                             <Button
-                                variant="contained"
-                                color="secondary"
                                 onClick={() => {
                                     window.localStorage.removeItem(
                                         StorageKey.PROJECT

@@ -19,8 +19,7 @@ enum CheckStatus {
 }
 
 const StyledCheckAllButton = styled(Button)`
-    margin-left: auto;
-    margin-bottom: 12px;
+    margin: 20px 0 12px auto;
 `;
 
 const determineIfAllAreChecked = (itemsToDetermine: CheckItem[]) => {
@@ -70,7 +69,10 @@ const CheckAllButton = ({ items, updateOk }: CheckAllButtonProps) => {
     }, [items]);
 
     return (
-        <StyledCheckAllButton onClick={allChecked ? uncheckAll : checkAll}>
+        <StyledCheckAllButton
+            variant="outlined"
+            onClick={allChecked ? uncheckAll : checkAll}
+        >
             <EdsIcon name={allChecked ? 'checkbox' : 'checkbox_outline'} />
             {allChecked ? 'Uncheck all' : 'Check all'}
         </StyledCheckAllButton>
