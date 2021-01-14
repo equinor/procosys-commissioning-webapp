@@ -54,7 +54,10 @@ const Bookmarks = () => {
         content = <PageHeader title="No bookmarks to display" />;
     return (
         <main>
-            <Navbar rightContent="search" />
+            <Navbar
+                leftContent={{ name: 'hamburger' }}
+                rightContent={{ name: 'search' }}
+            />
             <BookmarksWrapper>
                 {content}
                 <NewBookmarkWrapper>

@@ -19,6 +19,9 @@ import { CommParams } from '../../App';
 import { useParams } from 'react-router-dom';
 
 const NewPunchFormWrapper = styled.form`
+    background-color: white;
+    margin-top: 32px;
+    padding: 0 4%;
     & > button {
         float: right;
         margin-top: 16px;
@@ -79,9 +82,10 @@ const NewPunchForm = ({
                     setCategory(e.target.value)
                 }
             >
-                <option hidden disabled selected />
+                <option hidden disabled />
                 {categories.map((category) => (
                     <option
+                        key={category.id}
                         value={category.id}
                     >{`${category.description}`}</option>
                 ))}
@@ -98,6 +102,7 @@ const NewPunchForm = ({
                 <option hidden disabled selected />
                 {types.map((type) => (
                     <option
+                        key={type.id}
                         value={type.id}
                     >{`${type.code}. ${type.description}`}</option>
                 ))}
@@ -126,7 +131,7 @@ const NewPunchForm = ({
             >
                 <option hidden disabled selected />
                 {organizations.map((organization) => (
-                    <option value={organization.id}>
+                    <option key={organization.id} value={organization.id}>
                         {organization.description}
                     </option>
                 ))}
@@ -142,7 +147,7 @@ const NewPunchForm = ({
             >
                 <option hidden disabled selected />
                 {organizations.map((organization) => (
-                    <option value={organization.id}>
+                    <option key={organization.id} value={organization.id}>
                         {organization.description}
                     </option>
                 ))}

@@ -17,12 +17,6 @@ import ChecklistDetailsCard from '../components/checklist/ChecklistDetailsCard';
 import CommPkgContext from '../contexts/CommPkgContext';
 import NewPunchForm from '../components/newPunch/NewPunchForm';
 
-const NewPunchWrapper = styled.main`
-    display: flex;
-    flex-direction: column;
-    padding: 0 4%;
-`;
-
 const NewPunch = () => {
     const [categories, setCategories] = useState<PunchCategory[]>([]);
     const [types, setTypes] = useState<PunchType[]>([]);
@@ -71,7 +65,10 @@ const NewPunch = () => {
     if (fetchNewPunchStatus === AsyncStatus.SUCCESS && checklistDetails) {
         content = (
             <>
-                <ChecklistDetailsCard details={checklistDetails} />
+                <ChecklistDetailsCard
+                    details={checklistDetails}
+                    descriptionLabel={'New punch for:'}
+                />
                 <NewPunchForm
                     categories={categories}
                     types={types}
@@ -82,10 +79,13 @@ const NewPunch = () => {
     }
 
     return (
-        <NewPunchWrapper>
-            <Navbar />
+        <>
+            <Navbar
+                noBorder
+                leftContent={{ name: 'back', label: 'Checklist' }}
+            />
             {content}
-        </NewPunchWrapper>
+        </>
     );
 };
 

@@ -10,13 +10,14 @@ import { CommParams } from '../../App';
 const ChecklistWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    margin: 25px 0;
+    margin: 48px 0;
     /* box-shadow: ${SHADOW}; */
     /* background-color: #deecee; */
     box-sizing: border-box;
     /* padding: 20px; */
     & button {
-        width: 100%;
+        width: fit-content;
+        margin-left: auto;
         margin-top: 15px;
     }
 `;

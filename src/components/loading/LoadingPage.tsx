@@ -12,7 +12,7 @@ const LoadingPageWrapper = styled.main`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 10vh 10vw;
+    padding: 0 10vw;
     & h1 {
         text-align: center;
     }

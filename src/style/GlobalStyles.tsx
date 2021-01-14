@@ -6,7 +6,6 @@ const GlobalStyles = createGlobalStyle`
     body { 
         margin: 0 auto;
         padding-top: 54px;
-        background-color: #deecee;
         max-width: 768px;
     }
     h1 {
@@ -38,7 +37,7 @@ const GlobalStyles = createGlobalStyle`
     }
     main {
         background-color: white;
-        min-height: 90vh;
+        min-height: calc(100vh - 55px);
     }
 `;
 

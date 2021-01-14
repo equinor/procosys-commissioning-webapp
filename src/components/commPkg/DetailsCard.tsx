@@ -15,10 +15,10 @@ const DetailsWrapper = styled.div<{ atBookmarksPage?: Boolean }>`
     grid-column-gap: 15px;
     grid-row-gap: 15px;
     padding: 25px;
-    /* box-shadow: ${SHADOW}; */
-    margin: ${(props) =>
-        props.atBookmarksPage ? '0 4% 10px 4%' : '0px 4% 0px 4%'};
-    background-color: #deecee;
+    box-shadow: ${SHADOW};
+    background-color: #f7f7f7;
+    margin: ${(props) => (props.atBookmarksPage ? '0 4% 10px 4%' : '0')};
+    /* background-color: #deecee; */
 `;
 
 const Description = styled.div`
@@ -98,6 +98,7 @@ const DetailsCard = ({
                     }}
                 >
                     <EdsIcon
+                        color="primary"
                         name={
                             isBookmarked
                                 ? 'bookmark_filled'

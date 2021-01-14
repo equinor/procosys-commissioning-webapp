@@ -21,11 +21,10 @@ const ChecklistWrapper = styled.main`
 `;
 
 const IsSignedBanner = styled.div`
-    /* background-color: #deecee; */
-    padding: 12px 16px;
+    background-color: white;
+    padding: 12px 4%;
     display: flex;
     align-items: center;
-    margin-top: 16px;
     & p {
         margin: 0 0 0 12px;
     }
@@ -41,6 +40,7 @@ const Checklist = () => {
         ChecklistDetails
     >();
     const [isSigned, setIsSigned] = useState(false);
+    const [heightOfDetailsCard, setHeightOfDetailsCard] = useState(0);
     const { checklistId, plant } = useParams<CommParams>();
 
     useEffect(() => {
@@ -82,34 +82,41 @@ const Checklist = () => {
         checkItems.length
     ) {
         content = (
-            <ChecklistWrapper>
+            <>
+                <ChecklistDetailsCard
+                    details={checklistDetails}
+                    isSigned={isSigned}
+                    descriptionLabel={'checklist'}
+                />
                 {isSigned && (
                     <IsSignedBanner>
                         <EdsIcon name="info_circle" />
-                        <p>
-                            This checklist is signed and cannot be edited.
-                            Unsign to make changes.
-                        </p>
+                        <p>Unsign to make changes.</p>
                     </IsSignedBanner>
                 )}
-                <ChecklistDetailsCard details={checklistDetails} />
-                <CheckItems
-                    checkItems={checkItems}
-                    details={checklistDetails}
-                    isSigned={isSigned}
-                />
-                <ChecklistSignature
-                    isSigned={isSigned}
-                    details={checklistDetails}
-                    setIsSigned={setIsSigned}
-                />
-            </ChecklistWrapper>
+                <ChecklistWrapper>
+                    <CheckItems
+                        checkItems={checkItems}
+                        details={checklistDetails}
+                        isSigned={isSigned}
+                    />
+                    <ChecklistSignature
+                        isSigned={isSigned}
+                        details={checklistDetails}
+                        setIsSigned={setIsSigned}
+                    />
+                </ChecklistWrapper>
+            </>
         );
     }
 
     return (
         <>
-            <Navbar leftContent="back" rightContent="newPunch" />
+            <Navbar
+                noBorder={true}
+                leftContent={{ name: 'back', label: 'CommPkg' }}
+                rightContent={{ name: 'newPunch' }}
+            />
             {content}
         </>
     );

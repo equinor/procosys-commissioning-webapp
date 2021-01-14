@@ -6,14 +6,14 @@ import logo from '../../assets/img/procosys-logo.svg';
 import EdsIcon from '../EdsIcon';
 import { useSpring } from 'react-spring';
 import SideMenu from './SideMenu';
-import { CommParams } from '../../App';
 
-const NavbarWrapper = styled.nav`
+const NavbarWrapper = styled.nav<{ noBorder: boolean }>`
     height: 54px;
     width: 100%;
     max-width: 768px;
     background-color: #fff;
-    border-bottom: 1px solid #deecee;
+    border-bottom: ${(props) =>
+        props.noBorder ? 'none' : '1px solid #deecee'};
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -34,10 +34,15 @@ const NavbarWrapper = styled.nav`
     }
 `;
 
-type NavbarProps = {
-    leftContent?: string;
-    midContent?: string;
-    rightContent?: string;
+type LeftNavbarContent = {
+    name: 'hamburger' | 'back';
+    label?: string;
+    url?: string;
+};
+type RightNavbarContent = {
+    name: 'logo' | 'newPunch' | 'search';
+    label?: string;
+    url?: string;
 };
 
 const RightButton = styled(Button)`
@@ -50,10 +55,18 @@ const removeLastSubdirectory = (url: string) => {
     return matched[0].slice(0, -1);
 };
 
+type NavbarProps = {
+    leftContent?: LeftNavbarContent;
+    midContent?: string;
+    rightContent?: RightNavbarContent;
+    noBorder?: boolean;
+};
+
 const Navbar = ({
-    leftContent = 'hamburger',
+    leftContent,
     midContent = '',
-    rightContent = 'logo',
+    rightContent,
+    noBorder = false,
 }: NavbarProps) => {
     const [drawerIsOpen, setDrawerIsOpen] = useState(false);
     const history = useHistory();
@@ -66,8 +79,8 @@ const Navbar = ({
         display: drawerIsOpen ? 'block' : 'none',
     });
 
-    const determineLeftContent = (option: string) => {
-        if (option === 'hamburger') {
+    const determineLeftContent = () => {
+        if (leftContent?.name === 'hamburger') {
             return (
                 <Button
                     variant="ghost_icon"
@@ -77,19 +90,22 @@ const Navbar = ({
                 </Button>
             );
         }
-        return (
-            <Button
-                variant="ghost"
-                onClick={() => history.push(removeLastSubdirectory(url))}
-            >
-                <EdsIcon name={'arrow_back'} title="Back" />
-                CommPkg
-            </Button>
-        );
+        if (leftContent?.name === 'back') {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => history.push(removeLastSubdirectory(url))}
+                >
+                    <EdsIcon name={'arrow_back'} title="Back" />
+                    {leftContent.label}
+                </Button>
+            );
+        }
+        return <></>;
     };
 
-    const determineRightContent = (option: string) => {
-        if (option === 'logo') {
+    const determineRightContent = () => {
+        if (rightContent?.name === 'logo') {
             return (
                 <></>
                 // <Button variant="ghost" onClick={() => history.push(`/`)}>
@@ -97,7 +113,7 @@ const Navbar = ({
                 // </Button>
             );
         }
-        if (option === 'search') {
+        if (rightContent?.name === 'search') {
             return (
                 <Button
                     variant="ghost_icon"
@@ -107,7 +123,7 @@ const Navbar = ({
                 </Button>
             );
         }
-        if (option === 'newPunch') {
+        if (rightContent?.name === 'newPunch') {
             return (
                 <RightButton
                     variant="ghost"
@@ -122,10 +138,10 @@ const Navbar = ({
 
     return (
         <>
-            <NavbarWrapper>
-                {determineLeftContent(leftContent)}
+            <NavbarWrapper noBorder={noBorder}>
+                {determineLeftContent()}
                 <h4>{midContent}</h4>
-                {determineRightContent(rightContent)}
+                {determineRightContent()}
             </NavbarWrapper>
             <SideMenu
                 setDrawerIsOpen={setDrawerIsOpen}

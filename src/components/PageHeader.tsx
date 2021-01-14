@@ -7,11 +7,10 @@ const PageHeaderWrapper = styled.div<{ hasSubtitle: boolean }>`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
     & h2 {
         text-align: center;
         margin: ${(props) =>
-            props.hasSubtitle ? '12px 0 0 0' : '12px 0 24px 0'};
+            props.hasSubtitle ? '16px 0 0 0' : '16px 0 24px 0'};
     }
     & h6 {
         text-align: center;

@@ -19,7 +19,7 @@ enum CheckStatus {
 }
 
 const StyledCheckAllButton = styled(Button)`
-    margin: 20px 0 12px auto;
+    margin: 24px 0 12px auto;
 `;
 
 const determineIfAllAreChecked = (itemsToDetermine: CheckItem[]) => {

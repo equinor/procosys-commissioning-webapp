@@ -13,7 +13,7 @@ const CheckItemsWrapper = styled.div`
     }
     & > div {
         &:first-child {
-            margin-top: 36px;
+            margin-top: 16px;
         }
     }
 `;

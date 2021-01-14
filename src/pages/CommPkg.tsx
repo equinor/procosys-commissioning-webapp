@@ -10,7 +10,7 @@ import Navbar from '../components/navigation/Navbar';
 import styled from 'styled-components';
 
 const CommPkgWrapper = styled.main`
-    padding-top: 12px;
+    /* padding-top: 12px; */
 `;
 
 const CommPkg = () => {
@@ -18,7 +18,10 @@ const CommPkg = () => {
     const { path } = useRouteMatch();
     return (
         <CommPkgWrapper>
-            <Navbar leftContent="back" midContent="" />
+            <Navbar
+                noBorder
+                leftContent={{ name: 'back', label: 'Bookmarks' }}
+            />
             <DetailsCard
                 details={{
                     MCStatus: details.mcStatus,

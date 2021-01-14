@@ -13,7 +13,7 @@ import CheckItemDescription from './CheckItemDescription';
 const CheckItemWrapper = styled.div<{ disabled: boolean }>`
     background-color: ${(props) =>
         props.disabled ? 'transparent' : 'transparent'};
-    padding: 12px 0 12px 0;
+    /* padding: 12px 0 12px 0; */
     margin-top: 12px;
     & p,
     button {
