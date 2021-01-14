@@ -23,7 +23,7 @@ describe('<SideMenu/>', () => {
     it('Renders a back icon when left content is set to "back"', () => {
         const { queryAllByTitle } = render(
             <Router>
-                <Navbar leftContent="back" />
+                <Navbar leftContent={{ name: 'back' }} />
             </Router>
         );
         expect(queryAllByTitle('Back')).toBeDefined();
@@ -31,7 +31,7 @@ describe('<SideMenu/>', () => {
     it('Renders a search icon when right content is set to search', () => {
         const { queryAllByTitle } = render(
             <Router>
-                <Navbar rightContent="search" />
+                <Navbar rightContent={{ name: 'search' }} />
             </Router>
         );
         expect(queryAllByTitle('Search')).toBeDefined();
@@ -47,7 +47,7 @@ describe('<SideMenu/>', () => {
     it('Renders new punch button when newPunch argument is passed', () => {
         const { getByText } = render(
             <Router>
-                <Navbar rightContent="newPunch" />
+                <Navbar rightContent={{ name: 'newPunch' }} />
             </Router>
         );
         expect(getByText('New punch')).toBeDefined();

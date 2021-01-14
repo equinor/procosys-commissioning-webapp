@@ -8,7 +8,7 @@ import useBookmarks from '../../services/useBookmarks';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { COLORS, SHADOW } from '../../style/GlobalStyles';
 
-const DetailsWrapper = styled.div<{ onBookmarksPage?: Boolean }>`
+const DetailsWrapper = styled.div<{ atBookmarksPage?: Boolean }>`
     display: grid;
     grid-template-columns: repeat(2, 1fr) repeat(2, 0.5fr);
     grid-template-rows: repeat(2);
@@ -16,9 +16,9 @@ const DetailsWrapper = styled.div<{ onBookmarksPage?: Boolean }>`
     grid-row-gap: 15px;
     padding: 25px;
     box-shadow: ${SHADOW};
-    margin: ${(props) =>
-        props.onBookmarksPage ? '0 10px 10px 10px' : '5px 10px 0px 10px'};
-    /* background-color: ${COLORS.infographic.primary__moss_green_13.hex}; */
+    background-color: #f7f7f7;
+    margin: ${(props) => (props.atBookmarksPage ? '0 4% 10px 4%' : '0')};
+    /* background-color: #deecee; */
 `;
 
 const Description = styled.div`
@@ -32,14 +32,12 @@ const StatusIconWrapper = styled.div`
     text-align: center;
     & img {
         height: 20px;
-        margin-top: 8px;
+        margin-top: 10px;
+        margin-right: -1.2px;
     }
 `;
 const BookmarkIconWrapper = styled.div`
     grid-area: 2 / 4 / 2 / 4;
-    & svg {
-        transform: scaleY(1);
-    }
 `;
 const CommPkgNumberWrapper = styled.div`
     grid-area: 2 / 1 / 3 / 3;
@@ -63,21 +61,21 @@ export type DetailsCardInfo = {
 
 type DetailsCardProps = {
     details: DetailsCardInfo;
-    onBookmarksPage?: boolean;
+    atBookmarksPage?: boolean;
 };
 
 const DetailsCard = ({
     details,
-    onBookmarksPage = false,
+    atBookmarksPage = false,
 }: DetailsCardProps) => {
     const history = useHistory();
     const { url } = useRouteMatch();
     const { isBookmarked, setIsBookmarked } = useBookmarks(details);
     return (
         <DetailsWrapper
-            onBookmarksPage={onBookmarksPage}
+            atBookmarksPage={atBookmarksPage}
             onClick={
-                onBookmarksPage
+                atBookmarksPage
                     ? () => history.push(`${url}/${details.pkgNumber}`)
                     : () => {}
             }
@@ -93,13 +91,14 @@ const DetailsCard = ({
             </StatusIconWrapper>
             <BookmarkIconWrapper>
                 <Button
-                    variant="ghost"
+                    variant="ghost_icon"
                     onClick={(e: React.MouseEvent<HTMLElement>) => {
                         e.stopPropagation();
                         setIsBookmarked(!isBookmarked);
                     }}
                 >
                     <EdsIcon
+                        color="primary"
                         name={
                             isBookmarked
                                 ? 'bookmark_filled'

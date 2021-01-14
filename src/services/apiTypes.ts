@@ -148,3 +148,32 @@ export interface ChecklistResponse {
     checkList: ChecklistDetails;
     checkItems: CheckItem[];
 }
+
+export interface PunchCategory {
+    id: number;
+    code: string;
+    description: string;
+}
+
+export interface PunchType {
+    id: number;
+    parentId: number;
+    code: string;
+    description: string;
+}
+
+export interface PunchOrganization {
+    id: number;
+    parentId: number;
+    code: string;
+    description: string;
+}
+
+export interface NewPunch {
+    CheckListId: number;
+    CategoryId: number;
+    Description: string;
+    TypeId: number;
+    RaisedByOrganizationId: number;
+    ClearingByOrganizationId: number;
+}

@@ -4,8 +4,9 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
     body { 
-        margin: 0;
-        padding-top: 63px;
+        margin: 0 auto;
+        padding-top: 54px;
+        max-width: 768px;
     }
     h1 {
         ${tokens.typography.heading.h1 as CSSObject}
@@ -33,6 +34,10 @@ const GlobalStyles = createGlobalStyle`
     }
     label {
         ${tokens.typography.input.label as CSSObject}
+    }
+    main {
+        background-color: white;
+        min-height: calc(100vh - 55px);
     }
 `;
 

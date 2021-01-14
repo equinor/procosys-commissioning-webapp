@@ -7,13 +7,21 @@ import Scope from '../components/commPkg/Scope';
 import Tasks from '../components/commPkg/Tasks';
 import PunchList from '../components/commPkg/PunchList';
 import Navbar from '../components/navigation/Navbar';
+import styled from 'styled-components';
+
+const CommPkgWrapper = styled.main`
+    /* padding-top: 12px; */
+`;
 
 const CommPkg = () => {
     const { details, scope, punchList, tasks } = useContext(CommPkgContext);
     const { path } = useRouteMatch();
     return (
-        <>
-            <Navbar leftContent="back" midContent="" />
+        <CommPkgWrapper>
+            <Navbar
+                noBorder
+                leftContent={{ name: 'back', label: 'Bookmarks' }}
+            />
             <DetailsCard
                 details={{
                     MCStatus: details.mcStatus,
@@ -37,7 +45,7 @@ const CommPkg = () => {
                 numberOfPunches={punchList.length}
                 numberOfTasks={tasks.length}
             />
-        </>
+        </CommPkgWrapper>
     );
 };
 

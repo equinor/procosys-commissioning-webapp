@@ -6,19 +6,23 @@ import logo from '../../assets/img/procosys-logo.svg';
 import EdsIcon from '../EdsIcon';
 import { useSpring } from 'react-spring';
 import SideMenu from './SideMenu';
-import { CommParams } from '../../App';
 
-const NavbarWrapper = styled.nav`
+const NavbarWrapper = styled.nav<{ noBorder: boolean }>`
     height: 54px;
     width: 100%;
+    max-width: 768px;
     background-color: #fff;
+    border-bottom: ${(props) =>
+        props.noBorder ? 'none' : '1px solid #deecee'};
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 4px 6px 4px 0;
+    box-sizing: border-box;
+    padding: 4px 2% 4px 2%;
     position: fixed;
     top: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 10;
     & img {
         width: 24px;
@@ -30,14 +34,19 @@ const NavbarWrapper = styled.nav`
     }
 `;
 
-type NavbarProps = {
-    leftContent?: string;
-    midContent?: string;
-    rightContent?: string;
+type LeftNavbarContent = {
+    name: 'hamburger' | 'back';
+    label?: string;
+    url?: string;
+};
+type RightNavbarContent = {
+    name: 'logo' | 'newPunch' | 'search';
+    label?: string;
+    url?: string;
 };
 
 const RightButton = styled(Button)`
-    margin-right: 4%;
+    /* margin-right: 4%; */
 `;
 
 const removeLastSubdirectory = (url: string) => {
@@ -46,10 +55,18 @@ const removeLastSubdirectory = (url: string) => {
     return matched[0].slice(0, -1);
 };
 
+type NavbarProps = {
+    leftContent?: LeftNavbarContent;
+    midContent?: string;
+    rightContent?: RightNavbarContent;
+    noBorder?: boolean;
+};
+
 const Navbar = ({
-    leftContent = 'hamburger',
+    leftContent,
     midContent = '',
-    rightContent = 'logo',
+    rightContent,
+    noBorder = false,
 }: NavbarProps) => {
     const [drawerIsOpen, setDrawerIsOpen] = useState(false);
     const history = useHistory();
@@ -62,26 +79,33 @@ const Navbar = ({
         display: drawerIsOpen ? 'block' : 'none',
     });
 
-    const determineLeftContent = (option: string) => {
-        if (option === 'hamburger') {
+    const determineLeftContent = () => {
+        if (leftContent?.name === 'hamburger') {
             return (
-                <Button variant="ghost" onClick={() => setDrawerIsOpen(true)}>
+                <Button
+                    variant="ghost_icon"
+                    onClick={() => setDrawerIsOpen(true)}
+                >
                     <EdsIcon name={'menu'} color="#555" title="Menu" />
                 </Button>
             );
         }
-        return (
-            <Button
-                variant="ghost"
-                onClick={() => history.push(removeLastSubdirectory(url))}
-            >
-                <EdsIcon name={'arrow_back'} title="Back" />
-            </Button>
-        );
+        if (leftContent?.name === 'back') {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => history.push(removeLastSubdirectory(url))}
+                >
+                    <EdsIcon name={'arrow_back'} title="Back" />
+                    {leftContent.label}
+                </Button>
+            );
+        }
+        return <></>;
     };
 
-    const determineRightContent = (option: string) => {
-        if (option === 'logo') {
+    const determineRightContent = () => {
+        if (rightContent?.name === 'logo') {
             return (
                 <></>
                 // <Button variant="ghost" onClick={() => history.push(`/`)}>
@@ -89,28 +113,35 @@ const Navbar = ({
                 // </Button>
             );
         }
-        if (option === 'search') {
+        if (rightContent?.name === 'search') {
             return (
                 <Button
-                    variant="ghost"
+                    variant="ghost_icon"
                     onClick={() => history.push(`${url}/search`)}
                 >
                     <EdsIcon name={'search'} title="Search" />
                 </Button>
             );
         }
-        if (option === 'newPunch') {
-            return <RightButton variant="ghost">New punch</RightButton>;
+        if (rightContent?.name === 'newPunch') {
+            return (
+                <RightButton
+                    variant="ghost"
+                    onClick={() => history.push(`${url}/new-punch`)}
+                >
+                    New punch
+                </RightButton>
+            );
         }
         return <></>;
     };
 
     return (
         <>
-            <NavbarWrapper>
-                {determineLeftContent(leftContent)}
+            <NavbarWrapper noBorder={noBorder}>
+                {determineLeftContent()}
                 <h4>{midContent}</h4>
-                {determineRightContent(rightContent)}
+                {determineRightContent()}
             </NavbarWrapper>
             <SideMenu
                 setDrawerIsOpen={setDrawerIsOpen}

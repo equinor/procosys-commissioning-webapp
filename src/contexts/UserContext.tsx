@@ -10,6 +10,7 @@ type UserContextProps = {
 };
 
 export enum AsyncStatus {
+    INACTIVE,
     LOADING,
     SUCCESS,
     ERROR,

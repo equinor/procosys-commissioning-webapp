@@ -7,10 +7,8 @@ import { Button } from '@equinor/eds-core-react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import PlantContext from '../contexts/PlantContext';
 import Navbar from '../components/navigation/Navbar';
-import NavigationFooter, {
-    CommPkgFooterWrapper,
-} from '../components/commPkg/NavigationFooter';
 import { SHADOW } from '../style/GlobalStyles';
+import EdsIcon from '../components/EdsIcon';
 
 const BookmarksWrapper = styled.main`
     display: flex;
@@ -19,16 +17,12 @@ const BookmarksWrapper = styled.main`
     & h3 {
         text-align: center;
     }
-    & button {
-        width: fit-content;
-        align-self: flex-end;
-        margin-right: 4%;
-        margin-top: 12px;
-    }
 `;
 
-const BookmarksFooter = styled(CommPkgFooterWrapper)`
-    height: 60px;
+const NewBookmarkWrapper = styled.div`
+    margin: 12px 4% 10px 4%;
+    display: flex;
+    justify-content: flex-end;
 `;
 
 const Bookmarks = () => {
@@ -45,7 +39,7 @@ const Bookmarks = () => {
                 MCStatus: bookmark.MCStatus,
                 pkgNumber: bookmark.pkgNumber,
             }}
-            onBookmarksPage={true}
+            atBookmarksPage={true}
         />
     ));
 
@@ -59,16 +53,21 @@ const Bookmarks = () => {
     if (bookmarks.length < 1)
         content = <PageHeader title="No bookmarks to display" />;
     return (
-        <>
-            <Navbar rightContent="search" />
+        <main>
+            <Navbar
+                leftContent={{ name: 'hamburger' }}
+                rightContent={{ name: 'search' }}
+            />
             <BookmarksWrapper>
                 {content}
-
-                <Button onClick={() => history.push(`${url}/search`)}>
-                    Find new Comm. pkg
-                </Button>
+                <NewBookmarkWrapper>
+                    <Button onClick={() => history.push(`${url}/search`)}>
+                        <EdsIcon name="search" color="white" />
+                        Find comm. pkg
+                    </Button>
+                </NewBookmarkWrapper>
             </BookmarksWrapper>
-        </>
+        </main>
     );
 };
 

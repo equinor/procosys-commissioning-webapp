@@ -37,7 +37,7 @@ const SearchPage = () => {
     };
     return (
         <>
-            <Navbar leftContent={'back'} />
+            <Navbar leftContent={{ name: 'back', label: 'Bookmarks' }} />
             <SearchPageWrapper>
                 {searchHeaderToRender()}
                 <Search

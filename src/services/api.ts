@@ -5,9 +5,13 @@ import {
     ChecklistResponse,
     CommPkg,
     CommPkgSearchResults,
+    NewPunch,
     Plant,
     Project,
+    PunchCategory,
+    PunchOrganization,
     PunchPreview,
+    PunchType,
     TaskPreview,
 } from './apiTypes';
 import * as auth from './authService';
@@ -145,5 +149,174 @@ export const getChecklist = async (plantId: string, checklistId: string) => {
         return objectToCamelCase(data) as ChecklistResponse;
     } catch (error) {
         return Promise.reject(error);
+    }
+};
+
+export const postSetOk = async (
+    plantId: string,
+    checklistId: number,
+    checkItemId: number
+) => {
+    try {
+        await axios.post(
+            baseURL +
+                `CheckList/Item/SetOk?plantId=PCS$${plantId}&api-version=4.1`,
+            {
+                CheckListId: checklistId,
+                CheckItemId: checkItemId,
+            }
+        );
+        return Promise.resolve();
+    } catch (error) {
+        return Promise.reject(error);
+    }
+};
+
+export const postSetNA = async (
+    plantId: string,
+    checklistId: number,
+    checkItemId: number
+) => {
+    try {
+        await axios.post(
+            baseURL +
+                `CheckList/Item/SetNA?plantId=PCS$${plantId}&api-version=4.1`,
+            {
+                CheckListId: checklistId,
+                CheckItemId: checkItemId,
+            }
+        );
+        return Promise.resolve();
+    } catch (error) {
+        return Promise.reject(error);
+    }
+};
+
+export const postClear = async (
+    plantId: string,
+    checklistId: number,
+    checkItemId: number
+) => {
+    try {
+        await axios.post(
+            baseURL +
+                `CheckList/Item/Clear?plantId=PCS$${plantId}&api-version=4.1`,
+            {
+                CheckListId: checklistId,
+                CheckItemId: checkItemId,
+            }
+        );
+        return Promise.resolve();
+    } catch (error) {
+        return Promise.reject(error);
+    }
+};
+
+export const putMetaTableCell = async (
+    plantId: string,
+    checkItemId: number,
+    checklistId: number,
+    columnId: number,
+    rowId: number,
+    value: string
+) => {
+    try {
+        await axios.put(
+            baseURL +
+                `CheckList/Item/MetaTableCell?plantId=PCS$${plantId}&api-version=4.1`,
+            {
+                CheckListId: checklistId,
+                CheckItemId: checkItemId,
+                ColumnId: columnId,
+                RowId: rowId,
+                Value: value,
+            }
+        );
+        return Promise.resolve();
+    } catch (error) {
+        console.log(error.message);
+        return Promise.reject(error.message);
+    }
+};
+
+export const postSign = async (plantId: string, checklistId: number) => {
+    try {
+        await axios.post(
+            baseURL +
+                `CheckList/Comm/Sign?plantId=PCS$${plantId}&api-version=4.1`,
+            checklistId,
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+        return Promise.resolve();
+    } catch (error) {
+        console.log(error.message);
+        return Promise.reject(error.message);
+    }
+};
+
+export const postUnsign = async (plantId: string, checklistId: number) => {
+    try {
+        await axios.post(
+            baseURL +
+                `CheckList/Comm/Unsign?plantId=PCS$${plantId}&api-version=4.1`,
+            checklistId,
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+        return Promise.resolve();
+    } catch (error) {
+        console.log(error.message);
+        return Promise.reject(error.message);
+    }
+};
+
+export const getPunchCategories = async (plantId: string) => {
+    try {
+        const { data } = await axios.get(
+            baseURL +
+                `PunchListItem/Categories?plantId=PCS$${plantId}&api-version=4.1`
+        );
+        return objectToCamelCase(data) as PunchCategory[];
+    } catch (error) {
+        console.log(error);
+        return Promise.reject(error.message);
+    }
+};
+
+export const getPunchTypes = async (plantId: string) => {
+    try {
+        const { data } = await axios.get(
+            baseURL +
+                `PunchListItem/Types?plantId=PCS$${plantId}&api-version=4.1`
+        );
+        return objectToCamelCase(data) as PunchType[];
+    } catch (error) {
+        console.log(error);
+        return Promise.reject(error.message);
+    }
+};
+
+export const getPunchOrganizations = async (plantId: string) => {
+    try {
+        const { data } = await axios.get(
+            baseURL +
+                `PunchListItem/Organizations?plantId=PCS$${plantId}&api-version=4.1`
+        );
+        return objectToCamelCase(data) as PunchOrganization[];
+    } catch (error) {
+        console.log(error);
+        return Promise.reject(error.message);
+    }
+};
+
+export const postNewPunch = async (plantId: string, newPunchData: NewPunch) => {
+    try {
+        await axios.post(
+            baseURL + `PunchListItem?plantId=PCS$${plantId}&api-version=4.1`,
+            newPunchData
+        );
+        return Promise.resolve();
+    } catch (error) {
+        console.log(error);
+        return Promise.reject(error.message);
     }
 };

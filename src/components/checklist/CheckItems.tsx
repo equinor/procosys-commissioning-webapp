@@ -1,47 +1,94 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { CheckItem } from '../../services/apiTypes';
-import CheckItemComponent from './CheckItemComponent';
+import { CheckItem, ChecklistDetails } from '../../services/apiTypes';
+import CheckItemComponent from './checkItem/CheckItemComponent';
+import CheckHeader from './CheckHeader';
+import CheckAllButton from './CheckAllButton';
 
-const GreyText = styled.p`
-    margin: 0;
-    color: #a2a2a2;
-`;
-
-const CheckHeader = styled.div`
+const CheckItemsWrapper = styled.div`
     display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-top: 16px;
-    & div {
-        flex: 0 0 116px;
-        display: flex;
-        justify-content: space-around;
+    flex-direction: column;
+    & div:first-of-type {
+        margin-top: 0;
     }
-    & h5 {
-        margin-bottom: 12px;
+    & > div {
+        &:first-child {
+            margin-top: 16px;
+        }
     }
 `;
 
 type CheckItemsProps = {
-    items: CheckItem[];
+    checkItems: CheckItem[];
+    details: ChecklistDetails;
+    isSigned: boolean;
 };
 
-const CheckItems = ({ items }: CheckItemsProps) => {
-    const itemsToDisplay = items.map((item, index) =>
-        item.isHeading ? (
-            <CheckHeader>
-                <h5>{item.text}</h5>
-                <div>
-                    <GreyText>OK</GreyText>
-                    <GreyText>NA</GreyText>
-                </div>
-            </CheckHeader>
-        ) : (
-            <CheckItemComponent item={item} />
-        )
+const CheckItems = ({ checkItems, details, isSigned }: CheckItemsProps) => {
+    const [items, setItems] = useState(checkItems);
+
+    const updateNA = (value: boolean, checkItemId: number) => {
+        setItems((items) =>
+            items.map((existingItem) =>
+                existingItem.id === checkItemId
+                    ? { ...existingItem, isNotApplicable: value }
+                    : existingItem
+            )
+        );
+    };
+
+    const updateOk = (value: boolean, checkItemId: number) => {
+        setItems((items) =>
+            items.map((existingItem) =>
+                existingItem.id === checkItemId
+                    ? { ...existingItem, isOk: value }
+                    : existingItem
+            )
+        );
+    };
+
+    const determineCheckItem = (
+        item: CheckItem,
+        index: number,
+        nextItemIsHeading: boolean
+    ) => {
+        if (item.isHeading)
+            return (
+                <CheckHeader
+                    text={item.text}
+                    removeLabels={nextItemIsHeading}
+                />
+            );
+        // Return "OK / NA" labels if the first check item is not a heading.
+        if (index === 0) return <CheckHeader text="" />;
+        return (
+            <CheckItemComponent
+                item={item}
+                updateNA={updateNA}
+                updateOk={updateOk}
+                checklistId={details.id}
+                isSigned={isSigned}
+            />
+        );
+    };
+
+    const itemsToDisplay = items.map((item, index) => {
+        let nextItemIsHeading = items[index + 1]
+            ? items[index + 1].isHeading
+            : true;
+        return (
+            <React.Fragment key={item.id}>
+                {determineCheckItem(item, index, nextItemIsHeading)}
+            </React.Fragment>
+        );
+    });
+
+    return (
+        <CheckItemsWrapper>
+            {!isSigned && <CheckAllButton items={items} updateOk={updateOk} />}
+            {itemsToDisplay}
+        </CheckItemsWrapper>
     );
-    return <div>{itemsToDisplay}</div>;
 };
 
 export default CheckItems;
