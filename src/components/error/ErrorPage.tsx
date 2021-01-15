@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Banner } from '@equinor/eds-core-react';
 import { COLORS } from '../../style/GlobalStyles';
-import EdsIcon from '../EdsIcon';
+import EdsIcon from '../icons/EdsIcon';
 
 interface CommError {
     title?: string;

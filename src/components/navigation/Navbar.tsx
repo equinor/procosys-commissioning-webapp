@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Button } from '@equinor/eds-core-react';
 import { Link, useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import logo from '../../assets/img/procosys-logo.svg';
-import EdsIcon from '../EdsIcon';
+import EdsIcon from '../icons/EdsIcon';
 import { useSpring } from 'react-spring';
 import SideMenu from './SideMenu';
 
