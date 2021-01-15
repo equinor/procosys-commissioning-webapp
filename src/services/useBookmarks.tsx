@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { DetailsCardInfo } from '../components/commPkg/DetailsCard';
+import { DetailsCardInfo } from '../pages/CommPkg/DetailsCard';
 import PlantContext from '../contexts/PlantContext';
 
 export enum StorageKey {

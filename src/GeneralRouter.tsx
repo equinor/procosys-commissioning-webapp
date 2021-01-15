@@ -1,11 +1,11 @@
 import React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { PlantContextProvider } from './contexts/PlantContext';
-import SelectProject from './pages/SelectProject';
-import SearchPage from './pages/SearchPage';
-import SelectPlant from './pages/SelectPlant';
+import SelectProject from './pages/SelectProject/SelectProject';
+import Search from './pages/Search/Search';
+import SelectPlant from './pages/SelectPlant/SelectPlant';
 import CommPkgRouter from './CommPkgRouter';
-import Bookmarks from './pages/Bookmarks';
+import Bookmarks from './pages/Bookmarks/Bookmarks';
 
 const CommRouter = () => {
     return (
@@ -17,7 +17,7 @@ const CommRouter = () => {
                 <Route
                     exact
                     path={`/:plant/:project/search`}
-                    component={SearchPage}
+                    component={Search}
                 />
                 <Route
                     path={`/:plant/:project/:commPkg`}
