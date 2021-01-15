@@ -24,6 +24,9 @@ import {
     info_circle,
     checkbox,
     checkbox_outline,
+    thumbs_up,
+    error_filled,
+    hourglass_empty,
 } from '@equinor/eds-icons';
 import { Icon } from '@equinor/eds-core-react';
 import React from 'react';
@@ -54,6 +57,9 @@ Icon.add({
     info_circle,
     checkbox,
     checkbox_outline,
+    thumbs_up,
+    error_filled,
+    hourglass_empty,
 });
 
 type IconProps = {

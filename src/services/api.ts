@@ -1,4 +1,4 @@
-import axios, { CancelToken } from 'axios';
+import axios, { AxiosError, CancelToken } from 'axios';
 import objectToCamelCase from '../utils/objectToCamelCase';
 import {
     ChecklistPreview,
@@ -236,6 +236,23 @@ export const putMetaTableCell = async (
     } catch (error) {
         console.log(error.message);
         return Promise.reject(error.message);
+    }
+};
+
+export const putChecklistComment = async (
+    plantId: string,
+    checklistId: number,
+    Comment: string
+) => {
+    try {
+        await axios.put(
+            baseURL +
+                `CheckList/Comm/Comment?plantId=PCS$${plantId}&api-version=4.1`,
+            { CheckListId: checklistId, Comment: Comment }
+        );
+        return Promise.resolve();
+    } catch (error) {
+        return Promise.reject(error.response);
     }
 };
 
