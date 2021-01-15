@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Button } from '@equinor/eds-core-react';
-import { Link, useHistory, useParams, useRouteMatch } from 'react-router-dom';
-import logo from '../../assets/img/procosys-logo.svg';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import EdsIcon from '../icons/EdsIcon';
 import { useSpring } from 'react-spring';
 import SideMenu from './SideMenu';
@@ -10,7 +9,6 @@ import SideMenu from './SideMenu';
 const NavbarWrapper = styled.nav<{ noBorder: boolean }>`
     height: 54px;
     width: 100%;
-    max-width: 768px;
     background-color: #fff;
     border-bottom: ${(props) =>
         props.noBorder ? 'none' : '1px solid #deecee'};
