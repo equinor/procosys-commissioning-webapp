@@ -39,6 +39,7 @@ const Checklist = () => {
         ChecklistDetails
     >();
     const [isSigned, setIsSigned] = useState(false);
+    const [allItemsCheckedOrNA, setAllItemsCheckedOrNA] = useState(true);
     const { checklistId, plant } = useParams<CommParams>();
 
     useEffect(() => {
@@ -60,7 +61,7 @@ const Checklist = () => {
                 setChecklistStatus(AsyncStatus.ERROR);
             }
         })();
-    }, [checklistId]);
+    }, [checklistId, plant, isSigned]);
 
     let content = <SkeletonLoadingPage text="Loading checklist" />;
 
@@ -94,11 +95,14 @@ const Checklist = () => {
                 )}
                 <ChecklistWrapper>
                     <CheckItems
+                        setAllItemsCheckedOrNA={setAllItemsCheckedOrNA}
+                        allItemsCheckedOrNA={allItemsCheckedOrNA}
                         checkItems={checkItems}
                         details={checklistDetails}
                         isSigned={isSigned}
                     />
                     <ChecklistSignature
+                        allItemsCheckedOrNA={allItemsCheckedOrNA}
                         isSigned={isSigned}
                         details={checklistDetails}
                         setIsSigned={setIsSigned}

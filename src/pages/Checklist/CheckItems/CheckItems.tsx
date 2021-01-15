@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {
     CheckItem as CheckItemType,
@@ -21,14 +21,30 @@ const CheckItemsWrapper = styled.div`
     }
 `;
 
+const determineIfAllAreCheckedOrNA = (itemsToDetermine: CheckItemType[]) => {
+    return itemsToDetermine.every((item) => item.isOk || item.isNotApplicable);
+};
+
 type CheckItemsProps = {
     checkItems: CheckItemType[];
     details: ChecklistDetails;
     isSigned: boolean;
+    setAllItemsCheckedOrNA: React.Dispatch<React.SetStateAction<boolean>>;
+    allItemsCheckedOrNA: boolean;
 };
 
-const CheckItems = ({ checkItems, details, isSigned }: CheckItemsProps) => {
+const CheckItems = ({
+    checkItems,
+    details,
+    isSigned,
+    allItemsCheckedOrNA,
+    setAllItemsCheckedOrNA,
+}: CheckItemsProps) => {
     const [items, setItems] = useState(checkItems);
+
+    useEffect(() => {
+        setAllItemsCheckedOrNA(determineIfAllAreCheckedOrNA(items));
+    }, [items, setAllItemsCheckedOrNA]);
 
     const updateNA = (value: boolean, checkItemId: number) => {
         setItems((items) =>
@@ -88,7 +104,13 @@ const CheckItems = ({ checkItems, details, isSigned }: CheckItemsProps) => {
 
     return (
         <CheckItemsWrapper>
-            {!isSigned && <CheckAllButton items={items} updateOk={updateOk} />}
+            {!isSigned && (
+                <CheckAllButton
+                    allItemsCheckedOrNA={allItemsCheckedOrNA}
+                    items={items}
+                    updateOk={updateOk}
+                />
+            )}
             {itemsToDisplay}
         </CheckItemsWrapper>
     );
