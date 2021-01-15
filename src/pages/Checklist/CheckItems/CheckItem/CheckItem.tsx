@@ -6,8 +6,8 @@ import MetaTable from './MetaTable/MetaTable';
 import * as api from '../../../../services/api';
 import { CommParams } from '../../../../App';
 import { useParams } from 'react-router-dom';
-import CheckItemDescription from './CheckItemDescription';
 import { AsyncStatus } from '../../../../contexts/UserContext';
+import EdsIcon from '../../../../components/icons/EdsIcon';
 
 const CheckItemWrapper = styled.div<{ disabled: boolean }>`
     background-color: ${(props) =>
@@ -29,9 +29,30 @@ const DescriptionAndCheckWrapper = styled.div`
 `;
 
 const LeftWrapper = styled.div`
+    & button {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: none;
+        display: flex;
+        align-items: center;
+
+        & p {
+            margin: 0;
+            color: #007079;
+        }
+    }
     & > p {
         flex: auto;
         margin: 0;
+    }
+`;
+
+const CheckItemDescriptionWrapper = styled.div`
+    & > p {
+        margin: 8px 0px 8px 0px;
+        padding-left: 24px;
+        border-left: 2px solid #deecee;
     }
 `;
 
@@ -54,6 +75,7 @@ const CheckItem = ({ item, isSigned, updateNA, updateOk }: CheckItemProps) => {
     const { plant } = useParams<CommParams>();
     const [postOkStatus, setPostOkStatus] = useState(AsyncStatus.INACTIVE);
     const [postNAStatus, setPostNAStatus] = useState(AsyncStatus.INACTIVE);
+    const [showDescription, setShowDescription] = useState(false);
 
     const clearCheckmarks = async () => {
         try {
@@ -97,9 +119,25 @@ const CheckItem = ({ item, isSigned, updateNA, updateOk }: CheckItemProps) => {
                     <LeftWrapper>
                         <p>{item.text}</p>
                         {item.detailText && (
-                            <CheckItemDescription
-                                description={item.detailText}
-                            />
+                            <button
+                                onClick={() =>
+                                    setShowDescription((current) => !current)
+                                }
+                            >
+                                <p>
+                                    {showDescription
+                                        ? 'Hide details'
+                                        : 'Show details'}
+                                </p>
+                                <EdsIcon
+                                    name={
+                                        showDescription
+                                            ? 'chevron_down'
+                                            : 'chevron_right'
+                                    }
+                                    size={16}
+                                />
+                            </button>
                         )}
                     </LeftWrapper>
                     <CheckboxGroup>
@@ -119,6 +157,9 @@ const CheckItem = ({ item, isSigned, updateNA, updateOk }: CheckItemProps) => {
                         />
                     </CheckboxGroup>
                 </DescriptionAndCheckWrapper>
+                <CheckItemDescriptionWrapper>
+                    {showDescription && <p>{item.detailText}</p>}
+                </CheckItemDescriptionWrapper>
                 {item.metaTable && !item.isNotApplicable && (
                     <MetaTable
                         disabled={item.isNotApplicable || isSigned}
