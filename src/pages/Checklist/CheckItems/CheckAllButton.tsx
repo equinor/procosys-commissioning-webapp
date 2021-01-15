@@ -1,32 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { CheckItem } from '../../../services/apiTypes';
-import { Button, Checkbox } from '@equinor/eds-core-react';
+import { Button } from '@equinor/eds-core-react';
 import EdsIcon from '../../../components/icons/EdsIcon';
 import styled from 'styled-components';
 import { postClear, postSetOk } from '../../../services/api';
 import { CommParams } from '../../../App';
 import { useParams } from 'react-router-dom';
+import { AsyncStatus } from '../../../contexts/UserContext';
 
 const StyledCheckAllButton = styled(Button)`
+    :disabled {
+        margin: 24px 0 12px auto;
+    }
     margin: 24px 0 12px auto;
 `;
-
-const determineIfAllAreChecked = (itemsToDetermine: CheckItem[]) => {
-    return itemsToDetermine.every((item) => item.isOk || item.isNotApplicable);
-};
 
 type CheckAllButtonProps = {
     items: CheckItem[];
     updateOk: (value: boolean, checkItemId: number) => void;
+    allItemsCheckedOrNA: boolean;
 };
 
-const CheckAllButton = ({ items, updateOk }: CheckAllButtonProps) => {
+const CheckAllButton = ({
+    items,
+    updateOk,
+    allItemsCheckedOrNA,
+}: CheckAllButtonProps) => {
     const { plant, checklistId } = useParams<CommParams>();
-    const [allChecked, setAllChecked] = useState(
-        determineIfAllAreChecked(items)
-    );
-
+    const [checkAllStatus, setCheckAllStatus] = useState(AsyncStatus.INACTIVE);
     const checkAll = async () => {
+        setCheckAllStatus(AsyncStatus.LOADING);
         const itemsToCheck = items.filter(
             (item) => !item.isOk && !item.isNotApplicable
         );
@@ -37,12 +40,14 @@ const CheckAllButton = ({ items, updateOk }: CheckAllButtonProps) => {
                 })
             );
             itemsToCheck.forEach((item) => updateOk(true, item.id));
+            setCheckAllStatus(AsyncStatus.SUCCESS);
         } catch (error) {
-            console.log(error);
+            setCheckAllStatus(AsyncStatus.ERROR);
         }
     };
 
     const uncheckAll = async () => {
+        setCheckAllStatus(AsyncStatus.LOADING);
         const itemsToCheck = items.filter(
             (item) => item.isOk && !item.isNotApplicable
         );
@@ -53,22 +58,22 @@ const CheckAllButton = ({ items, updateOk }: CheckAllButtonProps) => {
                 })
             );
             itemsToCheck.forEach((item) => updateOk(false, item.id));
+            setCheckAllStatus(AsyncStatus.SUCCESS);
         } catch (error) {
-            console.log(error);
+            setCheckAllStatus(AsyncStatus.ERROR);
         }
     };
-
-    useEffect(() => {
-        setAllChecked(determineIfAllAreChecked(items));
-    }, [items]);
 
     return (
         <StyledCheckAllButton
             variant="outlined"
-            onClick={allChecked ? uncheckAll : checkAll}
+            onClick={allItemsCheckedOrNA ? uncheckAll : checkAll}
+            disabled={checkAllStatus === AsyncStatus.LOADING}
         >
-            <EdsIcon name={allChecked ? 'checkbox' : 'checkbox_outline'} />
-            {allChecked ? 'Uncheck all' : 'Check all'}
+            <EdsIcon
+                name={allItemsCheckedOrNA ? 'checkbox' : 'checkbox_outline'}
+            />
+            {allItemsCheckedOrNA ? 'Uncheck all' : 'Check all'}
         </StyledCheckAllButton>
     );
 };
