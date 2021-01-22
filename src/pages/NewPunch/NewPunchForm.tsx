@@ -73,10 +73,6 @@ const NewPunchForm = ({
     const [raisedBy, setRaisedBy] = useState('');
     const [clearingBy, setClearingBy] = useState('');
 
-    useEffect(() => {
-        console.log(submitPunchStatus);
-    }, [submitPunchStatus]);
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const NewPunchDTO: NewPunch = {
