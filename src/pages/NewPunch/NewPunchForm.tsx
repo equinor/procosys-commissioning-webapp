@@ -4,7 +4,7 @@ import {
     SingleSelect,
     TextField,
 } from '@equinor/eds-core-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { isTemplateExpression } from 'typescript';
 import { AsyncStatus } from '../../contexts/UserContext';
@@ -16,13 +16,32 @@ import {
 } from '../../services/apiTypes';
 import * as API from '../../services/api';
 import { CommParams } from '../../App';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
+import EdsIcon from '../../components/icons/EdsIcon';
+import { removeLastSubdirectory } from '../../utils/general';
+
+const ButtonGroup = styled.div`
+    display: flex;
+    & button:first-of-type {
+        margin-right: 16px;
+    }
+`;
+
+const NewPunchSuccess = styled.div`
+    padding: 0 4%;
+    margin-top: 48px;
+    height: calc(100vh - 54px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`;
 
 const NewPunchFormWrapper = styled.form`
     background-color: white;
     margin-top: 32px;
     padding: 0 4%;
-    & > button {
+    & > button,
+    button:disabled {
         float: right;
         margin-top: 16px;
     }
@@ -42,7 +61,9 @@ const NewPunchForm = ({
     types,
     organizations,
 }: NewPunchFormProps) => {
-    const { plant, checklistId } = useParams<CommParams>();
+    const { plant, checklistId, commPkg, project } = useParams<CommParams>();
+    const { url } = useRouteMatch();
+    const history = useHistory();
     const [submitPunchStatus, setSubmitPunchStatus] = useState(
         AsyncStatus.INACTIVE
     );
@@ -51,6 +72,10 @@ const NewPunchForm = ({
     const [type, setType] = useState('');
     const [raisedBy, setRaisedBy] = useState('');
     const [clearingBy, setClearingBy] = useState('');
+
+    useEffect(() => {
+        console.log(submitPunchStatus);
+    }, [submitPunchStatus]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -70,6 +95,33 @@ const NewPunchForm = ({
             setSubmitPunchStatus(AsyncStatus.ERROR);
         }
     };
+
+    if (submitPunchStatus === AsyncStatus.SUCCESS) {
+        return (
+            <NewPunchSuccess>
+                <EdsIcon name="check" size={40} />
+                <h4>Successfully added new punch</h4>
+                <ButtonGroup>
+                    <Button
+                        onClick={() =>
+                            history.push(removeLastSubdirectory(url))
+                        }
+                    >
+                        Back to checklist
+                    </Button>
+                    <Button
+                        onClick={() =>
+                            history.push(
+                                `/${plant}/${project}/${commPkg}/punch-list`
+                            )
+                        }
+                    >
+                        Go to punch list
+                    </Button>
+                </ButtonGroup>
+            </NewPunchSuccess>
+        );
+    }
 
     return (
         <NewPunchFormWrapper onSubmit={handleSubmit}>
