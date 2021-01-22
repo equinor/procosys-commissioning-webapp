@@ -1,3 +1,4 @@
+import { arrow_back_ios } from '@equinor/eds-icons';
 import axios, { AxiosError, CancelToken } from 'axios';
 import objectToCamelCase from '../utils/objectToCamelCase';
 import {
@@ -16,7 +17,9 @@ import {
 } from './apiTypes';
 import * as auth from './authService';
 
-const baseURL = 'https://procosyswebapiqp.equinor.com/api/';
+export const baseURL = 'https://procosyswebapiqp.equinor.com/api/';
+
+axios.defaults.baseURL = baseURL;
 
 axios.interceptors.request.use(async (request) => {
     try {
@@ -32,7 +35,7 @@ axios.interceptors.request.use(async (request) => {
 export const getPlants = async () => {
     try {
         const { data } = await axios.get(
-            baseURL + 'Plants?includePlantsWithoutAccess=false&api-version=4.1'
+            'Plants?includePlantsWithoutAccess=false&api-version=4.1'
         );
         const camelCasedResponse = objectToCamelCase(data);
         const camelCasedResponseWithSlug = camelCasedResponse.map(
@@ -50,7 +53,7 @@ export const getPlants = async () => {
 export const getProjectsForPlant = async (plantId: string) => {
     try {
         const { data } = await axios.get(
-            baseURL + `Projects?plantId=${plantId}&api-version=4.1`
+            `Projects?plantId=${plantId}&api-version=4.1`
         );
         return objectToCamelCase(data) as Project[];
     } catch (error) {
@@ -61,7 +64,7 @@ export const getProjectsForPlant = async (plantId: string) => {
 export const getPermissionsForPlant = async (plantId: string) => {
     try {
         const { data } = await axios.get(
-            baseURL + `Permissions?plantId=${plantId}&api-version=4.1`
+            `Permissions?plantId=${plantId}&api-version=4.1`
         );
         return data as string[];
     } catch (error) {
@@ -76,9 +79,10 @@ export const searchForCommPackage = async (
     cancelToken?: CancelToken
 ) => {
     try {
-        const { data } = await axios.get(
-            baseURL +
-                `CommPkg/Search?plantId=${plantId}&startsWithCommPkgNo=${query}&includeClosedProjects=false&projectId=${projectId}&api-version=4.1`,
+        const {
+            data,
+        } = await axios.get(
+            `CommPkg/Search?plantId=${plantId}&startsWithCommPkgNo=${query}&includeClosedProjects=false&projectId=${projectId}&api-version=4.1`,
             { cancelToken }
         );
 
@@ -95,8 +99,7 @@ export const getCommPackageDetails = async (
 ) => {
     try {
         const { data } = await axios.get(
-            baseURL +
-                `CommPkg/ByCommPkgNos?plantId=${plantId}&commPkgNos=${commPkgNumber}&projectName=${projectName}&api-version=4.1
+            `CommPkg/ByCommPkgNos?plantId=${plantId}&commPkgNos=${commPkgNumber}&projectName=${projectName}&api-version=4.1
 `
         );
         return objectToCamelCase(data[0]) as CommPkg;
@@ -108,8 +111,7 @@ export const getCommPackageDetails = async (
 export const getScope = async (plantId: string, commPkgId: number) => {
     try {
         const { data } = await axios.get(
-            baseURL +
-                `CommPkg/Checklists?plantId=${plantId}&commPkgId=${commPkgId}&api-version=4.1`
+            `CommPkg/Checklists?plantId=${plantId}&commPkgId=${commPkgId}&api-version=4.1`
         );
         return objectToCamelCase(data) as ChecklistPreview[];
     } catch (error) {
@@ -120,8 +122,7 @@ export const getScope = async (plantId: string, commPkgId: number) => {
 export const getTasks = async (plantId: string, commPkgId: number) => {
     try {
         const { data } = await axios.get(
-            baseURL +
-                `CommPkg/Tasks?plantId=${plantId}&commPkgId=${commPkgId}&api-version=4.1`
+            `CommPkg/Tasks?plantId=${plantId}&commPkgId=${commPkgId}&api-version=4.1`
         );
         return objectToCamelCase(data) as TaskPreview[];
     } catch (error) {
@@ -131,8 +132,7 @@ export const getTasks = async (plantId: string, commPkgId: number) => {
 export const getPunchList = async (plantId: string, commPkgId: number) => {
     try {
         const { data } = await axios.get(
-            baseURL +
-                `CommPkg/PunchList?plantId=${plantId}&commPkgId=${commPkgId}&api-version=4.1`
+            `CommPkg/PunchList?plantId=${plantId}&commPkgId=${commPkgId}&api-version=4.1`
         );
         return objectToCamelCase(data) as PunchPreview[];
     } catch (error) {
@@ -143,8 +143,7 @@ export const getPunchList = async (plantId: string, commPkgId: number) => {
 export const getChecklist = async (plantId: string, checklistId: string) => {
     try {
         const { data } = await axios.get(
-            baseURL +
-                `Checklist/Comm?plantId=PCS$${plantId}&checklistId=${checklistId}&api-version=4.1`
+            `Checklist/Comm?plantId=PCS$${plantId}&checklistId=${checklistId}&api-version=4.1`
         );
         return objectToCamelCase(data) as ChecklistResponse;
     } catch (error) {
@@ -159,8 +158,7 @@ export const postSetOk = async (
 ) => {
     try {
         await axios.post(
-            baseURL +
-                `CheckList/Item/SetOk?plantId=PCS$${plantId}&api-version=4.1`,
+            `CheckList/Item/SetOk?plantId=PCS$${plantId}&api-version=4.1`,
             {
                 CheckListId: checklistId,
                 CheckItemId: checkItemId,
@@ -179,8 +177,7 @@ export const postSetNA = async (
 ) => {
     try {
         await axios.post(
-            baseURL +
-                `CheckList/Item/SetNA?plantId=PCS$${plantId}&api-version=4.1`,
+            `CheckList/Item/SetNA?plantId=PCS$${plantId}&api-version=4.1`,
             {
                 CheckListId: checklistId,
                 CheckItemId: checkItemId,
@@ -199,8 +196,7 @@ export const postClear = async (
 ) => {
     try {
         await axios.post(
-            baseURL +
-                `CheckList/Item/Clear?plantId=PCS$${plantId}&api-version=4.1`,
+            `CheckList/Item/Clear?plantId=PCS$${plantId}&api-version=4.1`,
             {
                 CheckListId: checklistId,
                 CheckItemId: checkItemId,
@@ -222,8 +218,7 @@ export const putMetaTableCell = async (
 ) => {
     try {
         await axios.put(
-            baseURL +
-                `CheckList/Item/MetaTableCell?plantId=PCS$${plantId}&api-version=4.1`,
+            `CheckList/Item/MetaTableCell?plantId=PCS$${plantId}&api-version=4.1`,
             {
                 CheckListId: checklistId,
                 CheckItemId: checkItemId,
@@ -246,8 +241,7 @@ export const putChecklistComment = async (
 ) => {
     try {
         await axios.put(
-            baseURL +
-                `CheckList/Comm/Comment?plantId=PCS$${plantId}&api-version=4.1`,
+            `CheckList/Comm/Comment?plantId=PCS$${plantId}&api-version=4.1`,
             { CheckListId: checklistId, Comment: Comment }
         );
         return Promise.resolve();
@@ -259,8 +253,7 @@ export const putChecklistComment = async (
 export const postSign = async (plantId: string, checklistId: number) => {
     try {
         await axios.post(
-            baseURL +
-                `CheckList/Comm/Sign?plantId=PCS$${plantId}&api-version=4.1`,
+            `CheckList/Comm/Sign?plantId=PCS$${plantId}&api-version=4.1`,
             checklistId,
             { headers: { 'Content-Type': 'application/json' } }
         );
@@ -274,8 +267,7 @@ export const postSign = async (plantId: string, checklistId: number) => {
 export const postUnsign = async (plantId: string, checklistId: number) => {
     try {
         await axios.post(
-            baseURL +
-                `CheckList/Comm/Unsign?plantId=PCS$${plantId}&api-version=4.1`,
+            `CheckList/Comm/Unsign?plantId=PCS$${plantId}&api-version=4.1`,
             checklistId,
             { headers: { 'Content-Type': 'application/json' } }
         );
@@ -289,8 +281,7 @@ export const postUnsign = async (plantId: string, checklistId: number) => {
 export const getPunchCategories = async (plantId: string) => {
     try {
         const { data } = await axios.get(
-            baseURL +
-                `PunchListItem/Categories?plantId=PCS$${plantId}&api-version=4.1`
+            `PunchListItem/Categories?plantId=PCS$${plantId}&api-version=4.1`
         );
         return objectToCamelCase(data) as PunchCategory[];
     } catch (error) {
@@ -302,8 +293,7 @@ export const getPunchCategories = async (plantId: string) => {
 export const getPunchTypes = async (plantId: string) => {
     try {
         const { data } = await axios.get(
-            baseURL +
-                `PunchListItem/Types?plantId=PCS$${plantId}&api-version=4.1`
+            `PunchListItem/Types?plantId=PCS$${plantId}&api-version=4.1`
         );
         return objectToCamelCase(data) as PunchType[];
     } catch (error) {
@@ -315,8 +305,7 @@ export const getPunchTypes = async (plantId: string) => {
 export const getPunchOrganizations = async (plantId: string) => {
     try {
         const { data } = await axios.get(
-            baseURL +
-                `PunchListItem/Organizations?plantId=PCS$${plantId}&api-version=4.1`
+            `PunchListItem/Organizations?plantId=PCS$${plantId}&api-version=4.1`
         );
         return objectToCamelCase(data) as PunchOrganization[];
     } catch (error) {
@@ -328,7 +317,7 @@ export const getPunchOrganizations = async (plantId: string) => {
 export const postNewPunch = async (plantId: string, newPunchData: NewPunch) => {
     try {
         await axios.post(
-            baseURL + `PunchListItem?plantId=PCS$${plantId}&api-version=4.1`,
+            `PunchListItem?plantId=PCS$${plantId}&api-version=4.1`,
             newPunchData
         );
         return Promise.resolve();
