@@ -12,7 +12,7 @@ const MetaTableWrapper = styled.table`
         padding-bottom: 12px;
     }
     & thead {
-        & p {
+        & label {
             margin: 0;
             text-align: center;
         }
@@ -22,7 +22,7 @@ const MetaTableWrapper = styled.table`
         & th {
             min-width: 100px;
             padding-right: 10px;
-            & > p {
+            & > label {
                 margin: 0;
                 padding-bottom: 22px;
                 float: right;
@@ -68,18 +68,11 @@ const MetaTable = ({ labels, rows, disabled, checkItemId }: MetaTableProps) => {
     const tableContainerRef = useRef<HTMLDivElement>(
         document.createElement('div')
     );
-    useEffect(() => {
-        setTableIsScrollable(
-            tableContainerRef.current.scrollWidth >
-                tableContainerRef.current.clientWidth
-        );
-    }, [tableContainerRef]);
-
     const headers = labels.map((label) => (
         <React.Fragment key={label.id}>
             {label && (
                 <th>
-                    <p>{label.label}</p>
+                    <label>{label.label}</label>
                 </th>
             )}
         </React.Fragment>
@@ -102,12 +95,19 @@ const MetaTable = ({ labels, rows, disabled, checkItemId }: MetaTableProps) => {
         return (
             <tr key={row.id}>
                 <th>
-                    <p>{row.cells.length > 1 && row.label}</p>
+                    <label>{row.cells.length > 1 && row.label}</label>
                 </th>
                 {cells}
             </tr>
         );
     });
+
+    useEffect(() => {
+        setTableIsScrollable(
+            tableContainerRef.current.scrollWidth >
+                tableContainerRef.current.clientWidth
+        );
+    }, [tableContainerRef]);
 
     return (
         <HorizontalScroll ref={tableContainerRef}>
