@@ -7,6 +7,7 @@ const PageHeaderWrapper = styled.div<{ hasSubtitle: boolean }>`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: 16px;
     & h2 {
         text-align: center;
         margin: ${(props) =>
@@ -15,7 +16,7 @@ const PageHeaderWrapper = styled.div<{ hasSubtitle: boolean }>`
     & h6 {
         text-align: center;
         margin: 0 0 5px 0;
-        margin-bottom: 24px;
+        margin-bottom: 32px;
     }
 `;
 type PageHeaderProps = {
