@@ -13,6 +13,10 @@ import {
 } from '../../utils/textFieldHelpers';
 import { Card, Snackbar } from '@equinor/eds-core-react';
 
+const AllMustBeSignedWarning = styled(Card)`
+    margin-bottom: 16px;
+`;
+
 const ChecklistSignatureWrapper = styled.div<{ helperTextVisible: boolean }>`
     display: flex;
     flex-direction: column;
@@ -105,8 +109,16 @@ const ChecklistSignature = ({
         <ChecklistSignatureWrapper
             helperTextVisible={putCommentStatus !== AsyncStatus.INACTIVE}
         >
+            {!isSigned && !allItemsCheckedOrNA && (
+                <AllMustBeSignedWarning variant="warning">
+                    <Typography type="body_long">
+                        All applicable items must be checked before signing
+                    </Typography>
+                </AllMustBeSignedWarning>
+            )}
             <TextField
                 id={'Comment field'}
+                maxLength={500}
                 variant={determineVariant(putCommentStatus)}
                 disabled={isSigned || putCommentStatus === AsyncStatus.LOADING}
                 multiline
@@ -120,13 +132,7 @@ const ChecklistSignature = ({
                 ) => setComment(e.target.value)}
                 onBlur={putComment}
             />
-            {!isSigned && !allItemsCheckedOrNA && (
-                <Card variant="warning">
-                    <Typography type="body_long">
-                        All applicable items must be checked before signing
-                    </Typography>
-                </Card>
-            )}
+
             <Button
                 onClick={handleSignClick}
                 disabled={

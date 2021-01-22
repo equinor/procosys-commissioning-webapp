@@ -7,12 +7,12 @@ import { Button } from '@equinor/eds-core-react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import PlantContext from '../../contexts/PlantContext';
 import Navbar from '../../components/navigation/Navbar';
-import { SHADOW } from '../../style/GlobalStyles';
 import EdsIcon from '../../components/icons/EdsIcon';
 
 const BookmarksWrapper = styled.main`
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
     padding-bottom: 70px;
     & h3 {
         text-align: center;

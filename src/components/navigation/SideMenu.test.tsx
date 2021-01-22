@@ -2,7 +2,7 @@ import React from 'react';
 import { withPlantContext } from '../../test/contexts';
 import SideMenu from './SideMenu';
 
-jest.mock('../../../services/authService', () => ({
+jest.mock('../../services/authService', () => ({
     getUserName: () => 'erly',
 }));
 
