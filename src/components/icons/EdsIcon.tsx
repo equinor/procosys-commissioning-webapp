@@ -27,6 +27,7 @@ import {
     thumbs_up,
     error_filled,
     hourglass_empty,
+    check,
 } from '@equinor/eds-icons';
 import { Icon } from '@equinor/eds-core-react';
 import React from 'react';
@@ -60,6 +61,7 @@ Icon.add({
     thumbs_up,
     error_filled,
     hourglass_empty,
+    check,
 });
 
 type IconProps = {
