@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { CheckItem as CheckItemType } from '../../../../services/apiTypes';
-import { Checkbox, Switch } from '@equinor/eds-core-react';
+import { Checkbox } from '@equinor/eds-core-react';
 import MetaTable from './MetaTable/MetaTable';
 import * as api from '../../../../services/api';
 import { CommParams } from '../../../../App';
@@ -147,6 +147,7 @@ const CheckItem = ({ item, isSigned, updateNA, updateOk }: CheckItemProps) => {
                             onChange={handleSetOk}
                             checked={item.isOk}
                             label={''}
+                            name={'Checked'}
                         />
                         <Checkbox
                             disabled={isSigned}
@@ -154,6 +155,7 @@ const CheckItem = ({ item, isSigned, updateNA, updateOk }: CheckItemProps) => {
                             onChange={handleSetNA}
                             checked={item.isNotApplicable}
                             label={''}
+                            name={'Not Applicable'}
                         />
                     </CheckboxGroup>
                 </DescriptionAndCheckWrapper>
