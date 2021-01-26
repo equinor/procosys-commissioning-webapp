@@ -1,5 +1,4 @@
-import { arrow_back_ios } from '@equinor/eds-icons';
-import axios, { AxiosError, CancelToken } from 'axios';
+import axios, { CancelToken } from 'axios';
 import objectToCamelCase from '../utils/objectToCamelCase';
 import {
     ChecklistPreview,
@@ -28,7 +27,7 @@ axios.interceptors.request.use(async (request) => {
         return request;
     } catch (error) {
         console.log(error);
-        return request;
+        throw new Error(error);
     }
 });
 
