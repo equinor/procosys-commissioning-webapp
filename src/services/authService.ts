@@ -1,6 +1,7 @@
 import * as Msal from '@azure/msal-browser';
+import { AccountInfo } from '@azure/msal-browser';
 import axios from 'axios';
-import { AsyncStatus } from '../contexts/UserContext';
+import { AsyncStatus } from '../contexts/CommAppContext';
 
 export type AuthSettings = {
     clientId: string;
@@ -8,22 +9,44 @@ export type AuthSettings = {
     scopes: string[];
 };
 
+export interface IAuthService {
+    login: () => Promise<void>;
+    logout: () => Promise<void>;
+    getCurrentUser: () => AccountInfo | null;
+    handleLogin: () => Promise<AsyncStatus>;
+    isLoggedIn: () => Promise<void>;
+    getAccessToken: (scope: string[]) => Promise<string>;
+    getUserName: () => string | undefined;
+}
+export interface IAuthServiceProps {
+    MSAL: Msal.PublicClientApplication;
+    scopes: string[];
+}
+
 const settingsEndpint =
     'https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Auth';
 
 export const getAuthSettings = async () => {
     const { data } = await axios.get(settingsEndpint);
-    return data as AuthSettings;
+    // Todo: TypeGuard authsettings
+    const clientSettings = {
+        auth: {
+            clientId: data.clientId,
+            authority: data.authority,
+            redirectUri: window.location.href,
+        },
+    };
+    const scopes = data.scopes;
+    const configurationScope = data.configurationScope;
+    return { clientSettings, scopes, configurationScope };
 };
 
-const auth = (MSAL: Msal.PublicClientApplication, scopes: string[]) => {
+const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
     const logout = async () => {
         return await MSAL.logout();
     };
 
     const login = async () => {
-        console.log('HIT LOGIN');
-        console.log(scopes);
         if (!getCurrentUser()) MSAL.loginRedirect({ scopes: scopes });
     };
 
@@ -37,29 +60,30 @@ const auth = (MSAL: Msal.PublicClientApplication, scopes: string[]) => {
         return getCurrentUser()?.username;
     };
 
-    const getAccessToken = async () => {
-        console.log('HIT GETACCESSTOKEN');
+    const getAccessToken = async (scope: string[]) => {
         try {
             const account = MSAL.getAllAccounts()[0];
             const silentTokenResponse = await MSAL.acquireTokenSilent({
                 account,
-                scopes,
+                scopes: scope,
             });
             return Promise.resolve(silentTokenResponse.accessToken);
         } catch (error) {
             console.log('Token acquisition failed, redirecting');
-            MSAL.loginRedirect({ scopes: scopes });
+            MSAL.acquireTokenRedirect({ scopes: scope });
             return Promise.reject(error as Msal.AuthError);
         }
     };
 
     const isLoggedIn = async () => {
-        console.log('HIT ISLOGGEDIN');
         const cachedAccount = MSAL.getAllAccounts()[0];
         if (cachedAccount == null) return Promise.reject();
         try {
             // User is able to get accessToken, no login required
-            await getAccessToken();
+            await MSAL.acquireTokenSilent({
+                account: cachedAccount,
+                scopes: ['User.read'],
+            });
             return Promise.resolve();
         } catch {
             return Promise.reject();
@@ -67,7 +91,6 @@ const auth = (MSAL: Msal.PublicClientApplication, scopes: string[]) => {
     };
 
     const handleLogin = async () => {
-        console.log('HIT HANDLELOGIN');
         const redirectFromSigninResponse = await MSAL.handleRedirectPromise();
         if (redirectFromSigninResponse !== null) {
             return Promise.resolve(AsyncStatus.SUCCESS);
@@ -88,8 +111,7 @@ const auth = (MSAL: Msal.PublicClientApplication, scopes: string[]) => {
         isLoggedIn,
         getAccessToken,
         getUserName,
-        logScopes,
     };
 };
 
-export default auth;
+export default authService;

@@ -4,8 +4,10 @@ import GlobalStyles from './style/GlobalStyles';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import auth, { AuthSettings, getAuthSettings } from './services/authService';
+import authService, { getAuthSettings } from './services/authService';
 import * as MSAL from '@azure/msal-browser';
+import baseApiService, { getApiSettings } from './services/baseApi';
+import procosysApiService from './services/procosysApi';
 
 const render = (content: JSX.Element) => {
     ReactDOM.render(
@@ -19,23 +21,40 @@ const render = (content: JSX.Element) => {
     );
 };
 
+const initialize = async () => {
+    const {
+        clientSettings,
+        scopes,
+        configurationScope,
+    } = await getAuthSettings();
+    const authClient = new MSAL.PublicClientApplication(clientSettings);
+    const authInstance = authService({
+        MSAL: authClient,
+        scopes: scopes,
+    });
+    await authInstance.handleLogin();
+    const accessToken = await authInstance.getAccessToken(configurationScope);
+    const apiSettingsEndpoint =
+        'https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Configuration?';
+    const { configuration } = await getApiSettings(
+        apiSettingsEndpoint,
+        accessToken
+    );
+    const baseApiInstance = baseApiService(authInstance, configuration.baseUrl);
+    const procosysApiInstance = procosysApiService({ axios: baseApiInstance });
+    return { authInstance, procosysApiInstance };
+};
+
 (async () => {
-    let authSettings: AuthSettings;
-    let authClient: MSAL.PublicClientApplication;
     render(<LoadingPage loadingText={'Initializing...'} />);
     try {
-        authSettings = await getAuthSettings();
-        const clientSettings = {
-            auth: {
-                clientId: authSettings.clientId,
-                authority: authSettings.authority,
-            },
-        };
-        authClient = new MSAL.PublicClientApplication(clientSettings);
-        const authInstance = auth(authClient, authSettings.scopes);
-        authInstance.logScopes();
-        await authInstance.handleLogin();
-        render(<App authInstance={authInstance} />);
+        const { authInstance, procosysApiInstance } = await initialize();
+        render(
+            <App
+                authInstance={authInstance}
+                procosysApiInstance={procosysApiInstance}
+            />
+        );
     } catch (error) {
         render(
             <ErrorPage
