@@ -1,7 +1,6 @@
 import * as Msal from '@azure/msal-browser';
 import { AccountInfo } from '@azure/msal-browser';
 import axios from 'axios';
-import { AsyncStatus } from '../contexts/CommAppContext';
 
 export type AuthSettings = {
     clientId: string;
@@ -13,8 +12,8 @@ export interface IAuthService {
     login: () => Promise<void>;
     logout: () => Promise<void>;
     getCurrentUser: () => AccountInfo | null;
-    handleLogin: () => Promise<AsyncStatus>;
-    isLoggedIn: () => Promise<void>;
+    handleLogin: () => Promise<boolean>;
+    isLoggedIn: () => Promise<boolean>;
     getAccessToken: (scope: string[]) => Promise<string>;
     getUserName: () => string | undefined;
 }
@@ -38,7 +37,13 @@ export const getAuthSettings = async () => {
     };
     const scopes = data.scopes;
     const configurationScope = data.configurationScope;
-    return { clientSettings, scopes, configurationScope };
+    const configurationEndpoint = data.configurationEndpoint;
+    return {
+        clientSettings,
+        scopes,
+        configurationScope,
+        configurationEndpoint,
+    };
 };
 
 const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
@@ -61,46 +66,45 @@ const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
     };
 
     const getAccessToken = async (scope: string[]) => {
-        try {
-            const account = MSAL.getAllAccounts()[0];
-            const silentTokenResponse = await MSAL.acquireTokenSilent({
-                account,
-                scopes: scope,
-            });
-            return Promise.resolve(silentTokenResponse.accessToken);
-        } catch (error) {
+        const account = MSAL.getAllAccounts()[0];
+        if (!account) return '';
+        const { accessToken } = await MSAL.acquireTokenSilent({
+            account,
+            scopes: scope,
+        });
+        if (accessToken) {
+            return Promise.resolve(accessToken);
+        } else {
             console.log('Token acquisition failed, redirecting');
             MSAL.acquireTokenRedirect({ scopes: scope });
-            return Promise.reject(error as Msal.AuthError);
+            return '';
         }
     };
 
     const isLoggedIn = async () => {
+        console.log(scopes);
         const cachedAccount = MSAL.getAllAccounts()[0];
-        if (cachedAccount == null) return Promise.reject();
-        try {
-            // User is able to get accessToken, no login required
-            await MSAL.acquireTokenSilent({
-                account: cachedAccount,
-                scopes: ['User.read'],
-            });
-            return Promise.resolve();
-        } catch {
-            return Promise.reject();
-        }
+        if (cachedAccount == null) return false;
+        // User is able to get accessToken, no login required
+        const accessToken = await MSAL.acquireTokenSilent({
+            account: cachedAccount,
+            scopes: ['User.read'],
+        });
+        if (accessToken) return true;
+        return false;
     };
 
     const handleLogin = async () => {
         const redirectFromSigninResponse = await MSAL.handleRedirectPromise();
         if (redirectFromSigninResponse !== null) {
-            return Promise.resolve(AsyncStatus.SUCCESS);
+            return Promise.resolve(false);
         }
-        try {
-            await isLoggedIn();
-            return Promise.resolve(AsyncStatus.SUCCESS);
-        } catch {
+        const userIsloggedIn = await isLoggedIn();
+        if (userIsloggedIn) {
+            return Promise.resolve(false);
+        } else {
             login();
-            return Promise.reject(AsyncStatus.ERROR);
+            return Promise.resolve(true);
         }
     };
     return {

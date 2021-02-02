@@ -24,11 +24,11 @@ const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
     };
 
     const isLoggedIn = async () => {
-        return Promise.resolve();
+        return true;
     };
 
     const handleLogin = async () => {
-        return Promise.resolve(AsyncStatus.SUCCESS);
+        return Promise.resolve(false);
     };
     return {
         logout,

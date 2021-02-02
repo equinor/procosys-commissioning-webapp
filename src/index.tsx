@@ -26,24 +26,26 @@ const initialize = async () => {
         clientSettings,
         scopes,
         configurationScope,
+        configurationEndpoint,
     } = await getAuthSettings();
     const authClient = new MSAL.PublicClientApplication(clientSettings);
     const authInstance = authService({
         MSAL: authClient,
         scopes: scopes,
     });
-    await authInstance.handleLogin();
-    const accessToken = await authInstance.getAccessToken(configurationScope);
-    const apiSettingsEndpoint =
-        'https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Configuration?';
-    const { configuration } = await getApiSettings(
-        apiSettingsEndpoint,
-        accessToken
+    const isRedirecting = await authInstance.handleLogin();
+    if (isRedirecting) return Promise.reject('redirecting');
+    const configurationAccessToken = await authInstance.getAccessToken(
+        configurationScope
+    );
+    const procosysApiSettings = await getApiSettings(
+        configurationEndpoint,
+        configurationAccessToken
     );
     const baseApiInstance = baseApiService(
         authInstance,
-        configuration.baseUrl,
-        scopes
+        procosysApiSettings.baseUrl,
+        procosysApiSettings.scope
     );
     const procosysApiInstance = procosysApiService({ axios: baseApiInstance });
     return { authInstance, procosysApiInstance };
@@ -60,11 +62,16 @@ const initialize = async () => {
             />
         );
     } catch (error) {
-        render(
-            <ErrorPage
-                title="Unable to initialize app"
-                description="Check your connection or reload this page and try again. If problem persists, contact customer support"
-            />
-        );
+        console.log('ERRORERROR', error);
+        if (error === 'redirecting') {
+            render(<LoadingPage loadingText={'Redirecting to login...'} />);
+        } else {
+            render(
+                <ErrorPage
+                    title="Unable to initialize app"
+                    description="Check your connection or reload this page and try again. If problem persists, contact customer support"
+                />
+            );
+        }
     }
 })();

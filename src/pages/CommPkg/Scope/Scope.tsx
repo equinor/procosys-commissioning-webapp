@@ -17,14 +17,13 @@ export const CommPkgListWrapper = styled.div`
 export const PreviewButton = styled(Link)`
     display: flex;
     align-items: center;
-    /* border-bottom: 2px solid ${COLORS.ui.background__light.hex}; */
-    padding: 20px 16px;
+    padding: 20px 4%;
     text-decoration: none;
     justify-content: space-between;
     & img {
         max-height: 20px;
         object-fit: contain;
-        flex: 0.5;
+        flex: 0.1;
     }
     & > div {
         margin-left: 16px;

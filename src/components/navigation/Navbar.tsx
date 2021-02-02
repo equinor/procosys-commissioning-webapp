@@ -17,7 +17,7 @@ const NavbarWrapper = styled.nav<{ noBorder: boolean }>`
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
-    padding: 4px 2% 4px 2%;
+    padding: 4px 4% 4px 4%;
     position: fixed;
     top: 0;
     left: 50%;
@@ -30,6 +30,9 @@ const NavbarWrapper = styled.nav<{ noBorder: boolean }>`
     }
     & h4 {
         margin: 0;
+    }
+    & button {
+        padding: 0;
     }
 `;
 

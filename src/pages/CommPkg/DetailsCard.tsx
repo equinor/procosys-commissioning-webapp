@@ -38,6 +38,8 @@ const StatusIconWrapper = styled.div`
 `;
 const BookmarkIconWrapper = styled.div`
     grid-area: 2 / 4 / 2 / 4;
+    display: flex;
+    justify-content: center;
 `;
 const CommPkgNumberWrapper = styled.div`
     grid-area: 2 / 1 / 3 / 3;

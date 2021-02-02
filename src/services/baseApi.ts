@@ -4,7 +4,7 @@ import { IAuthService } from './authService';
 type ProcosysApiSettings = {
     baseUrl: string;
     version: string;
-    scopes: string[];
+    scope: string[];
 };
 
 export const getApiSettings = async (endpoint: string, accessToken: string) => {
@@ -22,7 +22,6 @@ const baseApiService = (
     scope: string[]
 ) => {
     const axiosInstance = axios.create();
-    console.log(baseURL);
     axiosInstance.defaults.baseURL = baseURL;
     axiosInstance.interceptors.request.use(async (request) => {
         try {
