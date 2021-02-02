@@ -6,18 +6,17 @@ import {
     PunchOrganization,
     PunchType,
 } from '../../services/apiTypes';
-import * as API from '../../services/api';
 import { useParams } from 'react-router-dom';
 import { CommParams } from '../../App';
-import { AsyncStatus } from '../../contexts/UserContext';
+import CommAppContext, { AsyncStatus } from '../../contexts/CommAppContext';
 import ErrorPage from '../../components/error/ErrorPage';
 import Navbar from '../../components/navigation/Navbar';
-import styled from 'styled-components';
 import ChecklistDetailsCard from '../Checklist/ChecklistDetailsCard';
 import CommPkgContext from '../../contexts/CommPkgContext';
 import NewPunchForm from './NewPunchForm';
 
 const NewPunch = () => {
+    const { api } = useContext(CommAppContext);
     const [categories, setCategories] = useState<PunchCategory[]>([]);
     const [types, setTypes] = useState<PunchType[]>([]);
     const [organizations, setOrganizations] = useState<PunchOrganization[]>([]);
@@ -39,10 +38,10 @@ const NewPunch = () => {
                     organizationsFromAPI,
                     checklistFromAPI,
                 ] = await Promise.all([
-                    API.getPunchCategories(plant),
-                    API.getPunchTypes(plant),
-                    API.getPunchOrganizations(plant),
-                    API.getChecklist(plant, checklistId),
+                    api.getPunchCategories(plant),
+                    api.getPunchTypes(plant),
+                    api.getPunchOrganizations(plant),
+                    api.getChecklist(plant, checklistId),
                 ]);
                 setCategories(categoriesFromAPI);
                 setTypes(typesFromAPI);

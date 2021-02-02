@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ChecklistDetails } from '../../services/apiTypes';
 import { Button, TextField, Typography } from '@equinor/eds-core-react';
 import styled from 'styled-components';
-import * as api from '../../services/api';
 import { useParams } from 'react-router-dom';
 import { CommParams } from '../../App';
-import { AsyncStatus } from '../../contexts/UserContext';
+import CommAppContext, { AsyncStatus } from '../../contexts/CommAppContext';
 import {
     determineHelperIcon,
     determineHelperText,
@@ -53,6 +52,7 @@ const ChecklistSignature = ({
     isSigned,
     allItemsCheckedOrNA,
 }: ChecklistSignatureProps) => {
+    const { api } = useContext(CommAppContext);
     const { plant, checklistId } = useParams<CommParams>();
     const [comment, setComment] = useState(details.comment);
     const [putCommentStatus, setPutCommentStatus] = useState(

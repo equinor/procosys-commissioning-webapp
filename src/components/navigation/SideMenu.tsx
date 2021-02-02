@@ -8,6 +8,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { CommParams } from '../../App';
 import PlantContext from '../../contexts/PlantContext';
 import { StorageKey } from '../../services/useBookmarks';
+import CommAppContext from '../../contexts/CommAppContext';
 
 const SideMenuWrapper = styled(animated.aside)`
     width: 297px;
@@ -84,6 +85,7 @@ const SideMenu = ({
     backdropAnimation,
     setDrawerIsOpen,
 }: SideMenuProps) => {
+    const { auth } = useContext(CommAppContext);
     const history = useHistory();
     const params = useParams<CommParams>();
     const { currentPlant, currentProject } = useContext(PlantContext);

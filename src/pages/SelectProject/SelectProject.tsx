@@ -7,7 +7,7 @@ import SkeletonLoadingPage from '../../components/loading/SkeletonLoader';
 import Navbar from '../../components/navigation/Navbar';
 import PageHeader from '../../components/PageHeader';
 import PlantContext from '../../contexts/PlantContext';
-import { AsyncStatus } from '../../contexts/UserContext';
+import { AsyncStatus } from '../../contexts/CommAppContext';
 import { SelectPlantWrapper, SelectorButton } from '../SelectPlant/SelectPlant';
 
 const SelectProject = () => {

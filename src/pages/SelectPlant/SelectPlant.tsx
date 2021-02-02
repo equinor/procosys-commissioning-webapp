@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import EdsIcon from '../../components/icons/EdsIcon';
 import ErrorPage from '../../components/error/ErrorPage';
-import UserContext from '../../contexts/UserContext';
+import CommAppContext from '../../contexts/CommAppContext';
 import { COLORS } from '../../style/GlobalStyles';
 import PageHeader from '../../components/PageHeader';
 import Navbar from '../../components/navigation/Navbar';
@@ -37,7 +37,7 @@ export const SelectorButton = styled(Link)`
 `;
 
 const SelectPlant = () => {
-    const { availablePlants } = useContext(UserContext);
+    const { availablePlants } = useContext(CommAppContext);
 
     const plantsToRender = availablePlants.map((plant) => (
         <SelectorButton key={plant.id} to={`/${plant.slug}`}>

@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useReducer, useState } from 'react';
-import * as api from '../../services/api';
 import axios, { CancelToken } from 'axios';
 import PlantContext from '../../contexts/PlantContext';
 import { CommPkgSearchResults } from '../../services/apiTypes';
+import { ProcosysApiService } from '../../services/procosysApi';
+import CommAppContext from '../../contexts/CommAppContext';
 
 export enum SearchStatus {
     INACTIVE,
@@ -55,7 +56,8 @@ const fetchHits = async (
     dispatch: React.Dispatch<Action>,
     plantID: string,
     projectID: number,
-    cancelToken: CancelToken
+    cancelToken: CancelToken,
+    api: ProcosysApiService
 ) => {
     dispatch({ type: 'FETCH_START' });
     try {
@@ -75,6 +77,7 @@ const fetchHits = async (
 };
 
 const useSearchPageFacade = () => {
+    const { api } = useContext(CommAppContext);
     const [{ hits, searchStatus }, dispatch] = useReducer(fetchReducer, {
         hits: { maxAvailable: 0, items: [] },
         searchStatus: SearchStatus.INACTIVE,
@@ -96,7 +99,8 @@ const useSearchPageFacade = () => {
                     dispatch,
                     currentPlant.id,
                     currentProject.id,
-                    token
+                    token,
+                    api
                 ),
             300
         );

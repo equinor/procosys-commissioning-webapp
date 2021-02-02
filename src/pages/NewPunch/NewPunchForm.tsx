@@ -4,17 +4,16 @@ import {
     SingleSelect,
     TextField,
 } from '@equinor/eds-core-react';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { isTemplateExpression } from 'typescript';
-import { AsyncStatus } from '../../contexts/UserContext';
+import CommAppContext, { AsyncStatus } from '../../contexts/CommAppContext';
 import {
     NewPunch,
     PunchCategory,
     PunchOrganization,
     PunchType,
 } from '../../services/apiTypes';
-import * as API from '../../services/api';
 import { CommParams } from '../../App';
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import EdsIcon from '../../components/icons/EdsIcon';
@@ -61,6 +60,7 @@ const NewPunchForm = ({
     types,
     organizations,
 }: NewPunchFormProps) => {
+    const { api } = useContext(CommAppContext);
     const { plant, checklistId, commPkg, project } = useParams<CommParams>();
     const { url } = useRouteMatch();
     const history = useHistory();
@@ -85,7 +85,7 @@ const NewPunchForm = ({
         };
         setSubmitPunchStatus(AsyncStatus.LOADING);
         try {
-            await API.postNewPunch(plant, NewPunchDTO);
+            await api.postNewPunch(plant, NewPunchDTO);
             setSubmitPunchStatus(AsyncStatus.SUCCESS);
         } catch (error) {
             setSubmitPunchStatus(AsyncStatus.ERROR);

@@ -40,7 +40,11 @@ const initialize = async () => {
         apiSettingsEndpoint,
         accessToken
     );
-    const baseApiInstance = baseApiService(authInstance, configuration.baseUrl);
+    const baseApiInstance = baseApiService(
+        authInstance,
+        configuration.baseUrl,
+        scopes
+    );
     const procosysApiInstance = procosysApiService({ axios: baseApiInstance });
     return { authInstance, procosysApiInstance };
 };

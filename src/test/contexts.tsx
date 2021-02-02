@@ -3,7 +3,9 @@ import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import CommPkgContext from '../contexts/CommPkgContext';
 import PlantContext from '../contexts/PlantContext';
-import UserContext, { AsyncStatus } from '../contexts/UserContext';
+import CommAppContext, { AsyncStatus } from '../contexts/CommAppContext';
+import auth from '../services/__mocks__/authService';
+import Msal from '@azure/msal-browser';
 import {
     ChecklistPreview,
     CommPkg,
@@ -13,6 +15,10 @@ import {
     PunchPreview,
     TaskPreview,
 } from '../services/apiTypes';
+import { IAuthService } from '../services/authService';
+import authService from '../services/__mocks__/authService';
+import baseApiService from '../services/baseApi';
+import procosysApiService from '../services/procosysApi';
 
 export const testPlants: Plant[] = [
     { id: 'One', title: 'Test plant 1', slug: 'this-is-a-slug' },
@@ -118,6 +124,15 @@ export const withPlantContext = ({
     );
 };
 
+const client = new Msal.PublicClientApplication({
+    auth: { clientId: 'testId', authority: 'testAuthority' },
+});
+const authInstance = authService({ MSAL: client, scopes: ['testScope'] });
+const baseApiInstance = baseApiService(authInstance, 'http://testbaseurl.com', [
+    'testscope',
+]);
+const procosysApiInstance = procosysApiService({ axios: baseApiInstance });
+
 export const withUserContext = (
     Component: JSX.Element,
     asyncStatus: AsyncStatus,
@@ -125,14 +140,16 @@ export const withUserContext = (
 ) => {
     return render(
         <Router>
-            <UserContext.Provider
+            <CommAppContext.Provider
                 value={{
                     availablePlants: plants,
                     fetchPlantsStatus: asyncStatus,
+                    auth: authInstance,
+                    api: procosysApiInstance,
                 }}
             >
                 {Component}
-            </UserContext.Provider>
+            </CommAppContext.Provider>
         </Router>
     );
 };

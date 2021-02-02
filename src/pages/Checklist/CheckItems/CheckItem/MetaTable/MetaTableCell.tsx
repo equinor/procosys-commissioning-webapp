@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { TextField } from '@equinor/eds-core-react';
 import { CommParams } from '../../../../../App';
 import { useParams } from 'react-router-dom';
-import * as api from '../../../../../services/api';
-import { AsyncStatus } from '../../../../../contexts/UserContext';
+import CommAppContext, {
+    AsyncStatus,
+} from '../../../../../contexts/CommAppContext';
 import styled from 'styled-components';
 
 const HelperText = styled.div`
@@ -42,6 +43,7 @@ const MetaTableCell = ({
     checkItemId,
     label,
 }: MetaTableCellProps) => {
+    const { api } = useContext(CommAppContext);
     const { checklistId, plant } = useParams<CommParams>();
     const [inputValue, setInputValue] = useState(value);
     const [submitStatus, setSubmitStatus] = useState<AsyncStatus>(

@@ -1,5 +1,5 @@
 import React from 'react';
-import { AsyncStatus } from '../../contexts/UserContext';
+import { AsyncStatus } from '../../contexts/CommAppContext';
 import { testProjects, withPlantContext } from '../../test/contexts';
 import SelectProject from '../SelectProject/SelectProject';
 
