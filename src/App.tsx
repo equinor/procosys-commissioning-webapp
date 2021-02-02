@@ -1,9 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { AsyncStatus, UserContextProvider } from './contexts/UserContext';
+import { CommAppContextProvider } from './contexts/CommAppContext';
 import GeneralRouter from './GeneralRouter';
-import LoadingPage from './components/loading/LoadingPage';
 import ErrorBoundary from './components/error/ErrorBoundary';
+import { IAuthService } from './services/authService';
+import { ProcosysApiService } from './services/procosysApi';
 
 export type CommParams = {
     plant: string;
@@ -15,12 +16,13 @@ export type CommParams = {
 };
 
 type AppProps = {
-    authInstance: any;
+    authInstance: IAuthService;
+    procosysApiInstance: ProcosysApiService;
 };
 
-const App = ({ authInstance }: AppProps) => {
+const App = ({ procosysApiInstance, authInstance }: AppProps) => {
     return (
-        <UserContextProvider>
+        <CommAppContextProvider api={procosysApiInstance} auth={authInstance}>
             <Router>
                 <ErrorBoundary>
                     <Switch>
@@ -32,7 +34,7 @@ const App = ({ authInstance }: AppProps) => {
                     </Switch>
                 </ErrorBoundary>
             </Router>
-        </UserContextProvider>
+        </CommAppContextProvider>
     );
 };
 

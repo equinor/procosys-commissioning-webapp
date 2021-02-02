@@ -1,12 +1,15 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import ErrorPage from '../components/error/ErrorPage';
 import LoadingPage from '../components/loading/LoadingPage';
-import * as API from '../services/api';
 import { Plant } from '../services/apiTypes';
+import { IAuthService } from '../services/authService';
+import { ProcosysApiService } from '../services/procosysApi';
 
-type UserContextProps = {
+type CommAppContextProps = {
     availablePlants: Plant[];
     fetchPlantsStatus: AsyncStatus;
+    api: ProcosysApiService;
+    auth: IAuthService;
 };
 
 export enum AsyncStatus {
@@ -16,11 +19,13 @@ export enum AsyncStatus {
     ERROR,
 }
 
-const UserContext = React.createContext({} as UserContextProps);
+const CommAppContext = React.createContext({} as CommAppContextProps);
 
-export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
-    children,
-}) => {
+export const CommAppContextProvider: React.FC<{
+    children: ReactNode;
+    auth: IAuthService;
+    api: ProcosysApiService;
+}> = ({ children, auth, api }) => {
     const [availablePlants, setAvailablePlants] = useState<Plant[]>([]);
     const [fetchPlantsStatus, setFetchPlantsStatus] = useState<AsyncStatus>(
         AsyncStatus.LOADING
@@ -30,14 +35,14 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
         (async () => {
             setFetchPlantsStatus(AsyncStatus.LOADING);
             try {
-                const plantsFromAPI = await API.getPlants();
+                const plantsFromAPI = await api.getPlants();
                 setAvailablePlants(plantsFromAPI);
                 setFetchPlantsStatus(AsyncStatus.SUCCESS);
             } catch (error) {
                 setFetchPlantsStatus(AsyncStatus.ERROR);
             }
         })();
-    }, []);
+    }, [api]);
 
     if (fetchPlantsStatus === AsyncStatus.LOADING) {
         return <LoadingPage loadingText={'Loading available plants'} />;
@@ -51,15 +56,17 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({
         );
     }
     return (
-        <UserContext.Provider
+        <CommAppContext.Provider
             value={{
                 fetchPlantsStatus,
                 availablePlants,
+                api,
+                auth,
             }}
         >
             {children}
-        </UserContext.Provider>
+        </CommAppContext.Provider>
     );
 };
 
-export default UserContext;
+export default CommAppContext;

@@ -1,6 +1,5 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import LoadingPage from '../components/loading/LoadingPage';
-import * as api from '../services/api';
 import { CommParams } from '../App';
 import { useParams } from 'react-router-dom';
 import {
@@ -9,6 +8,7 @@ import {
     PunchPreview,
     TaskPreview,
 } from '../services/apiTypes';
+import CommAppContext from './CommAppContext';
 
 export type CommPkgContextProps = {
     details: CommPkg;
@@ -22,6 +22,7 @@ const CommPkgContext = React.createContext({} as CommPkgContextProps);
 export const CommPkgContextProvider: React.FC<{ children: ReactNode }> = ({
     children,
 }) => {
+    const { api } = useContext(CommAppContext);
     const [details, setDetails] = useState<CommPkg>();
     const [scope, setScope] = useState<ChecklistPreview[]>();
     const [tasks, setTasks] = useState<TaskPreview[]>();
