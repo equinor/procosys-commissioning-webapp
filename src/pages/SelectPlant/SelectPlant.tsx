@@ -22,7 +22,7 @@ export const SelectorButton = styled(Link)`
     align-items: center;
     text-decoration: none;
     padding: 16px 4%;
-    margin: 8px 10px;
+    margin: 0 10px;
     position: relative;
     & p {
         margin: 0 30px 0 0;

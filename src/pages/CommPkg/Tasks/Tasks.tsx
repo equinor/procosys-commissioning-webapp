@@ -1,17 +1,17 @@
 import React, { useContext } from 'react';
-import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import CommPkgContext from '../../../contexts/CommPkgContext';
 import { CommPkgListWrapper, PreviewButton } from '../Scope/Scope';
 import greenStatusImage from '../../../assets/img/scopeStatusGreen.png';
 import greyStatusImage from '../../../assets/img/scopeStatusGrey.png';
-import { ParagraphOverline } from '../../../style/GlobalStyles';
 import { Typography } from '@equinor/eds-core-react';
 import EdsIcon from '../../../components/icons/EdsIcon';
+import CompletionStatusIcon from '../../../components/icons/CompletionStatusIcon';
+import { CompletionStatus } from '../../../services/apiTypes';
 
 const TaskPreviewButton = styled(PreviewButton)`
     & > div {
-        flex: 4;
+        flex: 2;
     }
 `;
 
@@ -20,9 +20,9 @@ const Tasks = () => {
     const tasksToDisplay = tasks.map((task) => (
         <TaskPreviewButton to={``} key={task.id}>
             {task.isSigned ? (
-                <img src={greenStatusImage} alt="signed" />
+                <CompletionStatusIcon status={CompletionStatus.OK} />
             ) : (
-                <img src={greyStatusImage} alt="not signed" />
+                <CompletionStatusIcon status={CompletionStatus.OS} />
             )}
             <div>
                 <label>{task.number}</label>

@@ -141,19 +141,18 @@ const ChecklistSignature = ({
             >
                 {determineSignButtonText(isSigned, signStatus)}
             </Button>
-            <p>
-                Signed by {details.updatedByFirstName}{' '}
-                {details.updatedByLastName} at
-                {new Date(details.signedByFirstName).toLocaleDateString(
-                    'no-NO'
-                )}
-            </p>
+            {details.signedAt ? (
+                <p>
+                    Signed by {details.signedByFirstName}{' '}
+                    {details.signedByLastName} at{' '}
+                    {new Date(details.signedAt).toLocaleDateString('no-NO')}
+                </p>
+            ) : null}
+
             <p>
                 Updated by {details.updatedByFirstName}{' '}
-                {details.updatedByLastName} at
-                {new Date(details.updatedAt).toLocaleDateString(
-                    'no-NO'
-                )} by{' '}
+                {details.updatedByLastName} at{' '}
+                {new Date(details.updatedAt).toLocaleDateString('no-NO')}
             </p>
             <Snackbar
                 onClose={() => {
