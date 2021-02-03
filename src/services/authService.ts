@@ -22,11 +22,10 @@ export interface IAuthServiceProps {
     scopes: string[];
 }
 
-const settingsEndpint =
-    'https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Auth';
+const Settings = require('../settings.json');
 
 export const getAuthSettings = async () => {
-    const { data } = await axios.get(settingsEndpint);
+    const { data } = await axios.get(Settings.authSettingsEndpoint);
     // Todo: TypeGuard authsettings
     const clientSettings = {
         auth: {

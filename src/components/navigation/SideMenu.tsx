@@ -1,8 +1,7 @@
-import React, { SetStateAction, useContext, useRef } from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { animated, AnimatedValue } from 'react-spring';
-import { Icon, Button } from '@equinor/eds-core-react';
-import * as auth from '../../services/authService';
+import { Button } from '@equinor/eds-core-react';
 import EdsIcon from '../icons/EdsIcon';
 import { useHistory, useParams } from 'react-router-dom';
 import { CommParams } from '../../App';
@@ -59,7 +58,7 @@ const Backdrop = styled(animated.div)`
 
 const PlantInfo = styled.div`
     & h4 {
-        margin: 0 0 12px 0;
+        margin: 0 0 4px 0;
     }
     & p {
         margin: 16px 0 0 0;

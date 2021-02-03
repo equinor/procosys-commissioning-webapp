@@ -1,15 +1,14 @@
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
 import MetaTableCell, { MetaTableCellProps } from './MetaTableCell';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
     server,
     rest,
-    baseURL,
     putMetaTableCellURL,
 } from '../../../../../test/setupServer';
+import { withCommAppContext } from '../../../../../test/contexts';
 
 jest.mock('../../../../../services/authService');
 jest.useFakeTimers();
@@ -24,8 +23,8 @@ const metaTableCellTestProps: MetaTableCellProps = {
     label: 'Test label',
 };
 
-const metaTableCellForTesting = (
-    <Router>
+const metaTableCellForTesting = withCommAppContext({
+    Component: (
         <table>
             <tbody>
                 <tr>
@@ -33,8 +32,8 @@ const metaTableCellForTesting = (
                 </tr>
             </tbody>
         </table>
-    </Router>
-);
+    ),
+});
 
 async function setupWithInputTypedIn() {
     render(metaTableCellForTesting);

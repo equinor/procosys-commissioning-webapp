@@ -1,6 +1,5 @@
 import { IAuthService, IAuthServiceProps } from '../authService';
-import Msal, { AccountInfo } from '@azure/msal-browser';
-import { AsyncStatus } from '../../contexts/CommAppContext';
+import { AccountInfo } from '@azure/msal-browser';
 
 const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
     const login = async () => {
@@ -16,11 +15,11 @@ const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
     };
 
     const getUserName = () => {
-        return 'Test user';
+        return 'dummy-user';
     };
 
     const getAccessToken = () => {
-        return Promise.resolve('Bearer test');
+        return Promise.resolve('dummy-bearer-token');
     };
 
     const isLoggedIn = async () => {

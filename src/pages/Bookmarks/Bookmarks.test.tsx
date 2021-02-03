@@ -6,7 +6,9 @@ import { withPlantContext } from '../../test/contexts';
 
 describe('<Bookmarks/>', () => {
     it('Renders find comm pkg button', () => {
-        const { getByText } = withPlantContext({ Component: <Bookmarks /> });
+        const { getByText } = render(
+            withPlantContext({ Component: <Bookmarks /> })
+        );
         expect(getByText('Find comm. pkg')).toBeInTheDocument();
     });
 });

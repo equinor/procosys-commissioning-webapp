@@ -1,14 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import MetaTable from './MetaTable';
 import React from 'react';
-import dummyData from '../../../../../test/dummyData';
+import { dummyMetatableData } from '../../../../../test/dummyData';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 const metaTableToRender = (
     <Router>
         <MetaTable
-            labels={dummyData.labels}
-            rows={dummyData.rows}
+            labels={dummyMetatableData.labels}
+            rows={dummyMetatableData.rows}
             isSigned={false}
             checkItemId={0}
             disabled={false}

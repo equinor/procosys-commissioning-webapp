@@ -1,11 +1,22 @@
-import { Row, ColumnLabel } from '../services/apiTypes';
+import {
+    Row,
+    ColumnLabel,
+    ChecklistPreview,
+    CommPkg,
+    CompletionStatus,
+    Plant,
+    Project,
+    PunchPreview,
+    TaskPreview,
+    CommPkgPreview,
+} from '../services/apiTypes';
 
-type DummyData = {
+type DummyMetatableData = {
     rows: Row[];
     labels: ColumnLabel[];
 };
 
-const dummyData: DummyData = {
+export const dummyMetatableData: DummyMetatableData = {
     rows: [
         {
             id: 0,
@@ -42,4 +53,86 @@ const dummyData: DummyData = {
     ],
 };
 
-export default dummyData;
+export const testPlants: Plant[] = [
+    { id: 'One', title: 'Test plant 1', slug: 'this-is-a-slug' },
+    { id: 'Two', title: 'Test plant 2', slug: 'yet-another-slug' },
+];
+
+export const testProjects: Project[] = [
+    { id: 1, title: 'Test project 1', description: 'this-is-a-description' },
+    { id: 2, title: 'Test project 2', description: 'yet-another-description' },
+];
+
+export const testDetails: CommPkg = {
+    id: 1,
+    commPkgNo: 'Test commPkgNo',
+    description: 'Test commPkg description',
+    commStatus: CompletionStatus.OK,
+    mcStatus: CompletionStatus.OK,
+    mcPkgCount: 1,
+    mcPkgsAcceptedByCommissioning: 1,
+    mcPkgsAcceptedByOperation: 1,
+    commissioningHandoverStatus: 'Test commissioningHandoverStatus',
+    operationHandoverStatus: 'Test operationHandoverStatus',
+    systemId: 1,
+};
+
+export const testTasks: TaskPreview[] = [
+    {
+        id: 1,
+        number: 'Test task number',
+        title: 'Test task title',
+        chapter: 'Test task chapter',
+        isSigned: true,
+    },
+    {
+        id: 2,
+        number: 'Test task number 2',
+        title: 'Test task title 2',
+        chapter: 'Test task chapter 2',
+        isSigned: false,
+    },
+];
+
+export const testCommPkgPreview: CommPkgPreview[] = [
+    {
+        id: 1,
+        commPkgNo: 'Test comm pkg number',
+        description: 'Test description',
+        mcStatus: CompletionStatus.OK,
+        commStatus: CompletionStatus.OK,
+        commissioningHandoverStatus: 'OK',
+        operationHandoverStatus: 'OK',
+    },
+];
+
+export const testScope: ChecklistPreview[] = [
+    {
+        id: 1,
+        tagNo: 'Test tag number',
+        tagDescription: 'Test tag description',
+        status: CompletionStatus.OK,
+        formularGroup: 'Test formular group',
+        formularType: 'Test formular type',
+        isRestrictedForUser: false,
+        hasElectronicForm: true,
+    },
+];
+
+export const testPunchList: PunchPreview[] = [
+    {
+        id: 1,
+        status: CompletionStatus.OK,
+        description: 'Test punch description',
+        systemModule: 'Test punch system module',
+        tagId: 1,
+        tagNo: 'Test tag number',
+        tagDescription: 'Test tag description',
+        isRestrictedForUser: false,
+        cleared: true,
+        rejected: false,
+        statusControlledBySwcr: true,
+    },
+];
+
+export default dummyMetatableData;
