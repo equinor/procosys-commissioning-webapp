@@ -1,7 +1,7 @@
 import { CircularProgress } from '@equinor/eds-core-react';
 import React from 'react';
 import EdsIcon from '../components/icons/EdsIcon';
-import { AsyncStatus } from '../contexts/UserContext';
+import { AsyncStatus } from '../contexts/CommAppContext';
 
 export const determineHelperIcon = (status: AsyncStatus) => {
     if (status === AsyncStatus.ERROR) {

@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { AsyncStatus, UserContextProvider } from './contexts/UserContext';
+import { CommAppContextProvider } from './contexts/CommAppContext';
 import GeneralRouter from './GeneralRouter';
-import useAuthHandler from './services/useAuthHandler';
-import LoadingPage from './components/loading/LoadingPage';
 import ErrorBoundary from './components/error/ErrorBoundary';
+import { IAuthService } from './services/authService';
+import { ProcosysApiService } from './services/procosysApi';
 
 export type CommParams = {
     plant: string;
@@ -15,14 +15,14 @@ export type CommParams = {
     punch: string;
 };
 
-function App() {
-    const authStatus = useAuthHandler();
-    if (authStatus === AsyncStatus.LOADING)
-        return <LoadingPage loadingText={'Signing in'} />;
-    if (authStatus === AsyncStatus.ERROR)
-        return <LoadingPage loadingText={'Redirecting to login'} />;
+type AppProps = {
+    authInstance: IAuthService;
+    procosysApiInstance: ProcosysApiService;
+};
+
+const App = ({ procosysApiInstance, authInstance }: AppProps) => {
     return (
-        <UserContextProvider>
+        <CommAppContextProvider api={procosysApiInstance} auth={authInstance}>
             <Router>
                 <ErrorBoundary>
                     <Switch>
@@ -34,8 +34,8 @@ function App() {
                     </Switch>
                 </ErrorBoundary>
             </Router>
-        </UserContextProvider>
+        </CommAppContextProvider>
     );
-}
+};
 
 export default App;

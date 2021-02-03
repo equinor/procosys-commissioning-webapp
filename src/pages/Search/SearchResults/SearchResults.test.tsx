@@ -4,18 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { SearchStatus } from '../useSearchPageFacade';
 import { CommPkgPreview, CompletionStatus } from '../../../services/apiTypes';
 import SearchPage from './SearchResults';
-
-const testCommPkgPreview: CommPkgPreview[] = [
-    {
-        id: 1,
-        commPkgNo: 'Test comm pkg number',
-        description: 'Test description',
-        mcStatus: CompletionStatus.OK,
-        commStatus: CompletionStatus.OK,
-        commissioningHandoverStatus: 'OK',
-        operationHandoverStatus: 'OK',
-    },
-];
+import { testCommPkgPreview } from '../../../test/dummyData';
 
 describe('<SearchResult/>', () => {
     it('Renders placeholder text before user starts typing', () => {

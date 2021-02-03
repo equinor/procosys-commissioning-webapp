@@ -1,21 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { TextField } from '@equinor/eds-core-react';
 import { CommParams } from '../../../../../App';
 import { useParams } from 'react-router-dom';
-import * as api from '../../../../../services/api';
-import { AsyncStatus } from '../../../../../contexts/UserContext';
+import CommAppContext, {
+    AsyncStatus,
+} from '../../../../../contexts/CommAppContext';
 import styled from 'styled-components';
 
 const HelperText = styled.div`
     height: 12px;
     margin-top: 2px;
+    margin-left: 8px;
     & p {
         margin: 0;
         font-size: 12px;
     }
 `;
 
-type MetaTableCellProps = {
+export type MetaTableCellProps = {
     checkItemId: number;
     rowId: number;
     columnId: number;
@@ -24,6 +26,13 @@ type MetaTableCellProps = {
     disabled: boolean;
     label: string;
 };
+
+function determineHelperText(submitStatus: AsyncStatus) {
+    if (submitStatus === AsyncStatus.ERROR) return 'Unable to save.';
+    if (submitStatus === AsyncStatus.LOADING) return 'Saving data...';
+    if (submitStatus === AsyncStatus.SUCCESS) return 'Data saved.';
+    return '';
+}
 
 const MetaTableCell = ({
     value,
@@ -34,10 +43,14 @@ const MetaTableCell = ({
     checkItemId,
     label,
 }: MetaTableCellProps) => {
+    const { api } = useContext(CommAppContext);
     const { checklistId, plant } = useParams<CommParams>();
     const [inputValue, setInputValue] = useState(value);
-    const [submitStatus, setSubmitStatus] = useState<AsyncStatus | null>(null);
+    const [submitStatus, setSubmitStatus] = useState<AsyncStatus>(
+        AsyncStatus.INACTIVE
+    );
     const [errorMessage, setErrorMessage] = useState('');
+
     const submitData = async () => {
         if (inputValue === value) return;
         setSubmitStatus(AsyncStatus.LOADING);
@@ -52,26 +65,18 @@ const MetaTableCell = ({
             );
             setSubmitStatus(AsyncStatus.SUCCESS);
         } catch (error) {
-            console.log(error);
             setErrorMessage(error);
             setSubmitStatus(AsyncStatus.ERROR);
-            console.log(errorMessage);
         }
     };
 
     useEffect(() => {
         if (submitStatus !== AsyncStatus.SUCCESS) return;
-        setTimeout(() => {
-            setSubmitStatus(null);
+        let timerId = setTimeout(() => {
+            setSubmitStatus(AsyncStatus.INACTIVE);
         }, 2000);
+        return () => clearTimeout(timerId);
     }, [submitStatus]);
-
-    const helperText = () => {
-        if (submitStatus === AsyncStatus.ERROR) return 'Unable to save.';
-        if (submitStatus === AsyncStatus.LOADING) return 'Saving data...';
-        if (submitStatus === AsyncStatus.SUCCESS) return 'Data saved.';
-        return '';
-    };
 
     return (
         <td>
@@ -94,7 +99,7 @@ const MetaTableCell = ({
                 ) => setInputValue(event.target.value)}
             />
             <HelperText>
-                <p>{helperText()}</p>
+                <p>{determineHelperText(submitStatus)}</p>
             </HelperText>
         </td>
     );

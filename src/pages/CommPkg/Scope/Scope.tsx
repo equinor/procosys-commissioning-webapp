@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import CommPkgContext from '../../../contexts/CommPkgContext';
-import { COLORS } from '../../../style/GlobalStyles';
 import EdsIcon from '../../../components/icons/EdsIcon';
 import CompletionStatusIcon from '../../../components/icons/CompletionStatusIcon';
 
@@ -17,17 +16,17 @@ export const CommPkgListWrapper = styled.div`
 export const PreviewButton = styled(Link)`
     display: flex;
     align-items: center;
-    /* border-bottom: 2px solid ${COLORS.ui.background__light.hex}; */
-    padding: 20px 16px;
+    padding: 10px 2%;
+    margin: 10px 4% 0 4%;
     text-decoration: none;
     justify-content: space-between;
     & img {
         max-height: 20px;
         object-fit: contain;
-        flex: 0.5;
+        flex: 0.1;
     }
     & > div {
-        margin-left: 16px;
+        margin-left: 24px;
         flex: 3;
         & p {
             margin: 0;

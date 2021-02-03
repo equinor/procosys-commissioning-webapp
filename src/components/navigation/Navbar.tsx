@@ -5,6 +5,7 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import EdsIcon from '../icons/EdsIcon';
 import { useSpring } from 'react-spring';
 import SideMenu from './SideMenu';
+import { removeLastSubdirectory } from '../../utils/general';
 
 const NavbarWrapper = styled.nav<{ noBorder: boolean }>`
     height: 54px;
@@ -16,7 +17,7 @@ const NavbarWrapper = styled.nav<{ noBorder: boolean }>`
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
-    padding: 4px 2% 4px 2%;
+    padding: 4px 4% 4px 4%;
     position: fixed;
     top: 0;
     left: 50%;
@@ -29,6 +30,9 @@ const NavbarWrapper = styled.nav<{ noBorder: boolean }>`
     }
     & h4 {
         margin: 0;
+    }
+    & button {
+        padding: 0;
     }
 `;
 
@@ -46,12 +50,6 @@ type RightNavbarContent = {
 const RightButton = styled(Button)`
     /* margin-right: 4%; */
 `;
-
-const removeLastSubdirectory = (url: string) => {
-    const matched = url.match(/.*\//);
-    if (!matched) return '';
-    return matched[0].slice(0, -1);
-};
 
 type NavbarProps = {
     leftContent?: LeftNavbarContent;
@@ -80,11 +78,9 @@ const Navbar = ({
     const determineLeftContent = () => {
         if (leftContent?.name === 'hamburger') {
             return (
-                <Button
-                    variant="ghost_icon"
-                    onClick={() => setDrawerIsOpen(true)}
-                >
+                <Button variant="ghost" onClick={() => setDrawerIsOpen(true)}>
                     <EdsIcon name={'menu'} color="#555" title="Menu" />
+                    Menu
                 </Button>
             );
         }

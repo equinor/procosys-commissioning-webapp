@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ChecklistDetails } from '../../services/apiTypes';
 import { Button, TextField, Typography } from '@equinor/eds-core-react';
 import styled from 'styled-components';
-import * as api from '../../services/api';
 import { useParams } from 'react-router-dom';
 import { CommParams } from '../../App';
-import { AsyncStatus } from '../../contexts/UserContext';
+import CommAppContext, { AsyncStatus } from '../../contexts/CommAppContext';
 import {
     determineHelperIcon,
     determineHelperText,
     determineVariant,
 } from '../../utils/textFieldHelpers';
 import { Card, Snackbar } from '@equinor/eds-core-react';
+
+const AllMustBeSignedWarning = styled(Card)`
+    margin-bottom: 16px;
+`;
 
 const ChecklistSignatureWrapper = styled.div<{ helperTextVisible: boolean }>`
     display: flex;
@@ -49,6 +52,7 @@ const ChecklistSignature = ({
     isSigned,
     allItemsCheckedOrNA,
 }: ChecklistSignatureProps) => {
+    const { api } = useContext(CommAppContext);
     const { plant, checklistId } = useParams<CommParams>();
     const [comment, setComment] = useState(details.comment);
     const [putCommentStatus, setPutCommentStatus] = useState(
@@ -105,8 +109,16 @@ const ChecklistSignature = ({
         <ChecklistSignatureWrapper
             helperTextVisible={putCommentStatus !== AsyncStatus.INACTIVE}
         >
+            {!isSigned && !allItemsCheckedOrNA && (
+                <AllMustBeSignedWarning variant="warning">
+                    <Typography type="body_long">
+                        All applicable items must be checked before signing
+                    </Typography>
+                </AllMustBeSignedWarning>
+            )}
             <TextField
                 id={'Comment field'}
+                maxLength={500}
                 variant={determineVariant(putCommentStatus)}
                 disabled={isSigned || putCommentStatus === AsyncStatus.LOADING}
                 multiline
@@ -120,13 +132,7 @@ const ChecklistSignature = ({
                 ) => setComment(e.target.value)}
                 onBlur={putComment}
             />
-            {!isSigned && !allItemsCheckedOrNA && (
-                <Card variant="warning">
-                    <Typography type="body_long">
-                        All applicable items must be checked before signing
-                    </Typography>
-                </Card>
-            )}
+
             <Button
                 onClick={handleSignClick}
                 disabled={
@@ -135,10 +141,18 @@ const ChecklistSignature = ({
             >
                 {determineSignButtonText(isSigned, signStatus)}
             </Button>
+            {details.signedAt ? (
+                <p>
+                    Signed by {details.signedByFirstName}{' '}
+                    {details.signedByLastName} at{' '}
+                    {new Date(details.signedAt).toLocaleDateString('no-NO')}
+                </p>
+            ) : null}
+
             <p>
-                Updated at{' '}
-                {new Date(details.updatedAt).toLocaleDateString('no-NO')} by{' '}
-                {details.updatedByFirstName} {details.updatedByLastName}
+                Updated by {details.updatedByFirstName}{' '}
+                {details.updatedByLastName} at{' '}
+                {new Date(details.updatedAt).toLocaleDateString('no-NO')}
             </p>
             <Snackbar
                 onClose={() => {

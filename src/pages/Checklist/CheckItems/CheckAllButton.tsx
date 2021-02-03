@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { CheckItem } from '../../../services/apiTypes';
 import { Button } from '@equinor/eds-core-react';
 import EdsIcon from '../../../components/icons/EdsIcon';
 import styled from 'styled-components';
-import { postClear, postSetOk } from '../../../services/api';
 import { CommParams } from '../../../App';
 import { useParams } from 'react-router-dom';
-import { AsyncStatus } from '../../../contexts/UserContext';
+import CommAppContext, { AsyncStatus } from '../../../contexts/CommAppContext';
 
 const StyledCheckAllButton = styled(Button)`
     :disabled {
@@ -26,6 +25,7 @@ const CheckAllButton = ({
     updateOk,
     allItemsCheckedOrNA,
 }: CheckAllButtonProps) => {
+    const { api } = useContext(CommAppContext);
     const { plant, checklistId } = useParams<CommParams>();
     const [checkAllStatus, setCheckAllStatus] = useState(AsyncStatus.INACTIVE);
     const checkAll = async () => {
@@ -36,7 +36,7 @@ const CheckAllButton = ({
         try {
             await Promise.all(
                 itemsToCheck.map((item) => {
-                    return postSetOk(plant, parseInt(checklistId), item.id);
+                    return api.postSetOk(plant, parseInt(checklistId), item.id);
                 })
             );
             itemsToCheck.forEach((item) => updateOk(true, item.id));
@@ -54,7 +54,7 @@ const CheckAllButton = ({
         try {
             await Promise.all(
                 itemsToCheck.map((item) => {
-                    return postClear(plant, parseInt(checklistId), item.id);
+                    return api.postClear(plant, parseInt(checklistId), item.id);
                 })
             );
             itemsToCheck.forEach((item) => updateOk(false, item.id));

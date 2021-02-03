@@ -1,90 +1,74 @@
-import { render } from '@testing-library/react';
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import CommPkgContext from '../contexts/CommPkgContext';
 import PlantContext from '../contexts/PlantContext';
-import UserContext, { AsyncStatus } from '../contexts/UserContext';
+import CommAppContext, { AsyncStatus } from '../contexts/CommAppContext';
+import * as Msal from '@azure/msal-browser';
 import {
     ChecklistPreview,
     CommPkg,
-    CompletionStatus,
     Plant,
     Project,
     PunchPreview,
     TaskPreview,
 } from '../services/apiTypes';
+import baseApiService from '../services/baseApi';
+import procosysApiService, {
+    ProcosysApiService,
+} from '../services/procosysApi';
+import authService from '../services/__mocks__/authService';
+import {
+    testProjects,
+    testPlants,
+    testDetails,
+    testScope,
+    testTasks,
+    testPunchList,
+} from './dummyData';
+import { IAuthService } from '../services/authService';
 
-export const testPlants: Plant[] = [
-    { id: 'One', title: 'Test plant 1', slug: 'this-is-a-slug' },
-    { id: 'Two', title: 'Test plant 2', slug: 'yet-another-slug' },
-];
+const client = new Msal.PublicClientApplication({
+    auth: { clientId: 'testId', authority: 'testAuthority' },
+});
 
-export const testProjects: Project[] = [
-    { id: 1, title: 'Test project 1', description: 'this-is-a-description' },
-    { id: 2, title: 'Test project 2', description: 'yet-another-description' },
-];
+const authInstance = authService({ MSAL: client, scopes: ['testScope'] });
+const baseApiInstance = baseApiService(authInstance, 'https://dummy-url.com', [
+    'testscope',
+]);
+const procosysApiInstance = procosysApiService({ axios: baseApiInstance });
 
-export const testDetails: CommPkg = {
-    id: 1,
-    commPkgNo: 'Test commPkgNo',
-    description: 'Test commPkg description',
-    commStatus: CompletionStatus.OK,
-    mcStatus: CompletionStatus.OK,
-    mcPkgCount: 1,
-    mcPkgsAcceptedByCommissioning: 1,
-    mcPkgsAcceptedByOperation: 1,
-    commissioningHandoverStatus: 'Test commissioningHandoverStatus',
-    operationHandoverStatus: 'Test operationHandoverStatus',
-    systemId: 1,
+type WithCommAppContextProps = {
+    Component: JSX.Element;
+    asyncStatus?: AsyncStatus;
+    plants?: Plant[];
+    auth?: IAuthService;
+    api?: ProcosysApiService;
 };
 
-export const testTasks: TaskPreview[] = [
-    {
-        id: 1,
-        number: 'Test task number',
-        title: 'Test task title',
-        chapter: 'Test task chapter',
-        isSigned: true,
-    },
-    {
-        id: 2,
-        number: 'Test task number 2',
-        title: 'Test task title 2',
-        chapter: 'Test task chapter 2',
-        isSigned: false,
-    },
-];
+export const withCommAppContext = ({
+    Component,
+    asyncStatus = AsyncStatus.SUCCESS,
+    plants = testPlants,
+    auth = authInstance,
+    api = procosysApiInstance,
+}: WithCommAppContextProps) => {
+    return (
+        <Router>
+            <CommAppContext.Provider
+                value={{
+                    availablePlants: plants,
+                    fetchPlantsStatus: asyncStatus,
+                    auth: auth,
+                    api: api,
+                }}
+            >
+                {Component}
+            </CommAppContext.Provider>
+        </Router>
+    );
+};
 
-export const testScope: ChecklistPreview[] = [
-    {
-        id: 1,
-        tagNo: 'Test tag number',
-        tagDescription: 'Test tag description',
-        status: CompletionStatus.OK,
-        formularGroup: 'Test formular group',
-        formularType: 'Test formular type',
-        isRestrictedForUser: false,
-        hasElectronicForm: true,
-    },
-];
-
-export const testPunchList: PunchPreview[] = [
-    {
-        id: 1,
-        status: CompletionStatus.OK,
-        description: 'Test punch description',
-        systemModule: 'Test punch system module',
-        tagId: 1,
-        tagNo: 'Test tag number',
-        tagDescription: 'Test tag description',
-        isRestrictedForUser: false,
-        cleared: true,
-        rejected: false,
-        statusControlledBySwcr: true,
-    },
-];
-
-type withPlantContextProps = {
+type WithPlantContextProps = {
     Component: JSX.Element;
     fetchProjectsAndPermissionsStatus?: AsyncStatus;
     permissions?: string[];
@@ -100,9 +84,9 @@ export const withPlantContext = ({
     currentPlant = testPlants[1],
     currentProject = testProjects[1],
     Component,
-}: withPlantContextProps) => {
-    return render(
-        <Router>
+}: WithPlantContextProps) => {
+    return withCommAppContext({
+        Component: (
             <PlantContext.Provider
                 value={{
                     fetchProjectsAndPermissionsStatus: fetchProjectsAndPermissionsStatus,
@@ -114,27 +98,8 @@ export const withPlantContext = ({
             >
                 {Component}
             </PlantContext.Provider>
-        </Router>
-    );
-};
-
-export const withUserContext = (
-    Component: JSX.Element,
-    asyncStatus: AsyncStatus,
-    plants: Plant[]
-) => {
-    return render(
-        <Router>
-            <UserContext.Provider
-                value={{
-                    availablePlants: plants,
-                    fetchPlantsStatus: asyncStatus,
-                }}
-            >
-                {Component}
-            </UserContext.Provider>
-        </Router>
-    );
+        ),
+    });
 };
 
 type CommPkgContextProps = {
@@ -152,7 +117,7 @@ export const withCommPkgContext = ({
     tasks = testTasks,
     punchList = testPunchList,
 }: CommPkgContextProps) => {
-    return render(
+    return (
         <Router>
             <CommPkgContext.Provider
                 value={{

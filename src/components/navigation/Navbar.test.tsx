@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { withPlantContext } from '../../test/contexts';
 import Navbar from './Navbar';
 
 jest.mock('react-spring', () => ({
@@ -22,33 +23,41 @@ describe('<SideMenu/>', () => {
     // });
     it('Renders a back icon when left content is set to "back"', () => {
         const { queryAllByTitle } = render(
-            <Router>
-                <Navbar leftContent={{ name: 'back' }} />
-            </Router>
+            withPlantContext({
+                Component: <Navbar leftContent={{ name: 'back' }} />,
+            })
         );
         expect(queryAllByTitle('Back')).toBeDefined();
     });
     it('Renders a search icon when right content is set to search', () => {
         const { queryAllByTitle } = render(
-            <Router>
-                <Navbar rightContent={{ name: 'search' }} />
-            </Router>
+            withPlantContext({
+                Component: <Navbar rightContent={{ name: 'search' }} />,
+            })
         );
         expect(queryAllByTitle('Search')).toBeDefined();
     });
     it('Renders whatever text is passed in as mid content prop', () => {
         const { getByText } = render(
-            <Router>
-                <Navbar midContent="Test midcontent" />
-            </Router>
+            withPlantContext({
+                Component: (
+                    <Router>
+                        <Navbar midContent="Test midcontent" />
+                    </Router>
+                ),
+            })
         );
         expect(getByText('Test midcontent')).toBeDefined();
     });
     it('Renders new punch button when newPunch argument is passed', () => {
         const { getByText } = render(
-            <Router>
-                <Navbar rightContent={{ name: 'newPunch' }} />
-            </Router>
+            withPlantContext({
+                Component: (
+                    <Router>
+                        <Navbar rightContent={{ name: 'newPunch' }} />
+                    </Router>
+                ),
+            })
         );
         expect(getByText('New punch')).toBeDefined();
     });

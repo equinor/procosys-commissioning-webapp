@@ -1,13 +1,13 @@
-import React, { SetStateAction, useContext, useRef } from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { animated, AnimatedValue } from 'react-spring';
-import { Icon, Button } from '@equinor/eds-core-react';
-import * as auth from '../../services/authService';
+import { Button } from '@equinor/eds-core-react';
 import EdsIcon from '../icons/EdsIcon';
 import { useHistory, useParams } from 'react-router-dom';
 import { CommParams } from '../../App';
 import PlantContext from '../../contexts/PlantContext';
 import { StorageKey } from '../../services/useBookmarks';
+import CommAppContext from '../../contexts/CommAppContext';
 
 const SideMenuWrapper = styled(animated.aside)`
     width: 297px;
@@ -58,7 +58,7 @@ const Backdrop = styled(animated.div)`
 
 const PlantInfo = styled.div`
     & h4 {
-        margin: 0 0 12px 0;
+        margin: 0 0 4px 0;
     }
     & p {
         margin: 16px 0 0 0;
@@ -84,6 +84,7 @@ const SideMenu = ({
     backdropAnimation,
     setDrawerIsOpen,
 }: SideMenuProps) => {
+    const { auth } = useContext(CommAppContext);
     const history = useHistory();
     const params = useParams<CommParams>();
     const { currentPlant, currentProject } = useContext(PlantContext);

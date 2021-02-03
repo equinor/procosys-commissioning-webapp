@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { CommParams } from '../../App';
 import ErrorPage from '../../components/error/ErrorPage';
 import SkeletonLoadingPage from '../../components/loading/SkeletonLoader';
 import Navbar from '../../components/navigation/Navbar';
-import { AsyncStatus } from '../../contexts/UserContext';
-import * as api from '../../services/api';
+import CommAppContext, { AsyncStatus } from '../../contexts/CommAppContext';
 import { CheckItem, ChecklistDetails } from '../../services/apiTypes';
 import CheckItems from './CheckItems/CheckItems';
 import ChecklistSignature from './ChecklistSignature';
@@ -33,6 +32,7 @@ const IsSignedBanner = styled.div`
 `;
 
 const Checklist = () => {
+    const { api } = useContext(CommAppContext);
     const [checklistStatus, setChecklistStatus] = useState(AsyncStatus.LOADING);
     const [checkItems, setCheckItems] = useState<CheckItem[]>([]);
     const [checklistDetails, setChecklistDetails] = useState<

@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { CheckItem as CheckItemType } from '../../../../services/apiTypes';
-import { Checkbox, Switch } from '@equinor/eds-core-react';
+import { Checkbox } from '@equinor/eds-core-react';
 import MetaTable from './MetaTable/MetaTable';
-import * as api from '../../../../services/api';
 import { CommParams } from '../../../../App';
 import { useParams } from 'react-router-dom';
-import { AsyncStatus } from '../../../../contexts/UserContext';
+import CommAppContext, {
+    AsyncStatus,
+} from '../../../../contexts/CommAppContext';
 import EdsIcon from '../../../../components/icons/EdsIcon';
 
 const CheckItemWrapper = styled.div<{ disabled: boolean }>`
@@ -71,6 +72,7 @@ type CheckItemProps = {
 };
 
 const CheckItem = ({ item, isSigned, updateNA, updateOk }: CheckItemProps) => {
+    const { api } = useContext(CommAppContext);
     const { checklistId } = useParams<CommParams>();
     const { plant } = useParams<CommParams>();
     const [postOkStatus, setPostOkStatus] = useState(AsyncStatus.INACTIVE);
@@ -147,6 +149,7 @@ const CheckItem = ({ item, isSigned, updateNA, updateOk }: CheckItemProps) => {
                             onChange={handleSetOk}
                             checked={item.isOk}
                             label={''}
+                            name={'Checked'}
                         />
                         <Checkbox
                             disabled={isSigned}
@@ -154,6 +157,7 @@ const CheckItem = ({ item, isSigned, updateNA, updateOk }: CheckItemProps) => {
                             onChange={handleSetNA}
                             checked={item.isNotApplicable}
                             label={''}
+                            name={'Not Applicable'}
                         />
                     </CheckboxGroup>
                 </DescriptionAndCheckWrapper>

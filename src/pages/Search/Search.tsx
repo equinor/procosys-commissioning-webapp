@@ -8,10 +8,9 @@ import Navbar from '../../components/navigation/Navbar';
 import PageHeader from '../../components/PageHeader';
 
 const SearchPageWrapper = styled.main`
-    padding: 12px 4%;
+    padding: 0 4%;
     & h4 {
         text-align: center;
-        margin-top: 20px;
     }
     & span {
         height: 60px;

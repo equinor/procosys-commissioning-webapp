@@ -2,12 +2,11 @@ import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { CommParams } from '../App';
 import LoadingPage from '../components/loading/LoadingPage';
-import * as api from '../services/api';
 import { Plant, Project } from '../services/apiTypes';
 import { StorageKey } from '../services/useBookmarks';
 import matchPlantInURL from '../utils/matchPlantInURL';
 import matchProjectInURL from '../utils/matchProjectInURL';
-import UserContext, { AsyncStatus } from './UserContext';
+import CommAppContext, { AsyncStatus } from './CommAppContext';
 
 export type PlantContextProps = {
     fetchProjectsAndPermissionsStatus: AsyncStatus;
@@ -25,9 +24,10 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
     const { plant: plantInURL, project: projectInURL } = useParams<
         CommParams
     >();
+    const { api } = useContext(CommAppContext);
     const history = useHistory();
     const [currentPlant, setCurrentPlant] = useState<Plant | undefined>();
-    const { availablePlants } = useContext(UserContext);
+    const { availablePlants } = useContext(CommAppContext);
     const [availableProjects, setAvailableProjects] = useState<Project[]>([]);
     const [permissions, setPermissions] = useState<string[]>([]);
     const [currentProject, setCurrentProject] = useState<Project | undefined>();

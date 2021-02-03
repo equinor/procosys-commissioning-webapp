@@ -5,16 +5,16 @@ import EdsIcon from '../../components/icons/EdsIcon';
 import { Button } from '@equinor/eds-core-react';
 import useBookmarks from '../../services/useBookmarks';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import { COLORS, SHADOW } from '../../style/GlobalStyles';
+import { SHADOW } from '../../style/GlobalStyles';
 import { PackageStatusIcon } from '../../components/icons/PackageStatusIcon';
 
 const DetailsWrapper = styled.div<{ atBookmarksPage?: Boolean }>`
     display: grid;
     grid-template-columns: repeat(2, 1fr) repeat(2, 0.5fr);
     grid-template-rows: repeat(2);
-    grid-column-gap: 15px;
-    grid-row-gap: 15px;
-    padding: 25px;
+    grid-column-gap: 8px;
+    grid-row-gap: 8px;
+    padding: 16px 4%;
     box-shadow: ${SHADOW};
     background-color: #f7f7f7;
     margin: ${(props) => (props.atBookmarksPage ? '0 4% 10px 4%' : '0')};
@@ -38,6 +38,8 @@ const StatusIconWrapper = styled.div`
 `;
 const BookmarkIconWrapper = styled.div`
     grid-area: 2 / 4 / 2 / 4;
+    display: flex;
+    justify-content: center;
 `;
 const CommPkgNumberWrapper = styled.div`
     grid-area: 2 / 1 / 3 / 3;
