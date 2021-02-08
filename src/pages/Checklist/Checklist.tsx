@@ -42,6 +42,7 @@ const Checklist = () => {
     const [isSigned, setIsSigned] = useState(false);
     const [allItemsCheckedOrNA, setAllItemsCheckedOrNA] = useState(true);
     const { checklistId, plant } = useParams<CommParams>();
+    const [reloadChecklist, setReloadChecklist] = useState(false);
 
     // useEffect(() => {
     //     if (!checklistDetails) return;
@@ -67,7 +68,7 @@ const Checklist = () => {
         return () => {
             source.cancel('Checklist component unmounted');
         };
-    }, [checklistId, plant, isSigned, api]);
+    }, [checklistId, plant, reloadChecklist, api]);
 
     let content = <SkeletonLoadingPage text="Loading checklist" />;
 
@@ -108,6 +109,7 @@ const Checklist = () => {
                         isSigned={isSigned}
                     />
                     <ChecklistSignature
+                        reloadChecklist={setReloadChecklist}
                         allItemsCheckedOrNA={allItemsCheckedOrNA}
                         isSigned={isSigned}
                         details={checklistDetails}
