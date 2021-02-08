@@ -1,6 +1,7 @@
 import { Card } from '@equinor/eds-core-react';
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
+import { SHADOW } from '../../style/GlobalStyles';
 
 const SkeletonLoadingPageWrapper = styled.main`
     padding-top: 24px;
@@ -21,8 +22,10 @@ const load = keyframes`
 
 const BaseSkeleton = styled(Card)`
     box-sizing: border-box;
-    background-color: #fff;
-    border: 1px solid #f1f1f1;
+    border-radius: 15px;
+    background-color: #fafafa;
+    /* border: 1px solid #f1f1f1; */
+    box-shadow: ${SHADOW};
     position: relative;
     overflow: hidden;
     margin: 20px;
@@ -36,9 +39,9 @@ const BaseSkeleton = styled(Card)`
         width: 50%;
         background: linear-gradient(
             to right,
-            transparent 0%,
-            #fafafa 50%,
-            transparent 100%
+            #fafafa 0%,
+            #f0f0f0 50%,
+            #fafafa 100%
         );
         animation: ${load} 1s cubic-bezier(0.1, 0, 0.2, 1) infinite;
     }

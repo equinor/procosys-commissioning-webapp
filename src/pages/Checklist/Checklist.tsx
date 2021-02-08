@@ -11,6 +11,7 @@ import ChecklistSignature from './ChecklistSignature';
 import ChecklistDetailsCard from './ChecklistDetailsCard';
 import styled from 'styled-components';
 import EdsIcon from '../../components/icons/EdsIcon';
+import axios from 'axios';
 
 const ChecklistWrapper = styled.main`
     padding: 0 4%;
@@ -33,7 +34,7 @@ const IsSignedBanner = styled.div`
 
 const Checklist = () => {
     const { api } = useContext(CommAppContext);
-    const [checklistStatus, setChecklistStatus] = useState(AsyncStatus.LOADING);
+    const [checklistStatus, setChecklistStatus] = useState(AsyncStatus.SUCCESS);
     const [checkItems, setCheckItems] = useState<CheckItem[]>([]);
     const [checklistDetails, setChecklistDetails] = useState<
         ChecklistDetails
@@ -42,18 +43,20 @@ const Checklist = () => {
     const [allItemsCheckedOrNA, setAllItemsCheckedOrNA] = useState(true);
     const { checklistId, plant } = useParams<CommParams>();
 
-    useEffect(() => {
-        if (!checklistDetails) return;
-        setIsSigned(!!checklistDetails.signedByFirstName);
-    }, [checklistDetails]);
+    // useEffect(() => {
+    //     if (!checklistDetails) return;
+    //     setIsSigned(!!checklistDetails.signedByFirstName);
+    // }, [checklistDetails]);
 
     useEffect(() => {
+        const source = axios.CancelToken.source();
         (async () => {
             try {
                 const checklistResponse = await api.getChecklist(
                     plant,
                     checklistId
                 );
+                setIsSigned(!!checklistResponse.checkList.signedByFirstName);
                 setCheckItems(checklistResponse.checkItems);
                 setChecklistDetails(checklistResponse.checkList);
                 setChecklistStatus(AsyncStatus.SUCCESS);
@@ -61,7 +64,10 @@ const Checklist = () => {
                 setChecklistStatus(AsyncStatus.ERROR);
             }
         })();
-    }, [checklistId, plant, isSigned]);
+        return () => {
+            source.cancel('Checklist component unmounted');
+        };
+    }, [checklistId, plant, isSigned, api]);
 
     let content = <SkeletonLoadingPage text="Loading checklist" />;
 

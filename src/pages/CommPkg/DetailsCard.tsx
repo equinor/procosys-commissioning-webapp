@@ -17,7 +17,8 @@ const DetailsWrapper = styled.div<{ atBookmarksPage?: Boolean }>`
     padding: 16px 4%;
     box-shadow: ${SHADOW};
     background-color: #f7f7f7;
-    margin: ${(props) => (props.atBookmarksPage ? '0 4% 10px 4%' : '0')};
+    border-radius: 15px;
+    margin: ${(props) => (props.atBookmarksPage ? '0 4% 10px 4%' : '10px')};
     /* background-color: #deecee; */
 `;
 

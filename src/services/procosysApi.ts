@@ -283,7 +283,6 @@ const procosysApiService = ({
             );
             return Promise.resolve();
         } catch (error) {
-            console.log(error.message);
             return Promise.reject(error.message);
         }
     };

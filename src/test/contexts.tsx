@@ -117,8 +117,8 @@ export const withCommPkgContext = ({
     tasks = testTasks,
     punchList = testPunchList,
 }: CommPkgContextProps) => {
-    return (
-        <Router>
+    return withPlantContext({
+        Component: (
             <CommPkgContext.Provider
                 value={{
                     details,
@@ -129,6 +129,6 @@ export const withCommPkgContext = ({
             >
                 {Component}
             </CommPkgContext.Provider>
-        </Router>
-    );
+        ),
+    });
 };

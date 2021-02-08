@@ -145,14 +145,14 @@ const ChecklistSignature = ({
                 <p>
                     Signed by {details.signedByFirstName}{' '}
                     {details.signedByLastName} at{' '}
-                    {new Date(details.signedAt).toLocaleDateString('no-NO')}
+                    {new Date(details.signedAt).toLocaleDateString('en-GB')}
                 </p>
             ) : null}
 
             <p>
                 Updated by {details.updatedByFirstName}{' '}
                 {details.updatedByLastName} at{' '}
-                {new Date(details.updatedAt).toLocaleDateString('no-NO')}
+                {new Date(details.updatedAt).toLocaleDateString('en-GB')}
             </p>
             <Snackbar
                 onClose={() => {
