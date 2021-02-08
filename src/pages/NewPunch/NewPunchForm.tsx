@@ -1,39 +1,13 @@
-import {
-    Button,
-    NativeSelect,
-    SingleSelect,
-    TextField,
-} from '@equinor/eds-core-react';
-import React, { useContext, useEffect, useState } from 'react';
+import { Button, NativeSelect, TextField } from '@equinor/eds-core-react';
+import React from 'react';
 import styled from 'styled-components';
-import { isTemplateExpression } from 'typescript';
-import CommAppContext, { AsyncStatus } from '../../contexts/CommAppContext';
+import { AsyncStatus } from '../../contexts/CommAppContext';
 import {
-    NewPunch,
     PunchCategory,
     PunchOrganization,
     PunchType,
 } from '../../services/apiTypes';
-import { CommParams } from '../../App';
-import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
-import EdsIcon from '../../components/icons/EdsIcon';
-import { removeLastSubdirectory } from '../../utils/general';
-
-const ButtonGroup = styled.div`
-    display: flex;
-    & button:first-of-type {
-        margin-right: 16px;
-    }
-`;
-
-const NewPunchSuccess = styled.div`
-    padding: 0 4%;
-    margin-top: 48px;
-    height: calc(100vh - 54px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`;
+import { PunchFormData } from './NewPunch';
 
 const NewPunchFormWrapper = styled.form`
     background-color: white;
@@ -53,72 +27,29 @@ type NewPunchFormProps = {
     types: PunchType[];
     categories: PunchCategory[];
     organizations: PunchOrganization[];
+    formData: PunchFormData;
+    buttonText: string;
+    createChangeHandler: (
+        key: 'type' | 'category' | 'description' | 'raisedBy' | 'clearingBy'
+    ) => (
+        e: React.ChangeEvent<
+            HTMLSelectElement | HTMLTextAreaElement | HTMLInputElement
+        >
+    ) => void;
+    handleSubmit: (e: React.FormEvent) => Promise<void>;
+    submitPunchStatus: AsyncStatus;
 };
 
 const NewPunchForm = ({
     categories,
     types,
     organizations,
+    createChangeHandler,
+    handleSubmit,
+    submitPunchStatus,
+    formData,
+    buttonText,
 }: NewPunchFormProps) => {
-    const { api } = useContext(CommAppContext);
-    const { plant, checklistId, commPkg, project } = useParams<CommParams>();
-    const { url } = useRouteMatch();
-    const history = useHistory();
-    const [submitPunchStatus, setSubmitPunchStatus] = useState(
-        AsyncStatus.INACTIVE
-    );
-    const [category, setCategory] = useState('');
-    const [description, setDescription] = useState('');
-    const [type, setType] = useState('');
-    const [raisedBy, setRaisedBy] = useState('');
-    const [clearingBy, setClearingBy] = useState('');
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const NewPunchDTO: NewPunch = {
-            CheckListId: parseInt(checklistId),
-            CategoryId: parseInt(category),
-            Description: description,
-            TypeId: parseInt(type),
-            RaisedByOrganizationId: parseInt(raisedBy),
-            ClearingByOrganizationId: parseInt(clearingBy),
-        };
-        setSubmitPunchStatus(AsyncStatus.LOADING);
-        try {
-            await api.postNewPunch(plant, NewPunchDTO);
-            setSubmitPunchStatus(AsyncStatus.SUCCESS);
-        } catch (error) {
-            setSubmitPunchStatus(AsyncStatus.ERROR);
-        }
-    };
-
-    if (submitPunchStatus === AsyncStatus.SUCCESS) {
-        return (
-            <NewPunchSuccess>
-                <EdsIcon name="check" size={40} />
-                <h4>Successfully added new punch</h4>
-                <ButtonGroup>
-                    <Button
-                        onClick={() =>
-                            history.push(removeLastSubdirectory(url))
-                        }
-                    >
-                        Back to checklist
-                    </Button>
-                    <Button
-                        onClick={() =>
-                            history.push(
-                                `/${plant}/${project}/${commPkg}/punch-list`
-                            )
-                        }
-                    >
-                        Go to punch list
-                    </Button>
-                </ButtonGroup>
-            </NewPunchSuccess>
-        );
-    }
-
     return (
         <NewPunchFormWrapper onSubmit={handleSubmit}>
             <NativeSelect
@@ -126,9 +57,7 @@ const NewPunchForm = ({
                 id="PunchCategorySelect"
                 label="Punch category"
                 disabled={submitPunchStatus === AsyncStatus.LOADING}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                    setCategory(e.target.value)
-                }
+                onChange={createChangeHandler('category')}
             >
                 <option hidden disabled selected />
                 {categories.map((category) => (
@@ -143,9 +72,7 @@ const NewPunchForm = ({
                 id="PunchTypeSelect"
                 label="Type"
                 disabled={submitPunchStatus === AsyncStatus.LOADING}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                    setType(e.target.value)
-                }
+                onChange={createChangeHandler('type')}
             >
                 <option hidden disabled selected />
                 {types.map((type) => (
@@ -158,10 +85,8 @@ const NewPunchForm = ({
             <TextField
                 required
                 maxLength={255}
-                value={description}
-                onChange={(
-                    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-                ) => setDescription(e.target.value)}
+                value={formData.description}
+                onChange={createChangeHandler('description')}
                 label="Description"
                 multiline
                 rows={5}
@@ -173,9 +98,7 @@ const NewPunchForm = ({
                 label="Raised by"
                 id="RaisedBySelect"
                 disabled={submitPunchStatus === AsyncStatus.LOADING}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                    setRaisedBy(e.target.value)
-                }
+                onChange={createChangeHandler('raisedBy')}
             >
                 <option hidden disabled selected />
                 {organizations.map((organization) => (
@@ -189,9 +112,7 @@ const NewPunchForm = ({
                 id="ClearingBySelect"
                 label="Clearing by"
                 disabled={submitPunchStatus === AsyncStatus.LOADING}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                    setClearingBy(e.target.value)
-                }
+                onChange={createChangeHandler('clearingBy')}
             >
                 <option hidden disabled selected />
                 {organizations.map((organization) => (
@@ -204,7 +125,7 @@ const NewPunchForm = ({
                 type="submit"
                 disabled={submitPunchStatus === AsyncStatus.LOADING}
             >
-                Create punch
+                {buttonText}
             </Button>
         </NewPunchFormWrapper>
     );
