@@ -65,8 +65,8 @@ export const testProjects: Project[] = [
 
 export const testDetails: CommPkg = {
     id: 1,
-    commPkgNo: 'Test commPkgNo',
-    description: 'Test commPkg description',
+    commPkgNo: 'dummy-commpkg-no',
+    description: 'dummy-commpkg-description',
     commStatus: CompletionStatus.OK,
     mcStatus: CompletionStatus.OK,
     mcPkgCount: 1,
@@ -134,5 +134,58 @@ export const testPunchList: PunchPreview[] = [
         statusControlledBySwcr: true,
     },
 ];
+
+export const dummyChecklistResponse = {
+    CheckList: {
+        Id: 321421,
+        TagNo: 'dummy-tag-no',
+        TagDescription: 'dummy-tag-description',
+        ResponsibleCode: 'dummy-responsible-code',
+        ResponsibleDescription: 'dummy-responsible-description',
+        Status: 'OS',
+        SystemModule: 'COMM',
+        FormularType: 'dummy-formular-type',
+        FormularGroup: 'dummy-formular-group',
+        Comment: 'dummy-comment',
+        SignedByUser: 'dummy-signed-user',
+        SignedByFirstName: 'dummy-signed-first-name',
+        SignedByLastName: 'dimmy-signed-last-name',
+        SignedAt: null,
+        UpdatedAt: '2021-02-05T09:05:09Z',
+        UpdatedByUser: 'dummy-updated-user',
+        UpdatedByFirstName: 'dummy-update-first-name',
+        UpdatedByLastName: 'dummy-updated-last-name',
+        IsRestrictedForUser: false,
+        HasElectronicForm: true,
+    },
+    CheckItems: [
+        {
+            Id: 4957494,
+            SequenceNumber: '1',
+            Text: 'dummy-check-item-header-text',
+            DetailText: null,
+            IsHeading: true,
+            HasImage: false,
+            ImageFileId: 0,
+            HasMetaTable: false,
+            MetaTable: null,
+            IsOk: false,
+            IsNotApplicable: true,
+        },
+        {
+            Id: 962955,
+            SequenceNumber: '01',
+            Text: 'dimmy-check-item-text',
+            DetailText: 'dummy-details-text',
+            IsHeading: false,
+            HasImage: false,
+            ImageFileId: 0,
+            HasMetaTable: false,
+            MetaTable: null,
+            IsOk: true,
+            IsNotApplicable: false,
+        },
+    ],
+};
 
 export default dummyMetatableData;
