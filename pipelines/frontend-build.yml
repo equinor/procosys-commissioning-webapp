@@ -94,6 +94,7 @@ stages:
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   variables:
     envName: 'test'
+    envLabel: 'non-prod'
     envRg: '${{ variables.envRgName }}'
     envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
     serviceConnection: '${{ variables.nonProdServiceConnection }}'
@@ -121,6 +122,7 @@ stages:
 #   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
 #   variables:
 #     envName: 'prod'
+#     envLabel: 'prod'
 #     envRg: '${{ variables.envRgName }}'
 #     envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
 #     serviceConnection: '${{ variables.prodServiceConnection }}'
