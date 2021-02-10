@@ -9,7 +9,7 @@ import {
 } from '../../services/apiTypes';
 import { PunchFormData } from './NewPunch';
 
-const NewPunchFormWrapper = styled.form`
+export const NewPunchFormWrapper = styled.form`
     background-color: white;
     margin-top: 32px;
     padding: 0 4%;

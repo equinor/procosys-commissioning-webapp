@@ -4,6 +4,7 @@ import { CommPkgContextProvider } from './contexts/CommPkgContext';
 import Checklist from './pages/Checklist/Checklist';
 import CommPkg from './pages/CommPkg/CommPkg';
 import NewPunch from './pages/NewPunch/NewPunch';
+import ClearPunch from './pages/ClearPunch/ClearPunch';
 
 const CommPkgRouter = () => {
     const { path } = useRouteMatch();
@@ -19,6 +20,11 @@ const CommPkgRouter = () => {
                     exact
                     path={`${path}/scope/:checklistId/new-punch`}
                     component={NewPunch}
+                />
+                <Route
+                    exact
+                    path={`${path}/punch-list/:punchListItemId`}
+                    component={ClearPunch}
                 />
                 <Route path={path} component={CommPkg} />
             </Switch>

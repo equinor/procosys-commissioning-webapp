@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import EdsIcon from '../../../components/icons/EdsIcon';
 import { Typography } from '@equinor/eds-core-react';
 import CompletionStatusIcon from '../../../components/icons/CompletionStatusIcon';
+import { useRouteMatch } from 'react-router-dom';
 
 const InfoRow = styled.div`
     margin-top: 4px;
@@ -19,8 +20,9 @@ const ModuleAndTagWrapper = styled.div`
 
 const PunchList = () => {
     const { punchList } = useContext(CommPkgContext);
+    const { url } = useRouteMatch();
     const punchListToDisplay = punchList.map((punch) => (
-        <PreviewButton to={``} key={punch.id}>
+        <PreviewButton to={`${url}/${punch.id}`} key={punch.id}>
             <CompletionStatusIcon status={punch.status} />
             <div>
                 <Typography variant="body_short" lines={2}>
