@@ -22,10 +22,18 @@ const PunchList = () => {
     const { punchList } = useContext(CommPkgContext);
     const { url } = useRouteMatch();
     const punchListToDisplay = punchList.map((punch) => (
-        <PreviewButton to={`${url}/${punch.id}`} key={punch.id}>
+        <PreviewButton
+            to={
+                punch.cleared
+                    ? `${url}/${punch.id}/verify`
+                    : `${url}/${punch.id}/clear`
+            }
+            key={punch.id}
+        >
             <CompletionStatusIcon status={punch.status} />
             <div>
                 <Typography variant="body_short" lines={2}>
+                    {punch.cleared ? 'Cleared: ' : null}
                     {punch.description}
                 </Typography>
                 <ModuleAndTagWrapper>

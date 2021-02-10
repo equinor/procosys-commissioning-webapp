@@ -88,7 +88,13 @@ const Navbar = ({
             return (
                 <Button
                     variant="ghost"
-                    onClick={() => history.push(removeLastSubdirectory(url))}
+                    onClick={() => {
+                        if (leftContent.url) {
+                            history.push(leftContent.url);
+                        } else {
+                            history.push(removeLastSubdirectory(url));
+                        }
+                    }}
                 >
                     <EdsIcon name={'arrow_back'} title="Back" />
                     {leftContent.label}

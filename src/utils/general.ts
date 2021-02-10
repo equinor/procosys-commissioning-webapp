@@ -1,3 +1,5 @@
+import { CompletionStatus, PunchPreview } from '../services/apiTypes';
+
 export const removeLastSubdirectory = (url: string) => {
     const matched = url.match(/.*\//);
     if (!matched) return '';
@@ -14,3 +16,11 @@ export function ensure<T>(
 
     return argument;
 }
+
+export const calculateHighestStatus = (punchList: PunchPreview[]) => {
+    if (punchList.find((punch) => punch.status === 'PA'))
+        return CompletionStatus.PA;
+    if (punchList.find((punch) => punch.status === 'PB'))
+        return CompletionStatus.PB;
+    return CompletionStatus.OK;
+};
