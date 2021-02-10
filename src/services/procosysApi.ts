@@ -2,7 +2,7 @@ import { AxiosInstance, CancelToken } from 'axios';
 import {
     UpdatePunchData,
     UpdatePunchEndpoint,
-} from '../pages/ClearPunch/useClearPunchFacade';
+} from '../pages/Punch/ClearPunch/useClearPunchFacade';
 import objectToCamelCase from '../utils/objectToCamelCase';
 import {
     Plant,
@@ -17,7 +17,7 @@ import {
     PunchType,
     PunchOrganization,
     NewPunch,
-    PunchListItem,
+    PunchItem,
 } from './apiTypes';
 
 export type ProcosysApiService = {
@@ -82,10 +82,7 @@ export type ProcosysApiService = {
         plantId: string,
         cancelToken?: CancelToken
     ) => Promise<CommPkgSearchResults>;
-    getPunchListItem: (
-        plantId: string,
-        punchItemId: number
-    ) => Promise<PunchListItem>;
+    getPunchItem: (plantId: string, punchItemId: number) => Promise<PunchItem>;
     putUpdatePunch: (
         plantId: string,
         punchItemId: number,
@@ -398,11 +395,11 @@ const procosysApiService = ({
         }
     };
 
-    const getPunchListItem = async (plantId: string, punchItemId: number) => {
+    const getPunchItem = async (plantId: string, punchItemId: number) => {
         const { data } = await axios.get(
             `PunchListItem?plantId=PCS$${plantId}&punchItemId=${punchItemId}${apiVersion}`
         );
-        return objectToCamelCase(data) as PunchListItem;
+        return objectToCamelCase(data) as PunchItem;
     };
 
     const putUpdatePunch = async (
@@ -421,12 +418,13 @@ const procosysApiService = ({
     const postClearPunch = async (plantId: string, punchItemId: number) => {
         await axios.post(
             `PunchListItem/Clear?plantId=PCS$${plantId}${apiVersion}`,
-            { PunchItemId: punchItemId }
+            punchItemId,
+            { headers: { 'Content-Type': 'application/json' } }
         );
     };
 
     return {
-        getPunchListItem,
+        getPunchItem,
         getPlants,
         getProjectsForPlant,
         getPermissionsForPlant,

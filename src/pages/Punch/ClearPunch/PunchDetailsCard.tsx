@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { SHADOW } from '../../style/GlobalStyles';
+import { SHADOW } from '../../../style/GlobalStyles';
 
 const PunchDetailsCardWrapper = styled.div`
     padding: 16px;

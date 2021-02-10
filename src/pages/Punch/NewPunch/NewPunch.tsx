@@ -1,20 +1,20 @@
 import React, { useContext, useEffect, useState } from 'react';
-import SkeletonLoader from '../../components/loading/SkeletonLoader';
+import SkeletonLoader from '../../../components/loading/SkeletonLoader';
 import {
     ChecklistDetails,
     PunchCategory,
     PunchOrganization,
     PunchType,
-} from '../../services/apiTypes';
+} from '../../../services/apiTypes';
 import { useParams } from 'react-router-dom';
-import { CommParams } from '../../App';
-import CommAppContext, { AsyncStatus } from '../../contexts/CommAppContext';
-import ErrorPage from '../../components/error/ErrorPage';
-import Navbar from '../../components/navigation/Navbar';
-import ChecklistDetailsCard from '../Checklist/ChecklistDetailsCard';
+import { CommParams } from '../../../App';
+import CommAppContext, { AsyncStatus } from '../../../contexts/CommAppContext';
+import ErrorPage from '../../../components/error/ErrorPage';
+import Navbar from '../../../components/navigation/Navbar';
+import ChecklistDetailsCard from '../../Checklist/ChecklistDetailsCard';
 import NewPunchForm from './NewPunchForm';
-import useFormFields from '../../utils/useFormFields';
-import { NewPunch as NewPunchType } from '../../services/apiTypes';
+import useFormFields from '../../../utils/useFormFields';
+import { NewPunch as NewPunchType } from '../../../services/apiTypes';
 import NewPunchSuccessPage from './NewPunchSuccessPage';
 
 export type PunchFormData = {

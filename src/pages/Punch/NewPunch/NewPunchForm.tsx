@@ -1,13 +1,13 @@
 import { Button, NativeSelect, TextField } from '@equinor/eds-core-react';
 import React from 'react';
 import styled from 'styled-components';
-import { AsyncStatus } from '../../contexts/CommAppContext';
+import { AsyncStatus } from '../../../contexts/CommAppContext';
 import {
     PunchCategory,
     PunchOrganization,
     PunchType,
-} from '../../services/apiTypes';
-import { PunchFormData } from './NewPunch';
+} from '../../../services/apiTypes';
+import { PunchFormData } from '../../Punch/NewPunch/NewPunch';
 
 export const NewPunchFormWrapper = styled.form`
     background-color: white;

@@ -1,10 +1,10 @@
 import { Button, NativeSelect, TextField } from '@equinor/eds-core-react';
 import React from 'react';
-import ErrorPage from '../../components/error/ErrorPage';
-import SkeletonLoadingPage from '../../components/loading/SkeletonLoader';
-import Navbar from '../../components/navigation/Navbar';
-import { AsyncStatus } from '../../contexts/CommAppContext';
-import { ensure } from '../../utils/general';
+import ErrorPage from '../../../components/error/ErrorPage';
+import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
+import Navbar from '../../../components/navigation/Navbar';
+import { AsyncStatus } from '../../../contexts/CommAppContext';
+import { ensure, removeLastSubdirectory } from '../../../utils/general';
 import PunchDetailsCard from './PunchDetailsCard';
 import { NewPunchFormWrapper } from '../NewPunch/NewPunchForm';
 import useClearPunchFacade, {
@@ -20,8 +20,9 @@ const ClearPunch = () => {
         categories,
         types,
         organizations,
+        url,
         updateDatabase,
-        handleSubmit,
+        clearPunchItem,
         handleCategoryChange,
         handleDescriptionChange,
         handleTypeChange,
@@ -38,7 +39,7 @@ const ClearPunch = () => {
                     systemModule={punchItem.systemModule}
                     tagDescription={punchItem.tagDescription}
                 />
-                <NewPunchFormWrapper onSubmit={handleSubmit}>
+                <NewPunchFormWrapper onSubmit={clearPunchItem}>
                     <NativeSelect
                         required
                         id="PunchCategorySelect"
@@ -173,11 +174,16 @@ const ClearPunch = () => {
             />
         );
     }
+    console.log(removeLastSubdirectory(removeLastSubdirectory(url)));
     return (
         <>
             <Navbar
                 noBorder
-                leftContent={{ name: 'back', label: 'Punch list', url: '' }}
+                leftContent={{
+                    name: 'back',
+                    label: 'Punch list',
+                    url: removeLastSubdirectory(removeLastSubdirectory(url)),
+                }}
             />
             {content}
         </>

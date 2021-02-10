@@ -178,7 +178,7 @@ export interface NewPunch {
     ClearingByOrganizationId: number;
 }
 
-export interface PunchListItem {
+export interface PunchItem {
     id: number;
     checklistId: number;
     formularType: string;

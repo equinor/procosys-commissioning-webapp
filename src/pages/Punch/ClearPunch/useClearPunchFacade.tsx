@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { CommParams } from '../../App';
-import CommAppContext, { AsyncStatus } from '../../contexts/CommAppContext';
+import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
+import { CommParams } from '../../../App';
+import CommAppContext, { AsyncStatus } from '../../../contexts/CommAppContext';
 import {
     PunchCategory,
     PunchType,
     PunchOrganization,
-    PunchListItem,
-} from '../../services/apiTypes';
-import { ensure } from '../../utils/general';
+    PunchItem,
+} from '../../../services/apiTypes';
+import { ensure, removeLastSubdirectory } from '../../../utils/general';
 
 export enum UpdatePunchEndpoint {
     Description = 'SetDescription',
@@ -27,10 +27,10 @@ export type UpdatePunchData =
 
 const useClearPunchFacade = () => {
     const { api } = useContext(CommAppContext);
-    const { plant, punchListItemId } = useParams<CommParams>();
-    const [punchItem, setPunchItem] = useState<PunchListItem>(
-        {} as PunchListItem
-    );
+    const { plant, punchItemId } = useParams<CommParams>();
+    const { url } = useRouteMatch();
+    const history = useHistory();
+    const [punchItem, setPunchItem] = useState<PunchItem>({} as PunchItem);
     const [categories, setCategories] = useState<PunchCategory[]>([]);
     const [types, setTypes] = useState<PunchType[]>([]);
     const [organizations, setOrganizations] = useState<PunchOrganization[]>([]);
@@ -52,7 +52,7 @@ const useClearPunchFacade = () => {
         try {
             await api.putUpdatePunch(
                 plant,
-                parseInt(punchListItemId),
+                parseInt(punchItemId),
                 updateData,
                 endpoint
             );
@@ -122,12 +122,13 @@ const useClearPunchFacade = () => {
         });
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const clearPunchItem = async (e: React.FormEvent) => {
         e.preventDefault();
         setClearPunchStatus(AsyncStatus.LOADING);
         try {
-            await api.postClearPunch(plant, parseInt(punchListItemId));
+            await api.postClearPunch(plant, parseInt(punchItemId));
             setClearPunchStatus(AsyncStatus.SUCCESS);
+            history.push(`${removeLastSubdirectory(url)}/verify`);
         } catch (error) {
             setClearPunchStatus(AsyncStatus.ERROR);
         }
@@ -140,23 +141,23 @@ const useClearPunchFacade = () => {
                     categoriesFromAPI,
                     typesFromAPI,
                     organizationsFromAPI,
-                    punchListItemFromAPI,
+                    punchItemFromAPI,
                 ] = await Promise.all([
                     api.getPunchCategories(plant),
                     api.getPunchTypes(plant),
                     api.getPunchOrganizations(plant),
-                    api.getPunchListItem(plant, parseInt(punchListItemId)),
+                    api.getPunchItem(plant, parseInt(punchItemId)),
                 ]);
                 setCategories(categoriesFromAPI);
                 setTypes(typesFromAPI);
                 setOrganizations(organizationsFromAPI);
-                setPunchItem(punchListItemFromAPI);
+                setPunchItem(punchItemFromAPI);
                 setFetchPunchItemStatus(AsyncStatus.SUCCESS);
             } catch (error) {
                 setFetchPunchItemStatus(AsyncStatus.ERROR);
             }
         })();
-    }, [plant, api, punchListItemId]);
+    }, [plant, api, punchItemId]);
 
     return {
         updatePunchStatus,
@@ -166,8 +167,9 @@ const useClearPunchFacade = () => {
         categories,
         types,
         organizations,
+        url,
         updateDatabase,
-        handleSubmit,
+        clearPunchItem,
         handleCategoryChange,
         handleTypeChange,
         handleRaisedByChange,

@@ -3,9 +3,9 @@ import { url } from 'inspector';
 import React from 'react';
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
-import EdsIcon from '../../components/icons/EdsIcon';
-import { removeLastSubdirectory } from '../../utils/general';
-import { CommParams } from '../../App';
+import EdsIcon from '../../../components/icons/EdsIcon';
+import { removeLastSubdirectory } from '../../../utils/general';
+import { CommParams } from '../../../App';
 
 const ButtonGroup = styled.div`
     display: flex;

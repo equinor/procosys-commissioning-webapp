@@ -11,7 +11,7 @@ export type CommParams = {
     project: string;
     commPkg: string;
     checklistId: string;
-    punchListItemId: string;
+    punchItemId: string;
     task: string;
     punch: string;
 };
