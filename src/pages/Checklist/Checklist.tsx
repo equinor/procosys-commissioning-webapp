@@ -44,11 +44,6 @@ const Checklist = () => {
     const { checklistId, plant } = useParams<CommParams>();
     const [reloadChecklist, setReloadChecklist] = useState(false);
 
-    // useEffect(() => {
-    //     if (!checklistDetails) return;
-    //     setIsSigned(!!checklistDetails.signedByFirstName);
-    // }, [checklistDetails]);
-
     useEffect(() => {
         const source = axios.CancelToken.source();
         (async () => {

@@ -1,7 +1,6 @@
 import React from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { CommParams } from '../../../App';
 import { SearchStatus } from '../useSearchPageFacade';
 import { CommPkgPreview } from '../../../services/apiTypes';
 import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
@@ -47,7 +46,6 @@ type SearchResultsProps = {
 
 const SearchResults = ({ searchStatus, commPackages }: SearchResultsProps) => {
     const history = useHistory();
-    const { project } = useParams<CommParams>();
     if (searchStatus === SearchStatus.LOADING) {
         return <SkeletonLoadingPage fullWidth />;
     }
