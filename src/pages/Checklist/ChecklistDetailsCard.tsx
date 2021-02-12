@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import CompletionStatusIcon from '../../components/icons/CompletionStatusIcon';
 import { ChecklistDetails } from '../../services/apiTypes';
@@ -26,7 +26,6 @@ const ChecklistDetailsCardWrapper = styled.div<{ isSigned?: boolean }>`
     justify-content: space-between;
     align-items: center;
     box-shadow: ${SHADOW};
-    /* background-color: #deecee; */
     & img {
         max-width: 20px;
         margin: 10px 16px 10px 0px;

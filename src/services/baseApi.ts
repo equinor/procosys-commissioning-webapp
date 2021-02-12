@@ -3,7 +3,7 @@ import { IAuthService } from './authService';
 
 type ProcosysApiSettings = {
     baseUrl: string;
-    version: string;
+    apiVersion: string;
     scope: string[];
 };
 
@@ -16,11 +16,13 @@ export const getApiSettings = async (endpoint: string, accessToken: string) => {
     return data.configuration.procosysWebApi as ProcosysApiSettings;
 };
 
-const baseApiService = (
-    authInstance: IAuthService,
-    baseURL: string,
-    scope: string[]
-) => {
+type baseApiProps = {
+    authInstance: IAuthService;
+    baseURL: string;
+    scope: string[];
+};
+
+const baseApiService = ({ authInstance, baseURL, scope }: baseApiProps) => {
     const axiosInstance = axios.create();
     axiosInstance.defaults.baseURL = baseURL;
     axiosInstance.interceptors.request.use(async (request) => {

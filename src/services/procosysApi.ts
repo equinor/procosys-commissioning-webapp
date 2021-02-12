@@ -1,4 +1,9 @@
 import { AxiosInstance, CancelToken } from 'axios';
+import {
+    PunchAction,
+    UpdatePunchData,
+    UpdatePunchEndpoint,
+} from '../pages/Punch/ClearPunch/useClearPunchFacade';
 import objectToCamelCase from '../utils/objectToCamelCase';
 import {
     Plant,
@@ -13,6 +18,7 @@ import {
     PunchType,
     PunchOrganization,
     NewPunch,
+    PunchItem,
 } from './apiTypes';
 
 export type ProcosysApiService = {
@@ -77,19 +83,33 @@ export type ProcosysApiService = {
         plantId: string,
         cancelToken?: CancelToken
     ) => Promise<CommPkgSearchResults>;
+    getPunchItem: (plantId: string, punchItemId: number) => Promise<PunchItem>;
+    putUpdatePunch: (
+        plantId: string,
+        punchItemId: number,
+        updateData: UpdatePunchData,
+        endpoint: UpdatePunchEndpoint
+    ) => Promise<void>;
+    postPunchAction: (
+        plantId: string,
+        punchItemId: number,
+        punchAction: PunchAction
+    ) => Promise<void>;
 };
 
 type ProcosysApiServiceProps = {
     axios: AxiosInstance;
+    apiVersion: string;
 };
 
 const procosysApiService = ({
     axios,
+    apiVersion,
 }: ProcosysApiServiceProps): ProcosysApiService => {
     const getPlants = async () => {
         try {
             const { data } = await axios.get(
-                'Plants?includePlantsWithoutAccess=false&api-version=4.1'
+                `Plants?includePlantsWithoutAccess=false${apiVersion}`
             );
             const camelCasedResponse = objectToCamelCase(data);
             const camelCasedResponseWithSlug = camelCasedResponse.map(
@@ -107,7 +127,7 @@ const procosysApiService = ({
     const getProjectsForPlant = async (plantId: string) => {
         try {
             const { data } = await axios.get(
-                `Projects?plantId=${plantId}&api-version=4.1`
+                `Projects?plantId=${plantId}${apiVersion}`
             );
             return objectToCamelCase(data) as Project[];
         } catch (error) {
@@ -118,7 +138,7 @@ const procosysApiService = ({
     const getPermissionsForPlant = async (plantId: string) => {
         try {
             const { data } = await axios.get(
-                `Permissions?plantId=${plantId}&api-version=4.1`
+                `Permissions?plantId=${plantId}${apiVersion}`
             );
             return data as string[];
         } catch (error) {
@@ -136,7 +156,7 @@ const procosysApiService = ({
             const {
                 data,
             } = await axios.get(
-                `CommPkg/Search?plantId=${plantId}&startsWithCommPkgNo=${query}&includeClosedProjects=false&projectId=${projectId}&api-version=4.1`,
+                `CommPkg/Search?plantId=${plantId}&startsWithCommPkgNo=${query}&includeClosedProjects=false&projectId=${projectId}${apiVersion}`,
                 { cancelToken }
             );
 
@@ -153,7 +173,7 @@ const procosysApiService = ({
     ) => {
         try {
             const { data } = await axios.get(
-                `CommPkg/ByCommPkgNos?plantId=${plantId}&commPkgNos=${commPkgNumber}&projectName=${projectName}&api-version=4.1
+                `CommPkg/ByCommPkgNos?plantId=${plantId}&commPkgNos=${commPkgNumber}&projectName=${projectName}${apiVersion}
 `
             );
             return objectToCamelCase(data[0]) as CommPkg;
@@ -165,7 +185,7 @@ const procosysApiService = ({
     const getScope = async (plantId: string, commPkgId: number) => {
         try {
             const { data } = await axios.get(
-                `CommPkg/Checklists?plantId=${plantId}&commPkgId=${commPkgId}&api-version=4.1`
+                `CommPkg/Checklists?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}`
             );
             return objectToCamelCase(data) as ChecklistPreview[];
         } catch (error) {
@@ -176,7 +196,7 @@ const procosysApiService = ({
     const getTasks = async (plantId: string, commPkgId: number) => {
         try {
             const { data } = await axios.get(
-                `CommPkg/Tasks?plantId=${plantId}&commPkgId=${commPkgId}&api-version=4.1`
+                `CommPkg/Tasks?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}`
             );
             return objectToCamelCase(data) as TaskPreview[];
         } catch (error) {
@@ -186,7 +206,7 @@ const procosysApiService = ({
     const getPunchList = async (plantId: string, commPkgId: number) => {
         try {
             const { data } = await axios.get(
-                `CommPkg/PunchList?plantId=${plantId}&commPkgId=${commPkgId}&api-version=4.1`
+                `CommPkg/PunchList?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}`
             );
             return objectToCamelCase(data) as PunchPreview[];
         } catch (error) {
@@ -197,7 +217,7 @@ const procosysApiService = ({
     const getChecklist = async (plantId: string, checklistId: string) => {
         try {
             const { data } = await axios.get(
-                `Checklist/Comm?plantId=PCS$${plantId}&checklistId=${checklistId}&api-version=4.1`
+                `Checklist/Comm?plantId=PCS$${plantId}&checklistId=${checklistId}${apiVersion}`
             );
             return objectToCamelCase(data) as ChecklistResponse;
         } catch (error) {
@@ -212,7 +232,7 @@ const procosysApiService = ({
     ) => {
         try {
             await axios.post(
-                `CheckList/Item/SetOk?plantId=PCS$${plantId}&api-version=4.1`,
+                `CheckList/Item/SetOk?plantId=PCS$${plantId}${apiVersion}`,
                 {
                     CheckListId: checklistId,
                     CheckItemId: checkItemId,
@@ -231,7 +251,7 @@ const procosysApiService = ({
     ) => {
         try {
             await axios.post(
-                `CheckList/Item/SetNA?plantId=PCS$${plantId}&api-version=4.1`,
+                `CheckList/Item/SetNA?plantId=PCS$${plantId}${apiVersion}`,
                 {
                     CheckListId: checklistId,
                     CheckItemId: checkItemId,
@@ -250,7 +270,7 @@ const procosysApiService = ({
     ) => {
         try {
             await axios.post(
-                `CheckList/Item/Clear?plantId=PCS$${plantId}&api-version=4.1`,
+                `CheckList/Item/Clear?plantId=PCS$${plantId}${apiVersion}`,
                 {
                     CheckListId: checklistId,
                     CheckItemId: checkItemId,
@@ -272,7 +292,7 @@ const procosysApiService = ({
     ) => {
         try {
             await axios.put(
-                `CheckList/Item/MetaTableCell?plantId=PCS$${plantId}&api-version=4.1`,
+                `CheckList/Item/MetaTableCell?plantId=PCS$${plantId}${apiVersion}`,
                 {
                     CheckListId: checklistId,
                     CheckItemId: checkItemId,
@@ -294,7 +314,7 @@ const procosysApiService = ({
     ) => {
         try {
             await axios.put(
-                `CheckList/Comm/Comment?plantId=PCS$${plantId}&api-version=4.1`,
+                `CheckList/Comm/Comment?plantId=PCS$${plantId}${apiVersion}`,
                 { CheckListId: checklistId, Comment: Comment }
             );
             return Promise.resolve();
@@ -306,7 +326,7 @@ const procosysApiService = ({
     const postSign = async (plantId: string, checklistId: number) => {
         try {
             await axios.post(
-                `CheckList/Comm/Sign?plantId=PCS$${plantId}&api-version=4.1`,
+                `CheckList/Comm/Sign?plantId=PCS$${plantId}${apiVersion}`,
                 checklistId,
                 { headers: { 'Content-Type': 'application/json' } }
             );
@@ -320,7 +340,7 @@ const procosysApiService = ({
     const postUnsign = async (plantId: string, checklistId: number) => {
         try {
             await axios.post(
-                `CheckList/Comm/Unsign?plantId=PCS$${plantId}&api-version=4.1`,
+                `CheckList/Comm/Unsign?plantId=PCS$${plantId}${apiVersion}`,
                 checklistId,
                 { headers: { 'Content-Type': 'application/json' } }
             );
@@ -334,7 +354,7 @@ const procosysApiService = ({
     const getPunchCategories = async (plantId: string) => {
         try {
             const { data } = await axios.get(
-                `PunchListItem/Categories?plantId=PCS$${plantId}&api-version=4.1`
+                `PunchListItem/Categories?plantId=PCS$${plantId}${apiVersion}`
             );
             return objectToCamelCase(data) as PunchCategory[];
         } catch (error) {
@@ -346,7 +366,7 @@ const procosysApiService = ({
     const getPunchTypes = async (plantId: string) => {
         try {
             const { data } = await axios.get(
-                `PunchListItem/Types?plantId=PCS$${plantId}&api-version=4.1`
+                `PunchListItem/Types?plantId=PCS$${plantId}${apiVersion}`
             );
             return objectToCamelCase(data) as PunchType[];
         } catch (error) {
@@ -358,7 +378,7 @@ const procosysApiService = ({
     const getPunchOrganizations = async (plantId: string) => {
         try {
             const { data } = await axios.get(
-                `PunchListItem/Organizations?plantId=PCS$${plantId}&api-version=4.1`
+                `PunchListItem/Organizations?plantId=PCS$${plantId}${apiVersion}`
             );
             return objectToCamelCase(data) as PunchOrganization[];
         } catch (error) {
@@ -370,7 +390,7 @@ const procosysApiService = ({
     const postNewPunch = async (plantId: string, newPunchData: NewPunch) => {
         try {
             await axios.post(
-                `PunchListItem?plantId=PCS$${plantId}&api-version=4.1`,
+                `PunchListItem?plantId=PCS$${plantId}${apiVersion}`,
                 newPunchData
             );
             return Promise.resolve();
@@ -379,7 +399,42 @@ const procosysApiService = ({
             return Promise.reject(error.message);
         }
     };
+
+    const getPunchItem = async (plantId: string, punchItemId: number) => {
+        const { data } = await axios.get(
+            `PunchListItem?plantId=PCS$${plantId}&punchItemId=${punchItemId}${apiVersion}`
+        );
+        return objectToCamelCase(data) as PunchItem;
+    };
+
+    const putUpdatePunch = async (
+        plantId: string,
+        punchItemId: number,
+        updateData: UpdatePunchData,
+        endpoint: UpdatePunchEndpoint
+    ) => {
+        const dto = { PunchItemId: punchItemId, ...updateData };
+        await axios.put(
+            `PunchListItem/${endpoint}?plantId=PCS$${plantId}${apiVersion}`,
+            dto
+        );
+    };
+
+    /* Used for clearing, unclearing, rejecting and verifying a */
+    const postPunchAction = async (
+        plantId: string,
+        punchItemId: number,
+        punchAction: PunchAction
+    ) => {
+        await axios.post(
+            `PunchListItem/${punchAction}?plantId=PCS$${plantId}${apiVersion}`,
+            punchItemId,
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+    };
+
     return {
+        getPunchItem,
         getPlants,
         getProjectsForPlant,
         getPermissionsForPlant,
@@ -400,6 +455,8 @@ const procosysApiService = ({
         getTasks,
         getScope,
         searchForCommPackage,
+        putUpdatePunch,
+        postPunchAction,
     };
 };
 

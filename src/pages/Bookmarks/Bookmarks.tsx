@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import DetailsCard from '../CommPkg/DetailsCard';
 import PageHeader from '../../components/PageHeader';
-import { getCurrentBookmarks } from '../../services/useBookmarks';
+import { getCurrentBookmarks } from './useBookmarks';
 import { Button } from '@equinor/eds-core-react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import PlantContext from '../../contexts/PlantContext';

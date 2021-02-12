@@ -50,9 +50,9 @@ const MetaTableCell = ({
         AsyncStatus.INACTIVE
     );
     const [errorMessage, setErrorMessage] = useState('');
+    let valueBeforeFocus = '';
 
     const submitData = async () => {
-        if (inputValue === value) return;
         setSubmitStatus(AsyncStatus.LOADING);
         try {
             await api.putMetaTableCell(
@@ -91,7 +91,10 @@ const MetaTableCell = ({
                     (submitStatus === AsyncStatus.SUCCESS && 'success') ||
                     'default'
                 }
-                onBlur={submitData}
+                onFocus={() => (valueBeforeFocus = value)}
+                onBlur={() => {
+                    value !== valueBeforeFocus && submitData();
+                }}
                 onChange={(
                     event: React.ChangeEvent<
                         HTMLTextAreaElement | HTMLInputElement

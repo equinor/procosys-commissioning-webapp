@@ -44,6 +44,7 @@ type ChecklistSignatureProps = {
     setIsSigned: React.Dispatch<React.SetStateAction<boolean>>;
     isSigned: boolean;
     allItemsCheckedOrNA: boolean;
+    reloadChecklist: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const ChecklistSignature = ({
@@ -51,6 +52,7 @@ const ChecklistSignature = ({
     setIsSigned,
     isSigned,
     allItemsCheckedOrNA,
+    reloadChecklist,
 }: ChecklistSignatureProps) => {
     const { api } = useContext(CommAppContext);
     const { plant, checklistId } = useParams<CommParams>();
@@ -91,6 +93,7 @@ const ChecklistSignature = ({
             setSnackbarText(
                 isSigned ? 'Unsign complete.' : 'Signing complete.'
             );
+            reloadChecklist((reloadStatus) => !reloadStatus);
         } catch (error) {
             setSignStatus(AsyncStatus.ERROR);
             setShowSnackbar(true);

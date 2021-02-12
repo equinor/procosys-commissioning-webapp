@@ -1,14 +1,7 @@
-import {
-    render,
-    screen,
-    waitFor,
-    waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { withCommPkgContext } from '../../test/contexts';
 import Checklist from './Checklist';
-
-jest.useFakeTimers();
 
 beforeEach(async () => {
     render(withCommPkgContext({ Component: <Checklist /> }));
@@ -29,5 +22,11 @@ describe('<Checklist/>', () => {
         ).toBeInTheDocument();
     });
     test.todo('Lets user toggle the check item description');
+    test.todo('Shows error screen when unable to load');
+    test.todo('Shows banner when checklist is signed');
+    test.todo(
+        'Shows warning when unable to sign due to items not being checked or NA'
+    );
+    test.todo('Disables field when pressing sign on an unsigned checklist');
     test.todo('Disables check button when NA is checked for an item');
 });

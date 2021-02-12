@@ -3,7 +3,9 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { CommPkgContextProvider } from './contexts/CommPkgContext';
 import Checklist from './pages/Checklist/Checklist';
 import CommPkg from './pages/CommPkg/CommPkg';
-import NewPunch from './pages/NewPunch/NewPunch';
+import NewPunch from './pages/Punch/NewPunch/NewPunch';
+import ClearPunch from './pages/Punch/ClearPunch/ClearPunch';
+import VerifyPunch from './pages/Punch/VerifyPunch/VerifyPunch';
 
 const CommPkgRouter = () => {
     const { path } = useRouteMatch();
@@ -19,6 +21,16 @@ const CommPkgRouter = () => {
                     exact
                     path={`${path}/scope/:checklistId/new-punch`}
                     component={NewPunch}
+                />
+                <Route
+                    exact
+                    path={`${path}/punch-list/:punchItemId/clear`}
+                    component={ClearPunch}
+                />
+                <Route
+                    exact
+                    path={`${path}/punch-list/:punchItemId/verify`}
+                    component={VerifyPunch}
                 />
                 <Route path={path} component={CommPkg} />
             </Switch>

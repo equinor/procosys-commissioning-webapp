@@ -8,10 +8,9 @@ import Tasks from './Tasks/Tasks';
 import PunchList from './PunchList/PunchList';
 import Navbar from '../../components/navigation/Navbar';
 import styled from 'styled-components';
+import { calculateHighestStatus } from '../../utils/general';
 
-const CommPkgWrapper = styled.main`
-    /* padding-top: 12px; */
-`;
+const CommPkgWrapper = styled.main``;
 
 const CommPkg = () => {
     const { details, scope, punchList, tasks } = useContext(CommPkgContext);
@@ -44,6 +43,7 @@ const CommPkg = () => {
                 numberOfChecklists={scope.length}
                 numberOfPunches={punchList.length}
                 numberOfTasks={tasks.length}
+                status={calculateHighestStatus(punchList)}
             />
         </CommPkgWrapper>
     );
