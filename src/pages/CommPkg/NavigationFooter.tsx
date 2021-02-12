@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import EdsIcon from '../../components/icons/EdsIcon';
 import { useHistory, useRouteMatch } from 'react-router-dom';
+import CompletionStatusIcon from '../../components/icons/CompletionStatusIcon';
+import { CompletionStatus } from '../../services/apiTypes';
 
 export const CommPkgFooterWrapper = styled.div`
     width: 100%;
@@ -36,6 +38,11 @@ export const FooterButton = styled.button<{ active: boolean }>`
     opacity: ${(props) => (props.active ? '1' : '0.8')};
     background-color: ${(props) => (props.active ? `white` : 'white')};
     position: relative;
+    & img {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+    }
     & p {
         margin: 0;
         font-weight: ${(props) => (props.active ? 'initial' : 'initial')};
@@ -75,12 +82,14 @@ type CommPkgFooterProps = {
     numberOfChecklists: number;
     numberOfTasks: number;
     numberOfPunches: number;
+    status: CompletionStatus;
 };
 
 const NavigationFooter = ({
     numberOfChecklists,
     numberOfTasks,
     numberOfPunches,
+    status,
 }: CommPkgFooterProps) => {
     const history = useHistory();
     const { url } = useRouteMatch();
@@ -124,7 +133,11 @@ const NavigationFooter = ({
                         <p>{numberOfPunches}</p>
                     </ItemCount>
                 )}
-                <EdsIcon name="warning_filled" />
+                {status === CompletionStatus.OK ? (
+                    <EdsIcon name="warning_filled" alt="punch list" />
+                ) : (
+                    <CompletionStatusIcon status={status} />
+                )}
                 <ButtonText>
                     <p>Punches</p>
                 </ButtonText>

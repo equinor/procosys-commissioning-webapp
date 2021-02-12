@@ -6,7 +6,7 @@ import EdsIcon from '../../../components/icons/EdsIcon';
 import CompletionStatusIcon from '../../../components/icons/CompletionStatusIcon';
 
 export const CommPkgListWrapper = styled.div`
-    padding-bottom: 70px;
+    padding-bottom: 85px;
     & h3 {
         text-align: center;
         margin-top: 16px;

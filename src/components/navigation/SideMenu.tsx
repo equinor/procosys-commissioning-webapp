@@ -6,7 +6,7 @@ import EdsIcon from '../icons/EdsIcon';
 import { useHistory, useParams } from 'react-router-dom';
 import { CommParams } from '../../App';
 import PlantContext from '../../contexts/PlantContext';
-import { StorageKey } from '../../services/useBookmarks';
+import { StorageKey } from '../../pages/Bookmarks/useBookmarks';
 import CommAppContext from '../../contexts/CommAppContext';
 
 const SideMenuWrapper = styled(animated.aside)`

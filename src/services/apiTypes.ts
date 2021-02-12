@@ -177,3 +177,50 @@ export interface NewPunch {
     RaisedByOrganizationId: number;
     ClearingByOrganizationId: number;
 }
+
+export interface PunchItem {
+    id: number;
+    checklistId: number;
+    formularType: string;
+    status: string;
+    description: string;
+    typeCode: string;
+    typeDescription: string;
+    raisedByCode: string;
+    raisedByDescription: string;
+    clearingByCode: string;
+    clearingByDescription: string;
+    clearedAt?: null;
+    clearedByUser?: null;
+    clearedByFirstName?: null;
+    clearedByLastName?: null;
+    verifiedAt?: null;
+    verifiedByUser?: null;
+    verifiedByFirstName?: null;
+    verifiedByLastName?: null;
+    rejectedAt?: null;
+    rejectedByUser?: null;
+    rejectedByFirstName?: null;
+    rejectedByLastName?: null;
+    dueDate?: null;
+    estimate?: null;
+    priorityId?: null;
+    priorityCode?: null;
+    priorityDescription?: null;
+    actionByPerson: number;
+    actionByPersonFirstName?: null;
+    actionByPersonLastName?: null;
+    materialRequired: boolean;
+    materialEta?: null;
+    materialNo?: null;
+    systemModule: string;
+    tagDescription: string;
+    tagId: number;
+    tagNo: string;
+    responsibleCode: string;
+    responsibleDescription: string;
+    sorting?: null;
+    statusControlledBySwcr: boolean;
+    isRestrictedForUser: boolean;
+    attachmentCount: number;
+}

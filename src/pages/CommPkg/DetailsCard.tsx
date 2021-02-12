@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { CompletionStatus } from '../../services/apiTypes';
 import EdsIcon from '../../components/icons/EdsIcon';
 import { Button } from '@equinor/eds-core-react';
-import useBookmarks from '../../services/useBookmarks';
+import useBookmarks from '../Bookmarks/useBookmarks';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { SHADOW } from '../../style/GlobalStyles';
 import { PackageStatusIcon } from '../../components/icons/PackageStatusIcon';

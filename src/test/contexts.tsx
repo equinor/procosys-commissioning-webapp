@@ -32,10 +32,15 @@ const client = new Msal.PublicClientApplication({
 });
 
 const authInstance = authService({ MSAL: client, scopes: ['testScope'] });
-const baseApiInstance = baseApiService(authInstance, 'https://dummy-url.com', [
-    'testscope',
-]);
-const procosysApiInstance = procosysApiService({ axios: baseApiInstance });
+const baseApiInstance = baseApiService({
+    authInstance,
+    baseURL: 'https://dummy-url.com',
+    scope: ['testscope'],
+});
+const procosysApiInstance = procosysApiService({
+    axios: baseApiInstance,
+    apiVersion: 'dummy-version',
+});
 
 type WithCommAppContextProps = {
     Component: JSX.Element;

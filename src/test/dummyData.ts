@@ -187,5 +187,3 @@ export const dummyChecklistResponse = {
         },
     ],
 };
-
-export default dummyMetatableData;

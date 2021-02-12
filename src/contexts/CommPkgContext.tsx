@@ -53,15 +53,15 @@ export const CommPkgContextProvider: React.FC<{ children: ReactNode }> = ({
                 tasksFromAPI,
                 punchListFromAPI,
             ] = await Promise.all([
-                api.getScope(`PCS$${plantInURL}`, details.id),
-                api.getTasks(`PCS$${plantInURL}`, details.id),
-                api.getPunchList(`PCS$${plantInURL}`, details.id),
+                api.getScope(plantInURL, details.id),
+                api.getTasks(plantInURL, details.id),
+                api.getPunchList(plantInURL, details.id),
             ]);
             setScope(scopeFromAPI);
             setTasks(tasksFromAPI);
             setPunchList(punchListFromAPI);
         })();
-    }, [plantInURL, details]);
+    }, [plantInURL, details, api]);
 
     if (!details || !scope || !tasks || !punchList)
         return <LoadingPage loadingText={'Loading commissioning package'} />;
