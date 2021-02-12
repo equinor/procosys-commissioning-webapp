@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { CompletionStatus } from '../../services/apiTypes';
+import { CommPkg } from '../../services/apiTypes';
 import EdsIcon from '../../components/icons/EdsIcon';
-import { Button } from '@equinor/eds-core-react';
+import { Button, DotProgress } from '@equinor/eds-core-react';
 import useBookmarks from '../Bookmarks/useBookmarks';
-import { useHistory, useRouteMatch } from 'react-router-dom';
 import { SHADOW } from '../../style/GlobalStyles';
 import { PackageStatusIcon } from '../../components/icons/PackageStatusIcon';
+import useCommonHooks from '../../utils/useCommonHooks';
+import { AsyncStatus } from '../../contexts/CommAppContext';
+import DetailsCardShell from './DetailsCardShell';
 
 const DetailsWrapper = styled.div<{ atBookmarksPage?: Boolean }>`
     display: grid;
@@ -19,7 +21,6 @@ const DetailsWrapper = styled.div<{ atBookmarksPage?: Boolean }>`
     background-color: #f7f7f7;
     border-radius: 15px;
     margin: ${(props) => (props.atBookmarksPage ? '0 4% 10px 4%' : '10px')};
-    /* background-color: #deecee; */
 `;
 
 const Description = styled.div`
@@ -55,68 +56,95 @@ const MCStatusWrapper = styled.div`
     }
 `;
 
-export type DetailsCardInfo = {
-    description: string;
-    pkgNumber: string;
-    MCStatus: CompletionStatus;
-    commStatus: CompletionStatus;
-};
-
 type DetailsCardProps = {
-    details: DetailsCardInfo;
+    commPkgId: string;
     atBookmarksPage?: boolean;
+    onClickAction?: () => void;
 };
 
 const DetailsCard = ({
-    details,
+    commPkgId,
     atBookmarksPage = false,
+    onClickAction,
 }: DetailsCardProps) => {
-    const history = useHistory();
-    const { url } = useRouteMatch();
-    const { isBookmarked, setIsBookmarked } = useBookmarks(details);
-    return (
-        <DetailsWrapper
-            atBookmarksPage={atBookmarksPage}
-            onClick={
-                atBookmarksPage
-                    ? () => history.push(`${url}/${details.pkgNumber}`)
-                    : () => {}
+    const { api, params } = useCommonHooks();
+    const { isBookmarked, setIsBookmarked } = useBookmarks(commPkgId);
+    const [details, setDetails] = useState<CommPkg>();
+    const [fetchDetailsStatus, setFetchDetailsStatus] = useState(
+        AsyncStatus.LOADING
+    );
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const detailsFromApi = await api.getCommPackageDetails(
+                    params.plant,
+                    commPkgId
+                );
+                setDetails(detailsFromApi);
+                setFetchDetailsStatus(AsyncStatus.SUCCESS);
+            } catch {
+                setFetchDetailsStatus(AsyncStatus.ERROR);
             }
-        >
-            <Description>
-                <p>{details.description}</p>
-            </Description>
-            <StatusIconWrapper>
-                <PackageStatusIcon
-                    mcStatus={details.MCStatus}
-                    commStatus={details.commStatus}
-                />
-            </StatusIconWrapper>
-            <BookmarkIconWrapper>
-                <Button
-                    variant="ghost_icon"
-                    onClick={(e: React.MouseEvent<HTMLElement>) => {
-                        e.stopPropagation();
-                        setIsBookmarked(!isBookmarked);
-                    }}
-                >
-                    <EdsIcon
-                        color="primary"
-                        name={
-                            isBookmarked
-                                ? 'bookmark_filled'
-                                : 'bookmark_outlined'
-                        }
+        })();
+    }, [params, api, commPkgId]);
+
+    if (fetchDetailsStatus === AsyncStatus.ERROR) {
+        return (
+            <DetailsCardShell atBookmarksPage={atBookmarksPage}>
+                <p>Unable to load comm package details. Try reloading.</p>
+            </DetailsCardShell>
+        );
+    }
+    if (fetchDetailsStatus === AsyncStatus.SUCCESS && details) {
+        return (
+            <DetailsWrapper
+                atBookmarksPage={atBookmarksPage}
+                onClick={onClickAction}
+            >
+                <Description>
+                    <p>{details.description}</p>
+                </Description>
+                <StatusIconWrapper>
+                    <PackageStatusIcon
+                        mcStatus={details.mcStatus}
+                        commStatus={details.commStatus}
                     />
-                </Button>
-            </BookmarkIconWrapper>
-            <CommPkgNumberWrapper>
-                <label>PKG number:</label> <p>{details.pkgNumber}</p>
-            </CommPkgNumberWrapper>
-            <MCStatusWrapper>
-                <label>MC Status:</label> <p>{details.MCStatus}</p>
-            </MCStatusWrapper>
-        </DetailsWrapper>
+                </StatusIconWrapper>
+                <BookmarkIconWrapper>
+                    <Button
+                        variant="ghost_icon"
+                        onClick={(e: React.MouseEvent<HTMLElement>) => {
+                            e.stopPropagation();
+                            setIsBookmarked((prev) => !prev);
+                        }}
+                    >
+                        <EdsIcon
+                            color="primary"
+                            name={
+                                isBookmarked
+                                    ? 'bookmark_filled'
+                                    : 'bookmark_outlined'
+                            }
+                        />
+                    </Button>
+                </BookmarkIconWrapper>
+                <CommPkgNumberWrapper>
+                    <label>PKG number:</label> <p>{details.commPkgNo}</p>
+                </CommPkgNumberWrapper>
+                <MCStatusWrapper>
+                    <label>MC Status:</label> <p>{details.mcStatus}</p>
+                </MCStatusWrapper>
+            </DetailsWrapper>
+        );
+    }
+
+    return (
+        <DetailsCardShell atBookmarksPage={atBookmarksPage}>
+            <>
+                <DotProgress variant="green" />
+            </>
+        </DetailsCardShell>
     );
 };
 
