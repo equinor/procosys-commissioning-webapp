@@ -1,9 +1,12 @@
-import React, { useContext } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import CommPkgContext from '../../../contexts/CommPkgContext';
 import EdsIcon from '../../../components/icons/EdsIcon';
 import CompletionStatusIcon from '../../../components/icons/CompletionStatusIcon';
+import { AsyncStatus } from '../../../contexts/CommAppContext';
+import { ChecklistPreview } from '../../../services/apiTypes';
+import useCommonHooks from '../../../utils/useCommonHooks';
+import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
 
 export const CommPkgListWrapper = styled.div`
     padding-bottom: 85px;
@@ -43,26 +46,49 @@ const FormulaTypeText = styled.p`
 `;
 
 const Scope = () => {
-    const { scope } = useContext(CommPkgContext);
-    const { url } = useRouteMatch();
-    const scopeToRender = scope.map((checklist) => (
-        <PreviewButton key={checklist.id} to={`${url}/${checklist.id}`}>
-            <CompletionStatusIcon status={checklist.status} />
-            <div>
-                <label>{checklist.tagNo}</label>
-                <p>{checklist.tagDescription}</p>
-            </div>
-            <FormulaTypeText>{checklist.formularType}</FormulaTypeText>
-            <EdsIcon name="chevron_right" />
-        </PreviewButton>
-    ));
-    if (scope.length < 1)
-        return (
-            <CommPkgListWrapper>
-                <h3>The scope is empty</h3>
-            </CommPkgListWrapper>
-        );
-    return <CommPkgListWrapper>{scopeToRender}</CommPkgListWrapper>;
+    const { params, api, url } = useCommonHooks();
+    const [scope, setScope] = useState<ChecklistPreview[]>();
+    const [fetchScopeStatus, setFetchScopeStatus] = useState(
+        AsyncStatus.LOADING
+    );
+
+    useEffect(() => {
+        (async () => {
+            setFetchScopeStatus(AsyncStatus.LOADING);
+            try {
+                const scopeFromApi = await api.getScope(
+                    params.plant,
+                    params.commPkg
+                );
+                setScope(scopeFromApi);
+                setFetchScopeStatus(AsyncStatus.SUCCESS);
+            } catch {
+                setFetchScopeStatus(AsyncStatus.ERROR);
+            }
+        })();
+    }, []);
+
+    if (fetchScopeStatus === AsyncStatus.SUCCESS && scope) {
+        const scopeToRender = scope.map((checklist) => (
+            <PreviewButton key={checklist.id} to={`${url}/${checklist.id}`}>
+                <CompletionStatusIcon status={checklist.status} />
+                <div>
+                    <label>{checklist.tagNo}</label>
+                    <p>{checklist.tagDescription}</p>
+                </div>
+                <FormulaTypeText>{checklist.formularType}</FormulaTypeText>
+                <EdsIcon name="chevron_right" />
+            </PreviewButton>
+        ));
+        if (scope.length < 1)
+            return (
+                <CommPkgListWrapper>
+                    <h3>The scope is empty</h3>
+                </CommPkgListWrapper>
+            );
+        return <CommPkgListWrapper>{scopeToRender}</CommPkgListWrapper>;
+    }
+    return <SkeletonLoadingPage text="Loading scope" />;
 };
 
 export default Scope;
