@@ -55,9 +55,7 @@ const SearchResults = ({ searchStatus, commPackages }: SearchResultsProps) => {
                 {commPackages.map((commPackage) => {
                     return (
                         <SearchResult
-                            onClick={() =>
-                                history.push(`${commPackage.commPkgNo}`)
-                            }
+                            onClick={() => history.push(`${commPackage.id}`)}
                             key={commPackage.id}
                         >
                             <StatusImageWrapper>
