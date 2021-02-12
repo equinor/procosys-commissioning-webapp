@@ -1,5 +1,6 @@
 import { AxiosInstance, CancelToken } from 'axios';
 import {
+    PunchAction,
     UpdatePunchData,
     UpdatePunchEndpoint,
 } from '../pages/Punch/ClearPunch/useClearPunchFacade';
@@ -89,7 +90,11 @@ export type ProcosysApiService = {
         updateData: UpdatePunchData,
         endpoint: UpdatePunchEndpoint
     ) => Promise<void>;
-    postClearPunch: (plantId: string, punchItemId: number) => Promise<void>;
+    postPunchAction: (
+        plantId: string,
+        punchItemId: number,
+        punchAction: PunchAction
+    ) => Promise<void>;
 };
 
 type ProcosysApiServiceProps = {
@@ -180,7 +185,7 @@ const procosysApiService = ({
     const getScope = async (plantId: string, commPkgId: number) => {
         try {
             const { data } = await axios.get(
-                `CommPkg/Checklists?plantId=${plantId}&commPkgId=${commPkgId}${apiVersion}`
+                `CommPkg/Checklists?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}`
             );
             return objectToCamelCase(data) as ChecklistPreview[];
         } catch (error) {
@@ -191,7 +196,7 @@ const procosysApiService = ({
     const getTasks = async (plantId: string, commPkgId: number) => {
         try {
             const { data } = await axios.get(
-                `CommPkg/Tasks?plantId=${plantId}&commPkgId=${commPkgId}${apiVersion}`
+                `CommPkg/Tasks?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}`
             );
             return objectToCamelCase(data) as TaskPreview[];
         } catch (error) {
@@ -201,7 +206,7 @@ const procosysApiService = ({
     const getPunchList = async (plantId: string, commPkgId: number) => {
         try {
             const { data } = await axios.get(
-                `CommPkg/PunchList?plantId=${plantId}&commPkgId=${commPkgId}${apiVersion}`
+                `CommPkg/PunchList?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}`
             );
             return objectToCamelCase(data) as PunchPreview[];
         } catch (error) {
@@ -415,9 +420,14 @@ const procosysApiService = ({
         );
     };
 
-    const postClearPunch = async (plantId: string, punchItemId: number) => {
+    /* Used for clearing, unclearing, rejecting and verifying a */
+    const postPunchAction = async (
+        plantId: string,
+        punchItemId: number,
+        punchAction: PunchAction
+    ) => {
         await axios.post(
-            `PunchListItem/Clear?plantId=PCS$${plantId}${apiVersion}`,
+            `PunchListItem/${punchAction}?plantId=PCS$${plantId}${apiVersion}`,
             punchItemId,
             { headers: { 'Content-Type': 'application/json' } }
         );
@@ -446,7 +456,7 @@ const procosysApiService = ({
         getScope,
         searchForCommPackage,
         putUpdatePunch,
-        postClearPunch,
+        postPunchAction,
     };
 };
 
