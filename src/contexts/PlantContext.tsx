@@ -3,7 +3,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { CommParams } from '../App';
 import LoadingPage from '../components/loading/LoadingPage';
 import { Plant, Project } from '../services/apiTypes';
-import { StorageKey } from '../services/useBookmarks';
+import { StorageKey } from '../pages/Bookmarks/useBookmarks';
 import matchPlantInURL from '../utils/matchPlantInURL';
 import matchProjectInURL from '../utils/matchProjectInURL';
 import CommAppContext, { AsyncStatus } from './CommAppContext';

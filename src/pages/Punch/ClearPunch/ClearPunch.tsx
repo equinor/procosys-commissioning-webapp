@@ -1,10 +1,15 @@
-import { Button, NativeSelect, TextField } from '@equinor/eds-core-react';
+import {
+    Button,
+    NativeSelect,
+    Snackbar,
+    TextField,
+} from '@equinor/eds-core-react';
 import React from 'react';
 import ErrorPage from '../../../components/error/ErrorPage';
 import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
 import Navbar from '../../../components/navigation/Navbar';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
-import { ensure, removeLastSubdirectory } from '../../../utils/general';
+import { ensure, removeSubdirectories } from '../../../utils/general';
 import PunchDetailsCard from './PunchDetailsCard';
 import { NewPunchFormWrapper } from '../NewPunch/NewPunchForm';
 import useClearPunchFacade, {
@@ -21,6 +26,9 @@ const ClearPunch = () => {
         types,
         organizations,
         url,
+        showSnackbar,
+        snackbarText,
+        setShowSnackbar,
         updateDatabase,
         clearPunchItem,
         handleCategoryChange,
@@ -31,7 +39,10 @@ const ClearPunch = () => {
     } = useClearPunchFacade();
     let descriptionBeforeBlur = '';
 
-    let content = <SkeletonLoadingPage text="Loading punch item" />;
+    let content = <></>;
+    if (fetchPunchItemStatus === AsyncStatus.LOADING) {
+        content = <SkeletonLoadingPage text="Loading punch item" />;
+    }
     if (fetchPunchItemStatus === AsyncStatus.SUCCESS && punchItem) {
         content = (
             <>
@@ -158,7 +169,10 @@ const ClearPunch = () => {
                     </NativeSelect>
                     <Button
                         type="submit"
-                        disabled={updatePunchStatus === AsyncStatus.LOADING}
+                        disabled={
+                            updatePunchStatus === AsyncStatus.LOADING ||
+                            clearPunchStatus === AsyncStatus.LOADING
+                        }
                     >
                         Clear
                     </Button>
@@ -174,7 +188,7 @@ const ClearPunch = () => {
             />
         );
     }
-    console.log(removeLastSubdirectory(removeLastSubdirectory(url)));
+    console.log(removeSubdirectories(url, 2));
     return (
         <>
             <Navbar
@@ -182,10 +196,18 @@ const ClearPunch = () => {
                 leftContent={{
                     name: 'back',
                     label: 'Punch list',
-                    url: removeLastSubdirectory(removeLastSubdirectory(url)),
+                    url: removeSubdirectories(url, 2),
                 }}
             />
             {content}
+            <Snackbar
+                onClose={() => {
+                    setShowSnackbar(false);
+                }}
+                open={showSnackbar}
+            >
+                {snackbarText}
+            </Snackbar>
         </>
     );
 };

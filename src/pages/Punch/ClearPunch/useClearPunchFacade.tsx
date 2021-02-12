@@ -8,7 +8,7 @@ import {
     PunchOrganization,
     PunchItem,
 } from '../../../services/apiTypes';
-import { ensure, removeLastSubdirectory } from '../../../utils/general';
+import { ensure, removeSubdirectories } from '../../../utils/general';
 
 export enum UpdatePunchEndpoint {
     Description = 'SetDescription',
@@ -16,6 +16,14 @@ export enum UpdatePunchEndpoint {
     Type = 'SetType',
     RaisedBy = 'SetRaisedBy',
     ClearingBy = 'SetClearingBy',
+}
+
+export enum PunchAction {
+    CLEAR = 'Clear',
+    UNCLEAR = 'Unclear',
+    REJECT = 'Reject',
+    VERIFY = 'Verify',
+    UNVERIFY = 'Unverify',
 }
 
 export type UpdatePunchData =
@@ -34,6 +42,8 @@ const useClearPunchFacade = () => {
     const [categories, setCategories] = useState<PunchCategory[]>([]);
     const [types, setTypes] = useState<PunchType[]>([]);
     const [organizations, setOrganizations] = useState<PunchOrganization[]>([]);
+    const [showSnackbar, setShowSnackbar] = useState(false);
+    const [snackbarText, setSnackbarText] = useState('');
     const [fetchPunchItemStatus, setFetchPunchItemStatus] = useState(
         AsyncStatus.LOADING
     );
@@ -49,6 +59,8 @@ const useClearPunchFacade = () => {
         updateData: UpdatePunchData
     ) => {
         setUpdatePunchStatus(AsyncStatus.LOADING);
+        setShowSnackbar(true);
+        setSnackbarText('Saving change.');
         try {
             await api.putUpdatePunch(
                 plant,
@@ -57,8 +69,10 @@ const useClearPunchFacade = () => {
                 endpoint
             );
             setUpdatePunchStatus(AsyncStatus.SUCCESS);
+            setSnackbarText('Change successfully saved.');
         } catch (error) {
             setUpdatePunchStatus(AsyncStatus.ERROR);
+            setSnackbarText('Unable to save change.');
         }
     };
 
@@ -126,9 +140,13 @@ const useClearPunchFacade = () => {
         e.preventDefault();
         setClearPunchStatus(AsyncStatus.LOADING);
         try {
-            await api.postClearPunch(plant, parseInt(punchItemId));
+            await api.postPunchAction(
+                plant,
+                parseInt(punchItemId),
+                PunchAction.CLEAR
+            );
             setClearPunchStatus(AsyncStatus.SUCCESS);
-            history.push(`${removeLastSubdirectory(url)}/verify`);
+            history.push(`${removeSubdirectories(url, 1)}/verify`);
         } catch (error) {
             setClearPunchStatus(AsyncStatus.ERROR);
         }
@@ -168,6 +186,9 @@ const useClearPunchFacade = () => {
         types,
         organizations,
         url,
+        showSnackbar,
+        snackbarText,
+        setShowSnackbar,
         updateDatabase,
         clearPunchItem,
         handleCategoryChange,

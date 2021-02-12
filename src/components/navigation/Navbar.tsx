@@ -5,7 +5,7 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import EdsIcon from '../icons/EdsIcon';
 import { useSpring } from 'react-spring';
 import SideMenu from './SideMenu';
-import { removeLastSubdirectory } from '../../utils/general';
+import { removeSubdirectories } from '../../utils/general';
 
 const NavbarWrapper = styled.nav<{ noBorder: boolean }>`
     height: 54px;
@@ -92,7 +92,7 @@ const Navbar = ({
                         if (leftContent.url) {
                             history.push(leftContent.url);
                         } else {
-                            history.push(removeLastSubdirectory(url));
+                            history.push(removeSubdirectories(url, 1));
                         }
                     }}
                 >

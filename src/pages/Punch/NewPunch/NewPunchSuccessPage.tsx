@@ -1,10 +1,9 @@
 import { Button } from '@equinor/eds-core-react';
-import { url } from 'inspector';
 import React from 'react';
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import EdsIcon from '../../../components/icons/EdsIcon';
-import { removeLastSubdirectory } from '../../../utils/general';
+import { removeSubdirectories } from '../../../utils/general';
 import { CommParams } from '../../../App';
 
 const ButtonGroup = styled.div`
@@ -33,7 +32,7 @@ const NewPunchSuccessPage = () => {
             <h4>Successfully added new punch</h4>
             <ButtonGroup>
                 <Button
-                    onClick={() => history.push(removeLastSubdirectory(url))}
+                    onClick={() => history.push(removeSubdirectories(url, 1))}
                 >
                     Back to checklist
                 </Button>

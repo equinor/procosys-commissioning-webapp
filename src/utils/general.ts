@@ -1,8 +1,19 @@
 import { CompletionStatus, PunchPreview } from '../services/apiTypes';
 
-export const removeLastSubdirectory = (url: string) => {
+export const removeSubdirectories = (
+    url: string,
+    numberOfSubdirectoriesToRemove: number
+) => {
+    let modifiedUrl = url;
+    for (let i = 0; i < numberOfSubdirectoriesToRemove; i++) {
+        modifiedUrl = removeLastSubdirectory(modifiedUrl);
+    }
+    return modifiedUrl;
+};
+const removeLastSubdirectory = (url: string) => {
     const matched = url.match(/.*\//);
-    if (!matched) return '';
+    if (!matched)
+        throw Error('Routing failed: Unable to remove subdirectories');
     return matched[0].slice(0, -1);
 };
 
