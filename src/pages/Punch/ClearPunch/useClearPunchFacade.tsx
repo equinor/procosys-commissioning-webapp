@@ -1,7 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
-import { CommParams } from '../../../App';
-import CommAppContext, { AsyncStatus } from '../../../contexts/CommAppContext';
+import React, { useEffect, useState } from 'react';
+import { AsyncStatus } from '../../../contexts/CommAppContext';
 import {
     PunchCategory,
     PunchType,
@@ -9,6 +7,7 @@ import {
     PunchItem,
 } from '../../../services/apiTypes';
 import { ensure, removeSubdirectories } from '../../../utils/general';
+import useCommonHooks from '../../../utils/useCommonHooks';
 
 export enum UpdatePunchEndpoint {
     Description = 'SetDescription',
@@ -34,10 +33,7 @@ export type UpdatePunchData =
     | { Description: string };
 
 const useClearPunchFacade = () => {
-    const { api } = useContext(CommAppContext);
-    const { plant, punchItemId } = useParams<CommParams>();
-    const { url } = useRouteMatch();
-    const history = useHistory();
+    const { api, params, url, history } = useCommonHooks();
     const [punchItem, setPunchItem] = useState<PunchItem>({} as PunchItem);
     const [categories, setCategories] = useState<PunchCategory[]>([]);
     const [types, setTypes] = useState<PunchType[]>([]);
@@ -63,8 +59,8 @@ const useClearPunchFacade = () => {
         setSnackbarText('Saving change.');
         try {
             await api.putUpdatePunch(
-                plant,
-                parseInt(punchItemId),
+                params.plant,
+                params.punchItemId,
                 updateData,
                 endpoint
             );
@@ -141,8 +137,8 @@ const useClearPunchFacade = () => {
         setClearPunchStatus(AsyncStatus.LOADING);
         try {
             await api.postPunchAction(
-                plant,
-                parseInt(punchItemId),
+                params.plant,
+                params.punchItemId,
                 PunchAction.CLEAR
             );
             setClearPunchStatus(AsyncStatus.SUCCESS);
@@ -161,10 +157,10 @@ const useClearPunchFacade = () => {
                     organizationsFromApi,
                     punchItemFromApi,
                 ] = await Promise.all([
-                    api.getPunchCategories(plant),
-                    api.getPunchTypes(plant),
-                    api.getPunchOrganizations(plant),
-                    api.getPunchItem(plant, parseInt(punchItemId)),
+                    api.getPunchCategories(params.plant),
+                    api.getPunchTypes(params.plant),
+                    api.getPunchOrganizations(params.plant),
+                    api.getPunchItem(params.plant, params.punchItemId),
                 ]);
                 setCategories(categoriesFromApi);
                 setTypes(typesFromApi);
@@ -175,7 +171,7 @@ const useClearPunchFacade = () => {
                 setFetchPunchItemStatus(AsyncStatus.ERROR);
             }
         })();
-    }, [plant, api, punchItemId]);
+    }, [params.plant, api, params.punchItemId]);
 
     return {
         updatePunchStatus,

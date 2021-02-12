@@ -3,11 +3,9 @@ import styled from 'styled-components';
 import { animated, AnimatedValue } from 'react-spring';
 import { Button } from '@equinor/eds-core-react';
 import EdsIcon from '../icons/EdsIcon';
-import { useHistory, useParams } from 'react-router-dom';
-import { CommParams } from '../../App';
 import PlantContext from '../../contexts/PlantContext';
 import { StorageKey } from '../../pages/Bookmarks/useBookmarks';
-import CommAppContext from '../../contexts/CommAppContext';
+import useCommonHooks from '../../utils/useCommonHooks';
 
 const SideMenuWrapper = styled(animated.aside)`
     width: 297px;
@@ -84,9 +82,7 @@ const SideMenu = ({
     backdropAnimation,
     setDrawerIsOpen,
 }: SideMenuProps) => {
-    const { auth } = useContext(CommAppContext);
-    const history = useHistory();
-    const params = useParams<CommParams>();
+    const { auth, history, params } = useCommonHooks();
     const { currentPlant, currentProject } = useContext(PlantContext);
     return (
         <>

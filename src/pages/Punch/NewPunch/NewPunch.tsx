@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SkeletonLoader from '../../../components/loading/SkeletonLoader';
 import {
     ChecklistDetails,
@@ -6,9 +6,7 @@ import {
     PunchOrganization,
     PunchType,
 } from '../../../services/apiTypes';
-import { useParams } from 'react-router-dom';
-import { CommParams } from '../../../App';
-import CommAppContext, { AsyncStatus } from '../../../contexts/CommAppContext';
+import { AsyncStatus } from '../../../contexts/CommAppContext';
 import ErrorPage from '../../../components/error/ErrorPage';
 import Navbar from '../../../components/navigation/Navbar';
 import ChecklistDetailsCard from '../../Checklist/ChecklistDetailsCard';
@@ -16,6 +14,7 @@ import NewPunchForm from './NewPunchForm';
 import useFormFields from '../../../utils/useFormFields';
 import { NewPunch as NewPunchType } from '../../../services/apiTypes';
 import NewPunchSuccessPage from './NewPunchSuccessPage';
+import useCommonHooks from '../../../utils/useCommonHooks';
 
 export type PunchFormData = {
     category: string;
@@ -34,7 +33,7 @@ const newPunchInitialValues = {
 };
 
 const NewPunch = () => {
-    const { api } = useContext(CommAppContext);
+    const { api, params } = useCommonHooks();
     const { formFields, createChangeHandler } = useFormFields(
         newPunchInitialValues
     );
@@ -50,12 +49,11 @@ const NewPunch = () => {
     const [checklistDetails, setChecklistDetails] = useState<
         ChecklistDetails
     >();
-    const { plant, checklistId } = useParams<CommParams>();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const NewPunchDTO: NewPunchType = {
-            CheckListId: parseInt(checklistId),
+            CheckListId: parseInt(params.checklistId),
             CategoryId: parseInt(formFields.category),
             Description: formFields.description,
             TypeId: parseInt(formFields.type),
@@ -64,7 +62,7 @@ const NewPunch = () => {
         };
         setSubmitPunchStatus(AsyncStatus.LOADING);
         try {
-            await api.postNewPunch(plant, NewPunchDTO);
+            await api.postNewPunch(params.plant, NewPunchDTO);
             setSubmitPunchStatus(AsyncStatus.SUCCESS);
         } catch (error) {
             setSubmitPunchStatus(AsyncStatus.ERROR);
@@ -80,10 +78,10 @@ const NewPunch = () => {
                     organizationsFromApi,
                     checklistFromApi,
                 ] = await Promise.all([
-                    api.getPunchCategories(plant),
-                    api.getPunchTypes(plant),
-                    api.getPunchOrganizations(plant),
-                    api.getChecklist(plant, checklistId),
+                    api.getPunchCategories(params.plant),
+                    api.getPunchTypes(params.plant),
+                    api.getPunchOrganizations(params.plant),
+                    api.getChecklist(params.plant, params.checklistId),
                 ]);
                 setCategories(categoriesFromApi);
                 setTypes(typesFromApi);
@@ -94,7 +92,7 @@ const NewPunch = () => {
                 setFetchNewPunchStatus(AsyncStatus.ERROR);
             }
         })();
-    }, [plant, checklistId, api]);
+    }, [params.plant, params.checklistId, api]);
 
     let content = null;
     if (fetchNewPunchStatus === AsyncStatus.LOADING) {

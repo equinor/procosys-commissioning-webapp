@@ -1,16 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CommPkgListWrapper, PreviewButton } from '../Scope/Scope';
 import styled from 'styled-components';
 import EdsIcon from '../../../components/icons/EdsIcon';
 import { Typography } from '@equinor/eds-core-react';
 import CompletionStatusIcon from '../../../components/icons/CompletionStatusIcon';
-import CommAppContext, { AsyncStatus } from '../../../contexts/CommAppContext';
+import { AsyncStatus } from '../../../contexts/CommAppContext';
 import { PunchPreview } from '../../../services/apiTypes';
 import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
 import ErrorPage from '../../../components/error/ErrorPage';
 import useCommonHooks from '../../../utils/useCommonHooks';
-import { CommParams } from '../../../App';
-import { useParams, useRouteMatch } from 'react-router-dom';
 
 const InfoRow = styled.div`
     &:first-child {
@@ -23,9 +21,7 @@ const ModuleAndTagWrapper = styled.div`
 `;
 
 const PunchList = () => {
-    const { api } = useContext(CommAppContext);
-    const { url } = useRouteMatch();
-    const { plant, commPkg } = useParams<CommParams>();
+    const { api, url, params } = useCommonHooks();
     const [punchList, setPunchList] = useState<PunchPreview[]>();
     const [fetchPunchListStatus, setFetchPunchListStatus] = useState(
         AsyncStatus.LOADING
@@ -35,7 +31,10 @@ const PunchList = () => {
         (async () => {
             setFetchPunchListStatus(AsyncStatus.LOADING);
             try {
-                const punchListFromApi = await api.getPunchList(plant, commPkg);
+                const punchListFromApi = await api.getPunchList(
+                    params.plant,
+                    params.commPkg
+                );
                 setPunchList(punchListFromApi);
                 setFetchPunchListStatus(AsyncStatus.SUCCESS);
             } catch {

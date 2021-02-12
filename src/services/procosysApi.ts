@@ -35,17 +35,17 @@ export type ProcosysApiService = {
     ) => Promise<CommPkg>;
     postClear: (
         plantId: string,
-        checklistId: number,
+        checklistId: string,
         checkItemId: number
     ) => Promise<void>;
     postSetOk: (
         plantId: string,
-        checklistId: number,
+        checklistId: string,
         checkItemId: number
     ) => Promise<void>;
     postSetNA: (
         plantId: string,
-        checklistId: number,
+        checklistId: string,
         checkItemId: number
     ) => Promise<void>;
     postNewPunch: (plantId: string, newPunchData: NewPunch) => Promise<void>;
@@ -56,17 +56,17 @@ export type ProcosysApiService = {
     ) => Promise<PunchPreview[]>;
     getPunchTypes: (plantId: string) => Promise<PunchType[]>;
     getPunchCategories: (plantId: string) => Promise<PunchCategory[]>;
-    postSign: (plantId: string, checklistId: number) => Promise<void>;
-    postUnsign: (plantId: string, checklistId: number) => Promise<void>;
+    postSign: (plantId: string, checklistId: string) => Promise<void>;
+    postUnsign: (plantId: string, checklistId: string) => Promise<void>;
     putChecklistComment: (
         plantId: string,
-        checklistId: number,
+        checklistId: string,
         Comment: string
     ) => Promise<void>;
     putMetaTableCell: (
         plantId: string,
         checkItemId: number,
-        checklistId: number,
+        checklistId: string,
         columnId: number,
         rowId: number,
         value: string
@@ -82,16 +82,16 @@ export type ProcosysApiService = {
         plantId: string,
         cancelToken?: CancelToken
     ) => Promise<CommPkgSearchResults>;
-    getPunchItem: (plantId: string, punchItemId: number) => Promise<PunchItem>;
+    getPunchItem: (plantId: string, punchItemId: string) => Promise<PunchItem>;
     putUpdatePunch: (
         plantId: string,
-        punchItemId: number,
+        punchItemId: string,
         updateData: UpdatePunchData,
         endpoint: UpdatePunchEndpoint
     ) => Promise<void>;
     postPunchAction: (
         plantId: string,
-        punchItemId: number,
+        punchItemId: string,
         punchAction: PunchAction
     ) => Promise<void>;
 };
@@ -194,7 +194,7 @@ const procosysApiService = ({
 
     const postSetOk = async (
         plantId: string,
-        checklistId: number,
+        checklistId: string,
         checkItemId: number
     ) => {
         try {
@@ -213,7 +213,7 @@ const procosysApiService = ({
 
     const postSetNA = async (
         plantId: string,
-        checklistId: number,
+        checklistId: string,
         checkItemId: number
     ) => {
         try {
@@ -232,7 +232,7 @@ const procosysApiService = ({
 
     const postClear = async (
         plantId: string,
-        checklistId: number,
+        checklistId: string,
         checkItemId: number
     ) => {
         try {
@@ -252,7 +252,7 @@ const procosysApiService = ({
     const putMetaTableCell = async (
         plantId: string,
         checkItemId: number,
-        checklistId: number,
+        checklistId: string,
         columnId: number,
         rowId: number,
         value: string
@@ -276,7 +276,7 @@ const procosysApiService = ({
 
     const putChecklistComment = async (
         plantId: string,
-        checklistId: number,
+        checklistId: string,
         Comment: string
     ) => {
         try {
@@ -290,7 +290,7 @@ const procosysApiService = ({
         }
     };
 
-    const postSign = async (plantId: string, checklistId: number) => {
+    const postSign = async (plantId: string, checklistId: string) => {
         await axios.post(
             `CheckList/Comm/Sign?plantId=PCS$${plantId}${apiVersion}`,
             checklistId,
@@ -299,7 +299,7 @@ const procosysApiService = ({
         return Promise.resolve();
     };
 
-    const postUnsign = async (plantId: string, checklistId: number) => {
+    const postUnsign = async (plantId: string, checklistId: string) => {
         await axios.post(
             `CheckList/Comm/Unsign?plantId=PCS$${plantId}${apiVersion}`,
             checklistId,
@@ -337,7 +337,7 @@ const procosysApiService = ({
         return Promise.resolve();
     };
 
-    const getPunchItem = async (plantId: string, punchItemId: number) => {
+    const getPunchItem = async (plantId: string, punchItemId: string) => {
         const { data } = await axios.get(
             `PunchListItem?plantId=PCS$${plantId}&punchItemId=${punchItemId}${apiVersion}`
         );
@@ -346,7 +346,7 @@ const procosysApiService = ({
 
     const putUpdatePunch = async (
         plantId: string,
-        punchItemId: number,
+        punchItemId: string,
         updateData: UpdatePunchData,
         endpoint: UpdatePunchEndpoint
     ) => {
@@ -360,7 +360,7 @@ const procosysApiService = ({
     /* Used for clearing, unclearing, rejecting and verifying a */
     const postPunchAction = async (
         plantId: string,
-        punchItemId: number,
+        punchItemId: string,
         punchAction: PunchAction
     ) => {
         await axios.post(

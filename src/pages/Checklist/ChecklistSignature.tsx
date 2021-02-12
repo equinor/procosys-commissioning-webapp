@@ -1,16 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChecklistDetails } from '../../services/apiTypes';
 import { Button, TextField, Typography } from '@equinor/eds-core-react';
 import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
-import { CommParams } from '../../App';
-import CommAppContext, { AsyncStatus } from '../../contexts/CommAppContext';
+import { AsyncStatus } from '../../contexts/CommAppContext';
 import {
     determineHelperIcon,
     determineHelperText,
     determineVariant,
 } from '../../utils/textFieldHelpers';
 import { Card, Snackbar } from '@equinor/eds-core-react';
+import useCommonHooks from '../../utils/useCommonHooks';
 
 const AllMustBeSignedWarning = styled(Card)`
     margin-bottom: 16px;
@@ -54,8 +53,7 @@ const ChecklistSignature = ({
     allItemsCheckedOrNA,
     reloadChecklist,
 }: ChecklistSignatureProps) => {
-    const { api } = useContext(CommAppContext);
-    const { plant, checklistId } = useParams<CommParams>();
+    const { api, params } = useCommonHooks();
     const [comment, setComment] = useState(details.comment);
     const [putCommentStatus, setPutCommentStatus] = useState(
         AsyncStatus.INACTIVE
@@ -68,8 +66,8 @@ const ChecklistSignature = ({
         setPutCommentStatus(AsyncStatus.LOADING);
         try {
             await api.putChecklistComment(
-                plant,
-                parseInt(checklistId),
+                params.plant,
+                params.checklistId,
                 comment
             );
             setPutCommentStatus(AsyncStatus.SUCCESS);
@@ -82,10 +80,10 @@ const ChecklistSignature = ({
         setSignStatus(AsyncStatus.LOADING);
         try {
             if (isSigned) {
-                await api.postUnsign(plant, parseInt(checklistId));
+                await api.postUnsign(params.plant, params.checklistId);
                 setIsSigned(false);
             } else {
-                await api.postSign(plant, parseInt(checklistId));
+                await api.postSign(params.plant, params.checklistId);
                 setIsSigned(true);
             }
             setSignStatus(AsyncStatus.SUCCESS);

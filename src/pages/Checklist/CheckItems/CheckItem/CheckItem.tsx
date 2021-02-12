@@ -1,19 +1,16 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { CheckItem as CheckItemType } from '../../../../services/apiTypes';
 import { Checkbox } from '@equinor/eds-core-react';
 import MetaTable from './MetaTable/MetaTable';
 import { CommParams } from '../../../../App';
-import { useParams } from 'react-router-dom';
-import CommAppContext, {
-    AsyncStatus,
-} from '../../../../contexts/CommAppContext';
+import { AsyncStatus } from '../../../../contexts/CommAppContext';
 import EdsIcon from '../../../../components/icons/EdsIcon';
+import useCommonHooks from '../../../../utils/useCommonHooks';
 
 const CheckItemWrapper = styled.div<{ disabled: boolean }>`
     background-color: ${(props) =>
         props.disabled ? 'transparent' : 'transparent'};
-    /* padding: 12px 0 12px 0; */
     margin-top: 12px;
     & p,
     button {
@@ -72,16 +69,14 @@ type CheckItemProps = {
 };
 
 const CheckItem = ({ item, isSigned, updateNA, updateOk }: CheckItemProps) => {
-    const { api } = useContext(CommAppContext);
-    const { checklistId } = useParams<CommParams>();
-    const { plant } = useParams<CommParams>();
+    const { api, params } = useCommonHooks();
     const [postOkStatus, setPostOkStatus] = useState(AsyncStatus.INACTIVE);
     const [postNAStatus, setPostNAStatus] = useState(AsyncStatus.INACTIVE);
     const [showDescription, setShowDescription] = useState(false);
 
     const clearCheckmarks = async () => {
         try {
-            await api.postClear(plant, parseInt(checklistId), item.id);
+            await api.postClear(params.plant, params.checklistId, item.id);
             updateOk(false, item.id);
             updateNA(false, item.id);
         } catch (error) {
@@ -93,7 +88,7 @@ const CheckItem = ({ item, isSigned, updateNA, updateOk }: CheckItemProps) => {
         if (item.isNotApplicable) return clearCheckmarks();
         setPostNAStatus(AsyncStatus.LOADING);
         try {
-            await api.postSetNA(plant, parseInt(checklistId), item.id);
+            await api.postSetNA(params.plant, params.checklistId, item.id);
             setPostNAStatus(AsyncStatus.SUCCESS);
             updateOk(false, item.id);
             updateNA(true, item.id);
@@ -106,7 +101,7 @@ const CheckItem = ({ item, isSigned, updateNA, updateOk }: CheckItemProps) => {
     const handleSetOk = async () => {
         if (item.isOk) return clearCheckmarks();
         try {
-            await api.postSetOk(plant, parseInt(checklistId), item.id);
+            await api.postSetOk(params.plant, params.checklistId, item.id);
             updateNA(false, item.id);
             updateOk(true, item.id);
         } catch (error) {
