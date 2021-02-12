@@ -65,7 +65,6 @@ const initialize = async () => {
             />
         );
     } catch (error) {
-        console.log('ERRORERROR', error);
         if (error === 'redirecting') {
             render(<LoadingPage loadingText={'Redirecting to login...'} />);
         } else {

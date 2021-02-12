@@ -75,20 +75,20 @@ const NewPunch = () => {
         (async () => {
             try {
                 const [
-                    categoriesFromAPI,
-                    typesFromAPI,
-                    organizationsFromAPI,
-                    checklistFromAPI,
+                    categoriesFromApi,
+                    typesFromApi,
+                    organizationsFromApi,
+                    checklistFromApi,
                 ] = await Promise.all([
                     api.getPunchCategories(plant),
                     api.getPunchTypes(plant),
                     api.getPunchOrganizations(plant),
                     api.getChecklist(plant, checklistId),
                 ]);
-                setCategories(categoriesFromAPI);
-                setTypes(typesFromAPI);
-                setOrganizations(organizationsFromAPI);
-                setChecklistDetails(checklistFromAPI.checkList);
+                setCategories(categoriesFromApi);
+                setTypes(typesFromApi);
+                setOrganizations(organizationsFromApi);
+                setChecklistDetails(checklistFromApi.checkList);
                 setFetchNewPunchStatus(AsyncStatus.SUCCESS);
             } catch (error) {
                 setFetchNewPunchStatus(AsyncStatus.ERROR);

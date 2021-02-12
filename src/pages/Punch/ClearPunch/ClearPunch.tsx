@@ -188,7 +188,7 @@ const ClearPunch = () => {
             />
         );
     }
-    console.log(removeSubdirectories(url, 2));
+
     return (
         <>
             <Navbar

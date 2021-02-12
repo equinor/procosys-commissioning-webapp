@@ -35,8 +35,8 @@ export const CommAppContextProvider: React.FC<{
         (async () => {
             setFetchPlantsStatus(AsyncStatus.LOADING);
             try {
-                const plantsFromAPI = await api.getPlants();
-                setAvailablePlants(plantsFromAPI);
+                const plantsFromApi = await api.getPlants();
+                setAvailablePlants(plantsFromApi);
                 setFetchPlantsStatus(AsyncStatus.SUCCESS);
             } catch (error) {
                 setFetchPlantsStatus(AsyncStatus.ERROR);

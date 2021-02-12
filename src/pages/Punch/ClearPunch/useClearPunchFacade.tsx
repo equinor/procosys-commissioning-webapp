@@ -156,20 +156,20 @@ const useClearPunchFacade = () => {
         (async () => {
             try {
                 const [
-                    categoriesFromAPI,
-                    typesFromAPI,
-                    organizationsFromAPI,
-                    punchItemFromAPI,
+                    categoriesFromApi,
+                    typesFromApi,
+                    organizationsFromApi,
+                    punchItemFromApi,
                 ] = await Promise.all([
                     api.getPunchCategories(plant),
                     api.getPunchTypes(plant),
                     api.getPunchOrganizations(plant),
                     api.getPunchItem(plant, parseInt(punchItemId)),
                 ]);
-                setCategories(categoriesFromAPI);
-                setTypes(typesFromAPI);
-                setOrganizations(organizationsFromAPI);
-                setPunchItem(punchItemFromAPI);
+                setCategories(categoriesFromApi);
+                setTypes(typesFromApi);
+                setOrganizations(organizationsFromApi);
+                setPunchItem(punchItemFromApi);
                 setFetchPunchItemStatus(AsyncStatus.SUCCESS);
             } catch (error) {
                 setFetchPunchItemStatus(AsyncStatus.ERROR);

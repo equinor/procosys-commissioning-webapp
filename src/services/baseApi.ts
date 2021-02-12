@@ -31,7 +31,6 @@ const baseApiService = ({ authInstance, baseURL, scope }: baseApiProps) => {
             request.headers['Authorization'] = `Bearer ${token}`;
             return request;
         } catch (error) {
-            console.log(error);
             throw new Error(error);
         }
     });
