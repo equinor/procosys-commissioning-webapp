@@ -14,11 +14,7 @@ const renderTasks = () => {
 describe('<Tasks />', () => {
     it('Renders a task preview button with task title and task number', async () => {
         renderTasks();
-        await waitFor(async () => {
-            await expect(
-                screen.getByText('dummy-task-title')
-            ).toBeInTheDocument();
-        });
+        expect(await screen.findByText('dummy-task-title')).toBeInTheDocument();
     });
     test.todo(
         'Renders placeholder text when an empty task list is returned from API'

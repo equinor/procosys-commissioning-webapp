@@ -18,10 +18,8 @@ describe('<PunchList />', () => {
     test.todo('Renders error page');
     it('Renders a punch preview button', async () => {
         renderPunchList();
-        await waitFor(async () => {
-            await expect(
-                screen.getByText('dummy-punch-item-description')
-            ).toBeInTheDocument();
-        });
+        expect(
+            await screen.findByText('dummy-punch-item-description')
+        ).toBeInTheDocument();
     });
 });
