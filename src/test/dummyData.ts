@@ -187,3 +187,60 @@ export const dummyChecklistResponse = {
         },
     ],
 };
+
+export const dummyScopeResponse = [
+    {
+        Id: 321,
+        TagNo: 'scope-dummy-tag-no',
+        TagDescription: 'scope-dummy-tag-description',
+        Status: 'PB',
+        FormularType: 'scope-dummy-formular-type',
+        FormularGroup: 'scope-dummy-formular-group',
+        IsRestrictedForUser: false,
+        HasElectronicForm: true,
+    },
+];
+
+export const dummyTasksResponse = [
+    {
+        Id: 43242,
+        Number: 'dummy-task-number',
+        Title: 'dummy-task-title',
+        Chapter: 'dummy-task-chapter',
+        IsSigned: true,
+    },
+];
+
+export const dummyPunchListResponse = [
+    {
+        Id: 645645,
+        Status: 'PB',
+        Description: 'dummy-punch-item-description',
+        SystemModule: 'dummy-punch-system-module',
+        TagDescription: 'dummy-punch-task-description',
+        TagId: 123,
+        TagNo: 'dummy-punch-tag-no',
+        IsRestrictedForUser: false,
+        Cleared: false,
+        Rejected: false,
+        StatusControlledBySwcr: false,
+    },
+];
+
+export const dummyCommPkgDetailsResponse = {
+    Id: 42323,
+    CommPkgNo: 'dummy-commPkg-no',
+    Description: 'dummy-commPkg-description',
+    CommStatus: 'PB',
+    McStatus: 'PB',
+    BluelineStatus: null,
+    YellowlineStatus: null,
+    McPkgCount: 15,
+    McPkgsAcceptedByCommissioning: 15,
+    McPkgsAcceptedByOperation: 15,
+    CommissioningHandoverStatus: 'ACCEPTED',
+    OperationHandoverStatus: 'ACCEPTED',
+    SystemId: 9780741,
+    System: '10|04',
+    IsVoided: false,
+};
