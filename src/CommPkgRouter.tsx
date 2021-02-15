@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import { CommPkgContextProvider } from './contexts/CommPkgContext';
 import Checklist from './pages/Checklist/Checklist';
 import CommPkg from './pages/CommPkg/CommPkg';
 import NewPunch from './pages/Punch/NewPunch/NewPunch';
@@ -10,31 +9,29 @@ import VerifyPunch from './pages/Punch/VerifyPunch/VerifyPunch';
 const CommPkgRouter = () => {
     const { path } = useRouteMatch();
     return (
-        <CommPkgContextProvider>
-            <Switch>
-                <Route
-                    exact
-                    path={`${path}/scope/:checklistId`}
-                    component={Checklist}
-                />
-                <Route
-                    exact
-                    path={`${path}/scope/:checklistId/new-punch`}
-                    component={NewPunch}
-                />
-                <Route
-                    exact
-                    path={`${path}/punch-list/:punchItemId/clear`}
-                    component={ClearPunch}
-                />
-                <Route
-                    exact
-                    path={`${path}/punch-list/:punchItemId/verify`}
-                    component={VerifyPunch}
-                />
-                <Route path={path} component={CommPkg} />
-            </Switch>
-        </CommPkgContextProvider>
+        <Switch>
+            <Route
+                exact
+                path={`${path}/scope/:checklistId`}
+                component={Checklist}
+            />
+            <Route
+                exact
+                path={`${path}/scope/:checklistId/new-punch`}
+                component={NewPunch}
+            />
+            <Route
+                exact
+                path={`${path}/punch-list/:punchItemId/clear`}
+                component={ClearPunch}
+            />
+            <Route
+                exact
+                path={`${path}/punch-list/:punchItemId/verify`}
+                component={VerifyPunch}
+            />
+            <Route path={path} component={CommPkg} />
+        </Switch>
     );
 };
 

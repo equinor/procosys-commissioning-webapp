@@ -1,16 +1,14 @@
 import { Button } from '@equinor/eds-core-react';
 import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react';
-import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { CommParams } from '../../../App';
 import ErrorPage from '../../../components/error/ErrorPage';
 import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
 import Navbar from '../../../components/navigation/Navbar';
-import CommAppContext, { AsyncStatus } from '../../../contexts/CommAppContext';
-import CommPkgContext from '../../../contexts/CommPkgContext';
+import { AsyncStatus } from '../../../contexts/CommAppContext';
 import { PunchItem } from '../../../services/apiTypes';
 import { removeSubdirectories } from '../../../utils/general';
+import useCommonHooks from '../../../utils/useCommonHooks';
 import PunchDetailsCard from '../ClearPunch/PunchDetailsCard';
 import { PunchAction } from '../ClearPunch/useClearPunchFacade';
 
@@ -32,8 +30,7 @@ const ButtonGroup = styled.div`
 `;
 
 const VerifyPunch = () => {
-    const { url } = useRouteMatch();
-    const history = useHistory();
+    const { url, history, params, api } = useCommonHooks();
     const [fetchPunchItemStatus, setFetchPunchItemStatus] = useState(
         AsyncStatus.LOADING
     );
@@ -41,16 +38,14 @@ const VerifyPunch = () => {
         AsyncStatus.INACTIVE
     );
     const [punchItem, setPunchItem] = useState<PunchItem>();
-    const { plant, punchItemId } = useParams<CommParams>();
-    const { api } = useContext(CommAppContext);
 
     useEffect(() => {
         const source = axios.CancelToken.source();
         (async () => {
             try {
                 const punchItemFromApi = await api.getPunchItem(
-                    plant,
-                    parseInt(punchItemId)
+                    params.plant,
+                    params.punchItemId
                 );
                 setPunchItem(punchItemFromApi);
                 setFetchPunchItemStatus(AsyncStatus.SUCCESS);
@@ -70,8 +65,8 @@ const VerifyPunch = () => {
         setPunchActionStatus(AsyncStatus.LOADING);
         try {
             await api.postPunchAction(
-                plant,
-                parseInt(punchItemId),
+                params.plant,
+                params.punchItemId,
                 punchAction
             );
             setPunchActionStatus(AsyncStatus.SUCCESS);

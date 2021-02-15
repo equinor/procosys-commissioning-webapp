@@ -1,19 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CommPkgListWrapper, PreviewButton } from '../Scope/Scope';
 import styled from 'styled-components';
 import EdsIcon from '../../../components/icons/EdsIcon';
 import { Typography } from '@equinor/eds-core-react';
 import CompletionStatusIcon from '../../../components/icons/CompletionStatusIcon';
-import { useParams, useRouteMatch } from 'react-router-dom';
-import CommAppContext, { AsyncStatus } from '../../../contexts/CommAppContext';
-import { CommParams } from '../../../App';
+import { AsyncStatus } from '../../../contexts/CommAppContext';
 import { PunchPreview } from '../../../services/apiTypes';
 import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
 import ErrorPage from '../../../components/error/ErrorPage';
-import CommPkgContext from '../../../contexts/CommPkgContext';
+import useCommonHooks from '../../../utils/useCommonHooks';
 
 const InfoRow = styled.div`
-    margin-top: 4px;
     &:first-child {
         margin-right: 20px;
     }
@@ -24,11 +21,8 @@ const ModuleAndTagWrapper = styled.div`
 `;
 
 const PunchList = () => {
+    const { api, url, params } = useCommonHooks();
     const [punchList, setPunchList] = useState<PunchPreview[]>();
-    const { api } = useContext(CommAppContext);
-    const { plant } = useParams<CommParams>();
-    const { details } = useContext(CommPkgContext);
-    const { url } = useRouteMatch();
     const [fetchPunchListStatus, setFetchPunchListStatus] = useState(
         AsyncStatus.LOADING
     );
@@ -37,17 +31,17 @@ const PunchList = () => {
         (async () => {
             setFetchPunchListStatus(AsyncStatus.LOADING);
             try {
-                const punchListFromAPI = await api.getPunchList(
-                    plant,
-                    details.id
+                const punchListFromApi = await api.getPunchList(
+                    params.plant,
+                    params.commPkg
                 );
-                setPunchList(punchListFromAPI);
+                setPunchList(punchListFromApi);
                 setFetchPunchListStatus(AsyncStatus.SUCCESS);
             } catch {
                 setFetchPunchListStatus(AsyncStatus.ERROR);
             }
         })();
-    }, [api, details, plant]);
+    }, []);
 
     const punchListToDisplay = punchList?.map((punch) => (
         <PreviewButton

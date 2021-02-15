@@ -5,7 +5,7 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import CompletionStatusIcon from '../../components/icons/CompletionStatusIcon';
 import { CompletionStatus } from '../../services/apiTypes';
 
-export const CommPkgFooterWrapper = styled.div`
+export const CommPkgFooterBase = styled.div`
     width: 100%;
     max-width: 768px;
     position: fixed;
@@ -20,12 +20,15 @@ export const CommPkgFooterWrapper = styled.div`
     );
     display: flex;
     height: 100px;
+`;
+
+const CommPkgFooterWrapper = styled(CommPkgFooterBase)`
     padding-bottom: 5px;
     justify-content: space-evenly;
     align-items: flex-end;
 `;
 
-export const FooterButton = styled.button<{ active: boolean }>`
+const FooterButton = styled.button<{ active: boolean }>`
     display: flex;
     flex-direction: column;
     align-items: center;

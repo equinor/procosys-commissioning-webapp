@@ -81,7 +81,6 @@ const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
     };
 
     const isLoggedIn = async () => {
-        console.log(scopes);
         const cachedAccount = MSAL.getAllAccounts()[0];
         if (cachedAccount == null) return false;
         // User is able to get accessToken, no login required

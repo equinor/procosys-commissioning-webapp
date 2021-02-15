@@ -1,10 +1,9 @@
 import { Button } from '@equinor/eds-core-react';
 import React from 'react';
-import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import EdsIcon from '../../../components/icons/EdsIcon';
 import { removeSubdirectories } from '../../../utils/general';
-import { CommParams } from '../../../App';
+import useCommonHooks from '../../../utils/useCommonHooks';
 
 const ButtonGroup = styled.div`
     display: flex;
@@ -23,9 +22,7 @@ const NewPunchSuccess = styled.div`
 `;
 
 const NewPunchSuccessPage = () => {
-    const history = useHistory();
-    const { plant, commPkg, project } = useParams<CommParams>();
-    const { url } = useRouteMatch();
+    const { history, params, url } = useCommonHooks();
     return (
         <NewPunchSuccess>
             <EdsIcon name="check" size={40} />
@@ -39,7 +36,7 @@ const NewPunchSuccessPage = () => {
                 <Button
                     onClick={() =>
                         history.push(
-                            `/${plant}/${project}/${commPkg}/punch-list`
+                            `/${params.plant}/${params.project}/${params.commPkg}/punch-list`
                         )
                     }
                 >
