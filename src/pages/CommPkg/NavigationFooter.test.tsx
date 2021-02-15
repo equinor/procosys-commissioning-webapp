@@ -27,6 +27,7 @@ describe('<NavigationFooter>', () => {
                     numberOfChecklists={5}
                     numberOfPunches={10}
                     numberOfTasks={15}
+                    status={CompletionStatus.PB}
                 />
             </Router>
         );

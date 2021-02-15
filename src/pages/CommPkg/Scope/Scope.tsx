@@ -88,7 +88,7 @@ const Scope = () => {
             );
         return <CommPkgListWrapper>{scopeToRender}</CommPkgListWrapper>;
     }
-    return <SkeletonLoadingPage text="Loading scope" />;
+    return <SkeletonLoadingPage text="" />;
 };
 
 export default Scope;

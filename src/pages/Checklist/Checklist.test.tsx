@@ -1,10 +1,10 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
-import { withCommPkgContext } from '../../test/contexts';
+import { withPlantContext } from '../../test/contexts';
 import Checklist from './Checklist';
 
 beforeEach(async () => {
-    render(withCommPkgContext({ Component: <Checklist /> }));
+    render(withPlantContext({ Component: <Checklist /> }));
     await waitFor(() => {
         expect(screen.getByText('Loading checklist')).toBeInTheDocument();
     });
