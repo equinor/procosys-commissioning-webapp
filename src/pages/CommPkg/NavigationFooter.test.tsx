@@ -2,6 +2,7 @@ import { render, within } from '@testing-library/react';
 import React from 'react';
 import NavigationFooter from './NavigationFooter';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { CompletionStatus } from '../../services/apiTypes';
 
 describe('<NavigationFooter>', () => {
     it('Renders navigation buttons for scope, task and punches', () => {
@@ -11,6 +12,7 @@ describe('<NavigationFooter>', () => {
                     numberOfChecklists={5}
                     numberOfPunches={10}
                     numberOfTasks={15}
+                    status={CompletionStatus.PA}
                 />
             </Router>
         );
@@ -25,6 +27,7 @@ describe('<NavigationFooter>', () => {
                     numberOfChecklists={5}
                     numberOfPunches={10}
                     numberOfTasks={15}
+                    status={CompletionStatus.PB}
                 />
             </Router>
         );

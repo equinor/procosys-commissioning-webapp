@@ -1,11 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TextField } from '@equinor/eds-core-react';
-import { CommParams } from '../../../../../App';
-import { useParams } from 'react-router-dom';
-import CommAppContext, {
-    AsyncStatus,
-} from '../../../../../contexts/CommAppContext';
+import { AsyncStatus } from '../../../../../contexts/CommAppContext';
 import styled from 'styled-components';
+import useCommonHooks from '../../../../../utils/useCommonHooks';
 
 const HelperText = styled.div`
     height: 12px;
@@ -43,8 +40,7 @@ const MetaTableCell = ({
     checkItemId,
     label,
 }: MetaTableCellProps) => {
-    const { api } = useContext(CommAppContext);
-    const { checklistId, plant } = useParams<CommParams>();
+    const { api, params } = useCommonHooks();
     const [inputValue, setInputValue] = useState(value);
     const [submitStatus, setSubmitStatus] = useState<AsyncStatus>(
         AsyncStatus.INACTIVE
@@ -56,9 +52,9 @@ const MetaTableCell = ({
         setSubmitStatus(AsyncStatus.LOADING);
         try {
             await api.putMetaTableCell(
-                plant,
+                params.plant,
                 checkItemId,
-                parseInt(checklistId),
+                params.checklistId,
                 columnId,
                 rowId,
                 inputValue

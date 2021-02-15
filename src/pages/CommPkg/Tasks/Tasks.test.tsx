@@ -1,27 +1,23 @@
-import { withCommPkgContext } from '../../../test/contexts';
+import { withPlantContext } from '../../../test/contexts';
 import React from 'react';
 import Tasks from './Tasks';
-import { render } from '@testing-library/react';
-import { testTasks } from '../../../test/dummyData';
+import { render, screen, waitFor } from '@testing-library/react';
+
+const renderTasks = () => {
+    render(
+        withPlantContext({
+            Component: <Tasks />,
+        })
+    );
+};
 
 describe('<Tasks />', () => {
-    it('Renders placeholder text when an empty task list is returned from API', () => {
-        const { getByText } = render(
-            withCommPkgContext({
-                Component: <Tasks />,
-                tasks: [],
-            })
-        );
-        expect(getByText('No tasks to display.')).toBeInTheDocument();
+    it('Renders a task preview button with task title and task number', async () => {
+        renderTasks();
+        expect(await screen.findByText('dummy-task-title')).toBeInTheDocument();
     });
-    it('Renders a task preview button with task title and task number', () => {
-        const { getByText } = render(
-            withCommPkgContext({
-                Component: <Tasks />,
-                tasks: testTasks,
-            })
-        );
-        expect(getByText('Test task title')).toBeInTheDocument();
-        expect(getByText('Test task number')).toBeInTheDocument();
-    });
+    test.todo(
+        'Renders placeholder text when an empty task list is returned from API'
+    );
+    test.todo('Renders error page');
 });

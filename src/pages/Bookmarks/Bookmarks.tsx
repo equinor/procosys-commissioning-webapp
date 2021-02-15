@@ -4,10 +4,10 @@ import DetailsCard from '../CommPkg/DetailsCard';
 import PageHeader from '../../components/PageHeader';
 import { getCurrentBookmarks } from './useBookmarks';
 import { Button } from '@equinor/eds-core-react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
 import PlantContext from '../../contexts/PlantContext';
 import Navbar from '../../components/navigation/Navbar';
 import EdsIcon from '../../components/icons/EdsIcon';
+import useCommonHooks from '../../utils/useCommonHooks';
 
 const BookmarksWrapper = styled.main`
     display: flex;
@@ -26,20 +26,16 @@ const NewBookmarkWrapper = styled.div`
 `;
 
 const Bookmarks = () => {
-    const { url } = useRouteMatch();
-    const history = useHistory();
+    const { url, history } = useCommonHooks();
     const { currentProject, currentPlant } = useContext(PlantContext);
     const bookmarks = getCurrentBookmarks(currentProject!.id.toString());
+    console.log(bookmarks);
     const bookmarksToDisplay = bookmarks.map((bookmark) => (
         <DetailsCard
-            key={bookmark.pkgNumber}
-            details={{
-                description: bookmark.description,
-                commStatus: bookmark.commStatus,
-                MCStatus: bookmark.MCStatus,
-                pkgNumber: bookmark.pkgNumber,
-            }}
+            key={bookmark}
+            commPkgId={bookmark}
             atBookmarksPage={true}
+            onClickAction={() => history.push(`${url}/${bookmark}`)}
         />
     ));
 
@@ -50,8 +46,10 @@ const Bookmarks = () => {
         </>
     );
 
-    if (bookmarks.length < 1)
+    if (bookmarks.length < 1) {
         content = <PageHeader title="No bookmarks to display" />;
+    }
+
     return (
         <main>
             <Navbar

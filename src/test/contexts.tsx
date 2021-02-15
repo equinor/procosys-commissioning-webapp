@@ -1,30 +1,15 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import CommPkgContext from '../contexts/CommPkgContext';
 import PlantContext from '../contexts/PlantContext';
 import CommAppContext, { AsyncStatus } from '../contexts/CommAppContext';
 import * as Msal from '@azure/msal-browser';
-import {
-    ChecklistPreview,
-    CommPkg,
-    Plant,
-    Project,
-    PunchPreview,
-    TaskPreview,
-} from '../services/apiTypes';
+import { Plant, Project } from '../services/apiTypes';
 import baseApiService from '../services/baseApi';
 import procosysApiService, {
     ProcosysApiService,
 } from '../services/procosysApi';
 import authService from '../services/__mocks__/authService';
-import {
-    testProjects,
-    testPlants,
-    testDetails,
-    testScope,
-    testTasks,
-    testPunchList,
-} from './dummyData';
+import { testProjects, testPlants } from './dummyData';
 import { IAuthService } from '../services/authService';
 
 const client = new Msal.PublicClientApplication({
@@ -103,37 +88,6 @@ export const withPlantContext = ({
             >
                 {Component}
             </PlantContext.Provider>
-        ),
-    });
-};
-
-type CommPkgContextProps = {
-    Component: JSX.Element;
-    details?: CommPkg;
-    scope?: ChecklistPreview[];
-    tasks?: TaskPreview[];
-    punchList?: PunchPreview[];
-};
-
-export const withCommPkgContext = ({
-    Component,
-    details = testDetails,
-    scope = testScope,
-    tasks = testTasks,
-    punchList = testPunchList,
-}: CommPkgContextProps) => {
-    return withPlantContext({
-        Component: (
-            <CommPkgContext.Provider
-                value={{
-                    details,
-                    scope,
-                    tasks,
-                    punchList,
-                }}
-            >
-                {Component}
-            </CommPkgContext.Provider>
         ),
     });
 };

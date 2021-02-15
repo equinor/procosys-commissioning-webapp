@@ -1,10 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { CommParams } from '../../App';
+import React, { useEffect, useState } from 'react';
 import ErrorPage from '../../components/error/ErrorPage';
 import SkeletonLoadingPage from '../../components/loading/SkeletonLoader';
 import Navbar from '../../components/navigation/Navbar';
-import CommAppContext, { AsyncStatus } from '../../contexts/CommAppContext';
+import { AsyncStatus } from '../../contexts/CommAppContext';
 import { CheckItem, ChecklistDetails } from '../../services/apiTypes';
 import CheckItems from './CheckItems/CheckItems';
 import ChecklistSignature from './ChecklistSignature';
@@ -12,6 +10,7 @@ import ChecklistDetailsCard from './ChecklistDetailsCard';
 import styled from 'styled-components';
 import EdsIcon from '../../components/icons/EdsIcon';
 import axios from 'axios';
+import useCommonHooks from '../../utils/useCommonHooks';
 
 const ChecklistWrapper = styled.main`
     padding: 0 4%;
@@ -33,7 +32,7 @@ const IsSignedBanner = styled.div`
 `;
 
 const Checklist = () => {
-    const { api } = useContext(CommAppContext);
+    const { params, api } = useCommonHooks();
     const [checklistStatus, setChecklistStatus] = useState(AsyncStatus.SUCCESS);
     const [checkItems, setCheckItems] = useState<CheckItem[]>([]);
     const [checklistDetails, setChecklistDetails] = useState<
@@ -41,7 +40,6 @@ const Checklist = () => {
     >();
     const [isSigned, setIsSigned] = useState(false);
     const [allItemsCheckedOrNA, setAllItemsCheckedOrNA] = useState(true);
-    const { checklistId, plant } = useParams<CommParams>();
     const [reloadChecklist, setReloadChecklist] = useState(false);
 
     useEffect(() => {
@@ -49,8 +47,8 @@ const Checklist = () => {
         (async () => {
             try {
                 const checklistResponse = await api.getChecklist(
-                    plant,
-                    checklistId
+                    params.plant,
+                    params.checklistId
                 );
                 setIsSigned(!!checklistResponse.checkList.signedByFirstName);
                 setCheckItems(checklistResponse.checkItems);
@@ -63,7 +61,7 @@ const Checklist = () => {
         return () => {
             source.cancel('Checklist component unmounted');
         };
-    }, [checklistId, plant, reloadChecklist, api]);
+    }, [params.checklistId, params.plant, reloadChecklist, api]);
 
     let content = <SkeletonLoadingPage text="Loading checklist" />;
 
