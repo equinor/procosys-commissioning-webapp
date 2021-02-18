@@ -31,9 +31,18 @@ const baseApiService = ({ authInstance, baseURL, scope }: baseApiProps) => {
             request.headers['Authorization'] = `Bearer ${token}`;
             return request;
         } catch (error) {
-            throw new Error(error);
+            throw new Error(error.message);
         }
     });
+    axiosInstance.interceptors.response.use(
+        (response) => {
+            return response;
+        },
+        (error) => {
+            console.dir(error);
+            throw new Error(error.response.data);
+        }
+    );
     return axiosInstance;
 };
 
