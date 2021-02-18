@@ -5,6 +5,8 @@ import {
     arrow_drop_down,
     error_outlined,
     close,
+    border_color,
+    tune,
     bookmark_outlined,
     bookmark_filled,
     check_circle,
@@ -28,12 +30,14 @@ import {
     error_filled,
     hourglass_empty,
     check,
+    assignment_turned_in,
 } from '@equinor/eds-icons';
 import { Icon } from '@equinor/eds-core-react';
 import React from 'react';
 
 Icon.add({
     menu,
+    tune,
     chevron_right,
     chevron_down,
     arrow_drop_down,
@@ -43,6 +47,8 @@ Icon.add({
     bookmark_filled,
     check_circle,
     list,
+    assignment_turned_in,
+    border_color,
     paste,
     view_list,
     remove,

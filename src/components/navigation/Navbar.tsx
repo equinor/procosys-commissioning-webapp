@@ -6,18 +6,21 @@ import EdsIcon from '../icons/EdsIcon';
 import { useSpring } from 'react-spring';
 import SideMenu from './SideMenu';
 import { removeSubdirectories } from '../../utils/general';
+import { BREAKPOINT } from '../../style/GlobalStyles';
 
 const NavbarWrapper = styled.nav<{ noBorder: boolean }>`
     height: 54px;
     width: 100%;
+    max-width: 768px;
     background-color: #fff;
     border-bottom: ${(props) =>
         props.noBorder ? 'none' : '1px solid #deecee'};
     display: flex;
+    flex-grow: 100;
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
-    padding: 4px 4% 4px 4%;
+    padding: 4px 28px;
     position: fixed;
     top: 0;
     left: 50%;
@@ -33,6 +36,9 @@ const NavbarWrapper = styled.nav<{ noBorder: boolean }>`
     }
     & button {
         padding: 0;
+    }
+    ${BREAKPOINT.standard} {
+        padding: 4px 4%;
     }
 `;
 

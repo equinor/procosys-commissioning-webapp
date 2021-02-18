@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { CommPkg } from '../../services/apiTypes';
 import EdsIcon from '../../components/icons/EdsIcon';
-import { Button, DotProgress } from '@equinor/eds-core-react';
+import { Button, Card, DotProgress } from '@equinor/eds-core-react';
 import useBookmarks from '../Bookmarks/useBookmarks';
 import { SHADOW } from '../../style/GlobalStyles';
 import { PackageStatusIcon } from '../../components/icons/PackageStatusIcon';
@@ -17,15 +17,16 @@ const DetailsWrapper = styled.div<{ atBookmarksPage?: Boolean }>`
     grid-column-gap: 8px;
     grid-row-gap: 8px;
     padding: 16px 4%;
-    box-shadow: ${SHADOW};
-    background-color: #f7f7f7;
-    border-radius: 15px;
-    margin: ${(props) => (props.atBookmarksPage ? '0 4% 10px 4%' : '10px')};
+    background-color: ${(props) =>
+        props.atBookmarksPage ? 'white' : '#deecee'};
+    box-shadow: ${(props) => (props.atBookmarksPage ? SHADOW : 'none')};
+    border-radius: 5px;
+    margin: ${(props) => (props.atBookmarksPage ? '0 4% 10px 4%' : '0')};
 `;
 
 const Description = styled.div`
     grid-area: 1 / 1 / 2 / 5;
-    & p {
+    & h4 {
         margin: 0;
     }
 `;
@@ -103,7 +104,7 @@ const DetailsCard = ({
                 onClick={onClickAction}
             >
                 <Description>
-                    <p>{details.description}</p>
+                    <h4>{details.description}</h4>
                 </Description>
                 <StatusIconWrapper>
                     <PackageStatusIcon

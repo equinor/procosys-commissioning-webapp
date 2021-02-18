@@ -142,7 +142,7 @@ const NavigationFooter = ({
                     <CompletionStatusIcon status={status} />
                 )}
                 <ButtonText>
-                    <p>Punches</p>
+                    <p>Punch list</p>
                 </ButtonText>
             </FooterButton>
         </CommPkgFooterWrapper>

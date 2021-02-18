@@ -19,7 +19,7 @@ export const CommPkgListWrapper = styled.div`
 export const PreviewButton = styled(Link)`
     display: flex;
     align-items: center;
-    padding: 10px 2%;
+    padding: 8px 0;
     margin: 10px 4% 0 4%;
     text-decoration: none;
     justify-content: space-between;
