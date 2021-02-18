@@ -2,11 +2,15 @@ import styled, { CSSObject } from 'styled-components';
 import { tokens } from '@equinor/eds-tokens';
 import { createGlobalStyle } from 'styled-components';
 
+export const SHADOW =
+    '0 0.3px 0.9px rgba(33, 41, 43, 0.04), 0 0.9px 3.1px rgba(33, 41, 43, 0.07), 0 4px 14px rgba(33, 41, 43, 0.1)';
+
 const GlobalStyles = createGlobalStyle`
     body { 
         margin: 0 auto;
         padding-top: 54px;
         max-width: 768px;
+        box-shadow: ${SHADOW};
     }
     h1 {
         ${tokens.typography.heading.h1 as CSSObject}
@@ -50,13 +54,11 @@ export const ParagraphOverline = styled(ParagraphOverlineImport)`
 export const BREAKPOINT = {
     xs: `@media (max-width: 0px)`,
     sm: `@media (max-width: 600px)`,
+    standard: `@media (max-width: 768px)`,
     md: `@media (max-width: 960px)`,
     lg: `@media (max-width: 1280px)`,
     xl: `@media (max-width: 1920px)`,
 };
-
-export const SHADOW =
-    '0 0.3px 0.9px rgba(33, 41, 43, 0.04), 0 0.9px 3.1px rgba(33, 41, 43, 0.07), 0 4px 14px rgba(33, 41, 43, 0.1)';
 
 export const COLORS = tokens.colors;
 

@@ -71,6 +71,7 @@ const ChecklistSignature = ({
                 comment
             );
             setPutCommentStatus(AsyncStatus.SUCCESS);
+            reloadChecklist((prev) => !prev);
         } catch (error) {
             setPutCommentStatus(AsyncStatus.ERROR);
         }
@@ -97,6 +98,12 @@ const ChecklistSignature = ({
             setShowSnackbar(true);
             setSnackbarText(error);
         }
+    };
+
+    const updatedByText = () => {
+        return `Updated by ${details.updatedByFirstName} ${
+            details.updatedByLastName
+        } at ${new Date(details.updatedAt).toLocaleDateString('en-GB')}`;
     };
 
     useEffect(() => {
@@ -126,7 +133,12 @@ const ChecklistSignature = ({
                 rows={5}
                 label="Comment"
                 helperIcon={determineHelperIcon(putCommentStatus)}
-                helperText={determineHelperText(putCommentStatus)}
+                helperText={
+                    putCommentStatus === AsyncStatus.INACTIVE &&
+                    details.updatedAt
+                        ? updatedByText()
+                        : determineHelperText(putCommentStatus)
+                }
                 value={comment}
                 onChange={(
                     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -150,11 +162,7 @@ const ChecklistSignature = ({
                 </p>
             ) : null}
 
-            <p>
-                Updated by {details.updatedByFirstName}{' '}
-                {details.updatedByLastName} at{' '}
-                {new Date(details.updatedAt).toLocaleDateString('en-GB')}
-            </p>
+            <p></p>
             <Snackbar
                 onClose={() => {
                     setShowSnackbar(false);
