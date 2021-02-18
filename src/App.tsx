@@ -10,10 +10,9 @@ export type CommParams = {
     plant: string;
     project: string;
     commPkg: string;
+    taskId: string;
     checklistId: string;
     punchItemId: string;
-    task: string;
-    punch: string;
 };
 
 type AppProps = {
