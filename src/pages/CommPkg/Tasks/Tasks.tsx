@@ -16,7 +16,7 @@ const TaskPreviewButton = styled(PreviewButton)`
 `;
 
 const Tasks = () => {
-    const { params, api } = useCommonHooks();
+    const { params, api, url } = useCommonHooks();
     const [tasks, setTasks] = useState<TaskPreview[]>();
     const [fetchTasksStatus, setFetchTasksStatus] = useState(
         AsyncStatus.LOADING
@@ -39,8 +39,8 @@ const Tasks = () => {
     }, []);
 
     if (fetchTasksStatus === AsyncStatus.SUCCESS && tasks) {
-        const tasksToDisplay = tasks?.map((task) => (
-            <TaskPreviewButton to={``} key={task.id}>
+        const tasksToDisplay = tasks.map((task) => (
+            <TaskPreviewButton to={`${url}/${task.id}`} key={task.id}>
                 {task.isSigned ? (
                     <CompletionStatusIcon status={CompletionStatus.OK} />
                 ) : (

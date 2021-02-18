@@ -8,6 +8,7 @@ import PlantContext from '../../contexts/PlantContext';
 import Navbar from '../../components/navigation/Navbar';
 import EdsIcon from '../../components/icons/EdsIcon';
 import useCommonHooks from '../../utils/useCommonHooks';
+import withAccessControl from '../../services/withAccessControl';
 
 const BookmarksWrapper = styled.main`
     display: flex;
@@ -29,7 +30,6 @@ const Bookmarks = () => {
     const { url, history } = useCommonHooks();
     const { currentProject, currentPlant } = useContext(PlantContext);
     const bookmarks = getCurrentBookmarks(currentProject!.id.toString());
-    console.log(bookmarks);
     const bookmarksToDisplay = bookmarks.map((bookmark) => (
         <DetailsCard
             key={bookmark}
@@ -69,4 +69,4 @@ const Bookmarks = () => {
     );
 };
 
-export default Bookmarks;
+export default withAccessControl(Bookmarks, ['COMMPKG/READ']);

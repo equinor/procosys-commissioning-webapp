@@ -3,7 +3,7 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { SHADOW } from '../../style/GlobalStyles';
 
-const SkeletonLoadingPageWrapper = styled.main`
+const SkeletonLoadingPageWrapper = styled.div`
     padding-top: 24px;
     & h3 {
         margin: 0;

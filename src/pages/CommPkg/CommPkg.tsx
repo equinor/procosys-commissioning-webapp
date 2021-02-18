@@ -17,6 +17,7 @@ import {
 } from '../../services/apiTypes';
 import { DotProgress } from '@equinor/eds-core-react';
 import NavigationFooterShell from './NavigationFooterShell';
+import withAccessControl from '../../services/withAccessControl';
 
 const CommPkgWrapper = styled.main``;
 
@@ -103,4 +104,10 @@ const CommPkg = () => {
     );
 };
 
-export default CommPkg;
+export default withAccessControl(CommPkg, [
+    'COMMPKG/READ',
+    'CPCL/READ',
+    'RUNNING_LOGS/READ',
+    'DOCUMENT/READ',
+    'PUNCHLISTITEM/READ',
+]);
