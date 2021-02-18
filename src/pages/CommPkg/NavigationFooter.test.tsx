@@ -18,7 +18,7 @@ describe('<NavigationFooter>', () => {
         );
         expect(getByText('Scope')).toBeInTheDocument();
         expect(getByText('Tasks')).toBeInTheDocument();
-        expect(getByText('Punches')).toBeInTheDocument();
+        expect(getByText('Punch list')).toBeInTheDocument();
     });
     it('Renders the correct number of list items on the buttons', () => {
         const { getByTestId } = render(
