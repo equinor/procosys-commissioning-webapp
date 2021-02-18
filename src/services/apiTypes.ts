@@ -224,3 +224,38 @@ export interface PunchItem {
     isRestrictedForUser: boolean;
     attachmentCount: number;
 }
+
+export interface Task {
+    id: number;
+    number: string;
+    title: string;
+    descriptionAsHtml: string;
+    commentAsHtml: string;
+    updatedByUser: string;
+    updatedAt: Date;
+    updatedByFirstName: string;
+    updatedByLastName: string;
+    signedByUser: string;
+    signedByFirstName: string;
+    signedByLastName: string;
+    signedAt: Date;
+}
+
+export interface TaskParameter {
+    id: number;
+    description: string;
+    measuredValue: string;
+    referenceValue: string;
+    referenceUnit: string;
+}
+
+export interface Attachment {
+    id: number;
+    uri: string;
+    title: string;
+    createdAt: Date;
+    classification: string;
+    mimeType: string;
+    thumbnailAsBase64: string;
+    hasFile: boolean;
+}

@@ -51,7 +51,7 @@ const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
     };
 
     const login = async () => {
-        if (!getCurrentUser()) MSAL.loginRedirect({ scopes: scopes });
+        MSAL.loginRedirect({ scopes: scopes });
     };
 
     const getCurrentUser = (): Msal.AccountInfo | null => {
@@ -84,12 +84,20 @@ const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
         const cachedAccount = MSAL.getAllAccounts()[0];
         if (cachedAccount == null) return false;
         // User is able to get accessToken, no login required
-        const accessToken = await MSAL.acquireTokenSilent({
-            account: cachedAccount,
-            scopes: ['User.read'],
-        });
-        if (accessToken) return true;
-        return false;
+        console.log('attempting to get accesstoken');
+        try {
+            const accessToken = await MSAL.acquireTokenSilent({
+                account: cachedAccount,
+                scopes: ['User.read'],
+            });
+            if (accessToken) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch {
+            return false;
+        }
     };
 
     const handleLogin = async () => {
