@@ -4,14 +4,14 @@ import Navbar from '../../components/navigation/Navbar';
 import { removeSubdirectories } from '../../utils/general';
 import useCommonHooks from '../../utils/useCommonHooks';
 import TaskDescription from './TaskDescription';
-import TaskParameters from './TaskParameters';
+import TaskParameters from './TaskParameters/TaskParameters';
 import TaskSignature from './TaskSignature';
 import { Task as TaskType } from '../../services/apiTypes';
 import { AsyncStatus } from '../../contexts/CommAppContext';
+import { Snackbar } from '@equinor/eds-core-react';
 
 const TaskWrapper = styled.main`
     padding: 16px 4%;
-    background-color: #ebebeb;
 `;
 
 const Task = () => {
@@ -19,6 +19,14 @@ const Task = () => {
     const [task, setTask] = useState<TaskType>();
     const [fetchTaskStatus, setFetchTaskStatus] = useState(AsyncStatus.LOADING);
     const [isSigned, setIsSigned] = useState(true);
+    const [showSnackbar, setShowSnackbar] = useState(false);
+    const [snackbarText, setSnackbarText] = useState('');
+    const [refreshTask, setRefreshTask] = useState(false);
+
+    useEffect(() => {
+        if (snackbarText.length < 1) return;
+        setShowSnackbar(true);
+    }, [snackbarText]);
 
     useEffect(() => {
         (async () => {
@@ -34,11 +42,22 @@ const Task = () => {
                 setFetchTaskStatus(AsyncStatus.ERROR);
             }
         })();
-    }, [api, params.plant, params.taskId]);
+    }, [api, params.plant, params.taskId, refreshTask]);
 
     return (
         <>
+            <Snackbar
+                autoHideDuration={3000}
+                onClose={() => {
+                    setShowSnackbar(false);
+                    setSnackbarText('');
+                }}
+                open={showSnackbar}
+            >
+                {snackbarText}
+            </Snackbar>
             <Navbar
+                noBorder
                 leftContent={{
                     name: 'back',
                     label: 'Tasks',
@@ -51,12 +70,16 @@ const Task = () => {
                     task={task}
                     fetchTaskStatus={fetchTaskStatus}
                     isSigned={isSigned}
+                    setSnackbarText={setSnackbarText}
                 />
+                <TaskParameters setSnackbarText={setSnackbarText} />
                 <TaskSignature
                     fetchTaskStatus={fetchTaskStatus}
                     isSigned={isSigned}
                     task={task}
                     setIsSigned={setIsSigned}
+                    setSnackbarText={setSnackbarText}
+                    refreshTask={setRefreshTask}
                 />
             </TaskWrapper>
         </>

@@ -5,7 +5,7 @@ import {
     UpdatePunchEndpoint,
 } from '../pages/Punch/ClearPunch/useClearPunchFacade';
 import { TaskCommentDto } from '../pages/Task/TaskDescription';
-import { TaskParameterDto } from '../pages/Task/TaskParameters';
+import { TaskParameterDto } from '../pages/Task/TaskParameters/TaskParameters';
 import objectToCamelCase from '../utils/objectToCamelCase';
 import {
     Plant,
@@ -312,9 +312,9 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
 
     const getTaskParameters = async (plantId: string, taskId: string) => {
         const { data } = await axios.get(
-            `CommPkg/Task/Parameters?plantId=$${plantId}?taskId=${taskId}${apiVersion}`
+            `CommPkg/Task/Parameters?plantId=PCS$${plantId}&taskId=${taskId}${apiVersion}`
         );
-        return objectToCamelCase(data) as TaskParameter;
+        return objectToCamelCase(data) as TaskParameter[];
     };
 
     const putTaskParameter = async (plantId: string, dto: TaskParameterDto) => {

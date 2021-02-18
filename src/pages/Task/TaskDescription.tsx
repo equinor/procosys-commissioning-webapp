@@ -5,15 +5,22 @@ import EdsIcon from '../../components/icons/EdsIcon';
 import SkeletonLoadingPage from '../../components/loading/SkeletonLoader';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import { Task } from '../../services/apiTypes';
+import { SHADOW } from '../../style/GlobalStyles';
+import useCommonHooks from '../../utils/useCommonHooks';
 const { CardHeader, CardHeaderTitle } = Card;
 
 export const TaskCardWrapper = styled.div`
     & h3,
-    p,
     h5 {
         margin: 0;
     }
+    & p {
+        margin-bottom: 8px;
+        margin-top: 0;
+    }
     margin-bottom: 16px;
+    box-shadow: ${SHADOW};
+    border-radius: 10px;
 `;
 
 export type TaskCommentDto = {
@@ -25,20 +32,42 @@ type TaskDescriptionProps = {
     task: Task | undefined;
     isSigned: boolean;
     fetchTaskStatus: AsyncStatus;
+    setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const TaskDescription = ({
     task,
     isSigned,
     fetchTaskStatus,
+    setSnackbarText,
 }: TaskDescriptionProps) => {
+    const { api, params } = useCommonHooks();
     const [comment, setComment] = useState('');
+    const [putCommentStatus, setPutCommentStatus] = useState(
+        AsyncStatus.INACTIVE
+    );
     let commentBeforeFocus = '';
 
     useEffect(() => {
         if (!task) return;
         setComment(task.commentAsHtml);
     }, [task]);
+
+    const handlePutComment = async () => {
+        setPutCommentStatus(AsyncStatus.LOADING);
+        const dto: TaskCommentDto = {
+            TaskId: parseInt(params.taskId),
+            CommentAsHtml: comment,
+        };
+        try {
+            await api.putTaskComment(params.plant, dto);
+            setPutCommentStatus(AsyncStatus.SUCCESS);
+            setSnackbarText('Comment successfully saved.');
+        } catch {
+            setPutCommentStatus(AsyncStatus.ERROR);
+            setSnackbarText('Unable to save comment.');
+        }
+    };
 
     const content = () => {
         if (fetchTaskStatus === AsyncStatus.SUCCESS && task) {
@@ -53,6 +82,10 @@ const TaskDescription = ({
 
                     <TextField
                         id="TaskComment"
+                        label="Comment"
+                        disabled={
+                            putCommentStatus === AsyncStatus.LOADING || isSigned
+                        }
                         multiline
                         rows={4}
                         onFocus={() => (commentBeforeFocus = comment)}
@@ -67,6 +100,10 @@ const TaskDescription = ({
                                 HTMLInputElement | HTMLTextAreaElement
                             >
                         ) => setComment(e.target.value)}
+                        onBlur={() => {
+                            comment !== commentBeforeFocus &&
+                                handlePutComment();
+                        }}
                     />
                 </>
             );
