@@ -4,6 +4,8 @@ import {
     UpdatePunchData,
     UpdatePunchEndpoint,
 } from '../pages/Punch/ClearPunch/useClearPunchFacade';
+import { TaskCommentDto } from '../pages/Task/TaskDescription';
+import { TaskParameterDto } from '../pages/Task/TaskParameters';
 import objectToCamelCase from '../utils/objectToCamelCase';
 import {
     Plant,
@@ -19,92 +21,16 @@ import {
     PunchOrganization,
     NewPunch,
     PunchItem,
+    Task,
+    TaskParameter,
 } from './apiTypes';
-
-export type ProcosysApiService = {
-    getPlants: () => Promise<Plant[]>;
-    getProjectsForPlant: (plantId: string) => Promise<Project[]>;
-    getPermissionsForPlant: (plantId: string) => Promise<string[]>;
-    getChecklist: (
-        plantId: string,
-        checklistId: string
-    ) => Promise<ChecklistResponse>;
-    getCommPackageDetails: (
-        plantId: string,
-        commPkgId: string
-    ) => Promise<CommPkg>;
-    postClear: (
-        plantId: string,
-        checklistId: string,
-        checkItemId: number
-    ) => Promise<void>;
-    postSetOk: (
-        plantId: string,
-        checklistId: string,
-        checkItemId: number
-    ) => Promise<void>;
-    postSetNA: (
-        plantId: string,
-        checklistId: string,
-        checkItemId: number
-    ) => Promise<void>;
-    postNewPunch: (plantId: string, newPunchData: NewPunch) => Promise<void>;
-    getPunchOrganizations: (plantId: string) => Promise<PunchOrganization[]>;
-    getPunchList: (
-        plantId: string,
-        commPkgId: string
-    ) => Promise<PunchPreview[]>;
-    getPunchTypes: (plantId: string) => Promise<PunchType[]>;
-    getPunchCategories: (plantId: string) => Promise<PunchCategory[]>;
-    postSign: (plantId: string, checklistId: string) => Promise<void>;
-    postUnsign: (plantId: string, checklistId: string) => Promise<void>;
-    putChecklistComment: (
-        plantId: string,
-        checklistId: string,
-        Comment: string
-    ) => Promise<void>;
-    putMetaTableCell: (
-        plantId: string,
-        checkItemId: number,
-        checklistId: string,
-        columnId: number,
-        rowId: number,
-        value: string
-    ) => Promise<void>;
-    getTasks: (plantId: string, commPkgId: string) => Promise<TaskPreview[]>;
-    getScope: (
-        plantId: string,
-        commPkgId: string
-    ) => Promise<ChecklistPreview[]>;
-    searchForCommPackage: (
-        query: string,
-        projectId: number,
-        plantId: string,
-        cancelToken?: CancelToken
-    ) => Promise<CommPkgSearchResults>;
-    getPunchItem: (plantId: string, punchItemId: string) => Promise<PunchItem>;
-    putUpdatePunch: (
-        plantId: string,
-        punchItemId: string,
-        updateData: UpdatePunchData,
-        endpoint: UpdatePunchEndpoint
-    ) => Promise<void>;
-    postPunchAction: (
-        plantId: string,
-        punchItemId: string,
-        punchAction: PunchAction
-    ) => Promise<void>;
-};
 
 type ProcosysApiServiceProps = {
     axios: AxiosInstance;
     apiVersion: string;
 };
 
-const procosysApiService = ({
-    axios,
-    apiVersion,
-}: ProcosysApiServiceProps): ProcosysApiService => {
+const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     const getPlants = async () => {
         const { data } = await axios.get(
             `Plants?includePlantsWithoutAccess=false${apiVersion}`
@@ -197,18 +123,14 @@ const procosysApiService = ({
         checklistId: string,
         checkItemId: number
     ) => {
-        try {
-            await axios.post(
-                `CheckList/Item/SetOk?plantId=PCS$${plantId}${apiVersion}`,
-                {
-                    CheckListId: checklistId,
-                    CheckItemId: checkItemId,
-                }
-            );
-            return Promise.resolve();
-        } catch (error) {
-            return Promise.reject(error);
-        }
+        await axios.post(
+            `CheckList/Item/SetOk?plantId=PCS$${plantId}${apiVersion}`,
+            {
+                CheckListId: checklistId,
+                CheckItemId: checkItemId,
+            }
+        );
+        return Promise.resolve();
     };
 
     const postSetNA = async (
@@ -216,18 +138,14 @@ const procosysApiService = ({
         checklistId: string,
         checkItemId: number
     ) => {
-        try {
-            await axios.post(
-                `CheckList/Item/SetNA?plantId=PCS$${plantId}${apiVersion}`,
-                {
-                    CheckListId: checklistId,
-                    CheckItemId: checkItemId,
-                }
-            );
-            return Promise.resolve();
-        } catch (error) {
-            return Promise.reject(error);
-        }
+        await axios.post(
+            `CheckList/Item/SetNA?plantId=PCS$${plantId}${apiVersion}`,
+            {
+                CheckListId: checklistId,
+                CheckItemId: checkItemId,
+            }
+        );
+        return Promise.resolve();
     };
 
     const postClear = async (
@@ -235,18 +153,14 @@ const procosysApiService = ({
         checklistId: string,
         checkItemId: number
     ) => {
-        try {
-            await axios.post(
-                `CheckList/Item/Clear?plantId=PCS$${plantId}${apiVersion}`,
-                {
-                    CheckListId: checklistId,
-                    CheckItemId: checkItemId,
-                }
-            );
-            return Promise.resolve();
-        } catch (error) {
-            return Promise.reject(error);
-        }
+        await axios.post(
+            `CheckList/Item/Clear?plantId=PCS$${plantId}${apiVersion}`,
+            {
+                CheckListId: checklistId,
+                CheckItemId: checkItemId,
+            }
+        );
+        return Promise.resolve();
     };
 
     const putMetaTableCell = async (
@@ -257,21 +171,17 @@ const procosysApiService = ({
         rowId: number,
         value: string
     ) => {
-        try {
-            await axios.put(
-                `CheckList/Item/MetaTableCell?plantId=PCS$${plantId}${apiVersion}`,
-                {
-                    CheckListId: checklistId,
-                    CheckItemId: checkItemId,
-                    ColumnId: columnId,
-                    RowId: rowId,
-                    Value: value,
-                }
-            );
-            return Promise.resolve();
-        } catch (error) {
-            return Promise.reject(error.message);
-        }
+        await axios.put(
+            `CheckList/Item/MetaTableCell?plantId=PCS$${plantId}${apiVersion}`,
+            {
+                CheckListId: checklistId,
+                CheckItemId: checkItemId,
+                ColumnId: columnId,
+                RowId: rowId,
+                Value: value,
+            }
+        );
+        return Promise.resolve();
     };
 
     const putChecklistComment = async (
@@ -279,15 +189,11 @@ const procosysApiService = ({
         checklistId: string,
         Comment: string
     ) => {
-        try {
-            await axios.put(
-                `CheckList/Comm/Comment?plantId=PCS$${plantId}${apiVersion}`,
-                { CheckListId: checklistId, Comment: Comment }
-            );
-            return Promise.resolve();
-        } catch (error) {
-            return Promise.reject(error.response);
-        }
+        await axios.put(
+            `CheckList/Comm/Comment?plantId=PCS$${plantId}${apiVersion}`,
+            { CheckListId: checklistId, Comment: Comment }
+        );
+        return Promise.resolve();
     };
 
     const postSign = async (plantId: string, checklistId: string) => {
@@ -357,6 +263,13 @@ const procosysApiService = ({
         );
     };
 
+    const getTask = async (plantId: string, taskId: string) => {
+        const { data } = await axios.get(
+            `CommPkg/Task?plantId=PCS$${plantId}&taskId=${taskId}${apiVersion}`
+        );
+        return objectToCamelCase(data) as Task;
+    };
+
     /* Used for clearing, unclearing, rejecting and verifying a */
     const postPunchAction = async (
         plantId: string,
@@ -370,6 +283,47 @@ const procosysApiService = ({
         );
     };
 
+    const postTaskSign = async (plantId: string, taskId: string) => {
+        await axios.post(
+            `CommPkg/Task/Sign?plantId=PCS$${plantId}${apiVersion}`,
+            taskId,
+            {
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
+    };
+
+    const postTaskUnsign = async (plantId: string, taskId: string) => {
+        await axios.post(
+            `CommPkg/Task/Unsign?plantId=PCS$${plantId}${apiVersion}`,
+            taskId,
+            {
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
+    };
+
+    const putTaskComment = async (plantId: string, dto: TaskCommentDto) => {
+        await axios.put(
+            `CommPkg/Task/Comment?plantId=PCS$${plantId}${apiVersion}`,
+            dto
+        );
+    };
+
+    const getTaskParameters = async (plantId: string, taskId: string) => {
+        const { data } = await axios.get(
+            `CommPkg/Task/Parameters?plantId=$${plantId}?taskId=${taskId}${apiVersion}`
+        );
+        return objectToCamelCase(data) as TaskParameter;
+    };
+
+    const putTaskParameter = async (plantId: string, dto: TaskParameterDto) => {
+        await axios.put(
+            `CommPkg/Task/Parameters/Parameter?plantId=PCS$${plantId}${apiVersion}`,
+            dto
+        );
+    };
+
     return {
         getPunchItem,
         getPlants,
@@ -377,24 +331,31 @@ const procosysApiService = ({
         getPermissionsForPlant,
         getChecklist,
         getCommPackageDetails,
-        postClear,
-        postSetOk,
-        postSetNA,
-        postNewPunch,
         getPunchOrganizations,
         getPunchList,
         getPunchTypes,
         getPunchCategories,
+        getTask,
+        getTasks,
+        getScope,
+        getTaskParameters,
+        postClear,
+        postSetOk,
+        postSetNA,
+        postNewPunch,
+        postPunchAction,
+        postTaskSign,
+        postTaskUnsign,
         postSign,
         postUnsign,
         putChecklistComment,
         putMetaTableCell,
-        getTasks,
-        getScope,
-        searchForCommPackage,
+        putTaskComment,
+        putTaskParameter,
         putUpdatePunch,
-        postPunchAction,
+        searchForCommPackage,
     };
 };
 
+export type ProcosysApiService = ReturnType<typeof procosysApiService>;
 export default procosysApiService;
