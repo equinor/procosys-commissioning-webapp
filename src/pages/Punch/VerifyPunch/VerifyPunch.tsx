@@ -9,6 +9,7 @@ import { AsyncStatus } from '../../../contexts/CommAppContext';
 import { PunchItem } from '../../../services/apiTypes';
 import { removeSubdirectories } from '../../../utils/general';
 import useCommonHooks from '../../../utils/useCommonHooks';
+import { PunchWrapper } from '../ClearPunch/ClearPunch';
 import PunchDetailsCard from '../ClearPunch/PunchDetailsCard';
 import { PunchAction } from '../ClearPunch/useClearPunchFacade';
 
@@ -56,7 +57,7 @@ const VerifyPunch = () => {
         return () => {
             source.cancel('Checklist component unmounted');
         };
-    }, []);
+    }, [params.plant, params.punchItemId, api]);
 
     const handlePunchAction = async (
         punchAction: PunchAction,
@@ -76,93 +77,106 @@ const VerifyPunch = () => {
         }
     };
 
-    let content = <></>;
-    if (fetchPunchItemStatus === AsyncStatus.LOADING) {
-        content = <SkeletonLoadingPage text="Loading punch item" />;
-    }
-    if (fetchPunchItemStatus === AsyncStatus.ERROR) {
-        content = <ErrorPage title="Unable to load punch item" />;
-    }
-    if (
-        fetchPunchItemStatus === AsyncStatus.SUCCESS &&
-        punchItem &&
-        punchItem.clearedAt
-    ) {
-        content = (
-            <>
-                <PunchDetailsCard
-                    systemModule={punchItem.systemModule}
-                    tagDescription={punchItem.tagDescription}
-                ></PunchDetailsCard>
-                <VerifyPunchWrapper>
-                    <label>Category:</label>
-                    <p>{punchItem.status}</p>
-                    <label>Type:</label>
-                    <p>
-                        {punchItem.typeCode}. {punchItem.typeDescription}
-                    </p>
-                    <label>Description:</label>
-                    <p>{punchItem.description}</p>
-                    <label>Raised By:</label>
-                    <p>
-                        {punchItem.raisedByCode}.{' '}
-                        {punchItem.raisedByDescription}
-                    </p>
-                    <label>Clearing by:</label>
-                    <p>
-                        {punchItem.clearingByCode}.{' '}
-                        {punchItem.clearingByDescription}
-                    </p>
-                    <label>Signatures:</label>
-                    <p>
-                        Cleared at{' '}
-                        {new Date(punchItem.clearedAt).toLocaleDateString(
-                            'en-GB'
-                        )}{' '}
-                        by {punchItem.clearedByFirstName}{' '}
-                        {punchItem.clearedByLastName} ({punchItem.clearedByUser}
-                        )
-                    </p>
-                    <ButtonGroup>
-                        <Button
-                            disabled={punchActionStatus === AsyncStatus.LOADING}
-                            onClick={() =>
-                                handlePunchAction(PunchAction.UNCLEAR, () =>
-                                    history.push(
-                                        removeSubdirectories(url, 1) + '/clear'
+    const content = () => {
+        if (
+            fetchPunchItemStatus === AsyncStatus.SUCCESS &&
+            punchItem &&
+            punchItem.clearedAt
+        ) {
+            return (
+                <>
+                    <PunchDetailsCard
+                        systemModule={punchItem.systemModule}
+                        tagDescription={punchItem.tagDescription}
+                    ></PunchDetailsCard>
+                    <VerifyPunchWrapper>
+                        <label>Category:</label>
+                        <p>{punchItem.status}</p>
+                        <label>Type:</label>
+                        <p>
+                            {punchItem.typeCode}. {punchItem.typeDescription}
+                        </p>
+                        <label>Description:</label>
+                        <p>{punchItem.description}</p>
+                        <label>Raised By:</label>
+                        <p>
+                            {punchItem.raisedByCode}.{' '}
+                            {punchItem.raisedByDescription}
+                        </p>
+                        <label>Clearing by:</label>
+                        <p>
+                            {punchItem.clearingByCode}.{' '}
+                            {punchItem.clearingByDescription}
+                        </p>
+                        <label>Signatures:</label>
+                        <p>
+                            Cleared at{' '}
+                            {new Date(punchItem.clearedAt).toLocaleDateString(
+                                'en-GB'
+                            )}{' '}
+                            by {punchItem.clearedByFirstName}{' '}
+                            {punchItem.clearedByLastName} (
+                            {punchItem.clearedByUser})
+                        </p>
+                        <ButtonGroup>
+                            <Button
+                                disabled={
+                                    punchActionStatus === AsyncStatus.LOADING
+                                }
+                                onClick={() =>
+                                    handlePunchAction(PunchAction.UNCLEAR, () =>
+                                        history.push(
+                                            removeSubdirectories(url, 1) +
+                                                '/clear'
+                                        )
                                     )
-                                )
-                            }
-                        >
-                            Unclear
-                        </Button>
-                        <Button
-                            disabled={punchActionStatus === AsyncStatus.LOADING}
-                            onClick={() =>
-                                handlePunchAction(PunchAction.REJECT, () =>
-                                    history.push(
-                                        removeSubdirectories(url, 1) + '/clear'
+                                }
+                            >
+                                Unclear
+                            </Button>
+                            <Button
+                                disabled={
+                                    punchActionStatus === AsyncStatus.LOADING
+                                }
+                                onClick={() =>
+                                    handlePunchAction(PunchAction.REJECT, () =>
+                                        history.push(
+                                            removeSubdirectories(url, 1) +
+                                                '/clear'
+                                        )
                                     )
-                                )
-                            }
-                        >
-                            Reject
-                        </Button>
-                        <Button
-                            disabled={punchActionStatus === AsyncStatus.LOADING}
-                            onClick={() =>
-                                handlePunchAction(PunchAction.VERIFY, () => {
-                                    history.push(removeSubdirectories(url, 2));
-                                })
-                            }
-                        >
-                            Verify
-                        </Button>
-                    </ButtonGroup>
-                </VerifyPunchWrapper>
-            </>
-        );
-    }
+                                }
+                            >
+                                Reject
+                            </Button>
+                            <Button
+                                disabled={
+                                    punchActionStatus === AsyncStatus.LOADING
+                                }
+                                onClick={() =>
+                                    handlePunchAction(
+                                        PunchAction.VERIFY,
+                                        () => {
+                                            history.push(
+                                                removeSubdirectories(url, 2)
+                                            );
+                                        }
+                                    )
+                                }
+                            >
+                                Verify
+                            </Button>
+                        </ButtonGroup>
+                    </VerifyPunchWrapper>
+                </>
+            );
+        } else if (fetchPunchItemStatus === AsyncStatus.ERROR) {
+            return <ErrorPage title="Unable to load punch item" />;
+        } else {
+            return <SkeletonLoadingPage text="Loading punch item" />;
+        }
+    };
+
     return (
         <>
             <Navbar
@@ -173,7 +187,7 @@ const VerifyPunch = () => {
                     url: removeSubdirectories(url, 2),
                 }}
             />
-            {content}
+            <PunchWrapper>{content()}</PunchWrapper>
         </>
     );
 };

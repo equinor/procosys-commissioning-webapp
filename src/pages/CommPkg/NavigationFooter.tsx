@@ -96,6 +96,7 @@ const NavigationFooter = ({
 }: CommPkgFooterProps) => {
     const history = useHistory();
     const { url } = useRouteMatch();
+
     return (
         <CommPkgFooterWrapper>
             <FooterButton

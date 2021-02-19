@@ -39,16 +39,21 @@ const Bookmarks = () => {
         />
     ));
 
-    let content = (
-        <>
-            <PageHeader title={'Bookmarks'} subtitle={currentPlant?.title} />
-            {bookmarksToDisplay}
-        </>
-    );
-
-    if (bookmarks.length < 1) {
-        content = <PageHeader title="No bookmarks to display" />;
-    }
+    const content = () => {
+        if (bookmarks.length < 1) {
+            return <PageHeader title="No bookmarks to display" />;
+        } else {
+            return (
+                <>
+                    <PageHeader
+                        title={'Bookmarks'}
+                        subtitle={currentPlant?.title}
+                    />
+                    {bookmarksToDisplay}
+                </>
+            );
+        }
+    };
 
     return (
         <main>
@@ -57,7 +62,7 @@ const Bookmarks = () => {
                 rightContent={{ name: 'search' }}
             />
             <BookmarksWrapper>
-                {content}
+                {content()}
                 <NewBookmarkWrapper>
                     <Button onClick={() => history.push(`${url}/search`)}>
                         <EdsIcon name="search" color="white" />

@@ -7,7 +7,6 @@ import CompletionStatusIcon from '../../../components/icons/CompletionStatusIcon
 import { AsyncStatus } from '../../../contexts/CommAppContext';
 import { PunchPreview } from '../../../services/apiTypes';
 import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
-import ErrorPage from '../../../components/error/ErrorPage';
 import useCommonHooks from '../../../utils/useCommonHooks';
 
 const InfoRow = styled.div`
@@ -41,54 +40,71 @@ const PunchList = () => {
                 setFetchPunchListStatus(AsyncStatus.ERROR);
             }
         })();
-    }, []);
+    }, [params.commPkg, params.plant, api]);
 
-    const punchListToDisplay = punchList?.map((punch) => (
-        <PreviewButton
-            to={
-                punch.cleared
-                    ? `${url}/${punch.id}/verify`
-                    : `${url}/${punch.id}/clear`
-            }
-            key={punch.id}
-        >
-            <CompletionStatusIcon status={punch.status} />
-            <div>
-                <Typography variant="body_short" lines={2}>
-                    {punch.cleared ? 'Cleared: ' : null}
-                    {punch.description}
-                </Typography>
-                <ModuleAndTagWrapper>
-                    <InfoRow>
-                        <label>Module: </label>
-                        <p>{punch.systemModule}</p>
-                    </InfoRow>
-                    <InfoRow>
-                        <label>Tag: </label>
-                        <Typography variant="body_short" lines={1}>
-                            {punch.tagDescription}
-                        </Typography>
-                    </InfoRow>
-                </ModuleAndTagWrapper>
-            </div>
-            <EdsIcon name="chevron_right" />
-        </PreviewButton>
-    ));
+    const content = () => {
+        if (
+            fetchPunchListStatus === AsyncStatus.SUCCESS &&
+            punchList &&
+            punchList.length > 0
+        ) {
+            return (
+                <>
+                    {punchList.map((punch) => (
+                        <PreviewButton
+                            to={
+                                punch.cleared
+                                    ? `${url}/${punch.id}/verify`
+                                    : `${url}/${punch.id}/clear`
+                            }
+                            key={punch.id}
+                        >
+                            <CompletionStatusIcon status={punch.status} />
+                            <div>
+                                <Typography variant="body_short" lines={2}>
+                                    {punch.cleared ? 'Cleared: ' : null}
+                                    {punch.description}
+                                </Typography>
+                                <ModuleAndTagWrapper>
+                                    <InfoRow>
+                                        <label>Module: </label>
+                                        <p>{punch.systemModule}</p>
+                                    </InfoRow>
+                                    <InfoRow>
+                                        <label>Tag: </label>
+                                        <Typography
+                                            variant="body_short"
+                                            lines={1}
+                                        >
+                                            {punch.tagDescription}
+                                        </Typography>
+                                    </InfoRow>
+                                </ModuleAndTagWrapper>
+                            </div>
+                            <EdsIcon name="chevron_right" />
+                        </PreviewButton>
+                    ))}
+                </>
+            );
+        } else if (
+            fetchPunchListStatus === AsyncStatus.SUCCESS &&
+            punchList &&
+            punchList.length < 1
+        ) {
+            return <h4>No punches to display.</h4>;
+        } else if (fetchPunchListStatus === AsyncStatus.ERROR) {
+            return (
+                <h4>
+                    Unable to get punch list. Please refresh or contact IT
+                    support
+                </h4>
+            );
+        } else {
+            return <SkeletonLoadingPage text="" />;
+        }
+    };
 
-    if (fetchPunchListStatus === AsyncStatus.LOADING) {
-        return <SkeletonLoadingPage text="" />;
-    }
-    if (fetchPunchListStatus === AsyncStatus.ERROR) {
-        return <ErrorPage title="Unable to load punch list" />;
-    }
-    if (fetchPunchListStatus === AsyncStatus.SUCCESS && punchList!.length < 1) {
-        return (
-            <CommPkgListWrapper>
-                <h3>No punches to display.</h3>
-            </CommPkgListWrapper>
-        );
-    }
-    return <CommPkgListWrapper>{punchListToDisplay}</CommPkgListWrapper>;
+    return <CommPkgListWrapper>{content()}</CommPkgListWrapper>;
 };
 
 export default PunchList;

@@ -142,9 +142,7 @@ const DetailsCard = ({
 
     return (
         <DetailsCardShell atBookmarksPage={atBookmarksPage}>
-            <>
-                <DotProgress variant="green" />
-            </>
+            <DotProgress variant="green" />
         </DetailsCardShell>
     );
 };

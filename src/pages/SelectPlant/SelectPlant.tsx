@@ -39,33 +39,36 @@ export const SelectorButton = styled(Link)`
 const SelectPlant = () => {
     const { availablePlants } = useContext(CommAppContext);
 
-    const plantsToRender = availablePlants.map((plant) => (
-        <SelectorButton key={plant.id} to={`/${plant.slug}`}>
-            <p>{plant.title}</p>
-            <EdsIcon name="chevron_right" title="chevron right" />
-        </SelectorButton>
-    ));
-
-    let content = (
-        <>
-            <PageHeader title={'Select plant'} />
-            {plantsToRender}
-        </>
-    );
-
-    if (plantsToRender.length < 1) {
-        content = (
-            <ErrorPage
-                title="No plants to show"
-                description="We were able to connect to the server, but there are no plants to show. Make sure you're logged in correctly, and that you have the necessary permissions"
-            ></ErrorPage>
-        );
-    }
+    const content = () => {
+        if (availablePlants.length < 1) {
+            return (
+                <ErrorPage
+                    title="No plants to show"
+                    description="We were able to connect to the server, but there are no plants to show. Make sure you're logged in correctly, and that you have the necessary permissions"
+                ></ErrorPage>
+            );
+        } else {
+            return (
+                <>
+                    <PageHeader title={'Select plant'} />
+                    {availablePlants.map((plant) => (
+                        <SelectorButton key={plant.id} to={`/${plant.slug}`}>
+                            <p>{plant.title}</p>
+                            <EdsIcon
+                                name="chevron_right"
+                                title="chevron right"
+                            />
+                        </SelectorButton>
+                    ))}
+                </>
+            );
+        }
+    };
 
     return (
         <>
             <Navbar leftContent={{ name: 'hamburger' }} />
-            <SelectPlantWrapper>{content}</SelectPlantWrapper>
+            <SelectPlantWrapper>{content()}</SelectPlantWrapper>
         </>
     );
 };

@@ -12,10 +12,11 @@ import EdsIcon from '../../components/icons/EdsIcon';
 import axios from 'axios';
 import useCommonHooks from '../../utils/useCommonHooks';
 
-const ChecklistWrapper = styled.main`
+const ChecklistWrapper = styled.div`
     padding: 0 4%;
     display: flex;
     flex-direction: column;
+    min-height: calc(100vh - 55px);
 `;
 
 const IsSignedBanner = styled.div`
@@ -33,7 +34,9 @@ const IsSignedBanner = styled.div`
 
 const Checklist = () => {
     const { params, api } = useCommonHooks();
-    const [checklistStatus, setChecklistStatus] = useState(AsyncStatus.SUCCESS);
+    const [fetchChecklistStatus, setFetchChecklistStatus] = useState(
+        AsyncStatus.SUCCESS
+    );
     const [checkItems, setCheckItems] = useState<CheckItem[]>([]);
     const [checklistDetails, setChecklistDetails] = useState<
         ChecklistDetails
@@ -53,9 +56,9 @@ const Checklist = () => {
                 setIsSigned(!!checklistResponse.checkList.signedByFirstName);
                 setCheckItems(checklistResponse.checkItems);
                 setChecklistDetails(checklistResponse.checkList);
-                setChecklistStatus(AsyncStatus.SUCCESS);
+                setFetchChecklistStatus(AsyncStatus.SUCCESS);
             } catch (err) {
-                setChecklistStatus(AsyncStatus.ERROR);
+                setFetchChecklistStatus(AsyncStatus.ERROR);
             }
         })();
         return () => {
@@ -63,55 +66,58 @@ const Checklist = () => {
         };
     }, [params.checklistId, params.plant, reloadChecklist, api]);
 
-    let content = <SkeletonLoadingPage text="Loading checklist" />;
-
-    if (checklistStatus === AsyncStatus.ERROR) {
-        content = (
-            <ErrorPage
-                title="Could not load checklist"
-                description="Please reload this page or try again later"
-            />
-        );
-    }
-
-    if (
-        checklistStatus === AsyncStatus.SUCCESS &&
-        checklistDetails &&
-        checklistDetails.id &&
-        checkItems.length
-    ) {
-        content = (
-            <>
-                <ChecklistDetailsCard
-                    details={checklistDetails}
-                    isSigned={isSigned}
-                    descriptionLabel={'checklist'}
+    const content = () => {
+        if (
+            fetchChecklistStatus === AsyncStatus.SUCCESS &&
+            checkItems &&
+            checklistDetails
+        ) {
+            return (
+                <>
+                    <ChecklistDetailsCard
+                        details={checklistDetails}
+                        isSigned={isSigned}
+                        descriptionLabel={'checklist'}
+                    />
+                    {isSigned && (
+                        <IsSignedBanner>
+                            <EdsIcon name="info_circle" />
+                            <p>Unsign to make changes.</p>
+                        </IsSignedBanner>
+                    )}
+                    <ChecklistWrapper>
+                        <CheckItems
+                            setAllItemsCheckedOrNA={setAllItemsCheckedOrNA}
+                            allItemsCheckedOrNA={allItemsCheckedOrNA}
+                            checkItems={checkItems}
+                            details={checklistDetails}
+                            isSigned={isSigned}
+                        />
+                        <ChecklistSignature
+                            reloadChecklist={setReloadChecklist}
+                            allItemsCheckedOrNA={allItemsCheckedOrNA}
+                            isSigned={isSigned}
+                            details={checklistDetails}
+                            setIsSigned={setIsSigned}
+                        />
+                    </ChecklistWrapper>
+                </>
+            );
+        } else if (fetchChecklistStatus === AsyncStatus.ERROR) {
+            return (
+                <ErrorPage
+                    title="Could not load checklist"
+                    description="Please reload this page or try again later"
                 />
-                {isSigned && (
-                    <IsSignedBanner>
-                        <EdsIcon name="info_circle" />
-                        <p>Unsign to make changes.</p>
-                    </IsSignedBanner>
-                )}
+            );
+        } else {
+            return (
                 <ChecklistWrapper>
-                    <CheckItems
-                        setAllItemsCheckedOrNA={setAllItemsCheckedOrNA}
-                        allItemsCheckedOrNA={allItemsCheckedOrNA}
-                        checkItems={checkItems}
-                        details={checklistDetails}
-                        isSigned={isSigned}
-                    />
-                    <ChecklistSignature
-                        reloadChecklist={setReloadChecklist}
-                        allItemsCheckedOrNA={allItemsCheckedOrNA}
-                        isSigned={isSigned}
-                        details={checklistDetails}
-                        setIsSigned={setIsSigned}
-                    />
+                    <SkeletonLoadingPage text="Loading checklist" />
                 </ChecklistWrapper>
-            </>
-        );
-    }
+            );
+        }
+    };
 
     return (
         <>
@@ -120,7 +126,7 @@ const Checklist = () => {
                 leftContent={{ name: 'back', label: 'CommPkg' }}
                 rightContent={{ name: 'newPunch' }}
             />
-            {content}
+            {content()}
         </>
     );
 };
