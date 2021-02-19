@@ -64,7 +64,6 @@ const Task = () => {
                     url: removeSubdirectories(url, 2),
                 }}
             />
-
             <TaskWrapper>
                 <TaskDescription
                     task={task}
@@ -72,7 +71,10 @@ const Task = () => {
                     isSigned={isSigned}
                     setSnackbarText={setSnackbarText}
                 />
-                <TaskParameters setSnackbarText={setSnackbarText} />
+                <TaskParameters
+                    setSnackbarText={setSnackbarText}
+                    isSigned={isSigned}
+                />
                 <TaskSignature
                     fetchTaskStatus={fetchTaskStatus}
                     isSigned={isSigned}

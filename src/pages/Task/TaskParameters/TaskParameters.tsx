@@ -18,11 +18,16 @@ const ParameterRow = styled.div`
     align-items: center;
     padding: 12px 0;
     border-top: 1px solid #007179;
+
+    & p {
+        flex: 1.5;
+        margin-right: 12px;
+    }
 `;
 
 const ParameterInputWrapper = styled.div`
     display: flex;
-    max-width: 50%;
+    flex: 1;
     & div:first-of-type {
         margin-right: 8px;
     }
@@ -41,9 +46,10 @@ export type TaskParameterDto = {
 
 type TaskParametersProps = {
     setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
+    isSigned: boolean;
 };
 
-const TaskParameters = ({ setSnackbarText }: TaskParametersProps) => {
+const TaskParameters = ({ setSnackbarText, isSigned }: TaskParametersProps) => {
     const { api, params } = useCommonHooks();
     const [parameters, setParameters] = useState<TaskParameter[]>([]);
     const [fetchParametersStatus, setFetchParametersStatus] = useState(
@@ -79,6 +85,11 @@ const TaskParameters = ({ setSnackbarText }: TaskParametersProps) => {
                 <ParameterRow key={parameter.id}>
                     <p>{parameter.description}</p>
                     <ParameterInputWrapper>
+                        <MeasuredValueInput
+                            parameter={parameter}
+                            isSigned={isSigned}
+                            setSnackbarText={setSnackbarText}
+                        />
                         <TextField
                             label={'Reference'}
                             disabled
@@ -86,10 +97,6 @@ const TaskParameters = ({ setSnackbarText }: TaskParametersProps) => {
                             meta={parameter.referenceUnit}
                             defaultValue={parameter.referenceValue}
                             id={'ReferenceValue'}
-                        />
-                        <MeasuredValueInput
-                            parameter={parameter}
-                            setSnackbarText={setSnackbarText}
                         />
                     </ParameterInputWrapper>
                 </ParameterRow>

@@ -8,11 +8,13 @@ import { TaskParameterDto } from './TaskParameters';
 type MeasuredValueInputProps = {
     parameter: TaskParameter;
     setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
+    isSigned: boolean;
 };
 
 const MeasuredValueInput = ({
     parameter,
     setSnackbarText,
+    isSigned,
 }: MeasuredValueInputProps) => {
     const { api, params } = useCommonHooks();
     const [value, setValue] = useState(parameter.measuredValue);
@@ -40,7 +42,7 @@ const MeasuredValueInput = ({
     return (
         <TextField
             label={'Measured'}
-            disabled={updateValueStatus === AsyncStatus.LOADING}
+            disabled={updateValueStatus === AsyncStatus.LOADING || isSigned}
             meta={parameter.referenceUnit}
             value={value}
             id={'MeasuredValue ' + parameter.id.toString()}
