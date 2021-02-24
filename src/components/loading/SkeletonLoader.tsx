@@ -22,7 +22,7 @@ const load = keyframes`
 
 const BaseSkeleton = styled(Card)`
     box-sizing: border-box;
-    border-radius: 15px;
+    border-radius: 10px;
     background-color: #eeeeee;
     position: relative;
     overflow: hidden;
@@ -37,9 +37,9 @@ const BaseSkeleton = styled(Card)`
         width: 50%;
         background: linear-gradient(
             to right,
-            #fafafa 0%,
-            #f0f0f0 50%,
-            #fafafa 100%
+            #eeeeee 0%,
+            #e6e6e6 50%,
+            #eeeeee 100%
         );
         animation: ${load} 1s cubic-bezier(0.1, 0, 0.2, 1) infinite;
     }
