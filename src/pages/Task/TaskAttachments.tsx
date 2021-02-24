@@ -124,7 +124,7 @@ const TaskAttachments = () => {
             fetchAttachmentsStatus === AsyncStatus.SUCCESS &&
             attachments.length < 1
         ) {
-            return <p>No attachments for this task</p>;
+            return <p>This task has no attachments.</p>;
         } else if (fetchAttachmentsStatus === AsyncStatus.ERROR) {
             return <p>Unable to load attachments. Please refresh.</p>;
         } else {
