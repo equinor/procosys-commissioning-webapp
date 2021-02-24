@@ -23,9 +23,7 @@ const load = keyframes`
 const BaseSkeleton = styled(Card)`
     box-sizing: border-box;
     border-radius: 15px;
-    background-color: #fafafa;
-    /* border: 1px solid #f1f1f1; */
-    box-shadow: ${SHADOW};
+    background-color: #eeeeee;
     position: relative;
     overflow: hidden;
     margin: 20px;
