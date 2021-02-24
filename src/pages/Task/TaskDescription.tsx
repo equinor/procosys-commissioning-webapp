@@ -123,9 +123,9 @@ const TaskDescription = ({
             <Card>
                 <CardHeader>
                     <CardHeaderTitle>
-                        <h3>Task</h3>
+                        <h3>Task {task ? `${task.number}` : null}</h3>
                     </CardHeaderTitle>
-                    <EdsIcon name="paste" />
+                    {/* <EdsIcon name="paste" /> */}
                 </CardHeader>
                 {content()}
             </Card>

@@ -258,4 +258,5 @@ export interface Attachment {
     mimeType: string;
     thumbnailAsBase64: string;
     hasFile: boolean;
+    fileName: string;
 }

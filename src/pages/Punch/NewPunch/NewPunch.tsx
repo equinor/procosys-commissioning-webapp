@@ -15,6 +15,7 @@ import useFormFields from '../../../utils/useFormFields';
 import { NewPunch as NewPunchType } from '../../../services/apiTypes';
 import NewPunchSuccessPage from './NewPunchSuccessPage';
 import useCommonHooks from '../../../utils/useCommonHooks';
+import { PunchWrapper } from '../ClearPunch/ClearPunch';
 
 export type PunchFormData = {
     category: string;
@@ -94,37 +95,37 @@ const NewPunch = () => {
         })();
     }, [params.plant, params.checklistId, api]);
 
-    let content = null;
-    if (fetchNewPunchStatus === AsyncStatus.LOADING) {
-        content = <SkeletonLoader text="Loading new punch" />;
-    }
-    if (fetchNewPunchStatus === AsyncStatus.ERROR) {
-        content = <ErrorPage title="Could not load new punch" />;
-    }
-    if (fetchNewPunchStatus === AsyncStatus.SUCCESS && checklistDetails) {
-        content = (
-            <>
-                <ChecklistDetailsCard
-                    details={checklistDetails}
-                    descriptionLabel={'New punch for:'}
-                />
-                <NewPunchForm
-                    categories={categories}
-                    types={types}
-                    organizations={organizations}
-                    formData={formFields}
-                    createChangeHandler={createChangeHandler}
-                    buttonText={'Create punch'}
-                    handleSubmit={handleSubmit}
-                    submitPunchStatus={submitPunchStatus}
-                />
-            </>
-        );
-    }
-
-    if (submitPunchStatus === AsyncStatus.SUCCESS) {
-        content = <NewPunchSuccessPage />;
-    }
+    const content = () => {
+        if (submitPunchStatus === AsyncStatus.SUCCESS) {
+            return <NewPunchSuccessPage />;
+        } else if (
+            fetchNewPunchStatus === AsyncStatus.SUCCESS &&
+            checklistDetails
+        ) {
+            return (
+                <>
+                    <ChecklistDetailsCard
+                        details={checklistDetails}
+                        descriptionLabel={'New punch for:'}
+                    />
+                    <NewPunchForm
+                        categories={categories}
+                        types={types}
+                        organizations={organizations}
+                        formData={formFields}
+                        createChangeHandler={createChangeHandler}
+                        buttonText={'Create punch'}
+                        handleSubmit={handleSubmit}
+                        submitPunchStatus={submitPunchStatus}
+                    />
+                </>
+            );
+        } else if (fetchNewPunchStatus === AsyncStatus.ERROR) {
+            return <ErrorPage title="Could not load new punch" />;
+        } else {
+            return <SkeletonLoader text="Loading new punch" />;
+        }
+    };
 
     return (
         <>
@@ -132,7 +133,7 @@ const NewPunch = () => {
                 noBorder
                 leftContent={{ name: 'back', label: 'Checklist' }}
             />
-            {content}
+            <PunchWrapper>{content()}</PunchWrapper>
         </>
     );
 };

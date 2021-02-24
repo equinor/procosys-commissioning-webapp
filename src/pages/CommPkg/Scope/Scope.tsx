@@ -7,6 +7,7 @@ import { AsyncStatus } from '../../../contexts/CommAppContext';
 import { ChecklistPreview } from '../../../services/apiTypes';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
+import ErrorPage from '../../../components/error/ErrorPage';
 
 export const CommPkgListWrapper = styled.div`
     padding-bottom: 85px;
@@ -66,29 +67,56 @@ const Scope = () => {
                 setFetchScopeStatus(AsyncStatus.ERROR);
             }
         })();
-    }, []);
+    }, [params.plant, params.commPkg, api]);
 
-    if (fetchScopeStatus === AsyncStatus.SUCCESS && scope) {
-        const scopeToRender = scope.map((checklist) => (
-            <PreviewButton key={checklist.id} to={`${url}/${checklist.id}`}>
-                <CompletionStatusIcon status={checklist.status} />
-                <div>
-                    <label>{checklist.tagNo}</label>
-                    <p>{checklist.tagDescription}</p>
-                </div>
-                <FormulaTypeText>{checklist.formularType}</FormulaTypeText>
-                <EdsIcon name="chevron_right" />
-            </PreviewButton>
-        ));
-        if (scope.length < 1)
+    const content = () => {
+        if (
+            fetchScopeStatus === AsyncStatus.SUCCESS &&
+            scope &&
+            scope.length > 0
+        ) {
+            return (
+                <>
+                    {scope.map((checklist) => (
+                        <PreviewButton
+                            key={checklist.id}
+                            to={`${url}/${checklist.id}`}
+                        >
+                            <CompletionStatusIcon status={checklist.status} />
+                            <div>
+                                <label>{checklist.tagNo}</label>
+                                <p>{checklist.tagDescription}</p>
+                            </div>
+                            <FormulaTypeText>
+                                {checklist.formularType}
+                            </FormulaTypeText>
+                            <EdsIcon name="chevron_right" />
+                        </PreviewButton>
+                    ))}
+                </>
+            );
+        } else if (
+            fetchScopeStatus === AsyncStatus.SUCCESS &&
+            scope &&
+            scope.length < 1
+        ) {
             return (
                 <CommPkgListWrapper>
                     <h3>The scope is empty</h3>
                 </CommPkgListWrapper>
             );
-        return <CommPkgListWrapper>{scopeToRender}</CommPkgListWrapper>;
-    }
-    return <SkeletonLoadingPage text="" />;
+        } else if (fetchScopeStatus === AsyncStatus.ERROR) {
+            return (
+                <h4>
+                    Unable to load scope. Please refresh or contact IT support
+                </h4>
+            );
+        } else {
+            return <SkeletonLoadingPage text="" />;
+        }
+    };
+
+    return <CommPkgListWrapper>{content()}</CommPkgListWrapper>;
 };
 
 export default Scope;

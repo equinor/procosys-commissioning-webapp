@@ -15,6 +15,9 @@ import { NewPunchFormWrapper } from '../NewPunch/NewPunchForm';
 import useClearPunchFacade, {
     UpdatePunchEndpoint,
 } from './useClearPunchFacade';
+import styled from 'styled-components';
+
+export const PunchWrapper = styled.main``;
 
 const ClearPunch = () => {
     const {
@@ -37,157 +40,161 @@ const ClearPunch = () => {
         handleRaisedByChange,
         handleClearingByChange,
     } = useClearPunchFacade();
-    let descriptionBeforeBlur = '';
+    let descriptionBeforeEntering = '';
 
-    let content = <></>;
-    if (fetchPunchItemStatus === AsyncStatus.LOADING) {
-        content = <SkeletonLoadingPage text="Loading punch item" />;
-    }
-    if (fetchPunchItemStatus === AsyncStatus.SUCCESS && punchItem) {
-        content = (
-            <>
-                <PunchDetailsCard
-                    systemModule={punchItem.systemModule}
-                    tagDescription={punchItem.tagDescription}
-                />
-                <NewPunchFormWrapper onSubmit={clearPunchItem}>
-                    <NativeSelect
-                        required
-                        id="PunchCategorySelect"
-                        label="Punch category"
-                        disabled={clearPunchStatus === AsyncStatus.LOADING}
-                        defaultValue={
-                            ensure(
-                                categories.find(
-                                    (category) =>
-                                        category.code === punchItem.status
-                                )
-                            ).id
-                        }
-                        onChange={handleCategoryChange}
-                    >
-                        {categories.map((category) => (
-                            <option
-                                key={category.id}
-                                value={category.id}
-                            >{`${category.description}`}</option>
-                        ))}
-                    </NativeSelect>
-                    <NativeSelect
-                        required
-                        id="PunchTypeSelect"
-                        label="Type"
-                        disabled={clearPunchStatus === AsyncStatus.LOADING}
-                        defaultValue={
-                            ensure(
-                                types.find(
-                                    (type) => type.code === punchItem.typeCode
-                                )
-                            ).id
-                        }
-                        onChange={handleTypeChange}
-                    >
-                        {types.map((type) => (
-                            <option
-                                key={type.id}
-                                value={type.id}
-                            >{`${type.code}. ${type.description}`}</option>
-                        ))}
-                    </NativeSelect>
-                    <TextField
-                        required
-                        maxLength={255}
-                        value={punchItem.description}
-                        label="Description"
-                        multiline
-                        rows={5}
-                        id="NewPunchDescription"
-                        disabled={clearPunchStatus === AsyncStatus.LOADING}
-                        onFocus={() =>
-                            (descriptionBeforeBlur = punchItem.description)
-                        }
-                        onBlur={() => {
-                            if (
-                                punchItem.description !== descriptionBeforeBlur
-                            ) {
-                                updateDatabase(
-                                    UpdatePunchEndpoint.Description,
-                                    {
-                                        Description: punchItem.description,
-                                    }
-                                );
-                            }
-                        }}
-                        onChange={handleDescriptionChange}
+    const content = () => {
+        if (fetchPunchItemStatus === AsyncStatus.SUCCESS && punchItem) {
+            return (
+                <>
+                    <PunchDetailsCard
+                        systemModule={punchItem.systemModule}
+                        tagDescription={punchItem.tagDescription}
                     />
-                    <NativeSelect
-                        required
-                        label="Raised by"
-                        id="RaisedBySelect"
-                        disabled={clearPunchStatus === AsyncStatus.LOADING}
-                        defaultValue={
-                            ensure(
-                                organizations.find(
-                                    (org) => org.code === punchItem.raisedByCode
-                                )
-                            ).id
-                        }
-                        onChange={handleRaisedByChange}
-                    >
-                        {organizations.map((organization) => (
-                            <option
-                                key={organization.id}
-                                value={organization.id}
-                            >
-                                {organization.description}
-                            </option>
-                        ))}
-                    </NativeSelect>
-                    <NativeSelect
-                        required
-                        id="ClearingBySelect"
-                        label="Clearing by"
-                        disabled={clearPunchStatus === AsyncStatus.LOADING}
-                        defaultValue={
-                            ensure(
-                                organizations.find(
-                                    (org) =>
-                                        org.code === punchItem.clearingByCode
-                                )
-                            ).id
-                        }
-                        onChange={handleClearingByChange}
-                    >
-                        {organizations.map((organization) => (
-                            <option
-                                key={organization.id}
-                                value={organization.id}
-                            >
-                                {organization.description}
-                            </option>
-                        ))}
-                    </NativeSelect>
-                    <Button
-                        type="submit"
-                        disabled={
-                            updatePunchStatus === AsyncStatus.LOADING ||
-                            clearPunchStatus === AsyncStatus.LOADING
-                        }
-                    >
-                        Clear
-                    </Button>
-                </NewPunchFormWrapper>
-            </>
-        );
-    }
-    if (fetchPunchItemStatus === AsyncStatus.ERROR) {
-        content = (
-            <ErrorPage
-                title="Unable to fetch punch item"
-                description="Please check your connection, reload this page or try again later."
-            />
-        );
-    }
+                    <NewPunchFormWrapper onSubmit={clearPunchItem}>
+                        <NativeSelect
+                            required
+                            id="PunchCategorySelect"
+                            label="Punch category"
+                            disabled={clearPunchStatus === AsyncStatus.LOADING}
+                            defaultValue={
+                                ensure(
+                                    categories.find(
+                                        (category) =>
+                                            category.code === punchItem.status
+                                    )
+                                ).id
+                            }
+                            onChange={handleCategoryChange}
+                        >
+                            {categories.map((category) => (
+                                <option
+                                    key={category.id}
+                                    value={category.id}
+                                >{`${category.description}`}</option>
+                            ))}
+                        </NativeSelect>
+                        <NativeSelect
+                            required
+                            id="PunchTypeSelect"
+                            label="Type"
+                            disabled={clearPunchStatus === AsyncStatus.LOADING}
+                            defaultValue={
+                                ensure(
+                                    types.find(
+                                        (type) =>
+                                            type.code === punchItem.typeCode
+                                    )
+                                ).id
+                            }
+                            onChange={handleTypeChange}
+                        >
+                            {types.map((type) => (
+                                <option
+                                    key={type.id}
+                                    value={type.id}
+                                >{`${type.code}. ${type.description}`}</option>
+                            ))}
+                        </NativeSelect>
+                        <TextField
+                            required
+                            maxLength={255}
+                            value={punchItem.description}
+                            label="Description"
+                            multiline
+                            rows={5}
+                            id="NewPunchDescription"
+                            disabled={clearPunchStatus === AsyncStatus.LOADING}
+                            onFocus={() =>
+                                (descriptionBeforeEntering =
+                                    punchItem.description)
+                            }
+                            onBlur={() => {
+                                if (
+                                    punchItem.description !==
+                                    descriptionBeforeEntering
+                                ) {
+                                    updateDatabase(
+                                        UpdatePunchEndpoint.Description,
+                                        {
+                                            Description: punchItem.description,
+                                        }
+                                    );
+                                }
+                            }}
+                            onChange={handleDescriptionChange}
+                        />
+                        <NativeSelect
+                            required
+                            label="Raised by"
+                            id="RaisedBySelect"
+                            disabled={clearPunchStatus === AsyncStatus.LOADING}
+                            defaultValue={
+                                ensure(
+                                    organizations.find(
+                                        (org) =>
+                                            org.code === punchItem.raisedByCode
+                                    )
+                                ).id
+                            }
+                            onChange={handleRaisedByChange}
+                        >
+                            {organizations.map((organization) => (
+                                <option
+                                    key={organization.id}
+                                    value={organization.id}
+                                >
+                                    {organization.description}
+                                </option>
+                            ))}
+                        </NativeSelect>
+                        <NativeSelect
+                            required
+                            id="ClearingBySelect"
+                            label="Clearing by"
+                            disabled={clearPunchStatus === AsyncStatus.LOADING}
+                            defaultValue={
+                                ensure(
+                                    organizations.find(
+                                        (org) =>
+                                            org.code ===
+                                            punchItem.clearingByCode
+                                    )
+                                ).id
+                            }
+                            onChange={handleClearingByChange}
+                        >
+                            {organizations.map((organization) => (
+                                <option
+                                    key={organization.id}
+                                    value={organization.id}
+                                >
+                                    {organization.description}
+                                </option>
+                            ))}
+                        </NativeSelect>
+                        <Button
+                            type="submit"
+                            disabled={
+                                updatePunchStatus === AsyncStatus.LOADING ||
+                                clearPunchStatus === AsyncStatus.LOADING
+                            }
+                        >
+                            Clear
+                        </Button>
+                    </NewPunchFormWrapper>
+                </>
+            );
+        } else if (fetchPunchItemStatus === AsyncStatus.ERROR) {
+            return (
+                <ErrorPage
+                    title="Unable to fetch punch item"
+                    description="Please check your connection, reload this page or try again later."
+                />
+            );
+        } else {
+            return <SkeletonLoadingPage text="Loading punch item" />;
+        }
+    };
 
     return (
         <>
@@ -199,7 +206,7 @@ const ClearPunch = () => {
                     url: removeSubdirectories(url, 2),
                 }}
             />
-            {content}
+            <PunchWrapper>{content()}</PunchWrapper>
             <Snackbar
                 onClose={() => {
                     setShowSnackbar(false);
