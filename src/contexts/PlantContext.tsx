@@ -36,6 +36,14 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
         const projectInStorage = window.localStorage.getItem(
             StorageKey.PROJECT
         );
+        const redirectPath = window.localStorage.getItem(
+            StorageKey.REDIRECTPATH
+        );
+        if (redirectPath && redirectPath.length > 1) {
+            history.push(redirectPath);
+            window.localStorage.removeItem(StorageKey.REDIRECTPATH);
+        }
+
         if (params.plant || !plantInStorage || !projectInStorage) return;
         if (projectInStorage)
             history.push(`/${plantInStorage}/${projectInStorage}`);
