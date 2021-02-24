@@ -5,6 +5,7 @@ export enum StorageKey {
     PLANT = 'currentPlant',
     PROJECT = 'currentProject',
     BOOKMARK = 'Procosys Bookmark',
+    REDIRECTPATH = 'ProCoSys-CWA-redirectPath',
 }
 
 const cleanUpBookmarks = (bookmarks: any) => {

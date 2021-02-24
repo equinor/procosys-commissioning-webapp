@@ -19,7 +19,7 @@ const ChecklistWrapper = styled.div`
     min-height: calc(100vh - 55px);
 `;
 
-const IsSignedBanner = styled.div`
+export const IsSignedBanner = styled.div`
     background-color: white;
     padding: 12px 4%;
     display: flex;

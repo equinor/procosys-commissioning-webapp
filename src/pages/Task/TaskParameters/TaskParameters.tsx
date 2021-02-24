@@ -115,7 +115,7 @@ const TaskParameters = ({ setSnackbarText, isSigned }: TaskParametersProps) => {
                     <CardHeaderTitle>
                         <h3>Parameters</h3>
                     </CardHeaderTitle>
-                    <EdsIcon name="tune" />
+                    {/* <EdsIcon name="tune" /> */}
                 </CardHeader>
                 {content()}
             </Card>
