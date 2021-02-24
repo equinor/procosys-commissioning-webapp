@@ -31,7 +31,7 @@ export const getAuthSettings = async () => {
         auth: {
             clientId: data.clientId,
             authority: data.authority,
-            redirectUri: window.location.href,
+            redirectUri: window.location.origin,
         },
     };
     const scopes = data.scopes;
@@ -51,6 +51,10 @@ const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
     };
 
     const login = async () => {
+        window.localStorage.setItem(
+            'ProCoSys-CWA-redirectPath',
+            window.location.pathname
+        );
         MSAL.loginRedirect({ scopes: scopes });
     };
 

@@ -36,35 +36,59 @@ const Tasks = () => {
                 setFetchTasksStatus(AsyncStatus.ERROR);
             }
         })();
-    }, []);
+    }, [params.commPkg, params.plant, api]);
 
-    if (fetchTasksStatus === AsyncStatus.SUCCESS && tasks) {
-        const tasksToDisplay = tasks.map((task) => (
-            <TaskPreviewButton to={`${url}/${task.id}`} key={task.id}>
-                {task.isSigned ? (
-                    <CompletionStatusIcon status={CompletionStatus.OK} />
-                ) : (
-                    <CompletionStatusIcon status={CompletionStatus.OS} />
-                )}
-                <div>
-                    <label>{task.number}</label>
-                    <Typography variant="body_short" lines={3}>
-                        {task.title}
-                    </Typography>
-                </div>
-                <EdsIcon name="chevron_right" />
-            </TaskPreviewButton>
-        ));
-        if (tasks!.length < 1)
+    const content = () => {
+        if (
+            fetchTasksStatus === AsyncStatus.SUCCESS &&
+            tasks &&
+            tasks.length > 0
+        ) {
             return (
-                <CommPkgListWrapper>
-                    <h3>No tasks to display.</h3>
-                </CommPkgListWrapper>
+                <>
+                    {tasks.map((task) => (
+                        <TaskPreviewButton
+                            to={`${url}/${task.id}`}
+                            key={task.id}
+                        >
+                            {task.isSigned ? (
+                                <CompletionStatusIcon
+                                    status={CompletionStatus.OK}
+                                />
+                            ) : (
+                                <CompletionStatusIcon
+                                    status={CompletionStatus.OS}
+                                />
+                            )}
+                            <div>
+                                <label>{task.number}</label>
+                                <Typography variant="body_short" lines={3}>
+                                    {task.title}
+                                </Typography>
+                            </div>
+                            <EdsIcon name="chevron_right" />
+                        </TaskPreviewButton>
+                    ))}
+                </>
             );
-        return <CommPkgListWrapper>{tasksToDisplay}</CommPkgListWrapper>;
-    }
+        } else if (
+            fetchTasksStatus === AsyncStatus.SUCCESS &&
+            tasks &&
+            tasks.length < 1
+        ) {
+            return <h4>No tasks to display.</h4>;
+        } else if (fetchTasksStatus === AsyncStatus.ERROR) {
+            return (
+                <h4>
+                    Unable to fetch tasks. Please refresh or contact IT support
+                </h4>
+            );
+        } else {
+            return <SkeletonLoadingPage text={''} />;
+        }
+    };
 
-    return <SkeletonLoadingPage text={''} />;
+    return <CommPkgListWrapper>{content()}</CommPkgListWrapper>;
 };
 
 export default Tasks;

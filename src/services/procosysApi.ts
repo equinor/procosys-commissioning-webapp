@@ -23,6 +23,7 @@ import {
     PunchItem,
     Task,
     TaskParameter,
+    Attachment,
 } from './apiTypes';
 
 type ProcosysApiServiceProps = {
@@ -324,7 +325,36 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         );
     };
 
+    const getTaskAttachments = async (plantId: string, taskId: string) => {
+        const { data } = await axios.get(
+            `CommPkg/Task/Attachments?plantId=PCS$${plantId}&taskId=${taskId}&thumbnailSize=32${apiVersion}`
+        );
+        return objectToCamelCase(data) as Attachment[];
+    };
+
+    const getTaskAttachment = async (
+        plantId: string,
+        taskId: string,
+        attachmentId: number
+    ) => {
+        const {
+            data,
+        } = await axios.get(
+            `CommPkg/Task/Attachment?plantId=PCS$${plantId}&taskId=${taskId}&attachmentId=${attachmentId}${apiVersion}`,
+            {
+                responseType: 'blob',
+                headers: {
+                    'Content-Disposition':
+                        'attachment; filename="filename.jpg"',
+                },
+            }
+        );
+        return data as Blob;
+    };
+
     return {
+        getTaskAttachments,
+        getTaskAttachment,
         getPunchItem,
         getPlants,
         getProjectsForPlant,

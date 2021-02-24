@@ -9,6 +9,9 @@ import TaskSignature from './TaskSignature';
 import { Task as TaskType } from '../../services/apiTypes';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import { Snackbar } from '@equinor/eds-core-react';
+import TaskAttachments from './TaskAttachments';
+import { IsSignedBanner } from '../Checklist/Checklist';
+import EdsIcon from '../../components/icons/EdsIcon';
 
 const TaskWrapper = styled.main`
     padding: 16px 4%;
@@ -61,10 +64,15 @@ const Task = () => {
                 leftContent={{
                     name: 'back',
                     label: 'Tasks',
-                    url: removeSubdirectories(url, 2),
+                    url: removeSubdirectories(url, 1),
                 }}
             />
-
+            {isSigned ? (
+                <IsSignedBanner>
+                    <EdsIcon name="info_circle" />
+                    <p>This task is signed. Unsign to make changes.</p>
+                </IsSignedBanner>
+            ) : null}
             <TaskWrapper>
                 <TaskDescription
                     task={task}
@@ -72,7 +80,11 @@ const Task = () => {
                     isSigned={isSigned}
                     setSnackbarText={setSnackbarText}
                 />
-                <TaskParameters setSnackbarText={setSnackbarText} />
+                <TaskAttachments />
+                <TaskParameters
+                    setSnackbarText={setSnackbarText}
+                    isSigned={isSigned}
+                />
                 <TaskSignature
                     fetchTaskStatus={fetchTaskStatus}
                     isSigned={isSigned}

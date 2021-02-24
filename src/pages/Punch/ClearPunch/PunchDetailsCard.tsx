@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { SHADOW } from '../../../style/GlobalStyles';
 
 const PunchDetailsCardWrapper = styled.div`
-    padding: 16px;
+    padding: 16px 4%;
     box-shadow: ${SHADOW};
     background-color: #fafafa;
     display: flex;
