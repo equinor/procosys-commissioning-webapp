@@ -5,7 +5,7 @@ import SkeletonLoadingPage from '../../components/loading/SkeletonLoader';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import { Task } from '../../services/apiTypes';
 import useCommonHooks from '../../utils/useCommonHooks';
-import { TaskCardWrapper } from './TaskDescription';
+import { TaskCardWrapper } from './Task';
 const { CardHeader, CardHeaderTitle } = Card;
 
 type TaskSignatureProps = {
