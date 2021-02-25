@@ -12,9 +12,27 @@ import { Snackbar } from '@equinor/eds-core-react';
 import TaskAttachments from './TaskAttachments';
 import { IsSignedBanner } from '../Checklist/Checklist';
 import EdsIcon from '../../components/icons/EdsIcon';
+import { SHADOW } from '../../style/GlobalStyles';
 
 const TaskWrapper = styled.main`
     padding: 16px 4%;
+`;
+
+export const TaskCardWrapper = styled.div`
+    & h3,
+    label {
+        margin: 0;
+    }
+    & h5 {
+        margin: 12px 0;
+    }
+    & p {
+        margin-bottom: 8px;
+        margin-top: 0;
+    }
+    margin-bottom: 16px;
+    box-shadow: ${SHADOW};
+    border-radius: 10px;
 `;
 
 const Task = () => {
@@ -80,7 +98,7 @@ const Task = () => {
                     isSigned={isSigned}
                     setSnackbarText={setSnackbarText}
                 />
-                <TaskAttachments />
+                <TaskAttachments setSnackbarText={setSnackbarText} />
                 <TaskParameters
                     setSnackbarText={setSnackbarText}
                     isSigned={isSigned}
