@@ -1,26 +1,27 @@
-import { Card, TextField } from '@equinor/eds-core-react';
-import React, { useEffect, useState } from 'react';
+import { Button, Card, Divider } from '@equinor/eds-core-react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import EdsIcon from '../../components/icons/EdsIcon';
 import SkeletonLoadingPage from '../../components/loading/SkeletonLoader';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import { Task } from '../../services/apiTypes';
-import { SHADOW } from '../../style/GlobalStyles';
 import useCommonHooks from '../../utils/useCommonHooks';
+import { TaskCardWrapper } from './Task';
 const { CardHeader, CardHeaderTitle } = Card;
 
-export const TaskCardWrapper = styled.div`
-    & h3,
-    h5 {
-        margin: 0;
+const CommentField = styled.div<{ editable: boolean }>`
+    background-color: #fafafa;
+    padding: 12px;
+    font-family: 'Equinor';
+    min-height: 80px;
+    border-bottom: ${(props) => (props.editable ? '1px solid black' : 'none')};
+`;
+
+const CommentButton = styled(Button)`
+    float: right;
+    margin-top: 12px;
+    :disabled {
+        margin-top: 12px;
     }
-    & p {
-        margin-bottom: 8px;
-        margin-top: 0;
-    }
-    margin-bottom: 16px;
-    box-shadow: ${SHADOW};
-    border-radius: 10px;
 `;
 
 export type TaskCommentDto = {
@@ -46,26 +47,42 @@ const TaskDescription = ({
     const [putCommentStatus, setPutCommentStatus] = useState(
         AsyncStatus.INACTIVE
     );
-    let commentBeforeFocus = '';
+    const [editComment, setEditComment] = useState(false);
+    const commentRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (!task) return;
         setComment(task.commentAsHtml);
     }, [task]);
 
-    const handlePutComment = async () => {
+    useEffect(() => console.log(comment), [comment]);
+
+    const saveComment = async () => {
         setPutCommentStatus(AsyncStatus.LOADING);
         const dto: TaskCommentDto = {
             TaskId: parseInt(params.taskId),
-            CommentAsHtml: comment,
+            CommentAsHtml: commentRef.current
+                ? commentRef.current.innerHTML
+                : '',
         };
         try {
             await api.putTaskComment(params.plant, dto);
             setPutCommentStatus(AsyncStatus.SUCCESS);
             setSnackbarText('Comment successfully saved.');
+            setEditComment(false);
         } catch {
             setPutCommentStatus(AsyncStatus.ERROR);
             setSnackbarText('Unable to save comment.');
+        }
+    };
+
+    const handleCommentClick = () => {
+        if (editComment) {
+            saveComment();
+        } else {
+            setEditComment(true);
+            //Ensure focus occurs after comment div is made editable
+            setTimeout(() => commentRef.current?.focus(), 100);
         }
     };
 
@@ -79,32 +96,28 @@ const TaskDescription = ({
                             __html: `<p>${task.descriptionAsHtml}</p>`,
                         }}
                     ></div>
+                    <Divider />
+                    <div>
+                        <label>Comment:</label>
+                        <CommentField
+                            editable={editComment}
+                            contentEditable={editComment}
+                            ref={commentRef}
+                            dangerouslySetInnerHTML={{
+                                __html: task.commentAsHtml,
+                            }}
+                        ></CommentField>
 
-                    <TextField
-                        id="TaskComment"
-                        label="Comment"
-                        disabled={
-                            putCommentStatus === AsyncStatus.LOADING || isSigned
-                        }
-                        multiline
-                        rows={4}
-                        onFocus={() => (commentBeforeFocus = comment)}
-                        value={comment}
-                        helperText={`Updated at ${new Date(
-                            task.updatedAt
-                        ).toLocaleDateString('en-GB')} by ${
-                            task.updatedByFirstName
-                        } ${task.updatedByLastName} (${task.updatedByUser})`}
-                        onChange={(
-                            e: React.ChangeEvent<
-                                HTMLInputElement | HTMLTextAreaElement
-                            >
-                        ) => setComment(e.target.value)}
-                        onBlur={() => {
-                            comment !== commentBeforeFocus &&
-                                handlePutComment();
-                        }}
-                    />
+                        <CommentButton
+                            disabled={
+                                isSigned ||
+                                putCommentStatus === AsyncStatus.LOADING
+                            }
+                            onClick={handleCommentClick}
+                        >
+                            {editComment ? 'Save comment' : 'Edit comment'}
+                        </CommentButton>
+                    </div>
                 </>
             );
         } else if (fetchTaskStatus === AsyncStatus.ERROR) {
@@ -127,7 +140,7 @@ const TaskDescription = ({
                     </CardHeaderTitle>
                     {/* <EdsIcon name="paste" /> */}
                 </CardHeader>
-                {content()}
+                <div>{content()}</div>
             </Card>
         </TaskCardWrapper>
     );
