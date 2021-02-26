@@ -1,4 +1,4 @@
-import { Button, Card } from '@equinor/eds-core-react';
+import { Button, Card, Scrim } from '@equinor/eds-core-react';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import EdsIcon from '../../components/icons/EdsIcon';
@@ -9,6 +9,17 @@ import useCommonHooks from '../../utils/useCommonHooks';
 import { TaskCardWrapper } from './Task';
 const { CardHeader, CardHeaderTitle } = Card;
 
+const ModalContainer = styled.div`
+    & img {
+        max-width: 100vw;
+        max-height: 90vh;
+        object-fit: contain;
+    }
+    & button {
+        margin-top: 12px;
+        float: right;
+    }
+`;
 const AttachmentsWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -54,6 +65,9 @@ const TaskAttachments = ({ setSnackbarText }: TaskAttachmentsProps) => {
     const [fetchAttachmentsStatus, setFetchAttachmentsStatus] = useState(
         AsyncStatus.LOADING
     );
+    const [fullScreenImageUrl, setFullScreenImageUrl] = useState('');
+    const [showFullScreenImage, setShowFullScreenImage] = useState(false);
+    const [fullScreenImageTitle, setFullScreenImageTitle] = useState('');
 
     useEffect(() => {
         (async () => {
@@ -93,6 +107,22 @@ const TaskAttachments = ({ setSnackbarText }: TaskAttachmentsProps) => {
         }
     };
 
+    const showLargeImage = async (attachmentId: number, imageTitle: string) => {
+        try {
+            const blob = await api.getTaskAttachment(
+                params.plant,
+                params.taskId,
+                attachmentId
+            );
+            const imageUrl = window.URL.createObjectURL(blob);
+            setFullScreenImageUrl(imageUrl);
+            setFullScreenImageTitle(imageTitle);
+            setShowFullScreenImage(true);
+        } catch {
+            setSnackbarText('Unable to load image.');
+        }
+    };
+
     const determineAttachment = (attachment: Attachment) => {
         //Attachment is an image
         if (attachment.thumbnailAsBase64) {
@@ -101,6 +131,9 @@ const TaskAttachments = ({ setSnackbarText }: TaskAttachmentsProps) => {
                     <img
                         src={`data:image/png;base64, ${attachment.thumbnailAsBase64}`}
                         alt={attachment.title}
+                        onClick={() =>
+                            showLargeImage(attachment.id, attachment.title)
+                        }
                     />
                     <p>{attachment.title}</p>
                     <Button
@@ -177,6 +210,26 @@ const TaskAttachments = ({ setSnackbarText }: TaskAttachmentsProps) => {
                         <h3>Attachments</h3>
                     </CardHeaderTitle>
                 </CardHeader>
+                {showFullScreenImage ? (
+                    <Scrim
+                        isDismissable
+                        onClose={() => setShowFullScreenImage(false)}
+                    >
+                        <ModalContainer>
+                            <img
+                                src={fullScreenImageUrl}
+                                alt={fullScreenImageTitle}
+                            />
+                            <Button
+                                onClick={() => setShowFullScreenImage(false)}
+                            >
+                                <EdsIcon name="close" />
+                                Close
+                            </Button>
+                        </ModalContainer>
+                    </Scrim>
+                ) : null}
+
                 {content()}
             </Card>
         </TaskCardWrapper>
