@@ -7,7 +7,6 @@ import { AsyncStatus } from '../../../contexts/CommAppContext';
 import { ChecklistPreview } from '../../../services/apiTypes';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
-import ErrorPage from '../../../components/error/ErrorPage';
 
 export const CommPkgListWrapper = styled.div`
     padding-bottom: 85px;
@@ -52,7 +51,6 @@ const Scope = () => {
     const [fetchScopeStatus, setFetchScopeStatus] = useState(
         AsyncStatus.LOADING
     );
-
     useEffect(() => {
         (async () => {
             setFetchScopeStatus(AsyncStatus.LOADING);
@@ -61,7 +59,10 @@ const Scope = () => {
                     params.plant,
                     params.commPkg
                 );
-                setScope(scopeFromApi);
+                const sortedScope = scopeFromApi.sort((a, b) =>
+                    a.tagNo.localeCompare(b.tagNo)
+                );
+                setScope(sortedScope);
                 setFetchScopeStatus(AsyncStatus.SUCCESS);
             } catch {
                 setFetchScopeStatus(AsyncStatus.ERROR);
