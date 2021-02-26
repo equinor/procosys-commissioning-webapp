@@ -23,9 +23,11 @@ export interface IAuthServiceProps {
 }
 
 const Settings = require('../settings.json');
+console.log('SETTINGS: ', Settings);
 
 export const getAuthSettings = async () => {
     const { data } = await axios.get(Settings.authSettingsEndpoint);
+    console.log('DATA FROM AUTH: ', data);
     // Todo: TypeGuard authsettings
     const clientSettings = {
         auth: {
