@@ -1,4 +1,5 @@
 import {
+    camera_add_photo,
     menu,
     chevron_right,
     chevron_down,
@@ -39,6 +40,7 @@ import { Icon } from '@equinor/eds-core-react';
 import React from 'react';
 
 Icon.add({
+    camera_add_photo,
     menu,
     tune,
     file,

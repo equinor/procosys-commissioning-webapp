@@ -3,7 +3,11 @@ import ErrorPage from '../../components/error/ErrorPage';
 import SkeletonLoadingPage from '../../components/loading/SkeletonLoader';
 import Navbar from '../../components/navigation/Navbar';
 import { AsyncStatus } from '../../contexts/CommAppContext';
-import { CheckItem, ChecklistDetails } from '../../services/apiTypes';
+import {
+    Attachment as AttachmentType,
+    CheckItem,
+    ChecklistDetails,
+} from '../../services/apiTypes';
 import CheckItems from './CheckItems/CheckItems';
 import ChecklistSignature from './ChecklistSignature';
 import ChecklistDetailsCard from './ChecklistDetailsCard';
@@ -11,12 +15,30 @@ import styled from 'styled-components';
 import EdsIcon from '../../components/icons/EdsIcon';
 import axios from 'axios';
 import useCommonHooks from '../../utils/useCommonHooks';
+import ProcosysCard, { CardWrapper } from '../../components/ProcosysCard';
+import Attachment from '../../components/Attachment';
+import { Button, Snackbar } from '@equinor/eds-core-react';
+import UploadAttachment from '../../components/UploadAttachment';
 
 const ChecklistWrapper = styled.div`
     padding: 0 4%;
     display: flex;
     flex-direction: column;
     min-height: calc(100vh - 55px);
+    & > ${CardWrapper}:first-of-type {
+        margin-top: 50px;
+    }
+`;
+
+const AttachmentsWrapper = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+`;
+
+const UploadImageButton = styled(Button)`
+    height: 64px;
+    width: 64px;
+    margin: 8px;
 `;
 
 export const IsSignedBanner = styled.div`
@@ -37,6 +59,10 @@ const Checklist = () => {
     const [fetchChecklistStatus, setFetchChecklistStatus] = useState(
         AsyncStatus.SUCCESS
     );
+    const [fetchAttachmentsStatus, setFetchAttachmentsStatus] = useState(
+        AsyncStatus.LOADING
+    );
+    const [attachments, setAttachments] = useState<AttachmentType[]>([]);
     const [checkItems, setCheckItems] = useState<CheckItem[]>([]);
     const [checklistDetails, setChecklistDetails] = useState<
         ChecklistDetails
@@ -44,6 +70,9 @@ const Checklist = () => {
     const [isSigned, setIsSigned] = useState(false);
     const [allItemsCheckedOrNA, setAllItemsCheckedOrNA] = useState(true);
     const [reloadChecklist, setReloadChecklist] = useState(false);
+    const [showSnackbar, setShowSnackbar] = useState(false);
+    const [snackbarText, setSnackbarText] = useState('');
+    const [showUploadModal, setShowUploadModal] = useState(false);
 
     useEffect(() => {
         const source = axios.CancelToken.source();
@@ -65,6 +94,30 @@ const Checklist = () => {
             source.cancel('Checklist component unmounted');
         };
     }, [params.checklistId, params.plant, reloadChecklist, api]);
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const attachmentsFromApi = await api.getChecklistAttachments(
+                    params.plant,
+                    params.checklistId
+                );
+                if (attachmentsFromApi.length > 0) {
+                    setFetchAttachmentsStatus(AsyncStatus.SUCCESS);
+                    setAttachments(attachmentsFromApi);
+                } else {
+                    setFetchAttachmentsStatus(AsyncStatus.EMPTY_RESPONSE);
+                }
+            } catch {
+                setFetchAttachmentsStatus(AsyncStatus.ERROR);
+            }
+        })();
+    }, [api, params.plant, params.checklistId]);
+
+    useEffect(() => {
+        if (snackbarText.length < 1) return;
+        setShowSnackbar(true);
+    }, [snackbarText]);
 
     const content = () => {
         if (
@@ -93,13 +146,58 @@ const Checklist = () => {
                             details={checklistDetails}
                             isSigned={isSigned}
                         />
-                        <ChecklistSignature
-                            reloadChecklist={setReloadChecklist}
-                            allItemsCheckedOrNA={allItemsCheckedOrNA}
-                            isSigned={isSigned}
-                            details={checklistDetails}
-                            setIsSigned={setIsSigned}
-                        />
+                        <ProcosysCard
+                            errorMessage={
+                                'Unable to load attachments for this checklist.'
+                            }
+                            emptyContentMessage={
+                                'This checklist has no attachments'
+                            }
+                            cardTitle={'Attachments'}
+                            fetchStatus={fetchAttachmentsStatus}
+                        >
+                            <AttachmentsWrapper>
+                                <UploadImageButton
+                                    onClick={() => setShowUploadModal(true)}
+                                >
+                                    <EdsIcon name="camera_add_photo" />
+                                </UploadImageButton>
+                                {showUploadModal ? (
+                                    <UploadAttachment
+                                        setShowModal={setShowUploadModal}
+                                        setAttachments={setAttachments}
+                                    />
+                                ) : null}
+                                {attachments.map((attachment) => (
+                                    <Attachment
+                                        getAttachment={
+                                            api.getChecklistAttachment
+                                        }
+                                        parentId={params.checklistId}
+                                        setSnackbarText={setSnackbarText}
+                                        attachment={attachment}
+                                        setAttachments={setAttachments}
+                                        deleteAttachment={
+                                            api.deleteChecklistAttachment
+                                        }
+                                    />
+                                ))}
+                            </AttachmentsWrapper>
+                        </ProcosysCard>
+                        <ProcosysCard
+                            fetchStatus={fetchChecklistStatus}
+                            errorMessage={'Unable to load checklist signature.'}
+                            cardTitle={'Signature'}
+                        >
+                            <ChecklistSignature
+                                setSnackbarText={setSnackbarText}
+                                reloadChecklist={setReloadChecklist}
+                                allItemsCheckedOrNA={allItemsCheckedOrNA}
+                                isSigned={isSigned}
+                                details={checklistDetails}
+                                setIsSigned={setIsSigned}
+                            />
+                        </ProcosysCard>
                     </ChecklistWrapper>
                 </>
             );
@@ -127,6 +225,16 @@ const Checklist = () => {
                 rightContent={{ name: 'newPunch' }}
             />
             {content()}
+            <Snackbar
+                autoHideDuration={3000}
+                onClose={() => {
+                    setShowSnackbar(false);
+                    setSnackbarText('');
+                }}
+                open={showSnackbar}
+            >
+                {snackbarText}
+            </Snackbar>
         </>
     );
 };
