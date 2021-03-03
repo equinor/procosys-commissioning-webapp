@@ -337,9 +337,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         taskId: string,
         attachmentId: number
     ) => {
-        const {
-            data,
-        } = await axios.get(
+        const { data } = await axios.get(
             `CommPkg/Task/Attachment?plantId=PCS$${plantId}&taskId=${taskId}&attachmentId=${attachmentId}${apiVersion}`,
             {
                 responseType: 'blob',
@@ -352,7 +350,70 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         return data as Blob;
     };
 
+    const getChecklistAttachments = async (
+        plantId: string,
+        checklistId: string
+    ) => {
+        const { data } = await axios.get(
+            `CheckList/Attachments?plantId=PCS$${plantId}&checkListId=${checklistId}&thumbnailSize=32${apiVersion}`
+        );
+        return objectToCamelCase(data) as Attachment[];
+    };
+
+    const getChecklistAttachment = async (
+        plantId: string,
+        checklistId: string,
+        attachmentId: number
+    ) => {
+        const { data } = await axios.get(
+            `CheckList/Attachment?plantId=PCS$${plantId}&checkListId=${checklistId}&attachmentId=${attachmentId}${apiVersion}`,
+            {
+                responseType: 'blob',
+                headers: {
+                    'Content-Disposition':
+                        'attachment; filename="filename.jpg"',
+                },
+            }
+        );
+        return data as Blob;
+    };
+
+    const deleteChecklistAttachment = async (
+        plantId: string,
+        checklistId: string,
+        attachmentId: number
+    ) => {
+        const dto = {
+            CheckListId: parseInt(checklistId),
+            AttachmentId: attachmentId,
+        };
+        await axios.delete(
+            `CheckList/Attachment?plantId=PCS$${plantId}&api-version=4.1`,
+            { data: dto }
+        );
+    };
+
+    const postChecklistAttachment = async (
+        plantId: string,
+        checklistId: string,
+        data: FormData,
+        title: string
+    ) => {
+        await axios.post(
+            `CheckList/Attachment?plantId=PCS$${plantId}&checkListId=${checklistId}&title=${title}${apiVersion}`,
+            data,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
+    };
+
     return {
+        deleteChecklistAttachment,
+        getChecklistAttachments,
+        getChecklistAttachment,
         getTaskAttachments,
         getTaskAttachment,
         getPunchItem,
@@ -378,6 +439,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         postTaskUnsign,
         postSign,
         postUnsign,
+        postChecklistAttachment,
         putChecklistComment,
         putMetaTableCell,
         putTaskComment,
