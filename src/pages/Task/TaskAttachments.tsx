@@ -1,15 +1,11 @@
-import { Button, Card, Scrim } from '@equinor/eds-core-react';
-import React, { useEffect, useState } from 'react';
+import { Button, Scrim } from '@equinor/eds-core-react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import EdsIcon from '../../components/icons/EdsIcon';
-import SkeletonLoadingPage from '../../components/loading/SkeletonLoader';
-import { AsyncStatus } from '../../contexts/CommAppContext';
 import { Attachment } from '../../services/apiTypes';
 import useCommonHooks from '../../utils/useCommonHooks';
-import { TaskCardWrapper } from './Task';
-const { CardHeader, CardHeaderTitle } = Card;
 
-const ModalContainer = styled.div`
+export const ModalContainer = styled.div`
     & img {
         max-width: 100vw;
         max-height: 90vh;
@@ -20,11 +16,13 @@ const ModalContainer = styled.div`
         float: right;
     }
 `;
-const AttachmentsWrapper = styled.div`
+
+export const AttachmentsWrapper = styled.div`
     display: flex;
     flex-direction: column;
 `;
-const AttachmentsRow = styled.div`
+
+export const AttachmentsRow = styled.div`
     display: flex;
     align-items: center;
     margin-bottom: 16px;
@@ -35,7 +33,6 @@ const AttachmentsRow = styled.div`
         object-position: 0 0;
         margin-right: 16px;
     }
-
     & > div {
         flex: 0.4;
         width: 32px;
@@ -57,32 +54,17 @@ const AttachmentsRow = styled.div`
 
 type TaskAttachmentsProps = {
     setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
+    attachments: Attachment[];
 };
 
-const TaskAttachments = ({ setSnackbarText }: TaskAttachmentsProps) => {
+const TaskAttachments = ({
+    setSnackbarText,
+    attachments,
+}: TaskAttachmentsProps) => {
     const { api, params } = useCommonHooks();
-    const [attachments, setAttachments] = useState<Attachment[]>([]);
-    const [fetchAttachmentsStatus, setFetchAttachmentsStatus] = useState(
-        AsyncStatus.LOADING
-    );
     const [fullScreenImageUrl, setFullScreenImageUrl] = useState('');
     const [showFullScreenImage, setShowFullScreenImage] = useState(false);
     const [fullScreenImageTitle, setFullScreenImageTitle] = useState('');
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const attachmentsFromApi = await api.getTaskAttachments(
-                    params.plant,
-                    params.taskId
-                );
-                setAttachments(attachmentsFromApi);
-                setFetchAttachmentsStatus(AsyncStatus.SUCCESS);
-            } catch {
-                setFetchAttachmentsStatus(AsyncStatus.ERROR);
-            }
-        })();
-    }, [api, params.plant, params.taskId]);
 
     const handleDownload = async (attachment: Attachment) => {
         try {
@@ -176,63 +158,33 @@ const TaskAttachments = ({ setSnackbarText }: TaskAttachmentsProps) => {
         }
     };
 
-    const content = () => {
-        if (
-            fetchAttachmentsStatus === AsyncStatus.SUCCESS &&
-            attachments.length > 0
-        ) {
-            return (
-                <AttachmentsWrapper>
-                    {attachments.map((attachment) => (
-                        <AttachmentsRow key={attachment.id}>
-                            {determineAttachment(attachment)}
-                        </AttachmentsRow>
-                    ))}
-                </AttachmentsWrapper>
-            );
-        } else if (
-            fetchAttachmentsStatus === AsyncStatus.SUCCESS &&
-            attachments.length < 1
-        ) {
-            return <p>This task has no attachments.</p>;
-        } else if (fetchAttachmentsStatus === AsyncStatus.ERROR) {
-            return <p>Unable to load attachments. Please refresh.</p>;
-        } else {
-            return <SkeletonLoadingPage nrOfRows={3} />;
-        }
-    };
-
     return (
-        <TaskCardWrapper>
-            <Card>
-                <CardHeader>
-                    <CardHeaderTitle>
-                        <h3>Attachments</h3>
-                    </CardHeaderTitle>
-                </CardHeader>
-                {showFullScreenImage ? (
-                    <Scrim
-                        isDismissable
-                        onClose={() => setShowFullScreenImage(false)}
-                    >
-                        <ModalContainer>
-                            <img
-                                src={fullScreenImageUrl}
-                                alt={fullScreenImageTitle}
-                            />
-                            <Button
-                                onClick={() => setShowFullScreenImage(false)}
-                            >
-                                <EdsIcon name="close" />
-                                Close
-                            </Button>
-                        </ModalContainer>
-                    </Scrim>
-                ) : null}
-
-                {content()}
-            </Card>
-        </TaskCardWrapper>
+        <>
+            {showFullScreenImage ? (
+                <Scrim
+                    isDismissable
+                    onClose={() => setShowFullScreenImage(false)}
+                >
+                    <ModalContainer>
+                        <img
+                            src={fullScreenImageUrl}
+                            alt={fullScreenImageTitle}
+                        />
+                        <Button onClick={() => setShowFullScreenImage(false)}>
+                            <EdsIcon name="close" />
+                            Close
+                        </Button>
+                    </ModalContainer>
+                </Scrim>
+            ) : null}
+            <AttachmentsWrapper>
+                {attachments.map((attachment) => (
+                    <AttachmentsRow key={attachment.id}>
+                        {determineAttachment(attachment)}
+                    </AttachmentsRow>
+                ))}
+            </AttachmentsWrapper>
+        </>
     );
 };
 
