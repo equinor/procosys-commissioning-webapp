@@ -1,14 +1,9 @@
-import { Card, Divider, TextField } from '@equinor/eds-core-react';
-import React, { useEffect, useState } from 'react';
+import { Divider, TextField } from '@equinor/eds-core-react';
+import React from 'react';
 import styled from 'styled-components';
-import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
-import { AsyncStatus } from '../../../contexts/CommAppContext';
 import { TaskParameter } from '../../../services/apiTypes';
 import { BREAKPOINT } from '../../../style/GlobalStyles';
-import useCommonHooks from '../../../utils/useCommonHooks';
-import { TaskCardWrapper } from '../Task';
 import MeasuredValueInput from './MeasuredValueInput';
-const { CardHeader, CardHeaderTitle } = Card;
 
 const ParameterRow = styled.div`
     display: flex;
@@ -44,41 +39,17 @@ export type TaskParameterDto = {
 type TaskParametersProps = {
     setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
     isSigned: boolean;
+    parameters: TaskParameter[];
 };
 
-const TaskParameters = ({ setSnackbarText, isSigned }: TaskParametersProps) => {
-    const { api, params } = useCommonHooks();
-    const [parameters, setParameters] = useState<TaskParameter[]>([]);
-    const [fetchParametersStatus, setFetchParametersStatus] = useState(
-        AsyncStatus.LOADING
-    );
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const parametersFromApi = await api.getTaskParameters(
-                    params.plant,
-                    params.taskId
-                );
-                setParameters(parametersFromApi);
-                setFetchParametersStatus(AsyncStatus.SUCCESS);
-            } catch {
-                setFetchParametersStatus(AsyncStatus.ERROR);
-            }
-        })();
-    }, [api, params.taskId, params.plant]);
-
-    const content = () => {
-        if (
-            fetchParametersStatus === AsyncStatus.SUCCESS &&
-            parameters.length < 1
-        ) {
-            return <p>This task has no parameters.</p>;
-        } else if (
-            fetchParametersStatus === AsyncStatus.SUCCESS &&
-            parameters.length > 0
-        ) {
-            return parameters.map((parameter, i) => (
+const TaskParameters = ({
+    setSnackbarText,
+    isSigned,
+    parameters,
+}: TaskParametersProps) => {
+    return (
+        <>
+            {parameters.map((parameter, i) => (
                 <>
                     {i === 0 ? null : <Divider />}
                     <ParameterRow key={parameter.id}>
@@ -100,26 +71,8 @@ const TaskParameters = ({ setSnackbarText, isSigned }: TaskParametersProps) => {
                         </ParameterInputWrapper>
                     </ParameterRow>
                 </>
-            ));
-        } else if (fetchParametersStatus === AsyncStatus.ERROR) {
-            return <p>Unable to fetch parameters. Please reload.</p>;
-        } else {
-            return <SkeletonLoadingPage nrOfRows={3} />;
-        }
-    };
-
-    return (
-        <TaskCardWrapper>
-            <Card>
-                <CardHeader>
-                    <CardHeaderTitle>
-                        <h3>Parameters</h3>
-                    </CardHeaderTitle>
-                    {/* <EdsIcon name="tune" /> */}
-                </CardHeader>
-                <div>{content()}</div>
-            </Card>
-        </TaskCardWrapper>
+            ))}
+        </>
     );
 };
 
