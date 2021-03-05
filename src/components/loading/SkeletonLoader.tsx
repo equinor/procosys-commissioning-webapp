@@ -1,7 +1,6 @@
 import { Card } from '@equinor/eds-core-react';
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import { SHADOW } from '../../style/GlobalStyles';
 
 const SkeletonLoadingPageWrapper = styled.div`
     padding-top: 24px;
