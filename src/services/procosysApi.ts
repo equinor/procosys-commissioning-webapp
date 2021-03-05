@@ -26,6 +26,13 @@ import {
     Attachment,
 } from './apiTypes';
 
+type PostAttachmentProps = {
+    plantId: string;
+    parentId?: string;
+    data: FormData;
+    title?: string;
+};
+
 type ProcosysApiServiceProps = {
     axios: AxiosInstance;
     apiVersion: string;
@@ -393,14 +400,85 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         );
     };
 
-    const postChecklistAttachment = async (
-        plantId: string,
-        checklistId: string,
-        data: FormData,
-        title: string
-    ) => {
+    const postChecklistAttachment = async ({
+        plantId,
+        parentId,
+        data,
+        title,
+    }: PostAttachmentProps) => {
         await axios.post(
-            `CheckList/Attachment?plantId=PCS$${plantId}&checkListId=${checklistId}&title=${title}${apiVersion}`,
+            `CheckList/Attachment?plantId=PCS$${plantId}&checkListId=${parentId}&title=${title}${apiVersion}`,
+            data,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
+    };
+
+    const getPunchAttachments = async (
+        plantId: string,
+        punchItemId: string
+    ) => {
+        const { data } = await axios.get(
+            `PunchListItem/Attachments?plantId=PCS$${plantId}&punchItemId=${punchItemId}${apiVersion}`
+        );
+        return objectToCamelCase(data) as Attachment[];
+    };
+
+    const getPunchAttachment = async (
+        plantId: string,
+        punchItemId: string,
+        attachmentId: number
+    ) => {
+        const { data } = await axios.get(
+            `PunchListItem/Attachment?plantId=PCS$${plantId}&punchItemId=${punchItemId}&attachmentId=${attachmentId}${apiVersion}`
+        );
+        return data as Blob;
+    };
+
+    const deletePunchAttachment = async (
+        plantId: string,
+        punchItemId: string,
+        attachmentId: number
+    ) => {
+        const dto = {
+            PunchItemId: parseInt(punchItemId),
+            AttachmentId: attachmentId,
+        };
+        await axios.delete(
+            `PunchListItem/Attachment?plantId=PCS$${plantId}${apiVersion}`,
+            { data: dto }
+        );
+    };
+
+    const postTempPunchAttachment = async ({
+        plantId,
+        parentId,
+        data: formData,
+        title,
+    }: PostAttachmentProps) => {
+        const { data } = await axios.post(
+            `PunchListItem/TempAttachment?plantId=PCS$${plantId}${apiVersion}`,
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
+        return data as string;
+    };
+
+    const postPunchAttachment = async ({
+        plantId,
+        parentId,
+        data,
+        title,
+    }: PostAttachmentProps) => {
+        await axios.post(
+            `PunchListItem/Attachment?plantId=PCS$${plantId}&punchItemId=${parentId}&title=${title}${apiVersion}`,
             data,
             {
                 headers: {
@@ -412,6 +490,9 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
 
     return {
         deleteChecklistAttachment,
+        deletePunchAttachment,
+        getPunchAttachments,
+        getPunchAttachment,
         getChecklistAttachments,
         getChecklistAttachment,
         getTaskAttachments,
@@ -437,8 +518,10 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         postPunchAction,
         postTaskSign,
         postTaskUnsign,
+        postPunchAttachment,
         postSign,
         postUnsign,
+        postTempPunchAttachment,
         postChecklistAttachment,
         putChecklistComment,
         putMetaTableCell,
@@ -450,4 +533,5 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
 };
 
 export type ProcosysApiService = ReturnType<typeof procosysApiService>;
+
 export default procosysApiService;

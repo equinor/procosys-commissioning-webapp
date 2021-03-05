@@ -176,6 +176,7 @@ export interface NewPunch {
     TypeId: number;
     RaisedByOrganizationId: number;
     ClearingByOrganizationId: number;
+    TemporaryFileIds: string[];
 }
 
 export interface PunchItem {
