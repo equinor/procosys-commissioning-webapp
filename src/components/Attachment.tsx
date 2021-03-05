@@ -2,69 +2,102 @@ import { Button, CircularProgress, Scrim } from '@equinor/eds-core-react';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { AsyncStatus } from '../contexts/CommAppContext';
-import { ModalContainer } from '../pages/Task/TaskAttachments';
 import { Attachment as AttachmentType } from '../services/apiTypes';
 import { handleDownload } from '../utils/general';
 import useCommonHooks from '../utils/useCommonHooks';
 import EdsIcon from './icons/EdsIcon';
 
-type AttachmentProps = {
-    attachment: AttachmentType;
-    setAttachments: React.Dispatch<React.SetStateAction<AttachmentType[]>>;
-    parentId: string;
-    deleteAttachment: (
-        plantId: string,
-        checklistId: string,
-        attachmentId: number
-    ) => Promise<void>;
-    getAttachment: (
-        plantId: string,
-        checklistId: string,
-        attachmentId: number
-    ) => Promise<Blob>;
-    setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
-};
+export const AttachmentsWrapper = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+`;
+
+export const UploadImageButton = styled(Button)`
+    height: 82px;
+    width: 82px;
+    margin: 8px;
+    &:disabled {
+        height: 82px;
+        width: 82px;
+        margin: 8px;
+    }
+`;
+
 const LoadingWrapper = styled.div`
-    height: 64px;
-    width: 64px;
+    height: 82px;
+    width: 82px;
     margin: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
 `;
 
-const AttachmentImage = styled.img`
-    height: 64px;
+export const AttachmentImage = styled.img`
+    height: 82px;
     margin: 8px;
 `;
 
-const ChecklistModal = styled.div`
+export const ImageModal = styled.div`
     width: 80vw;
     max-height: 80vh;
     padding: 16px;
     & > img {
         width: 100%;
+        max-height: 80vh;
         object-fit: contain;
     }
-    & button {
+    & button,
+    button:disabled {
         float: right;
-        margin-top: 16px;
-        margin-left: 16px;
+        margin-top: 12px;
+        margin-left: 12px;
     }
 `;
+
+type AttachmentProps = {
+    attachment: AttachmentType;
+    refreshAttachments: React.Dispatch<React.SetStateAction<boolean>>;
+    parentId: string;
+    isSigned?: boolean;
+    deleteAttachment:
+        | ((
+              plantId: string,
+              checklistId: string,
+              attachmentId: number
+          ) => Promise<void>)
+        | ((
+              plantId: string,
+              punchItemId: string,
+              attachmentId: number
+          ) => Promise<void>);
+    getAttachment:
+        | ((
+              plantId: string,
+              checklistId: string,
+              attachmentId: number
+          ) => Promise<Blob>)
+        | ((
+              plantId: string,
+              punchListId: string,
+              attachmentId: number
+          ) => Promise<Blob>);
+    setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
+};
 
 const Attachment = ({
     attachment,
     getAttachment,
     deleteAttachment,
-    setAttachments,
+    refreshAttachments,
     setSnackbarText,
     parentId,
+    isSigned = false,
 }: AttachmentProps) => {
     const { params } = useCommonHooks();
     const [showFullScreenImage, setShowFullScreenImage] = useState(false);
     const [attachmentFileURL, setAttachmentFileURL] = useState('');
     const [loadingStatus, setLoadingStatus] = useState(AsyncStatus.INACTIVE);
+    const [deleteStatus, setDeleteStatus] = useState(AsyncStatus.INACTIVE);
 
     const loadImage = async () => {
         setLoadingStatus(AsyncStatus.LOADING);
@@ -85,6 +118,20 @@ const Attachment = ({
         }
     };
 
+    const handleDelete = async () => {
+        setDeleteStatus(AsyncStatus.LOADING);
+        try {
+            await deleteAttachment(params.plant, parentId, attachment.id);
+            setSnackbarText('Attachment successfully removed');
+            refreshAttachments((prev) => !prev);
+            setDeleteStatus(AsyncStatus.SUCCESS);
+            setShowFullScreenImage(false);
+        } catch {
+            setDeleteStatus(AsyncStatus.ERROR);
+            setSnackbarText('Unable to delete attachment. Please try again');
+        }
+    };
+
     return (
         <>
             {showFullScreenImage ? (
@@ -92,8 +139,12 @@ const Attachment = ({
                     isDismissable
                     onClose={() => setShowFullScreenImage(false)}
                 >
-                    <ChecklistModal>
+                    <ImageModal>
                         <img src={attachmentFileURL} alt={attachment.title} />
+                        <Button onClick={() => setShowFullScreenImage(false)}>
+                            <EdsIcon name="close" />
+                            Close
+                        </Button>
                         <Button
                             onClick={() => {
                                 handleDownload(
@@ -108,11 +159,28 @@ const Attachment = ({
                             <EdsIcon name="cloud_download" />
                             Download
                         </Button>
-                        <Button onClick={() => setShowFullScreenImage(false)}>
-                            <EdsIcon name="close" />
-                            Close
-                        </Button>
-                    </ChecklistModal>
+                        {isSigned ? null : (
+                            <Button
+                                color={'danger'}
+                                onClick={handleDelete}
+                                disabled={deleteStatus === AsyncStatus.LOADING}
+                            >
+                                <EdsIcon
+                                    name="delete_to_trash"
+                                    color={
+                                        deleteStatus === AsyncStatus.LOADING
+                                            ? '#000000'
+                                            : '#ffffff'
+                                    }
+                                    alt="Delete attachment"
+                                    size={32}
+                                />
+                                {deleteStatus === AsyncStatus.LOADING
+                                    ? 'Loading...'
+                                    : 'Delete'}
+                            </Button>
+                        )}
+                    </ImageModal>
                 </Scrim>
             ) : null}
             {loadingStatus === AsyncStatus.LOADING ? (
