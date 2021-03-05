@@ -1,9 +1,11 @@
 import {
     camera_add_photo,
     menu,
+    stop,
     chevron_right,
     chevron_down,
     file,
+    delete_to_trash,
     arrow_drop_down,
     error_outlined,
     close,
@@ -42,9 +44,11 @@ import React from 'react';
 Icon.add({
     camera_add_photo,
     menu,
+    stop,
     tune,
     file,
     link,
+    delete_to_trash,
     cloud_download,
     chevron_right,
     chevron_down,

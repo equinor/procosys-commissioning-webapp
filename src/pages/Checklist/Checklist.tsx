@@ -15,10 +15,14 @@ import styled from 'styled-components';
 import EdsIcon from '../../components/icons/EdsIcon';
 import axios from 'axios';
 import useCommonHooks from '../../utils/useCommonHooks';
-import ProcosysCard, { CardWrapper } from '../../components/ProcosysCard';
-import Attachment from '../../components/Attachment';
-import { Button, Snackbar } from '@equinor/eds-core-react';
+import ProcosysCard from '../../components/ProcosysCard';
+import Attachment, {
+    AttachmentsWrapper,
+    UploadImageButton,
+} from '../../components/Attachment';
+import { Snackbar } from '@equinor/eds-core-react';
 import UploadAttachment from '../../components/UploadAttachment';
+import { CardWrapper } from '../../components/EdsCard';
 
 const ChecklistWrapper = styled.div`
     padding: 0 4%;
@@ -28,17 +32,6 @@ const ChecklistWrapper = styled.div`
     & > ${CardWrapper}:first-of-type {
         margin-top: 50px;
     }
-`;
-
-const AttachmentsWrapper = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-`;
-
-const UploadImageButton = styled(Button)`
-    height: 64px;
-    width: 64px;
-    margin: 8px;
 `;
 
 export const IsSignedBanner = styled.div`
@@ -70,6 +63,7 @@ const Checklist = () => {
     const [isSigned, setIsSigned] = useState(false);
     const [allItemsCheckedOrNA, setAllItemsCheckedOrNA] = useState(true);
     const [reloadChecklist, setReloadChecklist] = useState(false);
+    const [refreshAttachments, setRefreshAttachments] = useState(false);
     const [showSnackbar, setShowSnackbar] = useState(false);
     const [snackbarText, setSnackbarText] = useState('');
     const [showUploadModal, setShowUploadModal] = useState(false);
@@ -112,7 +106,7 @@ const Checklist = () => {
                 setFetchAttachmentsStatus(AsyncStatus.ERROR);
             }
         })();
-    }, [api, params.plant, params.checklistId]);
+    }, [api, params.plant, params.checklistId, refreshAttachments]);
 
     useEffect(() => {
         if (snackbarText.length < 1) return;
@@ -158,6 +152,7 @@ const Checklist = () => {
                         >
                             <AttachmentsWrapper>
                                 <UploadImageButton
+                                    disabled={isSigned}
                                     onClick={() => setShowUploadModal(true)}
                                 >
                                     <EdsIcon name="camera_add_photo" />
@@ -165,18 +160,28 @@ const Checklist = () => {
                                 {showUploadModal ? (
                                     <UploadAttachment
                                         setShowModal={setShowUploadModal}
-                                        setAttachments={setAttachments}
+                                        setSnackbarText={setSnackbarText}
+                                        refreshAttachments={
+                                            setRefreshAttachments
+                                        }
+                                        postAttachment={
+                                            api.postChecklistAttachment
+                                        }
+                                        parentId={params.checklistId}
                                     />
                                 ) : null}
                                 {attachments.map((attachment) => (
                                     <Attachment
+                                        isSigned={isSigned}
                                         getAttachment={
                                             api.getChecklistAttachment
                                         }
                                         parentId={params.checklistId}
                                         setSnackbarText={setSnackbarText}
                                         attachment={attachment}
-                                        setAttachments={setAttachments}
+                                        refreshAttachments={
+                                            setRefreshAttachments
+                                        }
                                         deleteAttachment={
                                             api.deleteChecklistAttachment
                                         }
