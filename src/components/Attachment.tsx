@@ -59,7 +59,7 @@ type AttachmentProps = {
     refreshAttachments: React.Dispatch<React.SetStateAction<boolean>>;
     parentId: string;
     isSigned?: boolean;
-    deleteAttachment:
+    deleteAttachment?:
         | ((
               plantId: string,
               checklistId: string,
@@ -109,8 +109,10 @@ const Attachment = ({
                 attachment.id
             );
             const imageUrl = window.URL.createObjectURL(blob);
+            console.log(imageUrl);
             setAttachmentFileURL(imageUrl);
             setShowFullScreenImage(true);
+            console.log('full screen');
             setLoadingStatus(AsyncStatus.SUCCESS);
         } catch {
             setSnackbarText('Unable to load image.');
@@ -119,6 +121,7 @@ const Attachment = ({
     };
 
     const handleDelete = async () => {
+        if (!deleteAttachment) return;
         setDeleteStatus(AsyncStatus.LOADING);
         try {
             await deleteAttachment(params.plant, parentId, attachment.id);
@@ -163,7 +166,10 @@ const Attachment = ({
                             <Button
                                 color={'danger'}
                                 onClick={handleDelete}
-                                disabled={deleteStatus === AsyncStatus.LOADING}
+                                disabled={
+                                    deleteStatus === AsyncStatus.LOADING ||
+                                    !deleteAttachment
+                                }
                             >
                                 <EdsIcon
                                     name="delete_to_trash"
