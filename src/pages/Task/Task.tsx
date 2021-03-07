@@ -136,6 +136,20 @@ const Task = () => {
                         setSnackbarText={setSnackbarText}
                     />
                 </ProcosysCard>
+                <ProcosysCard
+                    errorMessage={'Unable to load task signature.'}
+                    fetchStatus={fetchTaskStatus}
+                    cardTitle={'Signature'}
+                >
+                    <TaskSignature
+                        fetchTaskStatus={fetchTaskStatus}
+                        isSigned={isSigned}
+                        task={task}
+                        setIsSigned={setIsSigned}
+                        setSnackbarText={setSnackbarText}
+                        refreshTask={setRefreshTask}
+                    />
+                </ProcosysCard>
 
                 <ProcosysCard
                     fetchStatus={fetchAttachmentsStatus}
@@ -163,21 +177,6 @@ const Task = () => {
                         setSnackbarText={setSnackbarText}
                         isSigned={isSigned}
                         parameters={parameters}
-                    />
-                </ProcosysCard>
-
-                <ProcosysCard
-                    errorMessage={'Unable to load task signature.'}
-                    fetchStatus={fetchTaskStatus}
-                    cardTitle={'Signature'}
-                >
-                    <TaskSignature
-                        fetchTaskStatus={fetchTaskStatus}
-                        isSigned={isSigned}
-                        task={task}
-                        setIsSigned={setIsSigned}
-                        setSnackbarText={setSnackbarText}
-                        refreshTask={setRefreshTask}
                     />
                 </ProcosysCard>
             </TaskWrapper>
