@@ -109,10 +109,8 @@ const Attachment = ({
                 attachment.id
             );
             const imageUrl = window.URL.createObjectURL(blob);
-            console.log(imageUrl);
             setAttachmentFileURL(imageUrl);
             setShowFullScreenImage(true);
-            console.log('full screen');
             setLoadingStatus(AsyncStatus.SUCCESS);
         } catch {
             setSnackbarText('Unable to load image.');
