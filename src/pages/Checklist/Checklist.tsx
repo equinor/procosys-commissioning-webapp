@@ -172,6 +172,7 @@ const Checklist = () => {
                                 ) : null}
                                 {attachments.map((attachment) => (
                                     <Attachment
+                                        key={attachment.id}
                                         isSigned={isSigned}
                                         getAttachment={
                                             api.getChecklistAttachment
