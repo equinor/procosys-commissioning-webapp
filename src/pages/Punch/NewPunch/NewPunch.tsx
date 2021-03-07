@@ -115,9 +115,9 @@ const NewPunch = () => {
             TypeId: parseInt(formFields.type),
             RaisedByOrganizationId: parseInt(formFields.raisedBy),
             ClearingByOrganizationId: parseInt(formFields.clearingBy),
-            TemporaryFileIds: tempAttachments.map(
-                (attachment) => attachment.id
-            ),
+            TemporaryFileIds: tempAttachments.map((attachment) => {
+                return attachment.id;
+            }),
         };
         setSubmitPunchStatus(AsyncStatus.LOADING);
         try {
@@ -178,29 +178,6 @@ const NewPunch = () => {
                         details={checklistDetails}
                         descriptionLabel={'New punch for:'}
                     />
-                    <EdsCard title={'Add attachments'}>
-                        <AttachmentsWrapper>
-                            <UploadImageButton
-                                onClick={() => setShowUploadModal(true)}
-                            >
-                                <EdsIcon name="camera_add_photo" />
-                            </UploadImageButton>
-                            {tempAttachments.map((attachment) => (
-                                <>
-                                    <AttachmentImage
-                                        src={URL.createObjectURL(
-                                            attachment.file
-                                        )}
-                                        alt={'Temp attachment ' + attachment.id}
-                                        onClick={() => {
-                                            setAttachmentToShow(attachment);
-                                            setShowFullImageModal(true);
-                                        }}
-                                    />
-                                </>
-                            ))}
-                        </AttachmentsWrapper>
-                    </EdsCard>
                     <NewPunchForm
                         categories={categories}
                         types={types}
@@ -210,7 +187,35 @@ const NewPunch = () => {
                         buttonText={'Create punch'}
                         handleSubmit={handleSubmit}
                         submitPunchStatus={submitPunchStatus}
-                    />
+                    >
+                        <EdsCard title={'Add attachments'}>
+                            <AttachmentsWrapper>
+                                <UploadImageButton
+                                    onClick={() => setShowUploadModal(true)}
+                                >
+                                    <EdsIcon name="camera_add_photo" />
+                                </UploadImageButton>
+                                {tempAttachments.map((attachment) => (
+                                    <>
+                                        <AttachmentImage
+                                            key={attachment.id}
+                                            src={URL.createObjectURL(
+                                                attachment.file
+                                            )}
+                                            alt={
+                                                'Temp attachment ' +
+                                                attachment.id
+                                            }
+                                            onClick={() => {
+                                                setAttachmentToShow(attachment);
+                                                setShowFullImageModal(true);
+                                            }}
+                                        />
+                                    </>
+                                ))}
+                            </AttachmentsWrapper>
+                        </EdsCard>
+                    </NewPunchForm>
                     {showFullImageModal && attachmentToShow ? (
                         <Scrim
                             isDismissable
