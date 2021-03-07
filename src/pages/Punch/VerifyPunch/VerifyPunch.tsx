@@ -2,16 +2,21 @@ import { Button } from '@equinor/eds-core-react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import Attachment, { AttachmentsWrapper } from '../../../components/Attachment';
 import ErrorPage from '../../../components/error/ErrorPage';
 import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
 import Navbar from '../../../components/navigation/Navbar';
+import ProcosysCard from '../../../components/ProcosysCard';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
 import { PunchItem } from '../../../services/apiTypes';
+import buildEndpoint from '../../../utils/buildEndpoint';
 import { removeSubdirectories } from '../../../utils/general';
+import useAttachments from '../../../utils/useAttachments';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import { PunchWrapper } from '../ClearPunch/ClearPunch';
 import PunchDetailsCard from '../ClearPunch/PunchDetailsCard';
 import { PunchAction } from '../ClearPunch/useClearPunchFacade';
+import useSnackbar from '../../../utils/useSnackbar';
 
 const VerifyPunchWrapper = styled.main`
     padding: 16px 4%;
@@ -39,6 +44,14 @@ const VerifyPunch = () => {
         AsyncStatus.INACTIVE
     );
     const [punchItem, setPunchItem] = useState<PunchItem>();
+    const {
+        attachments,
+        fetchAttachmentsStatus,
+        refreshAttachments,
+    } = useAttachments(
+        buildEndpoint().getPunchAttachments(params.plant, params.punchItemId)
+    );
+    const { snackbar, setSnackbarText } = useSnackbar();
 
     useEffect(() => {
         const source = axios.CancelToken.source();
@@ -55,7 +68,7 @@ const VerifyPunch = () => {
             }
         })();
         return () => {
-            source.cancel('Checklist component unmounted');
+            source.cancel('Verify Punch component unmounted');
         };
     }, [params.plant, params.punchItemId, api]);
 
@@ -118,6 +131,26 @@ const VerifyPunch = () => {
                             {punchItem.clearedByLastName} (
                             {punchItem.clearedByUser})
                         </p>
+                        <ProcosysCard
+                            fetchStatus={fetchAttachmentsStatus}
+                            cardTitle={'Attachments'}
+                            errorMessage={
+                                'Unable to load attachments for this punch'
+                            }
+                        >
+                            <AttachmentsWrapper>
+                                {attachments.map((attachment) => (
+                                    <Attachment
+                                        setSnackbarText={setSnackbarText}
+                                        attachment={attachment}
+                                        key={attachment.id}
+                                        refreshAttachments={refreshAttachments}
+                                        parentId={params.punchItemId}
+                                        getAttachment={api.getPunchAttachment}
+                                    />
+                                ))}
+                            </AttachmentsWrapper>
+                        </ProcosysCard>
                         <ButtonGroup>
                             <Button
                                 disabled={
@@ -149,6 +182,7 @@ const VerifyPunch = () => {
                             >
                                 Reject
                             </Button>
+
                             <Button
                                 disabled={
                                     punchActionStatus === AsyncStatus.LOADING
@@ -188,6 +222,7 @@ const VerifyPunch = () => {
                 }}
             />
             <PunchWrapper>{content()}</PunchWrapper>
+            {snackbar}
         </>
     );
 };

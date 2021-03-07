@@ -50,8 +50,6 @@ const TaskDescription = ({
         setComment(task.commentAsHtml);
     }, [task]);
 
-    useEffect(() => console.log(comment), [comment]);
-
     const saveComment = async () => {
         setPutCommentStatus(AsyncStatus.LOADING);
         const dto: TaskCommentDto = {
