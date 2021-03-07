@@ -17,6 +17,7 @@ export enum AsyncStatus {
     LOADING,
     SUCCESS,
     ERROR,
+    EMPTY_RESPONSE,
 }
 
 const CommAppContext = React.createContext({} as CommAppContextProps);

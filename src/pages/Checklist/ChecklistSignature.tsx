@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { ChecklistDetails } from '../../services/apiTypes';
-import { Button, TextField, Typography } from '@equinor/eds-core-react';
+import {
+    Button,
+    Divider,
+    TextField,
+    Typography,
+} from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import {
@@ -18,7 +23,6 @@ const AllMustBeSignedWarning = styled(Card)`
 const ChecklistSignatureWrapper = styled.div<{ helperTextVisible: boolean }>`
     display: flex;
     flex-direction: column;
-    margin: 48px 0;
     box-sizing: border-box;
     & button,
     button:disabled {
@@ -44,6 +48,7 @@ type ChecklistSignatureProps = {
     isSigned: boolean;
     allItemsCheckedOrNA: boolean;
     reloadChecklist: React.Dispatch<React.SetStateAction<boolean>>;
+    setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const ChecklistSignature = ({
@@ -52,6 +57,7 @@ const ChecklistSignature = ({
     isSigned,
     allItemsCheckedOrNA,
     reloadChecklist,
+    setSnackbarText,
 }: ChecklistSignatureProps) => {
     const { api, params } = useCommonHooks();
     const [comment, setComment] = useState(details.comment);
@@ -59,8 +65,6 @@ const ChecklistSignature = ({
         AsyncStatus.INACTIVE
     );
     const [signStatus, setSignStatus] = useState(AsyncStatus.INACTIVE);
-    const [showSnackbar, setShowSnackbar] = useState(false);
-    const [snackbarText, setSnackbarText] = useState('');
 
     const putComment = async () => {
         setPutCommentStatus(AsyncStatus.LOADING);
@@ -88,15 +92,15 @@ const ChecklistSignature = ({
                 setIsSigned(true);
             }
             setSignStatus(AsyncStatus.SUCCESS);
-            setShowSnackbar(true);
             setSnackbarText(
                 isSigned ? 'Unsign complete.' : 'Signing complete.'
             );
             reloadChecklist((reloadStatus) => !reloadStatus);
-        } catch (error) {
+        } catch {
             setSignStatus(AsyncStatus.ERROR);
-            setShowSnackbar(true);
-            setSnackbarText(error);
+            setSnackbarText(
+                'Sign/unsign action failed. Check your connection and try again'
+            );
         }
     };
 
@@ -117,13 +121,19 @@ const ChecklistSignature = ({
         <ChecklistSignatureWrapper
             helperTextVisible={putCommentStatus !== AsyncStatus.INACTIVE}
         >
-            {!isSigned && !allItemsCheckedOrNA && (
-                <AllMustBeSignedWarning variant="warning">
-                    <Typography type="body_long">
-                        All applicable items must be checked before signing
-                    </Typography>
-                </AllMustBeSignedWarning>
-            )}
+            <p>
+                {details.signedAt ? (
+                    <>
+                        Signed by {details.signedByFirstName}{' '}
+                        {details.signedByLastName} at{' '}
+                        {new Date(details.signedAt).toLocaleDateString('en-GB')}
+                    </>
+                ) : (
+                    'This checklist is unsigned.'
+                )}
+            </p>
+            <Divider />
+
             <TextField
                 id={'Comment field'}
                 maxLength={500}
@@ -145,7 +155,13 @@ const ChecklistSignature = ({
                 ) => setComment(e.target.value)}
                 onBlur={putComment}
             />
-
+            {!isSigned && !allItemsCheckedOrNA && (
+                <AllMustBeSignedWarning variant="warning">
+                    <Typography type="body_long">
+                        All applicable items must be checked before signing
+                    </Typography>
+                </AllMustBeSignedWarning>
+            )}
             <Button
                 onClick={handleSignClick}
                 disabled={
@@ -154,24 +170,6 @@ const ChecklistSignature = ({
             >
                 {determineSignButtonText(isSigned, signStatus)}
             </Button>
-            {details.signedAt ? (
-                <p>
-                    Signed by {details.signedByFirstName}{' '}
-                    {details.signedByLastName} at{' '}
-                    {new Date(details.signedAt).toLocaleDateString('en-GB')}
-                </p>
-            ) : null}
-
-            <p></p>
-            <Snackbar
-                onClose={() => {
-                    setShowSnackbar(false);
-                    setSnackbarText('');
-                }}
-                open={showSnackbar}
-            >
-                {snackbarText}
-            </Snackbar>
         </ChecklistSignatureWrapper>
     );
 };

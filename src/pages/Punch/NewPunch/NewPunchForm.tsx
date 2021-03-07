@@ -1,6 +1,7 @@
 import { Button, NativeSelect, TextField } from '@equinor/eds-core-react';
 import React from 'react';
 import styled from 'styled-components';
+import { CardWrapper } from '../../../components/EdsCard';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
 import {
     PunchCategory,
@@ -13,10 +14,14 @@ export const NewPunchFormWrapper = styled.form`
     background-color: white;
     margin-top: 32px;
     padding: 0 4%;
+    overflow: hidden;
+    & ${CardWrapper}:first-of-type {
+        margin-top: 16px;
+    }
     & > button,
     button:disabled {
         float: right;
-        margin-top: 16px;
+        margin: 16px 0;
     }
     & > div {
         margin-top: 16px;
@@ -38,6 +43,7 @@ type NewPunchFormProps = {
     ) => void;
     handleSubmit: (e: React.FormEvent) => Promise<void>;
     submitPunchStatus: AsyncStatus;
+    children: JSX.Element;
 };
 
 const NewPunchForm = ({
@@ -49,6 +55,7 @@ const NewPunchForm = ({
     submitPunchStatus,
     formData,
     buttonText,
+    children,
 }: NewPunchFormProps) => {
     return (
         <NewPunchFormWrapper onSubmit={handleSubmit}>
@@ -121,6 +128,8 @@ const NewPunchForm = ({
                     </option>
                 ))}
             </NativeSelect>
+            {children}
+
             <Button
                 type="submit"
                 disabled={submitPunchStatus === AsyncStatus.LOADING}

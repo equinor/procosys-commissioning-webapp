@@ -53,11 +53,7 @@ const ChecklistDetailsCard = ({
         <ChecklistDetailsCardWrapper isSigned={isSigned}>
             <CompletionStatusIcon status={details.status} />
             <TextWrapper>
-                <label>
-                    {isSigned !== undefined &&
-                        (isSigned ? 'Signed' : 'Unsigned')}{' '}
-                    {descriptionLabel}:
-                </label>
+                <label>{details.tagNo}</label>
                 <p>{details.tagDescription}</p>
             </TextWrapper>
             <FormularTypeText>{details.formularType}</FormularTypeText>

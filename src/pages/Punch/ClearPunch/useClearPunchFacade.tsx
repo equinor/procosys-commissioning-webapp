@@ -5,6 +5,7 @@ import {
     PunchType,
     PunchOrganization,
     PunchItem,
+    Attachment,
 } from '../../../services/apiTypes';
 import { ensure, removeSubdirectories } from '../../../utils/general';
 import useCommonHooks from '../../../utils/useCommonHooks';
@@ -49,7 +50,6 @@ const useClearPunchFacade = () => {
     const [clearPunchStatus, setClearPunchStatus] = useState(
         AsyncStatus.INACTIVE
     );
-
     const updateDatabase = async (
         endpoint: UpdatePunchEndpoint,
         updateData: UpdatePunchData
@@ -184,6 +184,7 @@ const useClearPunchFacade = () => {
         url,
         showSnackbar,
         snackbarText,
+        setSnackbarText,
         setShowSnackbar,
         updateDatabase,
         clearPunchItem,

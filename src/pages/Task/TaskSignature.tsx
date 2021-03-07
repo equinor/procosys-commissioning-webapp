@@ -1,12 +1,8 @@
-import { Button, Card } from '@equinor/eds-core-react';
+import { Button } from '@equinor/eds-core-react';
 import React, { useState } from 'react';
-import EdsIcon from '../../components/icons/EdsIcon';
-import SkeletonLoadingPage from '../../components/loading/SkeletonLoader';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import { Task } from '../../services/apiTypes';
 import useCommonHooks from '../../utils/useCommonHooks';
-import { TaskCardWrapper } from './Task';
-const { CardHeader, CardHeaderTitle } = Card;
 
 type TaskSignatureProps = {
     isSigned: boolean;
@@ -18,7 +14,6 @@ type TaskSignatureProps = {
 };
 
 const TaskSignature = ({
-    fetchTaskStatus,
     isSigned,
     setIsSigned,
     task,
@@ -48,52 +43,33 @@ const TaskSignature = ({
         }
     };
 
-    const content = () => {
-        if (fetchTaskStatus === AsyncStatus.SUCCESS && task) {
-            return (
-                <>
-                    {task.signedAt ? (
-                        <>
-                            <p>{`Signed at ${new Date(
-                                task.signedAt
-                            ).toLocaleDateString('en-GB')} by ${
-                                task.signedByFirstName
-                            } ${task.signedByLastName} (${
-                                task.signedByUser
-                            })`}</p>
-                        </>
-                    ) : (
-                        <>
-                            <p>This task is not signed.</p>
-                        </>
-                    )}
-                    <Button
-                        disabled={taskSignStatus === AsyncStatus.LOADING}
-                        onClick={handleSign}
-                    >
-                        {isSigned ? 'Unsign' : 'Sign'}
-                    </Button>
-                </>
-            );
-        } else if (fetchTaskStatus === AsyncStatus.ERROR) {
-            return <p>Unable to load. Please refresh or contact IT support.</p>;
-        } else {
-            return <SkeletonLoadingPage nrOfRows={3} />;
-        }
-    };
-    return (
-        <TaskCardWrapper>
-            <Card>
-                <CardHeader>
-                    <CardHeaderTitle>
-                        <h3>Signature</h3>
-                    </CardHeaderTitle>
-                    <EdsIcon name="border_color" />
-                </CardHeader>
-                {content()}
-            </Card>
-        </TaskCardWrapper>
-    );
+    if (task) {
+        return (
+            <>
+                {task.signedAt ? (
+                    <>
+                        <p>{`Signed at ${new Date(
+                            task.signedAt
+                        ).toLocaleDateString('en-GB')} by ${
+                            task.signedByFirstName
+                        } ${task.signedByLastName} (${task.signedByUser})`}</p>
+                    </>
+                ) : (
+                    <>
+                        <p>This task is not signed.</p>
+                    </>
+                )}
+                <Button
+                    disabled={taskSignStatus === AsyncStatus.LOADING}
+                    onClick={handleSign}
+                >
+                    {isSigned ? 'Unsign' : 'Sign'}
+                </Button>
+            </>
+        );
+    } else {
+        return <></>;
+    }
 };
 
 export default TaskSignature;
