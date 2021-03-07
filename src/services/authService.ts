@@ -23,11 +23,9 @@ export interface IAuthServiceProps {
 }
 
 const Settings = require('../settings.json');
-console.log('SETTINGS: ', Settings);
 
 export const getAuthSettings = async () => {
     const { data } = await axios.get(Settings.authSettingsEndpoint);
-    console.log('DATA FROM AUTH: ', data);
     // Todo: TypeGuard authsettings
     const clientSettings = {
         auth: {
@@ -90,7 +88,7 @@ const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
         const cachedAccount = MSAL.getAllAccounts()[0];
         if (cachedAccount == null) return false;
         // User is able to get accessToken, no login required
-        console.log('attempting to get accesstoken');
+        console.log('Attempting to get accesstoken');
         try {
             const accessToken = await MSAL.acquireTokenSilent({
                 account: cachedAccount,

@@ -79,15 +79,17 @@ const CheckItems = ({
                 />
             );
         // Return "OK / NA" labels if the first check item is not a heading.
-        if (index === 0) return <CheckHeader text="" />;
         return (
-            <CheckItem
-                item={item}
-                updateNA={updateNA}
-                updateOk={updateOk}
-                checklistId={details.id}
-                isSigned={isSigned}
-            />
+            <>
+                {index === 0 ? <CheckHeader text="" /> : null}
+                <CheckItem
+                    item={item}
+                    updateNA={updateNA}
+                    updateOk={updateOk}
+                    checklistId={details.id}
+                    isSigned={isSigned}
+                />
+            </>
         );
     };
 

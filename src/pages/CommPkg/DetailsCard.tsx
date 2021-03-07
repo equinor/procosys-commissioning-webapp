@@ -121,7 +121,7 @@ const DetailsCard = ({
                         }}
                     >
                         <EdsIcon
-                            color="primary"
+                            color="#007079"
                             name={
                                 isBookmarked
                                     ? 'bookmark_filled'

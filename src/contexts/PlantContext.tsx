@@ -87,7 +87,7 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
                 setFetchProjectsAndPermissionsStatus(AsyncStatus.ERROR);
             }
         })();
-    }, [currentPlant]);
+    }, [currentPlant, api]);
 
     const renderChildren = () => {
         if (params.plant && !currentPlant) return false;

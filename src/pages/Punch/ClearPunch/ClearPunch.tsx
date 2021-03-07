@@ -16,6 +16,17 @@ import useClearPunchFacade, {
     UpdatePunchEndpoint,
 } from './useClearPunchFacade';
 import styled from 'styled-components';
+import ProcosysCard from '../../../components/ProcosysCard';
+import Attachment, {
+    AttachmentsWrapper,
+    UploadImageButton,
+} from '../../../components/Attachment';
+import { ApiId } from '@azure/msal-browser/dist/src/utils/BrowserConstants';
+import useCommonHooks from '../../../utils/useCommonHooks';
+import UploadAttachment from '../../../components/UploadAttachment';
+import EdsIcon from '../../../components/icons/EdsIcon';
+import useAttachments from '../../../utils/useAttachments';
+import buildEndpoint from '../../../utils/buildEndpoint';
 
 export const PunchWrapper = styled.main``;
 
@@ -31,6 +42,7 @@ const ClearPunch = () => {
         url,
         showSnackbar,
         snackbarText,
+        setSnackbarText,
         setShowSnackbar,
         updateDatabase,
         clearPunchItem,
@@ -40,6 +52,17 @@ const ClearPunch = () => {
         handleRaisedByChange,
         handleClearingByChange,
     } = useClearPunchFacade();
+    const { api, params } = useCommonHooks();
+    const {
+        attachments,
+        fetchAttachmentsStatus,
+        showUploadModal,
+        refreshAttachments,
+        setShowUploadModal,
+    } = useAttachments(
+        buildEndpoint().getPunchAttachments(params.plant, params.punchItemId)
+    );
+
     let descriptionBeforeEntering = '';
 
     const content = () => {
@@ -172,6 +195,42 @@ const ClearPunch = () => {
                                 </option>
                             ))}
                         </NativeSelect>
+                        <ProcosysCard
+                            errorMessage="Unable to load attachments."
+                            cardTitle="Attachments"
+                            fetchStatus={fetchAttachmentsStatus}
+                        >
+                            <AttachmentsWrapper>
+                                <UploadImageButton
+                                    onClick={() => setShowUploadModal(true)}
+                                >
+                                    <EdsIcon name="camera_add_photo" />
+                                </UploadImageButton>
+                                {showUploadModal ? (
+                                    <UploadAttachment
+                                        setShowModal={setShowUploadModal}
+                                        postAttachment={api.postPunchAttachment}
+                                        refreshAttachments={refreshAttachments}
+                                        parentId={params.punchItemId}
+                                        setSnackbarText={setSnackbarText}
+                                    />
+                                ) : null}
+
+                                {attachments.map((attachment) => (
+                                    <Attachment
+                                        key={attachment.id}
+                                        getAttachment={api.getPunchAttachment}
+                                        deleteAttachment={
+                                            api.deletePunchAttachment
+                                        }
+                                        setSnackbarText={setSnackbarText}
+                                        attachment={attachment}
+                                        refreshAttachments={refreshAttachments}
+                                        parentId={params.punchItemId}
+                                    />
+                                ))}
+                            </AttachmentsWrapper>
+                        </ProcosysCard>
                         <Button
                             type="submit"
                             disabled={

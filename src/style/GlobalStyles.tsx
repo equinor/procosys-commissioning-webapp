@@ -36,6 +36,9 @@ const GlobalStyles = createGlobalStyle`
     a {
         ${tokens.typography.paragraph.body_short_link as CSSObject}
     }
+    hr {
+        width: 100%;
+    }
     label {
         ${tokens.typography.input.label as CSSObject}
     }
