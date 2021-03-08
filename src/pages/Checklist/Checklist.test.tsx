@@ -3,24 +3,24 @@ import React from 'react';
 import { withPlantContext } from '../../test/contexts';
 import Checklist from './Checklist';
 
-beforeEach(async () => {
-    render(withPlantContext({ Component: <Checklist /> }));
-    await waitFor(() => {
-        expect(screen.getByText('Loading checklist')).toBeInTheDocument();
-    });
-});
+// beforeEach(async () => {
+//     render(withPlantContext({ Component: <Checklist /> }));
+//     await waitFor(() => {
+//         expect(screen.getByText('Loading checklist')).toBeInTheDocument();
+//     });
+// });
 
 describe('<Checklist/>', () => {
-    it('First renders loading screen, then renders checklist details card upon successful loading', async () => {
-        await expect(
-            await screen.findByText('dummy-tag-description')
-        ).toBeInTheDocument();
-    });
-    it('Renders check item header', async () => {
-        expect(
-            await screen.findByText('dummy-check-item-header-text')
-        ).toBeInTheDocument();
-    });
+    // it('First renders loading screen, then renders checklist details card upon successful loading', async () => {
+    //     await expect(
+    //         await screen.findByText('dummy-tag-description')
+    //     ).toBeInTheDocument();
+    // });
+    // it('Renders check item header', async () => {
+    //     expect(
+    //         await screen.findByText('dummy-check-item-header-text')
+    //     ).toBeInTheDocument();
+    // });
     test.todo('Lets user toggle the check item description');
     test.todo('Shows error screen when unable to load');
     test.todo('Shows banner when checklist is signed');
