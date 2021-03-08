@@ -1,7 +1,5 @@
 declare global {
     interface Window {
-        FB: any;
+        URL: any;
     }
 }
-
-let FB = window.FB;
