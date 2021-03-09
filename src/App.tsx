@@ -5,6 +5,11 @@ import GeneralRouter from './GeneralRouter';
 import ErrorBoundary from './components/error/ErrorBoundary';
 import { IAuthService } from './services/authService';
 import { ProcosysApiService } from './services/procosysApi';
+import { ApplicationInsights } from '@microsoft/applicationinsights-web';
+import {
+    AppInsightsContext,
+    ReactPlugin,
+} from '@microsoft/applicationinsights-react-js';
 
 export type CommParams = {
     plant: string;
@@ -18,23 +23,35 @@ export type CommParams = {
 type AppProps = {
     authInstance: IAuthService;
     procosysApiInstance: ProcosysApiService;
+    appInsightsInstance: ApplicationInsights;
+    appInsightsReactPlugin: ReactPlugin;
 };
 
-const App = ({ procosysApiInstance, authInstance }: AppProps) => {
+const App = ({
+    procosysApiInstance,
+    authInstance,
+    appInsightsInstance,
+    appInsightsReactPlugin: reactPlugin,
+}: AppProps) => {
     return (
-        <CommAppContextProvider api={procosysApiInstance} auth={authInstance}>
-            <Router>
-                <ErrorBoundary>
-                    <Switch>
-                        <Route
-                            path="/:plant?/:project?"
-                            component={GeneralRouter}
-                        />
-                        <Route render={() => <h1>404</h1>} />
-                    </Switch>
-                </ErrorBoundary>
-            </Router>
-        </CommAppContextProvider>
+        <AppInsightsContext.Provider value={reactPlugin}>
+            <CommAppContextProvider
+                api={procosysApiInstance}
+                auth={authInstance}
+            >
+                <Router>
+                    <ErrorBoundary>
+                        <Switch>
+                            <Route
+                                path="/:plant?/:project?"
+                                component={GeneralRouter}
+                            />
+                            <Route render={() => <h1>404</h1>} />
+                        </Switch>
+                    </ErrorBoundary>
+                </Router>
+            </CommAppContextProvider>
+        </AppInsightsContext.Provider>
     );
 };
 

@@ -7,6 +7,8 @@ import { AsyncStatus } from '../../../contexts/CommAppContext';
 import { ChecklistPreview } from '../../../services/apiTypes';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
+import { useTrackMetric } from '@microsoft/applicationinsights-react-js';
+import AsyncPage from '../../../components/AsyncPage';
 
 export const CommPkgListWrapper = styled.div`
     padding-bottom: 85px;
@@ -63,22 +65,26 @@ const Scope = () => {
                     a.tagNo.localeCompare(b.tagNo)
                 );
                 setScope(sortedScope);
-                setFetchScopeStatus(AsyncStatus.SUCCESS);
+                if (scopeFromApi.length < 1) {
+                    setFetchScopeStatus(AsyncStatus.EMPTY_RESPONSE);
+                } else {
+                    setFetchScopeStatus(AsyncStatus.SUCCESS);
+                }
             } catch {
                 setFetchScopeStatus(AsyncStatus.ERROR);
             }
         })();
     }, [params.plant, params.commPkg, api]);
 
-    const content = () => {
-        if (
-            fetchScopeStatus === AsyncStatus.SUCCESS &&
-            scope &&
-            scope.length > 0
-        ) {
-            return (
+    return (
+        <CommPkgListWrapper>
+            <AsyncPage
+                errorMessage={'Unable to load scope. Please try again.'}
+                emptyContentMessage={'The scope is empty.'}
+                fetchStatus={fetchScopeStatus}
+            >
                 <>
-                    {scope.map((checklist) => (
+                    {scope?.map((checklist) => (
                         <PreviewButton
                             key={checklist.id}
                             to={`${url}/${checklist.id}`}
@@ -95,29 +101,9 @@ const Scope = () => {
                         </PreviewButton>
                     ))}
                 </>
-            );
-        } else if (
-            fetchScopeStatus === AsyncStatus.SUCCESS &&
-            scope &&
-            scope.length < 1
-        ) {
-            return (
-                <CommPkgListWrapper>
-                    <h3>The scope is empty</h3>
-                </CommPkgListWrapper>
-            );
-        } else if (fetchScopeStatus === AsyncStatus.ERROR) {
-            return (
-                <h4>
-                    Unable to load scope. Please refresh or contact IT support
-                </h4>
-            );
-        } else {
-            return <SkeletonLoadingPage text="" />;
-        }
-    };
-
-    return <CommPkgListWrapper>{content()}</CommPkgListWrapper>;
+            </AsyncPage>
+        </CommPkgListWrapper>
+    );
 };
 
 export default Scope;

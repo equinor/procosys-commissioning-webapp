@@ -13,7 +13,7 @@ import {
     determineHelperText,
     determineVariant,
 } from '../../utils/textFieldHelpers';
-import { Card, Snackbar } from '@equinor/eds-core-react';
+import { Card } from '@equinor/eds-core-react';
 import useCommonHooks from '../../utils/useCommonHooks';
 
 const AllMustBeSignedWarning = styled(Card)`
@@ -96,11 +96,9 @@ const ChecklistSignature = ({
                 isSigned ? 'Unsign complete.' : 'Signing complete.'
             );
             reloadChecklist((reloadStatus) => !reloadStatus);
-        } catch {
+        } catch (error) {
             setSignStatus(AsyncStatus.ERROR);
-            setSnackbarText(
-                'Sign/unsign action failed. Check your connection and try again'
-            );
+            setSnackbarText(error.toString());
         }
     };
 

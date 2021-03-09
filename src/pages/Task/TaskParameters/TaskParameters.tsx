@@ -50,7 +50,7 @@ const TaskParameters = ({
     return (
         <>
             {parameters.map((parameter, i) => (
-                <>
+                <React.Fragment key={parameter.id}>
                     {i === 0 ? null : <Divider />}
                     <ParameterRow key={parameter.id}>
                         <p>{parameter.description}</p>
@@ -70,7 +70,7 @@ const TaskParameters = ({
                             />
                         </ParameterInputWrapper>
                     </ParameterRow>
-                </>
+                </React.Fragment>
             ))}
         </>
     );

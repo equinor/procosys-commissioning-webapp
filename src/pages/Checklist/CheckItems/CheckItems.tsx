@@ -71,13 +71,17 @@ const CheckItems = ({
         index: number,
         nextItemIsHeading: boolean
     ) => {
-        if (item.isHeading)
+        if (item.isHeading && nextItemIsHeading) {
+            return <></>;
+        }
+        if (item.isHeading) {
             return (
                 <CheckHeader
                     text={item.text}
                     removeLabels={nextItemIsHeading}
                 />
             );
+        }
         // Return "OK / NA" labels if the first check item is not a heading.
         return (
             <>

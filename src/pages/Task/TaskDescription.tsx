@@ -38,17 +38,11 @@ const TaskDescription = ({
     setSnackbarText,
 }: TaskDescriptionProps) => {
     const { api, params } = useCommonHooks();
-    const [comment, setComment] = useState('');
     const [putCommentStatus, setPutCommentStatus] = useState(
         AsyncStatus.INACTIVE
     );
     const [editComment, setEditComment] = useState(false);
     const commentRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (!task) return;
-        setComment(task.commentAsHtml);
-    }, [task]);
 
     const saveComment = async () => {
         setPutCommentStatus(AsyncStatus.LOADING);
@@ -63,9 +57,9 @@ const TaskDescription = ({
             setPutCommentStatus(AsyncStatus.SUCCESS);
             setSnackbarText('Comment successfully saved.');
             setEditComment(false);
-        } catch {
+        } catch (error) {
             setPutCommentStatus(AsyncStatus.ERROR);
-            setSnackbarText('Unable to save comment.');
+            setSnackbarText(error.toString());
         }
     };
 
@@ -82,13 +76,13 @@ const TaskDescription = ({
     if (task) {
         return (
             <>
-                <h5>{task?.title}</h5>
+                <h5>{task.title}</h5>
                 <div
                     dangerouslySetInnerHTML={{
-                        __html: `<p>${task?.descriptionAsHtml}</p>`,
+                        __html: `<p>${task.descriptionAsHtml}</p>`,
                     }}
                 ></div>
-                <Divider color="medium" variant="small" />
+                <Divider variant="medium" />
                 <div>
                     <label>Comment:</label>
                     <CommentField

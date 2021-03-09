@@ -1,8 +1,18 @@
 import { Button } from '@equinor/eds-core-react';
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import { Task } from '../../services/apiTypes';
 import useCommonHooks from '../../utils/useCommonHooks';
+
+const TaskSignatureWrapper = styled.div`
+    overflow: hidden;
+    & button,
+    button:disabled {
+        float: right;
+        margin-top: 12px;
+    }
+`;
 
 type TaskSignatureProps = {
     isSigned: boolean;
@@ -37,15 +47,15 @@ const TaskSignature = ({
             }
             refreshTask((prev) => !prev);
             setTaskSignStatus(AsyncStatus.SUCCESS);
-        } catch {
+        } catch (error) {
             setTaskSignStatus(AsyncStatus.ERROR);
-            setSnackbarText('Sign/unsign action failed');
+            setSnackbarText(error.toString());
         }
     };
 
     if (task) {
         return (
-            <>
+            <TaskSignatureWrapper>
                 {task.signedAt ? (
                     <>
                         <p>{`Signed at ${new Date(
@@ -65,7 +75,7 @@ const TaskSignature = ({
                 >
                     {isSigned ? 'Unsign' : 'Sign'}
                 </Button>
-            </>
+            </TaskSignatureWrapper>
         );
     } else {
         return <></>;

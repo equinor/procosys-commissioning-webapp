@@ -1,8 +1,11 @@
+import { Banner } from '@equinor/eds-core-react';
 import React from 'react';
 import styled from 'styled-components';
 import { AsyncStatus } from '../contexts/CommAppContext';
 import { SHADOW } from '../style/GlobalStyles';
+import EdsIcon from './icons/EdsIcon';
 import SkeletonLoadingPage from './loading/SkeletonLoader';
+const { BannerIcon, BannerMessage } = Banner;
 
 export const ContentWrapper = styled.article`
     & h3,
@@ -26,10 +29,9 @@ type ProcosysCardProps = {
     errorMessage: string;
     emptyContentMessage?: string;
     children: JSX.Element;
-    cardTitle: string;
 };
 
-const AsyncContent = ({
+const AsyncPage = ({
     fetchStatus,
     errorMessage,
     emptyContentMessage,
@@ -37,17 +39,31 @@ const AsyncContent = ({
 }: ProcosysCardProps) => {
     const content = () => {
         if (fetchStatus === AsyncStatus.SUCCESS) {
-            return children;
+            return <>{children}</>;
         } else if (fetchStatus === AsyncStatus.EMPTY_RESPONSE) {
-            return <p>{emptyContentMessage}</p>;
+            return (
+                <Banner>
+                    <BannerIcon>
+                        <EdsIcon name={'info_circle'} color={'#007079'} />
+                    </BannerIcon>
+                    <BannerMessage>{emptyContentMessage!}</BannerMessage>
+                </Banner>
+            );
         } else if (fetchStatus === AsyncStatus.ERROR) {
-            return <p>{errorMessage}</p>;
+            return (
+                <Banner>
+                    <BannerIcon variant="warning">
+                        <EdsIcon name={'error_filled'} color={'#FF3B3B'} />
+                    </BannerIcon>
+                    <BannerMessage>{errorMessage}</BannerMessage>
+                </Banner>
+            );
         } else {
-            return <SkeletonLoadingPage nrOfRows={3} />;
+            return <SkeletonLoadingPage nrOfRows={10} />;
         }
     };
 
     return <div>{content()}</div>;
 };
 
-export default AsyncContent;
+export default AsyncPage;
