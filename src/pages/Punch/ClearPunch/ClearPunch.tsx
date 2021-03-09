@@ -1,9 +1,4 @@
-import {
-    Button,
-    NativeSelect,
-    Snackbar,
-    TextField,
-} from '@equinor/eds-core-react';
+import { Button, NativeSelect, TextField } from '@equinor/eds-core-react';
 import React from 'react';
 import ErrorPage from '../../../components/error/ErrorPage';
 import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
@@ -21,7 +16,6 @@ import Attachment, {
     AttachmentsWrapper,
     UploadImageButton,
 } from '../../../components/Attachment';
-import { ApiId } from '@azure/msal-browser/dist/src/utils/BrowserConstants';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import UploadAttachment from '../../../components/UploadAttachment';
 import EdsIcon from '../../../components/icons/EdsIcon';
@@ -40,10 +34,8 @@ const ClearPunch = () => {
         types,
         organizations,
         url,
-        showSnackbar,
-        snackbarText,
+        snackbar,
         setSnackbarText,
-        setShowSnackbar,
         updateDatabase,
         clearPunchItem,
         handleCategoryChange,
@@ -266,14 +258,7 @@ const ClearPunch = () => {
                 }}
             />
             <PunchWrapper>{content()}</PunchWrapper>
-            <Snackbar
-                onClose={() => {
-                    setShowSnackbar(false);
-                }}
-                open={showSnackbar}
-            >
-                {snackbarText}
-            </Snackbar>
+            {snackbar}
         </>
     );
 };

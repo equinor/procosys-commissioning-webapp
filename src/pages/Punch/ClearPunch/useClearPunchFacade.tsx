@@ -5,10 +5,10 @@ import {
     PunchType,
     PunchOrganization,
     PunchItem,
-    Attachment,
 } from '../../../services/apiTypes';
 import { ensure, removeSubdirectories } from '../../../utils/general';
 import useCommonHooks from '../../../utils/useCommonHooks';
+import useSnackbar from '../../../utils/useSnackbar';
 
 export enum UpdatePunchEndpoint {
     Description = 'SetDescription',
@@ -35,12 +35,11 @@ export type UpdatePunchData =
 
 const useClearPunchFacade = () => {
     const { api, params, url, history } = useCommonHooks();
+    const { snackbar, setSnackbarText } = useSnackbar();
     const [punchItem, setPunchItem] = useState<PunchItem>({} as PunchItem);
     const [categories, setCategories] = useState<PunchCategory[]>([]);
     const [types, setTypes] = useState<PunchType[]>([]);
     const [organizations, setOrganizations] = useState<PunchOrganization[]>([]);
-    const [showSnackbar, setShowSnackbar] = useState(false);
-    const [snackbarText, setSnackbarText] = useState('');
     const [fetchPunchItemStatus, setFetchPunchItemStatus] = useState(
         AsyncStatus.LOADING
     );
@@ -55,7 +54,6 @@ const useClearPunchFacade = () => {
         updateData: UpdatePunchData
     ) => {
         setUpdatePunchStatus(AsyncStatus.LOADING);
-        setShowSnackbar(true);
         setSnackbarText('Saving change.');
         try {
             await api.putUpdatePunch(
@@ -68,7 +66,7 @@ const useClearPunchFacade = () => {
             setSnackbarText('Change successfully saved.');
         } catch (error) {
             setUpdatePunchStatus(AsyncStatus.ERROR);
-            setSnackbarText('Unable to save change.');
+            setSnackbarText(error.toString());
         }
     };
 
@@ -182,10 +180,8 @@ const useClearPunchFacade = () => {
         types,
         organizations,
         url,
-        showSnackbar,
-        snackbarText,
         setSnackbarText,
-        setShowSnackbar,
+        snackbar,
         updateDatabase,
         clearPunchItem,
         handleCategoryChange,

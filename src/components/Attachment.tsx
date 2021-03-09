@@ -127,9 +127,9 @@ const Attachment = ({
             refreshAttachments((prev) => !prev);
             setDeleteStatus(AsyncStatus.SUCCESS);
             setShowFullScreenImage(false);
-        } catch {
+        } catch (error) {
             setDeleteStatus(AsyncStatus.ERROR);
-            setSnackbarText('Unable to delete attachment. Please try again');
+            setSnackbarText(error.toString());
         }
     };
 

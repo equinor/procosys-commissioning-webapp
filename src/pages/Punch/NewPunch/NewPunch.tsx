@@ -26,7 +26,7 @@ import {
 import EdsIcon from '../../../components/icons/EdsIcon';
 import { UploadContainer } from '../../../components/UploadAttachment';
 import EdsCard from '../../../components/EdsCard';
-import { Snackbar } from '@equinor/eds-core-react';
+import useSnackbar from '../../../utils/useSnackbar';
 
 export type PunchFormData = {
     category: string;
@@ -71,8 +71,7 @@ const NewPunch = () => {
     const [postAttachmentStatus, setPostAttachmentStatus] = useState(
         AsyncStatus.INACTIVE
     );
-    const [showSnackbar, setShowSnackbar] = useState(false);
-    const [snackbarText, setSnackbarText] = useState('');
+    const { snackbar, setSnackbarText } = useSnackbar();
     const [showFullImageModal, setShowFullImageModal] = useState(false);
     const [attachmentToShow, setAttachmentToShow] = useState<TempAttachment>();
 
@@ -100,9 +99,9 @@ const NewPunch = () => {
             setSnackbarText('File successfully added.');
             setSelectedFile(undefined);
             setShowUploadModal(false);
-        } catch {
+        } catch (error) {
             setPostAttachmentStatus(AsyncStatus.ERROR);
-            setSnackbarText('Unable to upload attachment. Please try again.');
+            setSnackbarText(error.toString());
         }
     };
 
@@ -134,11 +133,6 @@ const NewPunch = () => {
         );
         setShowFullImageModal(false);
     };
-
-    useEffect(() => {
-        if (snackbarText.length < 1) return;
-        setShowSnackbar(true);
-    }, [snackbarText]);
 
     useEffect(() => {
         (async () => {
@@ -296,16 +290,7 @@ const NewPunch = () => {
                 leftContent={{ name: 'back', label: 'Checklist' }}
             />
             <PunchWrapper>{content()}</PunchWrapper>
-            <Snackbar
-                autoHideDuration={3000}
-                onClose={() => {
-                    setShowSnackbar(false);
-                    setSnackbarText('');
-                }}
-                open={showSnackbar}
-            >
-                {snackbarText}
-            </Snackbar>
+            {snackbar}
         </>
     );
 };

@@ -12,11 +12,11 @@ import {
     TaskParameter,
 } from '../../services/apiTypes';
 import { AsyncStatus } from '../../contexts/CommAppContext';
-import { Snackbar } from '@equinor/eds-core-react';
 import TaskAttachments from './TaskAttachments';
 import { IsSignedBanner } from '../Checklist/Checklist';
 import EdsIcon from '../../components/icons/EdsIcon';
 import ProcosysCard from '../../components/ProcosysCard';
+import useSnackbar from '../../utils/useSnackbar';
 
 const TaskWrapper = styled.main`
     padding: 16px 4%;
@@ -35,14 +35,8 @@ const Task = () => {
         AsyncStatus.LOADING
     );
     const [isSigned, setIsSigned] = useState(true);
-    const [showSnackbar, setShowSnackbar] = useState(false);
-    const [snackbarText, setSnackbarText] = useState('');
     const [refreshTask, setRefreshTask] = useState(false);
-
-    useEffect(() => {
-        if (snackbarText.length < 1) return;
-        setShowSnackbar(true);
-    }, [snackbarText]);
+    const { snackbar, setSnackbarText } = useSnackbar();
 
     useEffect(() => {
         (async () => {
@@ -100,16 +94,6 @@ const Task = () => {
 
     return (
         <>
-            <Snackbar
-                autoHideDuration={3000}
-                onClose={() => {
-                    setShowSnackbar(false);
-                    setSnackbarText('');
-                }}
-                open={showSnackbar}
-            >
-                {snackbarText}
-            </Snackbar>
             <Navbar
                 noBorder
                 leftContent={{
@@ -180,6 +164,7 @@ const Task = () => {
                     />
                 </ProcosysCard>
             </TaskWrapper>
+            {snackbar}
         </>
     );
 };

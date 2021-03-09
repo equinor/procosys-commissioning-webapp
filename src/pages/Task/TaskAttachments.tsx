@@ -84,8 +84,8 @@ const TaskAttachments = ({
             tempLink.click();
             document.body.removeChild(tempLink);
             setSnackbarText('Attachment downloaded.');
-        } catch {
-            setSnackbarText('Unable to get attachment.');
+        } catch (error) {
+            setSnackbarText(error.toString());
         }
     };
 
@@ -100,8 +100,8 @@ const TaskAttachments = ({
             setFullScreenImageUrl(imageUrl);
             setFullScreenImageTitle(imageTitle);
             setShowFullScreenImage(true);
-        } catch {
-            setSnackbarText('Unable to load image.');
+        } catch (error) {
+            setSnackbarText(error.toString());
         }
     };
 

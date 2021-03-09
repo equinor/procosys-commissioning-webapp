@@ -23,6 +23,9 @@ import Attachment, {
 import { Snackbar } from '@equinor/eds-core-react';
 import UploadAttachment from '../../components/UploadAttachment';
 import { CardWrapper } from '../../components/EdsCard';
+import useAttachments from '../../utils/useAttachments';
+import buildEndpoint from '../../utils/buildEndpoint';
+import useSnackbar from '../../utils/useSnackbar';
 
 const ChecklistWrapper = styled.div`
     padding: 0 4%;
@@ -49,13 +52,19 @@ export const IsSignedBanner = styled.div`
 
 const Checklist = () => {
     const { params, api } = useCommonHooks();
+    const getAttachmentsEndpoint = buildEndpoint().getChecklistAttachments(
+        params.plant,
+        params.checklistId
+    );
+    const {
+        refreshAttachments: setRefreshAttachments,
+        attachments,
+        fetchAttachmentsStatus,
+    } = useAttachments(getAttachmentsEndpoint);
+    const { snackbar, setSnackbarText } = useSnackbar();
     const [fetchChecklistStatus, setFetchChecklistStatus] = useState(
         AsyncStatus.SUCCESS
     );
-    const [fetchAttachmentsStatus, setFetchAttachmentsStatus] = useState(
-        AsyncStatus.LOADING
-    );
-    const [attachments, setAttachments] = useState<AttachmentType[]>([]);
     const [checkItems, setCheckItems] = useState<CheckItem[]>([]);
     const [checklistDetails, setChecklistDetails] = useState<
         ChecklistDetails
@@ -63,9 +72,6 @@ const Checklist = () => {
     const [isSigned, setIsSigned] = useState(false);
     const [allItemsCheckedOrNA, setAllItemsCheckedOrNA] = useState(true);
     const [reloadChecklist, setReloadChecklist] = useState(false);
-    const [refreshAttachments, setRefreshAttachments] = useState(false);
-    const [showSnackbar, setShowSnackbar] = useState(false);
-    const [snackbarText, setSnackbarText] = useState('');
     const [showUploadModal, setShowUploadModal] = useState(false);
 
     useEffect(() => {
@@ -88,30 +94,6 @@ const Checklist = () => {
             source.cancel('Checklist component unmounted');
         };
     }, [params.checklistId, params.plant, reloadChecklist, api]);
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const attachmentsFromApi = await api.getChecklistAttachments(
-                    params.plant,
-                    params.checklistId
-                );
-                if (attachmentsFromApi.length > 0) {
-                    setFetchAttachmentsStatus(AsyncStatus.SUCCESS);
-                    setAttachments(attachmentsFromApi);
-                } else {
-                    setFetchAttachmentsStatus(AsyncStatus.EMPTY_RESPONSE);
-                }
-            } catch {
-                setFetchAttachmentsStatus(AsyncStatus.ERROR);
-            }
-        })();
-    }, [api, params.plant, params.checklistId, refreshAttachments]);
-
-    useEffect(() => {
-        if (snackbarText.length < 1) return;
-        setShowSnackbar(true);
-    }, [snackbarText]);
 
     const content = () => {
         if (
@@ -231,16 +213,7 @@ const Checklist = () => {
                 rightContent={{ name: 'newPunch' }}
             />
             {content()}
-            <Snackbar
-                autoHideDuration={3000}
-                onClose={() => {
-                    setShowSnackbar(false);
-                    setSnackbarText('');
-                }}
-                open={showSnackbar}
-            >
-                {snackbarText}
-            </Snackbar>
+            {snackbar}
         </>
     );
 };
