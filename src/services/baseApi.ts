@@ -1,21 +1,6 @@
 import axios from 'axios';
 import { IAuthService } from './authService';
 
-type ProcosysApiSettings = {
-    baseUrl: string;
-    apiVersion: string;
-    scope: string[];
-};
-
-export const getApiSettings = async (endpoint: string, accessToken: string) => {
-    const { data } = await axios.get(endpoint, {
-        headers: {
-            Authorization: 'Bearer ' + accessToken,
-        },
-    });
-    return data.configuration.procosysWebApi as ProcosysApiSettings;
-};
-
 type baseApiProps = {
     authInstance: IAuthService;
     baseURL: string;
@@ -39,8 +24,11 @@ const baseApiService = ({ authInstance, baseURL, scope }: baseApiProps) => {
             return response;
         },
         (error) => {
-            console.dir(error);
-            throw new Error(error.response.data);
+            if (error.response) {
+                throw new Error(error.response.data);
+            } else {
+                throw new Error(error.message);
+            }
         }
     );
     return axiosInstance;
