@@ -6,8 +6,8 @@ import { Typography } from '@equinor/eds-core-react';
 import CompletionStatusIcon from '../../../components/icons/CompletionStatusIcon';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
 import { PunchPreview } from '../../../services/apiTypes';
-import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
 import useCommonHooks from '../../../utils/useCommonHooks';
+import AsyncPage from '../../../components/AsyncPage';
 
 const InfoRow = styled.div`
     &:first-child {
@@ -35,22 +35,28 @@ const PunchList = () => {
                     params.commPkg
                 );
                 setPunchList(punchListFromApi);
-                setFetchPunchListStatus(AsyncStatus.SUCCESS);
+                if (punchListFromApi.length < 1) {
+                    setFetchPunchListStatus(AsyncStatus.EMPTY_RESPONSE);
+                } else {
+                    setFetchPunchListStatus(AsyncStatus.SUCCESS);
+                }
             } catch {
                 setFetchPunchListStatus(AsyncStatus.ERROR);
             }
         })();
     }, [params.commPkg, params.plant, api]);
 
-    const content = () => {
-        if (
-            fetchPunchListStatus === AsyncStatus.SUCCESS &&
-            punchList &&
-            punchList.length > 0
-        ) {
-            return (
+    return (
+        <CommPkgListWrapper>
+            <AsyncPage
+                fetchStatus={fetchPunchListStatus}
+                errorMessage={
+                    'Error: Unable to get punch list. Please try again.'
+                }
+                emptyContentMessage={'The punch list is empty.'}
+            >
                 <>
-                    {punchList.map((punch) => (
+                    {punchList?.map((punch) => (
                         <PreviewButton
                             to={
                                 punch.cleared
@@ -85,26 +91,9 @@ const PunchList = () => {
                         </PreviewButton>
                     ))}
                 </>
-            );
-        } else if (
-            fetchPunchListStatus === AsyncStatus.SUCCESS &&
-            punchList &&
-            punchList.length < 1
-        ) {
-            return <h4>No punches to display.</h4>;
-        } else if (fetchPunchListStatus === AsyncStatus.ERROR) {
-            return (
-                <h4>
-                    Unable to get punch list. Please refresh or contact IT
-                    support
-                </h4>
-            );
-        } else {
-            return <SkeletonLoadingPage text="" />;
-        }
-    };
-
-    return <CommPkgListWrapper>{content()}</CommPkgListWrapper>;
+            </AsyncPage>
+        </CommPkgListWrapper>
+    );
 };
 
 export default PunchList;

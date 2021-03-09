@@ -214,7 +214,6 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
             checklistId,
             { headers: { 'Content-Type': 'application/json' } }
         );
-        return Promise.resolve();
     };
 
     const postUnsign = async (plantId: string, checklistId: string) => {
@@ -223,7 +222,6 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
             checklistId,
             { headers: { 'Content-Type': 'application/json' } }
         );
-        return Promise.resolve();
     };
 
     const getPunchCategories = async (plantId: string) => {

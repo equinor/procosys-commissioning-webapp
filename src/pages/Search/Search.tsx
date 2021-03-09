@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useEffect, useRef } from 'react';
 import { Search as SearchField } from '@equinor/eds-core-react';
 import withAccessControl from '../../services/withAccessControl';
 import styled from 'styled-components';
@@ -20,6 +20,14 @@ const SearchPageWrapper = styled.main`
 
 const Search = () => {
     const { hits, searchStatus, query, setQuery } = useSearchPageFacade();
+    const searchbarRef = useRef<HTMLInputElement>(
+        document.createElement('input')
+    );
+
+    useEffect(() => {
+        searchbarRef.current?.focus();
+    }, []);
+
     const searchHeaderToRender = () => {
         if (searchStatus === SearchStatus.SUCCESS) {
             return (
@@ -45,6 +53,7 @@ const Search = () => {
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                         setQuery(e.target.value)
                     }
+                    ref={searchbarRef}
                 />
                 <SearchResults
                     commPackages={hits.items}

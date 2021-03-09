@@ -1,13 +1,5 @@
 import * as Msal from '@azure/msal-browser';
 import { AccountInfo } from '@azure/msal-browser';
-import axios from 'axios';
-
-export type AuthSettings = {
-    clientId: string;
-    authority: string;
-    scopes: string[];
-};
-
 export interface IAuthService {
     login: () => Promise<void>;
     logout: () => Promise<void>;
@@ -21,29 +13,6 @@ export interface IAuthServiceProps {
     MSAL: Msal.PublicClientApplication;
     scopes: string[];
 }
-
-const Settings = require('../settings.json');
-
-export const getAuthSettings = async () => {
-    const { data } = await axios.get(Settings.authSettingsEndpoint);
-    // Todo: TypeGuard authsettings
-    const clientSettings = {
-        auth: {
-            clientId: data.clientId,
-            authority: data.authority,
-            redirectUri: window.location.origin,
-        },
-    };
-    const scopes = data.scopes;
-    const configurationScope = data.configurationScope;
-    const configurationEndpoint = data.configurationEndpoint;
-    return {
-        clientSettings,
-        scopes,
-        configurationScope,
-        configurationEndpoint,
-    };
-};
 
 const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
     const logout = async () => {

@@ -33,9 +33,9 @@ const MeasuredValueInput = ({
             await api.putTaskParameter(params.plant, dto);
             setUpdateValueStatus(AsyncStatus.SUCCESS);
             setSnackbarText('Parameter value saved');
-        } catch {
+        } catch (error) {
             setUpdateValueStatus(AsyncStatus.ERROR);
-            setSnackbarText('Unable to save parameter value');
+            setSnackbarText(error.toString());
         }
     };
 

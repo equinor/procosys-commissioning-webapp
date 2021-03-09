@@ -7,7 +7,7 @@ import CompletionStatusIcon from '../../../components/icons/CompletionStatusIcon
 import { CompletionStatus, TaskPreview } from '../../../services/apiTypes';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
 import useCommonHooks from '../../../utils/useCommonHooks';
-import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
+import AsyncPage from '../../../components/AsyncPage';
 
 const TaskPreviewButton = styled(PreviewButton)`
     & > div {
@@ -31,22 +31,26 @@ const Tasks = () => {
                     params.commPkg
                 );
                 setTasks(tasksFromApi);
-                setFetchTasksStatus(AsyncStatus.SUCCESS);
+                if (tasksFromApi.length < 1) {
+                    setFetchTasksStatus(AsyncStatus.EMPTY_RESPONSE);
+                } else {
+                    setFetchTasksStatus(AsyncStatus.SUCCESS);
+                }
             } catch {
                 setFetchTasksStatus(AsyncStatus.ERROR);
             }
         })();
     }, [params.commPkg, params.plant, api]);
 
-    const content = () => {
-        if (
-            fetchTasksStatus === AsyncStatus.SUCCESS &&
-            tasks &&
-            tasks.length > 0
-        ) {
-            return (
+    return (
+        <CommPkgListWrapper>
+            <AsyncPage
+                errorMessage={'Unable to load tasks. Please try again.'}
+                fetchStatus={fetchTasksStatus}
+                emptyContentMessage={'There are no tasks for this CommPkg.'}
+            >
                 <>
-                    {tasks.map((task) => (
+                    {tasks?.map((task) => (
                         <TaskPreviewButton
                             to={`${url}/${task.id}`}
                             key={task.id}
@@ -70,25 +74,9 @@ const Tasks = () => {
                         </TaskPreviewButton>
                     ))}
                 </>
-            );
-        } else if (
-            fetchTasksStatus === AsyncStatus.SUCCESS &&
-            tasks &&
-            tasks.length < 1
-        ) {
-            return <h4>No tasks to display.</h4>;
-        } else if (fetchTasksStatus === AsyncStatus.ERROR) {
-            return (
-                <h4>
-                    Unable to fetch tasks. Please refresh or contact IT support
-                </h4>
-            );
-        } else {
-            return <SkeletonLoadingPage text={''} />;
-        }
-    };
-
-    return <CommPkgListWrapper>{content()}</CommPkgListWrapper>;
+            </AsyncPage>
+        </CommPkgListWrapper>
+    );
 };
 
 export default Tasks;

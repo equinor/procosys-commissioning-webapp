@@ -82,7 +82,13 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
                 ]);
                 setAvailableProjects(projectsFromApi);
                 setPermissions(permissionsFromApi);
-                setFetchProjectsAndPermissionsStatus(AsyncStatus.SUCCESS);
+                if (projectsFromApi.length < 1) {
+                    setFetchProjectsAndPermissionsStatus(
+                        AsyncStatus.EMPTY_RESPONSE
+                    );
+                } else {
+                    setFetchProjectsAndPermissionsStatus(AsyncStatus.SUCCESS);
+                }
             } catch (error) {
                 setFetchProjectsAndPermissionsStatus(AsyncStatus.ERROR);
             }

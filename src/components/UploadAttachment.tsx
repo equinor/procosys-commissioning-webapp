@@ -65,9 +65,9 @@ const UploadAttachment = ({
             setSnackbarText('File successfully added.');
             refreshAttachments((currentValue) => !currentValue);
             setShowModal(false);
-        } catch {
+        } catch (error) {
             setPostAttachmentStatus(AsyncStatus.ERROR);
-            setSnackbarText('Unable to upload attachment. Please try again.');
+            setSnackbarText(error.toString());
         }
     };
 
