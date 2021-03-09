@@ -13,7 +13,7 @@ import {
     determineHelperText,
     determineVariant,
 } from '../../utils/textFieldHelpers';
-import { Card, Snackbar } from '@equinor/eds-core-react';
+import { Card } from '@equinor/eds-core-react';
 import useCommonHooks from '../../utils/useCommonHooks';
 
 const AllMustBeSignedWarning = styled(Card)`
