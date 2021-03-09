@@ -4,10 +4,12 @@ import GlobalStyles from './style/GlobalStyles';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import authService, { getAuthSettings } from './services/authService';
+import authService from './services/authService';
 import * as MSAL from '@azure/msal-browser';
-import baseApiService, { getApiSettings } from './services/baseApi';
+import baseApiService from './services/baseApi';
 import procosysApiService from './services/procosysApi';
+import { getAppConfig, getAuthConfig } from './services/appConfiguration';
+import initializeAppInsights from './services/appInsights';
 
 const render = (content: JSX.Element) => {
     ReactDOM.render(
@@ -22,12 +24,13 @@ const render = (content: JSX.Element) => {
 };
 
 const initialize = async () => {
+    // Get auth config, setup auth client and handle login
     const {
         clientSettings,
         scopes,
         configurationScope,
         configurationEndpoint,
-    } = await getAuthSettings();
+    } = await getAuthConfig();
     const authClient = new MSAL.PublicClientApplication(clientSettings);
     const authInstance = authService({
         MSAL: authClient,
@@ -35,33 +38,51 @@ const initialize = async () => {
     });
     const isRedirecting = await authInstance.handleLogin();
     if (isRedirecting) return Promise.reject('redirecting');
+
+    // Get config from App Configuration
     const configurationAccessToken = await authInstance.getAccessToken(
         configurationScope
     );
-    const procosysApiSettings = await getApiSettings(
+    const { procosysApiConfig, appInsightsConfig } = await getAppConfig(
         configurationEndpoint,
         configurationAccessToken
     );
     const baseApiInstance = baseApiService({
         authInstance,
-        baseURL: procosysApiSettings.baseUrl,
-        scope: procosysApiSettings.scope,
+        baseURL: procosysApiConfig.baseUrl,
+        scope: procosysApiConfig.scope,
     });
     const procosysApiInstance = procosysApiService({
         axios: baseApiInstance,
-        apiVersion: procosysApiSettings.apiVersion,
+        apiVersion: procosysApiConfig.apiVersion,
     });
-    return { authInstance, procosysApiInstance };
+    const {
+        appInsightsInstance,
+        appInsightsReactPlugin,
+    } = initializeAppInsights(appInsightsConfig.instrumentationKey);
+    return {
+        authInstance,
+        procosysApiInstance,
+        appInsightsInstance,
+        appInsightsReactPlugin,
+    };
 };
 
 (async () => {
     render(<LoadingPage loadingText={'Initializing...'} />);
     try {
-        const { authInstance, procosysApiInstance } = await initialize();
+        const {
+            authInstance,
+            procosysApiInstance,
+            appInsightsInstance,
+            appInsightsReactPlugin,
+        } = await initialize();
         render(
             <App
                 authInstance={authInstance}
                 procosysApiInstance={procosysApiInstance}
+                appInsightsInstance={appInsightsInstance}
+                appInsightsReactPlugin={appInsightsReactPlugin}
             />
         );
     } catch (error) {
