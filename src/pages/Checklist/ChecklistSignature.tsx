@@ -96,11 +96,9 @@ const ChecklistSignature = ({
                 isSigned ? 'Unsign complete.' : 'Signing complete.'
             );
             reloadChecklist((reloadStatus) => !reloadStatus);
-        } catch {
+        } catch (error) {
             setSignStatus(AsyncStatus.ERROR);
-            setSnackbarText(
-                'Sign/unsign action failed. Check your connection and try again'
-            );
+            setSnackbarText(error.toString());
         }
     };
 

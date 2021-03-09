@@ -3,11 +3,7 @@ import ErrorPage from '../../components/error/ErrorPage';
 import SkeletonLoadingPage from '../../components/loading/SkeletonLoader';
 import Navbar from '../../components/navigation/Navbar';
 import { AsyncStatus } from '../../contexts/CommAppContext';
-import {
-    Attachment as AttachmentType,
-    CheckItem,
-    ChecklistDetails,
-} from '../../services/apiTypes';
+import { CheckItem, ChecklistDetails } from '../../services/apiTypes';
 import CheckItems from './CheckItems/CheckItems';
 import ChecklistSignature from './ChecklistSignature';
 import ChecklistDetailsCard from './ChecklistDetailsCard';
@@ -20,7 +16,6 @@ import Attachment, {
     AttachmentsWrapper,
     UploadImageButton,
 } from '../../components/Attachment';
-import { Snackbar } from '@equinor/eds-core-react';
 import UploadAttachment from '../../components/UploadAttachment';
 import { CardWrapper } from '../../components/EdsCard';
 import useAttachments from '../../utils/useAttachments';
