@@ -115,30 +115,30 @@ stages:
       kvName: '${{ variables.kvName }}'
       kvRgName: '${{ variables.kvRgName }}'
 
-# # Deploy to Prod
-# - stage: prod
-#   displayName: 'Deploy to Prod'
-#   dependsOn: 'test'
-#   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-#   variables:
-#     envName: 'prod'
-#     envLabel: 'prod'
-#     envRg: '${{ variables.envRgName }}'
-#     envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
-#     serviceConnection: '${{ variables.prodServiceConnection }}'
-#     containerRegistry: '${{ variables.containerRegistryName }}'
+# Deploy to Prod
+- stage: prod
+  displayName: 'Deploy to Prod'
+  dependsOn: 'test'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  variables:
+    envName: 'prod'
+    envLabel: 'prod'
+    envRg: '${{ variables.envRgName }}'
+    envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
+    serviceConnection: '${{ variables.prodServiceConnection }}'
+    containerRegistry: '${{ variables.containerRegistryName }}'
 
-#   jobs:
-#   # Deploy to AKS
-#   - template: /templates/pipelines/kubernetes/comm-webapp-deploy.yml@templates
-#     parameters:
-#       deploymentName: 'deploy_to_k8s'
-#       dependsOn: ''
-#       serviceConnection: '${{ variables.serviceConnection }}'
-#       env: '${{ variables.envName }}'
-#       envRg: '${{ variables.aksRgName }}'
-#       envGroup: '${{ variables.envGroupName }}'
-#       dockerImage: '${{ variables.containerRegistry }}.azurecr.io/${{ variables.repositoryName }}:$(Build.BuildId)'
-#       clusterName: '${{ variables.aksProdName }}'
-#       kvName: '${{ variables.kvName }}'
-#       kvRgName: '${{ variables.kvRgName }}'
+  jobs:
+  # Deploy to AKS
+  - template: /templates/pipelines/kubernetes/comm-webapp-deploy.yml@templates
+    parameters:
+      deploymentName: 'deploy_to_k8s'
+      dependsOn: ''
+      serviceConnection: '${{ variables.serviceConnection }}'
+      env: '${{ variables.envName }}'
+      envRg: '${{ variables.aksRgName }}'
+      envGroup: '${{ variables.envGroupName }}'
+      dockerImage: '${{ variables.containerRegistry }}.azurecr.io/${{ variables.repositoryName }}:$(Build.BuildId)'
+      clusterName: '${{ variables.aksProdName }}'
+      kvName: '${{ variables.kvName }}'
+      kvRgName: '${{ variables.kvRgName }}'
