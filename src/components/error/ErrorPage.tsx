@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Banner } from '@equinor/eds-core-react';
 import { COLORS } from '../../style/GlobalStyles';
 import EdsIcon from '../icons/EdsIcon';
+const { BannerIcon, BannerMessage } = Banner;
 
 interface CommError {
     title?: string;
@@ -30,12 +31,14 @@ const ErrorPage = ({ title, description }: CommError) => {
         <ErrorPageWrapper>
             <h3>{title}</h3>
             <Banner>
-                <EdsIcon
-                    color={COLORS.interactive.danger__resting.hex}
-                    name="error_outlined"
-                    title="Error icon"
-                />
-                <p>{description}</p>
+                <BannerIcon variant={'warning'}>
+                    <EdsIcon
+                        color={COLORS.interactive.danger__resting.hex}
+                        name="error_outlined"
+                        title="Error icon"
+                    />
+                </BannerIcon>
+                <BannerMessage>Description</BannerMessage>
             </Banner>
         </ErrorPageWrapper>
     );
