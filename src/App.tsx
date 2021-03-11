@@ -33,13 +33,16 @@ const App = ({
     appInsightsInstance,
     appInsightsReactPlugin: reactPlugin,
 }: AppProps) => {
+    let rootDirectory = '';
+    if (window.location.pathname.substr(0, 5) === '/comm')
+        rootDirectory = '/comm';
     return (
         <AppInsightsContext.Provider value={reactPlugin}>
             <CommAppContextProvider
                 api={procosysApiInstance}
                 auth={authInstance}
             >
-                <Router>
+                <Router basename={rootDirectory}>
                     <ErrorBoundary>
                         <Switch>
                             <Route
