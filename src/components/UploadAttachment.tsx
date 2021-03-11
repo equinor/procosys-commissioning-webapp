@@ -10,7 +10,7 @@ export const UploadContainer = styled.div`
     width: 300px;
     background-color: white;
     padding: 16px;
-    overflow: hidden;
+    overflow: scroll;
     & img {
         width: 100%;
     }

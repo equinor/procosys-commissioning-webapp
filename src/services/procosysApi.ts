@@ -1,5 +1,4 @@
 import { AxiosInstance, CancelToken } from 'axios';
-import buildEndpoint from '../utils/buildEndpoint';
 import {
     PunchAction,
     UpdatePunchData,
