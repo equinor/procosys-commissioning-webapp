@@ -34,8 +34,13 @@ const ErrorPage = ({ title, description }: CommError) => {
                         title="Error icon"
                     />
                 </BannerIcon>
-                <BannerMessage>{title}</BannerMessage>
+                <BannerMessage bold>{title}</BannerMessage>
             </Banner>
+            {description && description.length > 0 && (
+                <Banner>
+                    <BannerMessage>{description}</BannerMessage>
+                </Banner>
+            )}
         </ErrorPageWrapper>
     );
 };
