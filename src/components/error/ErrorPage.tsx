@@ -6,7 +6,7 @@ import EdsIcon from '../icons/EdsIcon';
 const { BannerIcon, BannerMessage } = Banner;
 
 interface CommError {
-    title?: string;
+    title: string;
     description?: string;
 }
 
@@ -18,9 +18,6 @@ const ErrorPageWrapper = styled.main`
     & p {
         padding: 4%;
     }
-    & svg {
-        transform: scale(1);
-    }
     & h3 {
         margin-bottom: 0;
     }
@@ -29,7 +26,6 @@ const ErrorPageWrapper = styled.main`
 const ErrorPage = ({ title, description }: CommError) => {
     return (
         <ErrorPageWrapper>
-            <h3>{title}</h3>
             <Banner>
                 <BannerIcon variant={'warning'}>
                     <EdsIcon
@@ -38,7 +34,7 @@ const ErrorPage = ({ title, description }: CommError) => {
                         title="Error icon"
                     />
                 </BannerIcon>
-                <BannerMessage>Description</BannerMessage>
+                <BannerMessage>{title}</BannerMessage>
             </Banner>
         </ErrorPageWrapper>
     );
