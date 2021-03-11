@@ -6,6 +6,7 @@ import matchPlantInURL from '../utils/matchPlantInURL';
 import matchProjectInURL from '../utils/matchProjectInURL';
 import CommAppContext, { AsyncStatus } from './CommAppContext';
 import useCommonHooks from '../utils/useCommonHooks';
+import ErrorPage from '../components/error/ErrorPage';
 
 export type PlantContextProps = {
     fetchProjectsAndPermissionsStatus: AsyncStatus;
@@ -102,7 +103,11 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
     };
 
     if (!renderChildren()) {
-        return <LoadingPage loadingText={'Loading plant from URL'} />;
+        if (fetchProjectsAndPermissionsStatus === AsyncStatus.ERROR) {
+            return <ErrorPage title={'Unable to obtain permissions.'} />;
+        } else {
+            return <LoadingPage loadingText={'Loading plant from URL'} />;
+        }
     } else {
         return (
             <PlantContext.Provider
