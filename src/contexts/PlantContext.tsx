@@ -51,7 +51,7 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
     }, [params.plant, params.project]);
 
     useEffect(() => {
-        if (!params.plant) return;
+        if (!params.plant || params.plant === 'comm') return;
         window.localStorage.setItem(StorageKey.PLANT, params.plant);
         if (!params.project) return;
         window.localStorage.setItem(StorageKey.PROJECT, params.project);
@@ -104,7 +104,14 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
 
     if (!renderChildren()) {
         if (fetchProjectsAndPermissionsStatus === AsyncStatus.ERROR) {
-            return <ErrorPage title={'Unable to obtain permissions.'} />;
+            return (
+                <ErrorPage
+                    title={'Unable to obtain permissions.'}
+                    description={
+                        'Please check your internet connection or refresh this page.'
+                    }
+                />
+            );
         } else {
             return <LoadingPage loadingText={'Loading plant from URL'} />;
         }
