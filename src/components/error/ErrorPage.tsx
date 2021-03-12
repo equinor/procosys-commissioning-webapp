@@ -11,16 +11,8 @@ interface CommError {
 }
 
 const ErrorPageWrapper = styled.main`
-    padding: 0 4%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    & p {
-        padding: 4%;
-    }
-    & h3 {
-        margin-bottom: 0;
-    }
 `;
 
 const ErrorPage = ({ title, description }: CommError) => {
@@ -34,10 +26,13 @@ const ErrorPage = ({ title, description }: CommError) => {
                         title="Error icon"
                     />
                 </BannerIcon>
-                <BannerMessage bold>{title}</BannerMessage>
+                <BannerMessage variant="h4">{title}</BannerMessage>
             </Banner>
             {description && description.length > 0 && (
                 <Banner>
+                    <BannerIcon>
+                        <EdsIcon name="info_circle" title="Error icon" />
+                    </BannerIcon>
                     <BannerMessage>{description}</BannerMessage>
                 </Banner>
             )}

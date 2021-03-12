@@ -1,24 +1,37 @@
 import { Button, DotProgress, Scrim } from '@equinor/eds-core-react';
-import React, { useState } from 'react';
+import { NONAME } from 'dns';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { AsyncStatus } from '../contexts/CommAppContext';
 import { ProcosysApiService } from '../services/procosysApi';
 import useCommonHooks from '../utils/useCommonHooks';
 
 export const UploadContainer = styled.div`
-    max-height: 70vh;
+    max-height: 80vh;
     width: 300px;
     background-color: white;
     padding: 16px;
     overflow: scroll;
     & img {
         width: 100%;
+        max-height: 200px;
+        object-fit: contain;
     }
-    & button,
+    & > button,
     button:disabled {
         margin-top: 12px;
+        margin-right: 24px;
         float: right;
     }
+`;
+
+const ChooseImageContainer = styled.div`
+    width: 100%;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #deecee;
 `;
 
 type PostChecklistAttachment = ProcosysApiService['postChecklistAttachment'];
@@ -44,6 +57,7 @@ const UploadAttachment = ({
     const [postAttachmentStatus, setPostAttachmentStatus] = useState(
         AsyncStatus.INACTIVE
     );
+    const fileInputRef = useRef(document.createElement('input'));
 
     const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedFile(e.currentTarget.files![0]);
@@ -79,8 +93,21 @@ const UploadAttachment = ({
                         src={URL.createObjectURL(selectedFile)}
                         alt={selectedFile.name}
                     />
-                ) : null}
-                <input type="file" onChange={onFileChange} accept="image/*" />
+                ) : (
+                    <ChooseImageContainer>
+                        <Button onClick={() => fileInputRef.current.click()}>
+                            Choose image...
+                        </Button>
+                    </ChooseImageContainer>
+                )}
+                <input
+                    type="file"
+                    onChange={onFileChange}
+                    accept="image/*"
+                    ref={fileInputRef}
+                    style={{ display: 'none' }}
+                />
+
                 <Button
                     disabled={
                         !selectedFile ||
@@ -89,11 +116,16 @@ const UploadAttachment = ({
                     onClick={onFileUpload}
                 >
                     {postAttachmentStatus === AsyncStatus.LOADING ? (
-                        <DotProgress />
+                        <DotProgress variant="green" />
                     ) : (
                         'Upload image'
                     )}
                 </Button>
+                {selectedFile ? (
+                    <Button onClick={() => fileInputRef.current.click()}>
+                        Choose other
+                    </Button>
+                ) : null}
             </UploadContainer>
         </Scrim>
     );

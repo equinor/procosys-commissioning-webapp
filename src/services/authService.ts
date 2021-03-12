@@ -1,5 +1,6 @@
 import * as Msal from '@azure/msal-browser';
 import { AccountInfo } from '@azure/msal-browser';
+import { StorageKey } from '../pages/Bookmarks/useBookmarks';
 export interface IAuthService {
     login: () => Promise<void>;
     logout: () => Promise<void>;
@@ -21,7 +22,7 @@ const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
 
     const login = async () => {
         window.localStorage.setItem(
-            'ProCoSys-CWA-redirectPath',
+            StorageKey.REDIRECTPATH,
             window.location.pathname
         );
         MSAL.loginRedirect({ scopes: scopes });

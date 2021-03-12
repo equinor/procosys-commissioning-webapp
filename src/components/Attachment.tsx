@@ -1,4 +1,9 @@
-import { Button, CircularProgress, Scrim } from '@equinor/eds-core-react';
+import {
+    Button,
+    CircularProgress,
+    Scrim,
+    Typography,
+} from '@equinor/eds-core-react';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { AsyncStatus } from '../contexts/CommAppContext';
@@ -7,14 +12,16 @@ import { handleDownload } from '../utils/general';
 import useCommonHooks from '../utils/useCommonHooks';
 import EdsIcon from './icons/EdsIcon';
 
+const ATTACHMENT_SIZE = '112px';
+
 export const AttachmentsWrapper = styled.div`
     display: flex;
     flex-wrap: wrap;
 `;
 
 export const UploadImageButton = styled(Button)`
-    height: 82px;
-    width: 82px;
+    height: ${ATTACHMENT_SIZE};
+    width: ${ATTACHMENT_SIZE};
     margin: 8px;
     &:disabled {
         height: 82px;
@@ -23,17 +30,39 @@ export const UploadImageButton = styled(Button)`
     }
 `;
 
-const LoadingWrapper = styled.div`
-    height: 82px;
-    width: 82px;
+const AttachmentWrapper = styled.div`
+    height: ${ATTACHMENT_SIZE};
+    width: ${ATTACHMENT_SIZE};
     margin: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
 `;
 
+const DocumentAttachmentWrapper = styled(AttachmentWrapper)`
+    background-color: #deecee;
+    border: 2px solid #007079;
+    overflow: hidden;
+    box-sizing: border-box;
+    padding: 8px;
+    padding-top: 15px;
+    position: relative;
+    align-items: flex-start;
+    justify-content: flex-start;
+    & > button {
+        position: absolute;
+        bottom: 0;
+        right: 5px;
+    }
+    & > svg {
+        position: absolute;
+        bottom: 8px;
+        left: 50px;
+    }
+`;
+
 export const AttachmentImage = styled.img`
-    height: 82px;
+    height: ${ATTACHMENT_SIZE};
     margin: 8px;
 `;
 
@@ -98,8 +127,9 @@ const Attachment = ({
     const [attachmentFileURL, setAttachmentFileURL] = useState('');
     const [loadingStatus, setLoadingStatus] = useState(AsyncStatus.INACTIVE);
     const [deleteStatus, setDeleteStatus] = useState(AsyncStatus.INACTIVE);
+    const isDocument = attachment.mimeType.substr(0, 5) !== 'image';
 
-    const loadImage = async () => {
+    const loadAttachment = async () => {
         setLoadingStatus(AsyncStatus.LOADING);
         try {
             const blob = await getAttachment(
@@ -110,7 +140,11 @@ const Attachment = ({
             );
             const imageUrl = window.URL.createObjectURL(blob);
             setAttachmentFileURL(imageUrl);
-            setShowFullScreenImage(true);
+            if (!isDocument) {
+                setShowFullScreenImage(true);
+            } else {
+                handleDownload(imageUrl, attachment.fileName);
+            }
             setLoadingStatus(AsyncStatus.SUCCESS);
         } catch {
             setSnackbarText('Unable to load image.');
@@ -132,6 +166,21 @@ const Attachment = ({
             setSnackbarText(error.toString());
         }
     };
+
+    if (attachment.mimeType.substr(0, 5) !== 'image') {
+        return (
+            <DocumentAttachmentWrapper>
+                <Typography lines={3}>{attachment.title}</Typography>
+                <Button variant={'ghost_icon'} onClick={loadAttachment}>
+                    <EdsIcon
+                        name="cloud_download"
+                        color={'#007179'}
+                        alt={'download document'}
+                    />
+                </Button>
+            </DocumentAttachmentWrapper>
+        );
+    }
 
     return (
         <>
@@ -188,14 +237,14 @@ const Attachment = ({
                 </Scrim>
             ) : null}
             {loadingStatus === AsyncStatus.LOADING ? (
-                <LoadingWrapper>
+                <AttachmentWrapper>
                     <CircularProgress />
-                </LoadingWrapper>
+                </AttachmentWrapper>
             ) : (
                 <AttachmentImage
                     src={`data:image/png;base64, ${attachment.thumbnailAsBase64}`}
                     alt={attachment.title}
-                    onClick={loadImage}
+                    onClick={loadAttachment}
                 />
             )}
         </>
