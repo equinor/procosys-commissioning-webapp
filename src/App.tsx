@@ -36,7 +36,6 @@ const App = ({
     let rootDirectory = '';
     if (window.location.pathname.substr(0, 5) === '/comm') {
         rootDirectory = '/comm';
-        console.log('ROOT: ', rootDirectory);
     }
 
     return (

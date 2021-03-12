@@ -51,7 +51,6 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
     }, [params.plant, params.project]);
 
     useEffect(() => {
-        if (!params.plant || params.plant === 'comm') return;
         window.localStorage.setItem(StorageKey.PLANT, params.plant);
         if (!params.project) return;
         window.localStorage.setItem(StorageKey.PROJECT, params.project);
