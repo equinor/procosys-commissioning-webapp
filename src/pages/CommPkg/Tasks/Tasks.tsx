@@ -9,7 +9,7 @@ import { AsyncStatus } from '../../../contexts/CommAppContext';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import AsyncPage from '../../../components/AsyncPage';
 
-const TaskPreviewButton = styled(PreviewButton)`
+export const TaskPreviewButton = styled(PreviewButton)`
     & > div {
         flex: 2;
     }
