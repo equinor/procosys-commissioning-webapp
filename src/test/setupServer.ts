@@ -6,16 +6,19 @@ import {
     dummyPunchListResponse,
     dummyScopeResponse,
     dummyTasksResponse,
+    testProjects,
 } from './dummyData';
 import objectToCamelCase from '../utils/objectToCamelCase';
 
-export const baseURL = 'https://dummy-url.com';
+export const baseURL = 'https://test-url.com';
 export const putMetaTableCellURL = `${baseURL}/CheckList/Item/MetaTableCell*`;
 export const getChecklistURL = `${baseURL}/CheckList/Comm*`;
 export const getScopeURL = `${baseURL}/CommPkg/CheckLists*`;
 export const getTasksURL = `${baseURL}/CommPkg/Tasks*`;
 export const getPunchListURL = `${baseURL}/CommPkg/PunchList*`;
-export const getCommPkgDetailsURL = `*`;
+export const getCommPkgDetails = `${baseURL}/CommPkg*`;
+export const getPermissions = `${baseURL}/Permissions*`;
+export const getProjects = `${baseURL}/Projects*`;
 
 export const server = setupServer(
     rest.put(putMetaTableCellURL, (request, response, context) => {
@@ -49,10 +52,24 @@ export const server = setupServer(
             context.status(200)
         );
     }),
-    rest.get(getCommPkgDetailsURL, (request, response, context) => {
+    rest.get(getCommPkgDetails, (request, response, context) => {
         return response(
             context.delay(10),
             context.json(objectToCamelCase(dummyCommPkgDetailsResponse)),
+            context.status(200)
+        );
+    }),
+    rest.get(getProjects, (request, response, context) => {
+        return response(
+            context.delay(100),
+            context.json(testProjects),
+            context.status(200)
+        );
+    }),
+    rest.get(getPermissions, (request, response, context) => {
+        return response(
+            context.delay(100),
+            context.json(['COMMPKG/READ']),
             context.status(200)
         );
     })
