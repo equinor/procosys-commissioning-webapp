@@ -15,7 +15,7 @@ import { AsyncStatus } from '../../contexts/CommAppContext';
 import TaskAttachments from './TaskAttachments';
 import { IsSignedBanner } from '../Checklist/Checklist';
 import EdsIcon from '../../components/icons/EdsIcon';
-import ProcosysCard from '../../components/ProcosysCard';
+import AsyncCard from '../../components/AsyncCard';
 import useSnackbar from '../../utils/useSnackbar';
 
 const TaskWrapper = styled.main`
@@ -109,7 +109,7 @@ const Task = () => {
                 </IsSignedBanner>
             ) : null}
             <TaskWrapper>
-                <ProcosysCard
+                <AsyncCard
                     cardTitle={task ? `Task ${task.number}` : `Task`}
                     errorMessage={'Unable to load task description.'}
                     fetchStatus={fetchTaskStatus}
@@ -119,8 +119,8 @@ const Task = () => {
                         isSigned={isSigned}
                         setSnackbarText={setSnackbarText}
                     />
-                </ProcosysCard>
-                <ProcosysCard
+                </AsyncCard>
+                <AsyncCard
                     errorMessage={'Unable to load task signature.'}
                     fetchStatus={fetchTaskStatus}
                     cardTitle={'Signature'}
@@ -133,9 +133,9 @@ const Task = () => {
                         setSnackbarText={setSnackbarText}
                         refreshTask={setRefreshTask}
                     />
-                </ProcosysCard>
+                </AsyncCard>
 
-                <ProcosysCard
+                <AsyncCard
                     fetchStatus={fetchAttachmentsStatus}
                     errorMessage={
                         'Unable to load attachments. Please refresh or try again later.'
@@ -147,9 +147,9 @@ const Task = () => {
                         setSnackbarText={setSnackbarText}
                         attachments={attachments}
                     />
-                </ProcosysCard>
+                </AsyncCard>
 
-                <ProcosysCard
+                <AsyncCard
                     fetchStatus={fetchParametersStatus}
                     errorMessage={
                         'Unable to load parameters. Please refresh or try again later.'
@@ -162,7 +162,7 @@ const Task = () => {
                         isSigned={isSigned}
                         parameters={parameters}
                     />
-                </ProcosysCard>
+                </AsyncCard>
             </TaskWrapper>
             {snackbar}
         </>
