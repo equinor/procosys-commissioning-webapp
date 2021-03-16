@@ -9,8 +9,9 @@ import procosysApiService, {
     ProcosysApiService,
 } from '../services/procosysApi';
 import authService from '../services/__mocks__/authService';
-import { testProjects, testPlants } from './dummyData';
+import { testProjects, testPlants, dummyPermissions } from './dummyData';
 import { IAuthService } from '../services/authService';
+import { baseURL } from './setupServer';
 
 const client = new Msal.PublicClientApplication({
     auth: { clientId: 'testId', authority: 'testAuthority' },
@@ -19,7 +20,7 @@ const client = new Msal.PublicClientApplication({
 const authInstance = authService({ MSAL: client, scopes: ['testScope'] });
 const baseApiInstance = baseApiService({
     authInstance,
-    baseURL: 'https://dummy-url.com',
+    baseURL: baseURL,
     scope: ['testscope'],
 });
 const procosysApiInstance = procosysApiService({
@@ -73,6 +74,7 @@ export const withPlantContext = ({
     availableProjects = testProjects,
     currentPlant = testPlants[1],
     currentProject = testProjects[1],
+    permissions = dummyPermissions,
     Component,
 }: WithPlantContextProps) => {
     return withCommAppContext({
@@ -80,7 +82,7 @@ export const withPlantContext = ({
             <PlantContext.Provider
                 value={{
                     fetchProjectsAndPermissionsStatus: fetchProjectsAndPermissionsStatus,
-                    permissions: [],
+                    permissions: permissions,
                     currentPlant: currentPlant,
                     availableProjects: availableProjects,
                     currentProject: currentProject,
