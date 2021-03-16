@@ -1,5 +1,4 @@
 import { Button, DotProgress, Scrim } from '@equinor/eds-core-react';
-import { NONAME } from 'dns';
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { AsyncStatus } from '../contexts/CommAppContext';
