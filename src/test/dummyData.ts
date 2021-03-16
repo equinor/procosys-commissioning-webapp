@@ -58,6 +58,8 @@ export const testPlants: Plant[] = [
     { id: 'Two', title: 'Test plant 2', slug: 'yet-another-slug' },
 ];
 
+export const dummyPermissions: string[] = ['COMMPKG/READ'];
+
 export const testProjects: Project[] = [
     { id: 1, title: 'Test project 1', description: 'this-is-a-description' },
     { id: 2, title: 'Test project 2', description: 'yet-another-description' },

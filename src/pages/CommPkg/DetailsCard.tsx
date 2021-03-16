@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { CommPkg } from '../../services/apiTypes';
 import EdsIcon from '../../components/icons/EdsIcon';
-import { Button, Card, DotProgress } from '@equinor/eds-core-react';
+import { Button, DotProgress } from '@equinor/eds-core-react';
 import useBookmarks from '../Bookmarks/useBookmarks';
 import { SHADOW } from '../../style/GlobalStyles';
 import { PackageStatusIcon } from '../../components/icons/PackageStatusIcon';
 import useCommonHooks from '../../utils/useCommonHooks';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import DetailsCardShell from './DetailsCardShell';
+import axios from 'axios';
 
 const DetailsWrapper = styled.div<{ atBookmarksPage?: Boolean }>`
     display: grid;
@@ -76,6 +77,7 @@ const DetailsCard = ({
     );
 
     useEffect(() => {
+        const source = axios.CancelToken.source();
         (async () => {
             try {
                 const detailsFromApi = await api.getCommPackageDetails(
@@ -84,10 +86,13 @@ const DetailsCard = ({
                 );
                 setDetails(detailsFromApi);
                 setFetchDetailsStatus(AsyncStatus.SUCCESS);
-            } catch {
+            } catch (error) {
                 setFetchDetailsStatus(AsyncStatus.ERROR);
             }
         })();
+        return () => {
+            source.cancel('Detailscard unmounted');
+        };
     }, [params, api, commPkgId]);
 
     if (fetchDetailsStatus === AsyncStatus.ERROR) {
