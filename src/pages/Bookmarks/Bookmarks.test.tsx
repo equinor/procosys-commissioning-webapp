@@ -42,6 +42,5 @@ describe('<Bookmarks/>', () => {
                 'Unable to load comm package details. Try reloading.'
             )
         ).toBeInTheDocument();
-        screen.debug();
     });
 });
