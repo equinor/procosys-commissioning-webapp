@@ -11,7 +11,7 @@ import styled from 'styled-components';
 import EdsIcon from '../../components/icons/EdsIcon';
 import axios from 'axios';
 import useCommonHooks from '../../utils/useCommonHooks';
-import ProcosysCard from '../../components/ProcosysCard';
+import AsyncCard from '../../components/AsyncCard';
 import Attachment, {
     AttachmentsWrapper,
     UploadImageButton,
@@ -117,7 +117,7 @@ const Checklist = () => {
                             details={checklistDetails}
                             isSigned={isSigned}
                         />
-                        <ProcosysCard
+                        <AsyncCard
                             errorMessage={
                                 'Unable to load attachments for this checklist.'
                             }
@@ -166,8 +166,8 @@ const Checklist = () => {
                                     />
                                 ))}
                             </AttachmentsWrapper>
-                        </ProcosysCard>
-                        <ProcosysCard
+                        </AsyncCard>
+                        <AsyncCard
                             fetchStatus={fetchChecklistStatus}
                             errorMessage={'Unable to load checklist signature.'}
                             cardTitle={'Signature'}
@@ -180,7 +180,7 @@ const Checklist = () => {
                                 details={checklistDetails}
                                 setIsSigned={setIsSigned}
                             />
-                        </ProcosysCard>
+                        </AsyncCard>
                     </ChecklistWrapper>
                 </>
             );

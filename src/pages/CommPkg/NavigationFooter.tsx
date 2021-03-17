@@ -34,6 +34,7 @@ const FooterButton = styled.button<{ active: boolean }>`
     align-items: center;
     border: none;
     flex: 1;
+    cursor: pointer;
     height: 75px;
     max-width: 100px;
     margin: 0 15px 0 15px;

@@ -108,7 +108,7 @@ const useSearchPageFacade = () => {
             cancel('A new search has taken place instead');
             clearTimeout(timeOutId);
         };
-    }, [query, currentProject, currentPlant]);
+    }, [query, currentProject, currentPlant, api]);
 
     return {
         hits,

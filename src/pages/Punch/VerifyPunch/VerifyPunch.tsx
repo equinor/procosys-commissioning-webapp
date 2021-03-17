@@ -6,7 +6,7 @@ import Attachment, { AttachmentsWrapper } from '../../../components/Attachment';
 import ErrorPage from '../../../components/error/ErrorPage';
 import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
 import Navbar from '../../../components/navigation/Navbar';
-import ProcosysCard from '../../../components/ProcosysCard';
+import AsyncCard from '../../../components/AsyncCard';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
 import { PunchItem } from '../../../services/apiTypes';
 import buildEndpoint from '../../../utils/buildEndpoint';
@@ -131,7 +131,7 @@ const VerifyPunch = () => {
                             {punchItem.clearedByLastName} (
                             {punchItem.clearedByUser})
                         </p>
-                        <ProcosysCard
+                        <AsyncCard
                             fetchStatus={fetchAttachmentsStatus}
                             cardTitle={'Attachments'}
                             errorMessage={
@@ -150,7 +150,7 @@ const VerifyPunch = () => {
                                     />
                                 ))}
                             </AttachmentsWrapper>
-                        </ProcosysCard>
+                        </AsyncCard>
                         <ButtonGroup>
                             <Button
                                 disabled={
