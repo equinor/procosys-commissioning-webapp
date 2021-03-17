@@ -10,6 +10,7 @@ export const COLORS = {
     mossGreen: tokens.colors.interactive.primary__resting.hex,
     fadedBlue: tokens.colors.interactive.primary__hover_alt.hex,
     danger: tokens.colors.interactive.danger__resting.hex,
+    success: tokens.colors.interactive.success__resting.hex,
     white: '#fff',
     darkGrey: '#777',
     lightGrey: '#fafafa',

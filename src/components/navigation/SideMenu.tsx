@@ -16,7 +16,7 @@ const SideMenuWrapper = styled(animated.aside)`
     left: 0;
     z-index: 1000;
     background-color: ${COLORS.white};
-    border-right: 2px solid #deecee;
+    border-right: 2px solid ${COLORS.fadedBlue};
 `;
 
 const TopContent = styled.div`
@@ -50,7 +50,7 @@ const Backdrop = styled(animated.div)`
     position: fixed;
     top: 0;
     left: 0;
-    background: white;
+    background: ${COLORS.white};
     backdrop-filter: blur(1px);
     z-index: 500;
 `;
@@ -98,7 +98,7 @@ const SideMenu = ({
                         variant="ghost"
                         onClick={() => setDrawerIsOpen(false)}
                     >
-                        <EdsIcon name="close" color="black" />
+                        <EdsIcon name="close" color={COLORS.black} />
                     </Button>
                 </TopContent>
                 <UserInfo>
@@ -120,7 +120,7 @@ const SideMenu = ({
                         }}
                     >
                         Change plant
-                        <EdsIcon name="chevron_right" color="white" />
+                        <EdsIcon name="chevron_right" />
                     </Button>
                     {currentPlant && (
                         <>
@@ -140,7 +140,7 @@ const SideMenu = ({
                                 }}
                             >
                                 Change project
-                                <EdsIcon name="chevron_right" color="white" />
+                                <EdsIcon name="chevron_right" />
                             </Button>
                         </>
                     )}

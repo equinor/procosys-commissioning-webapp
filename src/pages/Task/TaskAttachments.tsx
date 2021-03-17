@@ -123,7 +123,10 @@ const TaskAttachments = ({
                         variant={'ghost_icon'}
                         onClick={() => handleDownload(attachment)}
                     >
-                        <EdsIcon name={'cloud_download'} color="#007179" />
+                        <EdsIcon
+                            name={'cloud_download'}
+                            color={COLORS.mossGreen}
+                        />
                     </Button>
                 </>
             );
@@ -139,7 +142,10 @@ const TaskAttachments = ({
                         variant={'ghost_icon'}
                         onClick={() => handleDownload(attachment)}
                     >
-                        <EdsIcon name={'cloud_download'} color="#007179" />
+                        <EdsIcon
+                            name={'cloud_download'}
+                            color={COLORS.mossGreen}
+                        />
                     </Button>
                 </>
             );

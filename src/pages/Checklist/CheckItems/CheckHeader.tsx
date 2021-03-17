@@ -9,7 +9,7 @@ const CheckHeaderWrapper = styled.div<{ noBorder?: boolean }>`
     margin-top: 48px;
     padding-bottom: 12px;
     border-bottom: ${(props) =>
-        props.noBorder ? 'none' : '2px solid #deecee'};
+        props.noBorder ? 'none' : `2px solid ${COLORS.fadedBlue}`};
     & div {
         flex: 0 0 95px;
         padding-right: 6px;

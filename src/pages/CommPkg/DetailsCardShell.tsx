@@ -14,7 +14,7 @@ const DetailsCardShellWrapper = styled.div<{ atBookmarksPage: boolean }>`
     justify-content: center;
     align-items: center;
     background-color: ${(props) =>
-        props.atBookmarksPage ? 'white' : COLORS.fadedBlue};
+        props.atBookmarksPage ? COLORS.white : COLORS.fadedBlue};
     box-shadow: ${(props) => (props.atBookmarksPage ? SHADOW : 'none')};
     border-radius: 5px;
     margin: ${(props) => (props.atBookmarksPage ? '0 4% 10px 4%' : '0')};

@@ -41,7 +41,7 @@ const MetaTableWrapper = styled.table`
 const HorizontalScroll = styled.div`
     overflow-x: scroll;
     padding: 6px 10px 0px 24px;
-    border-left: 2px solid #deecee;
+    border-left: 2px solid ${COLORS.fadedBlue};
     margin-top: 6px;
     & > div {
         & > p {

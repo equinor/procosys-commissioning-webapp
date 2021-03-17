@@ -2,7 +2,7 @@ import { Banner } from '@equinor/eds-core-react';
 import React from 'react';
 import styled from 'styled-components';
 import { AsyncStatus } from '../contexts/CommAppContext';
-import { SHADOW } from '../style/GlobalStyles';
+import { COLORS, SHADOW } from '../style/GlobalStyles';
 import EdsIcon from './icons/EdsIcon';
 import SkeletonLoadingPage from './loading/SkeletonLoader';
 const { BannerIcon, BannerMessage } = Banner;
@@ -44,7 +44,10 @@ const AsyncPage = ({
             return (
                 <Banner>
                     <BannerIcon>
-                        <EdsIcon name={'info_circle'} color={'#007079'} />
+                        <EdsIcon
+                            name={'info_circle'}
+                            color={COLORS.mossGreen}
+                        />
                     </BannerIcon>
                     <BannerMessage>{emptyContentMessage!}</BannerMessage>
                 </Banner>
@@ -53,7 +56,7 @@ const AsyncPage = ({
             return (
                 <Banner>
                     <BannerIcon variant="warning">
-                        <EdsIcon name={'error_filled'} color={'#FF3B3B'} />
+                        <EdsIcon name={'error_filled'} color={COLORS.danger} />
                     </BannerIcon>
                     <BannerMessage>{errorMessage}</BannerMessage>
                 </Banner>

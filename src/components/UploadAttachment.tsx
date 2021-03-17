@@ -31,7 +31,7 @@ const ChooseImageContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px dashed #deecee;
+    border: 2px dashed ${COLORS.fadedBlue};
 `;
 
 type PostChecklistAttachment = ProcosysApiService['postChecklistAttachment'];

@@ -11,7 +11,8 @@ const CommentField = styled.div<{ editable: boolean }>`
     padding: 12px;
     font-family: 'Equinor';
     min-height: 80px;
-    border-bottom: ${(props) => (props.editable ? '1px solid black' : 'none')};
+    border-bottom: ${(props) =>
+        props.editable ? `1px solid ${COLORS.black}` : 'none'};
 `;
 
 const CommentButton = styled(Button)`

@@ -51,7 +51,7 @@ const CheckItemDescriptionWrapper = styled.div`
     & > p {
         margin: 8px 0px 8px 0px;
         padding-left: 24px;
-        border-left: 2px solid #deecee;
+        border-left: 2px solid ${COLORS.fadedBlue};
     }
 `;
 

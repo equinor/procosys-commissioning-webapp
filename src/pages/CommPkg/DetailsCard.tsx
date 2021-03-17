@@ -4,7 +4,7 @@ import { CommPkg } from '../../services/apiTypes';
 import EdsIcon from '../../components/icons/EdsIcon';
 import { Button, DotProgress } from '@equinor/eds-core-react';
 import useBookmarks from '../Bookmarks/useBookmarks';
-import { SHADOW } from '../../style/GlobalStyles';
+import { COLORS, SHADOW } from '../../style/GlobalStyles';
 import { PackageStatusIcon } from '../../components/icons/PackageStatusIcon';
 import useCommonHooks from '../../utils/useCommonHooks';
 import { AsyncStatus } from '../../contexts/CommAppContext';
@@ -19,7 +19,7 @@ const DetailsWrapper = styled.div<{ atBookmarksPage?: Boolean }>`
     grid-row-gap: 8px;
     padding: 16px 4%;
     background-color: ${(props) =>
-        props.atBookmarksPage ? 'white' : '#deecee'};
+        props.atBookmarksPage ? COLORS.white : COLORS.fadedBlue};
     box-shadow: ${(props) => (props.atBookmarksPage ? SHADOW : 'none')};
     border-radius: 5px;
     margin: ${(props) => (props.atBookmarksPage ? '0 4% 10px 4%' : '0')};
@@ -126,7 +126,7 @@ const DetailsCard = ({
                         }}
                     >
                         <EdsIcon
-                            color="#007079"
+                            color={COLORS.mossGreen}
                             name={
                                 isBookmarked
                                     ? 'bookmark_filled'
