@@ -48,14 +48,10 @@ type LeftNavbarContent = {
     url?: string;
 };
 type RightNavbarContent = {
-    name: 'logo' | 'newPunch' | 'search';
+    name: 'newPunch' | 'search';
     label?: string;
     url?: string;
 };
-
-const RightButton = styled(Button)`
-    /* margin-right: 4%; */
-`;
 
 type NavbarProps = {
     leftContent?: LeftNavbarContent;
@@ -111,14 +107,6 @@ const Navbar = ({
     };
 
     const determineRightContent = () => {
-        if (rightContent?.name === 'logo') {
-            return (
-                <></>
-                // <Button variant="ghost" onClick={() => history.push(`/`)}>
-                //     <img src={logo} alt="ProCoSys logo" />
-                // </Button>
-            );
-        }
         if (rightContent?.name === 'search') {
             return (
                 <Button
@@ -131,12 +119,12 @@ const Navbar = ({
         }
         if (rightContent?.name === 'newPunch') {
             return (
-                <RightButton
+                <Button
                     variant="ghost"
                     onClick={() => history.push(`${url}/new-punch`)}
                 >
                     New punch
-                </RightButton>
+                </Button>
             );
         }
         return <></>;

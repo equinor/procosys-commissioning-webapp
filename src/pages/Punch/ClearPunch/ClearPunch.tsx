@@ -11,7 +11,7 @@ import useClearPunchFacade, {
     UpdatePunchEndpoint,
 } from './useClearPunchFacade';
 import styled from 'styled-components';
-import ProcosysCard from '../../../components/ProcosysCard';
+import AsyncCard from '../../../components/AsyncCard';
 import Attachment, {
     AttachmentsWrapper,
     UploadImageButton,
@@ -187,7 +187,7 @@ const ClearPunch = () => {
                                 </option>
                             ))}
                         </NativeSelect>
-                        <ProcosysCard
+                        <AsyncCard
                             errorMessage="Unable to load attachments."
                             cardTitle="Attachments"
                             fetchStatus={fetchAttachmentsStatus}
@@ -222,7 +222,7 @@ const ClearPunch = () => {
                                     />
                                 ))}
                             </AttachmentsWrapper>
-                        </ProcosysCard>
+                        </AsyncCard>
                         <Button
                             type="submit"
                             disabled={

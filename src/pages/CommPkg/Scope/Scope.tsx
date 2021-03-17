@@ -6,8 +6,6 @@ import CompletionStatusIcon from '../../../components/icons/CompletionStatusIcon
 import { AsyncStatus } from '../../../contexts/CommAppContext';
 import { ChecklistPreview } from '../../../services/apiTypes';
 import useCommonHooks from '../../../utils/useCommonHooks';
-import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
-import { useTrackMetric } from '@microsoft/applicationinsights-react-js';
 import AsyncPage from '../../../components/AsyncPage';
 
 export const CommPkgListWrapper = styled.div`

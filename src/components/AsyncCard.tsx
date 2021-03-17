@@ -3,7 +3,7 @@ import { AsyncStatus } from '../contexts/CommAppContext';
 import SkeletonLoadingPage from './loading/SkeletonLoader';
 import EdsCard from './EdsCard';
 
-type ProcosysCardProps = {
+type AsyncCardProps = {
     fetchStatus: AsyncStatus;
     errorMessage: string;
     emptyContentMessage?: string;
@@ -11,13 +11,13 @@ type ProcosysCardProps = {
     cardTitle: string;
 };
 
-const ProcosysCard = ({
+const AsyncCard = ({
     fetchStatus,
     errorMessage,
     emptyContentMessage,
     cardTitle,
     children,
-}: ProcosysCardProps) => {
+}: AsyncCardProps) => {
     const content = () => {
         if (fetchStatus === AsyncStatus.SUCCESS) {
             return children;
@@ -33,4 +33,4 @@ const ProcosysCard = ({
     return <EdsCard title={cardTitle}>{content()}</EdsCard>;
 };
 
-export default ProcosysCard;
+export default AsyncCard;
