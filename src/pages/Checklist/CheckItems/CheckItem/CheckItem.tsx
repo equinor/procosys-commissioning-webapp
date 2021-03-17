@@ -7,6 +7,7 @@ import { CommParams } from '../../../../App';
 import { AsyncStatus } from '../../../../contexts/CommAppContext';
 import EdsIcon from '../../../../components/icons/EdsIcon';
 import useCommonHooks from '../../../../utils/useCommonHooks';
+import { COLORS } from '../../../../style/GlobalStyles';
 
 const CheckItemWrapper = styled.div<{ disabled: boolean }>`
     background-color: ${(props) =>
@@ -14,7 +15,7 @@ const CheckItemWrapper = styled.div<{ disabled: boolean }>`
     margin-top: 12px;
     & p,
     button {
-        color: ${(props) => (props.disabled ? '#777777' : 'initial')};
+        color: ${(props) => (props.disabled ? COLORS.darkGrey : 'initial')};
     }
     transition: background-color 0.2s ease-in-out;
     transition: color 0.2s ease-in-out;
@@ -37,7 +38,7 @@ const LeftWrapper = styled.div`
 
         & p {
             margin: 0;
-            color: #007079;
+            color: ${COLORS.mossGreen};
         }
     }
     & > p {

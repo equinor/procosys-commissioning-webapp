@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { COLORS } from '../../../style/GlobalStyles';
 
 const CheckHeaderWrapper = styled.div<{ noBorder?: boolean }>`
     display: flex;
@@ -22,7 +23,7 @@ const CheckHeaderWrapper = styled.div<{ noBorder?: boolean }>`
 
 const GreyText = styled.p`
     margin: 0;
-    color: #a2a2a2;
+    color: ${COLORS.darkGrey};
 `;
 
 type CheckHeaderProps = {

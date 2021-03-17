@@ -21,7 +21,7 @@ const ErrorPage = ({ title, description }: CommError) => {
             <Banner>
                 <BannerIcon variant={'warning'}>
                     <EdsIcon
-                        color={COLORS.interactive.danger__resting.hex}
+                        color={COLORS.danger}
                         name="error_outlined"
                         title="Error icon"
                     />

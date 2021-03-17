@@ -3,12 +3,13 @@ import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { AsyncStatus } from '../contexts/CommAppContext';
 import { ProcosysApiService } from '../services/procosysApi';
+import { COLORS } from '../style/GlobalStyles';
 import useCommonHooks from '../utils/useCommonHooks';
 
 export const UploadContainer = styled.div`
     max-height: 80vh;
     width: 300px;
-    background-color: white;
+    background-color: ${COLORS.white};
     padding: 16px;
     overflow: scroll;
     & img {

@@ -21,6 +21,7 @@ import { CardWrapper } from '../../components/EdsCard';
 import useAttachments from '../../utils/useAttachments';
 import buildEndpoint from '../../utils/buildEndpoint';
 import useSnackbar from '../../utils/useSnackbar';
+import { COLORS } from '../../style/GlobalStyles';
 
 const ChecklistWrapper = styled.div`
     padding: 0 4%;
@@ -33,7 +34,7 @@ const ChecklistWrapper = styled.div`
 `;
 
 export const IsSignedBanner = styled.div`
-    background-color: white;
+    background-color: ${COLORS.white};
     padding: 12px 4%;
     display: flex;
     align-items: center;

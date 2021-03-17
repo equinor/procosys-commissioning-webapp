@@ -3,10 +3,11 @@ import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import { Task } from '../../services/apiTypes';
+import { COLORS } from '../../style/GlobalStyles';
 import useCommonHooks from '../../utils/useCommonHooks';
 
 const CommentField = styled.div<{ editable: boolean }>`
-    background-color: #fafafa;
+    background-color: ${COLORS.lightGrey};
     padding: 12px;
     font-family: 'Equinor';
     min-height: 80px;

@@ -43,7 +43,6 @@ const findNextTask = (
         (task) => task.id === parseInt(currentTaskId)
     );
     if (indexOfCurrentTask < 0) return null;
-    console.log('current task ', indexOfCurrentTask);
     const nextTask = tasks[indexOfCurrentTask + 1];
     if (nextTask) return nextTask;
     return null;

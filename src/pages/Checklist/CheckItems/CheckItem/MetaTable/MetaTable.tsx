@@ -3,6 +3,7 @@ import { ColumnLabel, Row } from '../../../../../services/apiTypes';
 import styled from 'styled-components';
 import MetaTableCell from './MetaTableCell';
 import EdsIcon from '../../../../../components/icons/EdsIcon';
+import { COLORS } from '../../../../../style/GlobalStyles';
 
 const MetaTableWrapper = styled.table`
     border-spacing: 4px;
@@ -46,7 +47,7 @@ const HorizontalScroll = styled.div`
         & > p {
             margin: 0 4px 0 0;
         }
-        background-color: #deecee;
+        background-color: ${COLORS.fadedBlue};
         padding: 4px 4px 4px 8px;
         margin-bottom: 12px;
         display: flex;

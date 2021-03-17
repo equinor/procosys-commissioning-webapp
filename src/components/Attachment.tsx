@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { AsyncStatus } from '../contexts/CommAppContext';
 import { Attachment as AttachmentType } from '../services/apiTypes';
+import { COLORS } from '../style/GlobalStyles';
 import { handleDownload } from '../utils/general';
 import useCommonHooks from '../utils/useCommonHooks';
 import EdsIcon from './icons/EdsIcon';
@@ -40,7 +41,7 @@ const AttachmentWrapper = styled.div`
 `;
 
 const DocumentAttachmentWrapper = styled(AttachmentWrapper)`
-    background-color: #deecee;
+    background-color: ${COLORS.fadedBlue};
     border: 2px solid #007079;
     overflow: hidden;
     box-sizing: border-box;

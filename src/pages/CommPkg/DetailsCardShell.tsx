@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import React from 'react';
-import { SHADOW } from '../../style/GlobalStyles';
+import { COLORS, SHADOW } from '../../style/GlobalStyles';
 
 const DetailsCardShellWrapper = styled.div<{ atBookmarksPage: boolean }>`
     padding: 16px 4%;
     box-shadow: ${SHADOW};
-    background-color: #deecee;
+    background-color: ${COLORS.fadedBlue};
     border-radius: 15px;
     display: flex;
     height: 95px;
@@ -14,7 +14,7 @@ const DetailsCardShellWrapper = styled.div<{ atBookmarksPage: boolean }>`
     justify-content: center;
     align-items: center;
     background-color: ${(props) =>
-        props.atBookmarksPage ? 'white' : '#deecee'};
+        props.atBookmarksPage ? 'white' : COLORS.fadedBlue};
     box-shadow: ${(props) => (props.atBookmarksPage ? SHADOW : 'none')};
     border-radius: 5px;
     margin: ${(props) => (props.atBookmarksPage ? '0 4% 10px 4%' : '0')};

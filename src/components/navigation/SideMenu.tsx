@@ -6,6 +6,7 @@ import EdsIcon from '../icons/EdsIcon';
 import PlantContext from '../../contexts/PlantContext';
 import { StorageKey } from '../../pages/Bookmarks/useBookmarks';
 import useCommonHooks from '../../utils/useCommonHooks';
+import { COLORS } from '../../style/GlobalStyles';
 
 const SideMenuWrapper = styled(animated.aside)`
     width: 297px;
@@ -14,7 +15,7 @@ const SideMenuWrapper = styled(animated.aside)`
     height: calc(100vh);
     left: 0;
     z-index: 1000;
-    background-color: white;
+    background-color: ${COLORS.white};
     border-right: 2px solid #deecee;
 `;
 
@@ -40,7 +41,7 @@ const UserInfo = styled.div`
 
 const UserNameText = styled.p`
     padding-bottom: 15px;
-    color: #939393;
+    color: ${COLORS.darkGrey};
 `;
 
 const Backdrop = styled(animated.div)`
@@ -68,7 +69,7 @@ const PlantInfo = styled.div`
     padding: 16px;
     display: flex;
     flex-direction: column;
-    background-color: #deecee;
+    background-color: ${COLORS.fadedBlue};
 `;
 
 type SideMenuProps = {
