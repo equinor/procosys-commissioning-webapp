@@ -8,10 +8,11 @@ import {
     PunchOrganization,
     PunchType,
 } from '../../../services/apiTypes';
+import { COLORS } from '../../../style/GlobalStyles';
 import { PunchFormData } from '../../Punch/NewPunch/NewPunch';
 
 export const NewPunchFormWrapper = styled.form`
-    background-color: white;
+    background-color: ${COLORS.white};
     margin-top: 32px;
     padding: 0 4%;
     overflow: hidden;

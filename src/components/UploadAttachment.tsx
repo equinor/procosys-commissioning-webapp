@@ -3,12 +3,13 @@ import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { AsyncStatus } from '../contexts/CommAppContext';
 import { ProcosysApiService } from '../services/procosysApi';
+import { COLORS } from '../style/GlobalStyles';
 import useCommonHooks from '../utils/useCommonHooks';
 
 export const UploadContainer = styled.div`
     max-height: 80vh;
     width: 300px;
-    background-color: white;
+    background-color: ${COLORS.white};
     padding: 16px;
     overflow: scroll;
     & img {
@@ -30,7 +31,7 @@ const ChooseImageContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px dashed #deecee;
+    border: 2px dashed ${COLORS.fadedBlue};
 `;
 
 type PostChecklistAttachment = ProcosysApiService['postChecklistAttachment'];
@@ -115,7 +116,7 @@ const UploadAttachment = ({
                     onClick={onFileUpload}
                 >
                     {postAttachmentStatus === AsyncStatus.LOADING ? (
-                        <DotProgress variant="green" />
+                        <DotProgress color="primary" />
                     ) : (
                         'Upload image'
                     )}

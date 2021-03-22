@@ -1,4 +1,5 @@
 import axios from 'axios';
+import objectToCamelCase from '../utils/objectToCamelCase';
 import { IAuthService } from './authService';
 
 type baseApiProps = {
@@ -21,9 +22,18 @@ const baseApiService = ({ authInstance, baseURL, scope }: baseApiProps) => {
     });
     axiosInstance.interceptors.response.use(
         (response) => {
+            if (
+                typeof response.data === 'object' &&
+                !(response.data instanceof Blob)
+            ) {
+                response.data = objectToCamelCase(response.data);
+            }
             return response;
         },
         (error) => {
+            if (axios.isCancel(error)) {
+                throw error;
+            }
             if (error.response) {
                 throw new Error(error.response.data);
             } else {

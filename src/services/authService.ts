@@ -58,7 +58,6 @@ const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
         const cachedAccount = MSAL.getAllAccounts()[0];
         if (cachedAccount == null) return false;
         // User is able to get accessToken, no login required
-        console.log('Attempting to get accesstoken');
         try {
             const accessToken = await MSAL.acquireTokenSilent({
                 account: cachedAccount,

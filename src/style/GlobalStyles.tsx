@@ -5,6 +5,17 @@ import { createGlobalStyle } from 'styled-components';
 export const SHADOW =
     '0 0.3px 0.9px rgba(33, 41, 43, 0.04), 0 0.9px 3.1px rgba(33, 41, 43, 0.07), 0 4px 14px rgba(33, 41, 43, 0.1)';
 
+export const COLORS = {
+    mossGreen: tokens.colors.interactive.primary__resting.hex,
+    fadedBlue: tokens.colors.interactive.primary__hover_alt.hex,
+    danger: tokens.colors.interactive.danger__resting.hex,
+    success: tokens.colors.interactive.success__resting.hex,
+    white: '#fff',
+    darkGrey: '#777',
+    lightGrey: '#fafafa',
+    black: '#000',
+};
+
 const GlobalStyles = createGlobalStyle`
     body { 
         margin: 0 auto;
@@ -43,7 +54,7 @@ const GlobalStyles = createGlobalStyle`
         ${tokens.typography.input.label as CSSObject}
     }
     main {
-        background-color: white;
+        background-color: ${COLORS.white};
         min-height: calc(100vh - 55px);
     }
 `;
@@ -62,7 +73,5 @@ export const BREAKPOINT = {
     lg: `@media (max-width: 1280px)`,
     xl: `@media (max-width: 1920px)`,
 };
-
-export const COLORS = tokens.colors;
 
 export default GlobalStyles;

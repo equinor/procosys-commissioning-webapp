@@ -18,6 +18,7 @@ import {
 import { DotProgress } from '@equinor/eds-core-react';
 import NavigationFooterShell from './NavigationFooterShell';
 import withAccessControl from '../../services/withAccessControl';
+import Axios from 'axios';
 
 const CommPkgWrapper = styled.main``;
 
@@ -31,6 +32,7 @@ const CommPkg = () => {
     );
 
     useEffect(() => {
+        const source = Axios.CancelToken.source();
         (async () => {
             try {
                 const [
@@ -39,7 +41,7 @@ const CommPkg = () => {
                     punchListFromApi,
                 ] = await Promise.all([
                     api.getScope(params.plant, params.commPkg),
-                    api.getTasks(params.plant, params.commPkg),
+                    api.getTasks(source.token, params.plant, params.commPkg),
                     api.getPunchList(params.plant, params.commPkg),
                 ]);
                 setScope(scopeFromApi);
@@ -50,6 +52,9 @@ const CommPkg = () => {
                 setFetchFooterDataStatus(AsyncStatus.ERROR);
             }
         })();
+        return () => {
+            source.cancel();
+        };
     }, [api, params.plant, params.commPkg]);
 
     const determineFooterToRender = () => {
@@ -77,7 +82,7 @@ const CommPkg = () => {
         }
         return (
             <NavigationFooterShell>
-                <DotProgress variant="green" />
+                <DotProgress color="primary" />
             </NavigationFooterShell>
         );
     };

@@ -6,15 +6,15 @@ import EdsIcon from '../icons/EdsIcon';
 import { useSpring } from 'react-spring';
 import SideMenu from './SideMenu';
 import { removeSubdirectories } from '../../utils/general';
-import { BREAKPOINT } from '../../style/GlobalStyles';
+import { BREAKPOINT, COLORS } from '../../style/GlobalStyles';
 
 const NavbarWrapper = styled.nav<{ noBorder: boolean }>`
     height: 54px;
     width: 100%;
     max-width: 768px;
-    background-color: #fff;
+    background-color: ${COLORS.white};
     border-bottom: ${(props) =>
-        props.noBorder ? 'none' : '1px solid #deecee'};
+        props.noBorder ? 'none' : `1px solid ${COLORS.fadedBlue}`};
     display: flex;
     flex-grow: 100;
     justify-content: space-between;
@@ -81,7 +81,11 @@ const Navbar = ({
         if (leftContent?.name === 'hamburger') {
             return (
                 <Button variant="ghost" onClick={() => setDrawerIsOpen(true)}>
-                    <EdsIcon name={'menu'} color="#555" title="Menu" />
+                    <EdsIcon
+                        name={'menu'}
+                        color={COLORS.darkGrey}
+                        title="Menu"
+                    />
                     Menu
                 </Button>
             );

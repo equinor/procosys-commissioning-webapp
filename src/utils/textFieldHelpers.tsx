@@ -1,13 +1,14 @@
 import React from 'react';
 import EdsIcon from '../components/icons/EdsIcon';
 import { AsyncStatus } from '../contexts/CommAppContext';
+import { COLORS } from '../style/GlobalStyles';
 
 export const determineHelperIcon = (status: AsyncStatus) => {
     if (status === AsyncStatus.ERROR) {
-        return <EdsIcon size={16} name="error_filled" color="#EB0000" />;
+        return <EdsIcon size={16} name="error_filled" color={COLORS.danger} />;
     }
     if (status === AsyncStatus.SUCCESS) {
-        return <EdsIcon size={16} name="thumbs_up" color="#4BB748" />;
+        return <EdsIcon size={16} name="thumbs_up" color={COLORS.success} />;
     }
     if (status === AsyncStatus.LOADING) {
         return <></>;

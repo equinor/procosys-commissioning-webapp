@@ -28,7 +28,7 @@ export const SelectorButton = styled(Link)`
         margin: 0 30px 0 0;
     }
     &:hover {
-        background-color: ${COLORS.interactive.secondary__highlight.hex};
+        background-color: ${COLORS.fadedBlue};
     }
     & svg {
         position: absolute;

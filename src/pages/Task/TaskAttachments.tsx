@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import EdsIcon from '../../components/icons/EdsIcon';
 import { Attachment } from '../../services/apiTypes';
+import { COLORS } from '../../style/GlobalStyles';
 import useCommonHooks from '../../utils/useCommonHooks';
 
 export const ModalContainer = styled.div`
@@ -37,7 +38,7 @@ export const AttachmentsRow = styled.div`
         flex: 0.4;
         width: 32px;
         height: 32px;
-        background-color: #fafafa;
+        background-color: ${COLORS.lightGrey};
         display: flex;
         align-items: center;
         justify-content: center;
@@ -122,7 +123,10 @@ const TaskAttachments = ({
                         variant={'ghost_icon'}
                         onClick={() => handleDownload(attachment)}
                     >
-                        <EdsIcon name={'cloud_download'} color="#007179" />
+                        <EdsIcon
+                            name={'cloud_download'}
+                            color={COLORS.mossGreen}
+                        />
                     </Button>
                 </>
             );
@@ -138,7 +142,10 @@ const TaskAttachments = ({
                         variant={'ghost_icon'}
                         onClick={() => handleDownload(attachment)}
                     >
-                        <EdsIcon name={'cloud_download'} color="#007179" />
+                        <EdsIcon
+                            name={'cloud_download'}
+                            color={COLORS.mossGreen}
+                        />
                     </Button>
                 </>
             );

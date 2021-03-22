@@ -266,7 +266,7 @@ const NewPunch = () => {
                                 >
                                     {postAttachmentStatus ===
                                     AsyncStatus.LOADING ? (
-                                        <DotProgress />
+                                        <DotProgress color="primary" />
                                     ) : (
                                         'Upload image'
                                     )}
