@@ -1,7 +1,6 @@
 import styled, { CSSObject } from 'styled-components';
 import { tokens } from '@equinor/eds-tokens';
 import { createGlobalStyle } from 'styled-components';
-import { colors } from '@equinor/eds-tokens';
 
 export const SHADOW =
     '0 0.3px 0.9px rgba(33, 41, 43, 0.04), 0 0.9px 3.1px rgba(33, 41, 43, 0.07), 0 4px 14px rgba(33, 41, 43, 0.1)';

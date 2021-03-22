@@ -116,7 +116,7 @@ const UploadAttachment = ({
                     onClick={onFileUpload}
                 >
                     {postAttachmentStatus === AsyncStatus.LOADING ? (
-                        <DotProgress variant="green" />
+                        <DotProgress color="primary" />
                     ) : (
                         'Upload image'
                     )}
