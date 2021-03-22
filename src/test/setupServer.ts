@@ -5,73 +5,126 @@ import {
     dummyCommPkgDetailsResponse,
     dummyPunchListResponse,
     dummyScopeResponse,
+    dummyTaskAttachmentsResponse,
+    dummyTaskParametersResponse,
+    dummyTaskResponse,
     dummyTasksResponse,
     testProjects,
 } from './dummyData';
 import objectToCamelCase from '../utils/objectToCamelCase';
 
 export const baseURL = 'https://test-url.com';
-export const putMetaTableCellURL = `${baseURL}/CheckList/Item/MetaTableCell*`;
-export const getChecklistURL = `${baseURL}/CheckList/Comm*`;
-export const getScopeURL = `${baseURL}/CommPkg/CheckLists*`;
-export const getTasksURL = `${baseURL}/CommPkg/Tasks*`;
-export const getPunchListURL = `${baseURL}/CommPkg/PunchList*`;
-export const getCommPkgDetails = `${baseURL}/CommPkg*`;
-export const getPermissions = `${baseURL}/Permissions*`;
-export const getProjects = `${baseURL}/Projects*`;
+export const ENDPOINTS = {
+    putMetaTableCell: `${baseURL}/CheckList/Item/MetaTableCell`,
+    getChecklist: `${baseURL}/CheckList/CommPkg`,
+    getScope: `${baseURL}/CommPkg/CheckLists`,
+    getTasks: `${baseURL}/CommPkg/Tasks`,
+    getPunchList: `${baseURL}/CommPkg/PunchList`,
+    getCommPkgDetails: `${baseURL}/CommPkg`,
+    getPermissions: `${baseURL}/Permissions`,
+    getProjects: `${baseURL}/Projects`,
+    getTask: `${baseURL}/CommPkg/Task`,
+    getTaskParameters: `${baseURL}/CommPkg/Task/Parameters`,
+    putTaskParameter: `${baseURL}/CommPkg/Task/Parameters/Parameter`,
+    getTaskAttachments: `${baseURL}/CommPkg/Task/Attachments`,
+    getTaskAttachment: `${baseURL}/CommPkg/Task/Attachment`,
+    putTaskComment: `${baseURL}/CommPkg/Task/Comment`,
+    postTaskSign: `${baseURL}/CommPkg/Task/Sign`,
+    postTaskUnsign: `${baseURL}/CommPkg/Task/Unsign`,
+};
 
 export const server = setupServer(
-    rest.put(putMetaTableCellURL, (request, response, context) => {
+    rest.put(ENDPOINTS.putMetaTableCell, (request, response, context) => {
         return response(context.status(200));
     }),
-    rest.get(getChecklistURL, (request, response, context) => {
+    rest.get(ENDPOINTS.getChecklist, (request, response, context) => {
         return response(
             context.delay(200),
             context.json(objectToCamelCase(dummyChecklistResponse)),
             context.status(200)
         );
     }),
-    rest.get(getScopeURL, (request, response, context) => {
+    rest.get(ENDPOINTS.getScope, (request, response, context) => {
         return response(
             context.delay(10),
             context.json(objectToCamelCase(dummyScopeResponse)),
             context.status(200)
         );
     }),
-    rest.get(getTasksURL, (request, response, context) => {
+    rest.get(ENDPOINTS.getTasks, (request, response, context) => {
         return response(
             context.delay(10),
             context.json(objectToCamelCase(dummyTasksResponse)),
             context.status(200)
         );
     }),
-    rest.get(getPunchListURL, (request, response, context) => {
+    rest.get(ENDPOINTS.getPunchList, (request, response, context) => {
         return response(
             context.delay(10),
             context.json(objectToCamelCase(dummyPunchListResponse)),
             context.status(200)
         );
     }),
-    rest.get(getCommPkgDetails, (request, response, context) => {
+    rest.get(ENDPOINTS.getCommPkgDetails, (request, response, context) => {
         return response(
             context.delay(10),
             context.json(objectToCamelCase(dummyCommPkgDetailsResponse)),
             context.status(200)
         );
     }),
-    rest.get(getProjects, (request, response, context) => {
+    rest.get(ENDPOINTS.getProjects, (request, response, context) => {
         return response(
-            context.delay(100),
+            context.delay(10),
             context.json(testProjects),
             context.status(200)
         );
     }),
-    rest.get(getPermissions, (request, response, context) => {
+    rest.get(ENDPOINTS.getPermissions, (request, response, context) => {
         return response(
-            context.delay(100),
+            context.delay(10),
             context.json(['COMMPKG/READ']),
             context.status(200)
         );
+    }),
+    rest.get(ENDPOINTS.getTask, (request, response, context) => {
+        return response(
+            context.delay(10),
+            context.json(dummyTaskResponse),
+            context.status(200)
+        );
+    }),
+    rest.get(ENDPOINTS.getTaskAttachments, (request, response, context) => {
+        return response(
+            context.delay(10),
+            context.json(dummyTaskAttachmentsResponse),
+            context.status(200)
+        );
+    }),
+    rest.get(ENDPOINTS.getTaskAttachment, (request, response, context) => {
+        return response(
+            context.delay(10),
+            context.json(new Blob()),
+            context.status(200)
+        );
+    }),
+    rest.get(ENDPOINTS.getTaskParameters, (request, response, context) => {
+        return response(
+            context.delay(10),
+            context.json(dummyTaskParametersResponse),
+            context.status(200)
+        );
+    }),
+    rest.put(ENDPOINTS.putTaskComment, (request, response, context) => {
+        return response(context.delay(10), context.status(200));
+    }),
+    rest.post(ENDPOINTS.postTaskSign, (request, response, context) => {
+        return response(context.delay(10), context.status(200));
+    }),
+    rest.post(ENDPOINTS.postTaskUnsign, (request, response, context) => {
+        return response(context.delay(10), context.status(200));
+    }),
+    rest.put(ENDPOINTS.putTaskParameter, (request, response, context) => {
+        return response(context.status(200));
     })
 );
 export { rest };

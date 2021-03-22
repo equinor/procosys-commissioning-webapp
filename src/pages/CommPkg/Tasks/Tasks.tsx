@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { CommPkgListWrapper, PreviewButton } from '../Scope/Scope';
 import { Typography } from '@equinor/eds-core-react';
 import EdsIcon from '../../../components/icons/EdsIcon';
 import CompletionStatusIcon from '../../../components/icons/CompletionStatusIcon';
-import { CompletionStatus, TaskPreview } from '../../../services/apiTypes';
-import { AsyncStatus } from '../../../contexts/CommAppContext';
+import { CompletionStatus } from '../../../services/apiTypes';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import AsyncPage from '../../../components/AsyncPage';
+import useAsyncGet from '../../../utils/useAsyncGet';
+import { CancelToken } from 'axios';
 
 export const TaskPreviewButton = styled(PreviewButton)`
     & > div {
@@ -17,36 +18,18 @@ export const TaskPreviewButton = styled(PreviewButton)`
 
 const Tasks = () => {
     const { params, api, url } = useCommonHooks();
-    const [tasks, setTasks] = useState<TaskPreview[]>();
-    const [fetchTasksStatus, setFetchTasksStatus] = useState(
-        AsyncStatus.LOADING
+    const {
+        response: tasks,
+        fetchStatus,
+    } = useAsyncGet((cancelToken: CancelToken) =>
+        api.getTasks(cancelToken, params.plant, params.commPkg)
     );
-
-    useEffect(() => {
-        (async () => {
-            setFetchTasksStatus(AsyncStatus.LOADING);
-            try {
-                const tasksFromApi = await api.getTasks(
-                    params.plant,
-                    params.commPkg
-                );
-                setTasks(tasksFromApi);
-                if (tasksFromApi.length < 1) {
-                    setFetchTasksStatus(AsyncStatus.EMPTY_RESPONSE);
-                } else {
-                    setFetchTasksStatus(AsyncStatus.SUCCESS);
-                }
-            } catch {
-                setFetchTasksStatus(AsyncStatus.ERROR);
-            }
-        })();
-    }, [params.commPkg, params.plant, api]);
 
     return (
         <CommPkgListWrapper>
             <AsyncPage
                 errorMessage={'Unable to load tasks. Please try again.'}
-                fetchStatus={fetchTasksStatus}
+                fetchStatus={fetchStatus}
                 emptyContentMessage={'There are no tasks for this CommPkg.'}
             >
                 <>

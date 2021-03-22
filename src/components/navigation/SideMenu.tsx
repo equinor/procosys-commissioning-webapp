@@ -6,6 +6,7 @@ import EdsIcon from '../icons/EdsIcon';
 import PlantContext from '../../contexts/PlantContext';
 import { StorageKey } from '../../pages/Bookmarks/useBookmarks';
 import useCommonHooks from '../../utils/useCommonHooks';
+import { COLORS } from '../../style/GlobalStyles';
 
 const SideMenuWrapper = styled(animated.aside)`
     width: 297px;
@@ -14,8 +15,8 @@ const SideMenuWrapper = styled(animated.aside)`
     height: calc(100vh);
     left: 0;
     z-index: 1000;
-    background-color: white;
-    border-right: 2px solid #deecee;
+    background-color: ${COLORS.white};
+    border-right: 2px solid ${COLORS.fadedBlue};
 `;
 
 const TopContent = styled.div`
@@ -40,7 +41,7 @@ const UserInfo = styled.div`
 
 const UserNameText = styled.p`
     padding-bottom: 15px;
-    color: #939393;
+    color: ${COLORS.darkGrey};
 `;
 
 const Backdrop = styled(animated.div)`
@@ -49,7 +50,7 @@ const Backdrop = styled(animated.div)`
     position: fixed;
     top: 0;
     left: 0;
-    background: white;
+    background: ${COLORS.white};
     backdrop-filter: blur(1px);
     z-index: 500;
 `;
@@ -68,7 +69,7 @@ const PlantInfo = styled.div`
     padding: 16px;
     display: flex;
     flex-direction: column;
-    background-color: #deecee;
+    background-color: ${COLORS.fadedBlue};
 `;
 
 type SideMenuProps = {
@@ -97,7 +98,7 @@ const SideMenu = ({
                         variant="ghost"
                         onClick={() => setDrawerIsOpen(false)}
                     >
-                        <EdsIcon name="close" color="black" />
+                        <EdsIcon name="close" color={COLORS.black} />
                     </Button>
                 </TopContent>
                 <UserInfo>
@@ -119,7 +120,7 @@ const SideMenu = ({
                         }}
                     >
                         Change plant
-                        <EdsIcon name="chevron_right" color="white" />
+                        <EdsIcon name="chevron_right" />
                     </Button>
                     {currentPlant && (
                         <>
@@ -139,7 +140,7 @@ const SideMenu = ({
                                 }}
                             >
                                 Change project
-                                <EdsIcon name="chevron_right" color="white" />
+                                <EdsIcon name="chevron_right" />
                             </Button>
                         </>
                     )}

@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { SHADOW } from '../../../style/GlobalStyles';
+import { COLORS, SHADOW } from '../../../style/GlobalStyles';
 
 const PunchDetailsCardWrapper = styled.div`
     padding: 16px 4%;
     box-shadow: ${SHADOW};
-    background-color: #fafafa;
+    background-color: ${COLORS.lightGrey};
     display: flex;
     & div {
         margin-right: 16px;

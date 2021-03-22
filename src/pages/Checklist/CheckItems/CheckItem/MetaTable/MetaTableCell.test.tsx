@@ -3,11 +3,7 @@ import React from 'react';
 import MetaTableCell, { MetaTableCellProps } from './MetaTableCell';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import {
-    server,
-    rest,
-    putMetaTableCellURL,
-} from '../../../../../test/setupServer';
+import { server, rest, ENDPOINTS } from '../../../../../test/setupServer';
 import { withCommAppContext } from '../../../../../test/contexts';
 
 jest.mock('../../../../../services/authService');
@@ -69,9 +65,12 @@ describe('<MetaTableCell>', () => {
     });
     it('Renders "Unable to save." upon error', async () => {
         server.use(
-            rest.put(putMetaTableCellURL, (request, response, context) => {
-                return response(context.status(400));
-            })
+            rest.put(
+                ENDPOINTS.putMetaTableCell,
+                (request, response, context) => {
+                    return response(context.status(400));
+                }
+            )
         );
         await setupWithInputTypedIn();
         userEvent.tab();

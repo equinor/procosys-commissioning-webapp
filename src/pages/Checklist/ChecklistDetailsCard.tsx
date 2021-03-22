@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import CompletionStatusIcon from '../../components/icons/CompletionStatusIcon';
 import { ChecklistDetails } from '../../services/apiTypes';
-import { SHADOW } from '../../style/GlobalStyles';
+import { COLORS, SHADOW } from '../../style/GlobalStyles';
 
 const FormularTypeText = styled.p`
     flex: 1;
@@ -21,7 +21,8 @@ const ChecklistDetailsCardWrapper = styled.div<{ isSigned?: boolean }>`
     padding: 16px 4%;
     box-sizing: border-box;
     width: 100%;
-    background-color: ${(props) => (props.isSigned ? '#deecee' : '#f7f7f7')};
+    background-color: ${(props) =>
+        props.isSigned ? COLORS.fadedBlue : COLORS.lightGrey};
     display: flex;
     justify-content: space-between;
     align-items: center;

@@ -7,8 +7,6 @@ import TaskDescription from './TaskDescription';
 import TaskParameters from './TaskParameters/TaskParameters';
 import TaskSignature from './TaskSignature';
 import {
-    Attachment,
-    CompletionStatus,
     Task as TaskType,
     TaskParameter,
     TaskPreview,
@@ -20,8 +18,9 @@ import EdsIcon from '../../components/icons/EdsIcon';
 import AsyncCard from '../../components/AsyncCard';
 import useSnackbar from '../../utils/useSnackbar';
 import { TaskPreviewButton } from '../CommPkg/Tasks/Tasks';
-import CompletionStatusIcon from '../../components/icons/CompletionStatusIcon';
 import { Typography } from '@equinor/eds-core-react';
+import Axios, { CancelToken } from 'axios';
+import useAsyncGet from '../../utils/useAsyncGet';
 
 const NextTaskButton = styled(TaskPreviewButton)`
     padding: 0;
@@ -43,7 +42,6 @@ const findNextTask = (
         (task) => task.id === parseInt(currentTaskId)
     );
     if (indexOfCurrentTask < 0) return null;
-    console.log('current task ', indexOfCurrentTask);
     const nextTask = tasks[indexOfCurrentTask + 1];
     if (nextTask) return nextTask;
     return null;
@@ -51,82 +49,56 @@ const findNextTask = (
 
 const Task = () => {
     const { url, api, params } = useCommonHooks();
+    const {
+        response: attachments,
+        fetchStatus: fetchAttachmentsStatus,
+    } = useAsyncGet((cancelToken: CancelToken) =>
+        api.getTaskAttachments(cancelToken, params.plant, params.taskId)
+    );
+    const {
+        response: parameters,
+        fetchStatus: fetchParametersStatus,
+    } = useAsyncGet((token) =>
+        api.getTaskParameters(token, params.plant, params.taskId)
+    );
     const [task, setTask] = useState<TaskType>();
     const [nextTask, setNextTask] = useState<TaskPreview | null>(null);
     const [fetchNextTaskStatus, setFetchNextTaskStatus] = useState(
         AsyncStatus.LOADING
     );
-    const [attachments, setAttachments] = useState<Attachment[]>([]);
-    const [parameters, setParameters] = useState<TaskParameter[]>([]);
     const [fetchTaskStatus, setFetchTaskStatus] = useState(AsyncStatus.LOADING);
-    const [fetchAttachmentsStatus, setFetchAttachmentsStatus] = useState(
-        AsyncStatus.LOADING
-    );
-    const [fetchParametersStatus, setFetchParametersStatus] = useState(
-        AsyncStatus.LOADING
-    );
-    const [isSigned, setIsSigned] = useState(true);
+    const [isSigned, setIsSigned] = useState(false);
     const [refreshTask, setRefreshTask] = useState(false);
     const { snackbar, setSnackbarText } = useSnackbar();
+    const source = Axios.CancelToken.source();
 
     useEffect(() => {
         (async () => {
             try {
                 const taskFromApi = await api.getTask(
+                    source.token,
                     params.plant,
                     params.taskId
                 );
                 setTask(taskFromApi);
                 setFetchTaskStatus(AsyncStatus.SUCCESS);
                 setIsSigned(!!taskFromApi.signedByUser);
-            } catch {
-                setFetchTaskStatus(AsyncStatus.ERROR);
+            } catch (error) {
+                if (!Axios.isCancel(error)) {
+                    setFetchTaskStatus(AsyncStatus.ERROR);
+                }
             }
         })();
+        return () => {
+            source.cancel();
+        };
     }, [api, params.plant, params.taskId, refreshTask]);
 
     useEffect(() => {
         (async () => {
             try {
-                const attachmentsFromApi = await api.getTaskAttachments(
-                    params.plant,
-                    params.taskId
-                );
-                if (attachmentsFromApi.length > 0) {
-                    setFetchAttachmentsStatus(AsyncStatus.SUCCESS);
-                    setAttachments(attachmentsFromApi);
-                } else {
-                    setFetchAttachmentsStatus(AsyncStatus.EMPTY_RESPONSE);
-                }
-            } catch {
-                setFetchAttachmentsStatus(AsyncStatus.ERROR);
-            }
-        })();
-    }, [api, params.plant, params.taskId]);
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const parametersFromApi = await api.getTaskParameters(
-                    params.plant,
-                    params.taskId
-                );
-                if (parametersFromApi.length > 0) {
-                    setParameters(parametersFromApi);
-                    setFetchParametersStatus(AsyncStatus.SUCCESS);
-                } else {
-                    setFetchParametersStatus(AsyncStatus.EMPTY_RESPONSE);
-                }
-            } catch {
-                setFetchParametersStatus(AsyncStatus.ERROR);
-            }
-        })();
-    }, [api, params.taskId, params.plant]);
-
-    useEffect(() => {
-        (async () => {
-            try {
                 const tasksFromApi = await api.getTasks(
+                    source.token,
                     params.plant,
                     params.commPkg
                 );
@@ -136,10 +108,15 @@ const Task = () => {
                     setNextTask(findNextTask(tasksFromApi, params.taskId));
                 }
                 setFetchNextTaskStatus(AsyncStatus.SUCCESS);
-            } catch {
-                setFetchNextTaskStatus(AsyncStatus.ERROR);
+            } catch (error) {
+                if (!Axios.isCancel(error)) {
+                    setFetchNextTaskStatus(AsyncStatus.ERROR);
+                }
             }
         })();
+        return () => {
+            source.cancel();
+        };
     }, [api, params.taskId, params.plant, params.commPkg]);
 
     return (
@@ -175,17 +152,22 @@ const Task = () => {
                     fetchStatus={fetchTaskStatus}
                     cardTitle={'Signature'}
                 >
-                    <TaskSignature
-                        fetchTaskStatus={fetchTaskStatus}
-                        isSigned={isSigned}
-                        task={task}
-                        setIsSigned={setIsSigned}
-                        setSnackbarText={setSnackbarText}
-                        refreshTask={setRefreshTask}
-                    />
+                    {task ? (
+                        <TaskSignature
+                            fetchTaskStatus={fetchTaskStatus}
+                            isSigned={isSigned}
+                            task={task}
+                            setIsSigned={setIsSigned}
+                            setSnackbarText={setSnackbarText}
+                            refreshTask={setRefreshTask}
+                        />
+                    ) : (
+                        <></>
+                    )}
                 </AsyncCard>
 
-                {fetchAttachmentsStatus !== AsyncStatus.EMPTY_RESPONSE ? (
+                {fetchAttachmentsStatus !== AsyncStatus.EMPTY_RESPONSE &&
+                attachments ? (
                     <AsyncCard
                         fetchStatus={fetchAttachmentsStatus}
                         errorMessage={
@@ -201,7 +183,8 @@ const Task = () => {
                     </AsyncCard>
                 ) : null}
 
-                {fetchParametersStatus !== AsyncStatus.EMPTY_RESPONSE ? (
+                {fetchParametersStatus !== AsyncStatus.EMPTY_RESPONSE &&
+                parameters ? (
                     <AsyncCard
                         fetchStatus={fetchParametersStatus}
                         errorMessage={

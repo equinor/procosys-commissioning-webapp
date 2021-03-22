@@ -4,6 +4,7 @@ import EdsIcon from '../../components/icons/EdsIcon';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import CompletionStatusIcon from '../../components/icons/CompletionStatusIcon';
 import { CompletionStatus } from '../../services/apiTypes';
+import { COLORS } from '../../style/GlobalStyles';
 
 export const CommPkgFooterBase = styled.div`
     width: 100%;
@@ -40,7 +41,7 @@ const FooterButton = styled.button<{ active: boolean }>`
     margin: 0 15px 0 15px;
     padding: 20px 0 0 0;
     opacity: ${(props) => (props.active ? '1' : '0.8')};
-    background-color: ${(props) => (props.active ? `white` : 'white')};
+    background-color: ${COLORS.white};
     position: relative;
     & img {
         width: 24px;
@@ -51,7 +52,7 @@ const FooterButton = styled.button<{ active: boolean }>`
         margin: 0;
         font-weight: ${(props) => (props.active ? 'initial' : 'initial')};
         border-bottom: ${(props) =>
-            props.active ? '3px solid #555' : 'initial'};
+            props.active ? `3px solid ${COLORS.darkGrey}` : 'initial'};
         margin-bottom: ${(props) => (props.active ? '3px' : 'initial')};
     }
     &:focus,
@@ -73,7 +74,7 @@ const ItemCount = styled.span`
     & p {
         text-align: center;
         font-size: 12px;
-        color: black;
+        color: ${COLORS.black};
         border: none;
     }
 `;

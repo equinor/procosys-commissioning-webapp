@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { AsyncStatus } from '../contexts/CommAppContext';
 import { Attachment as AttachmentType } from '../services/apiTypes';
+import { COLORS } from '../style/GlobalStyles';
 import { handleDownload } from '../utils/general';
 import useCommonHooks from '../utils/useCommonHooks';
 import EdsIcon from './icons/EdsIcon';
@@ -40,8 +41,8 @@ const AttachmentWrapper = styled.div`
 `;
 
 const DocumentAttachmentWrapper = styled(AttachmentWrapper)`
-    background-color: #deecee;
-    border: 2px solid #007079;
+    background-color: ${COLORS.fadedBlue};
+    border: 2px solid ${COLORS.mossGreen};
     overflow: hidden;
     box-sizing: border-box;
     padding: 8px;
@@ -174,7 +175,7 @@ const Attachment = ({
                 <Button variant={'ghost_icon'} onClick={loadAttachment}>
                     <EdsIcon
                         name="cloud_download"
-                        color={'#007179'}
+                        color={COLORS.mossGreen}
                         alt={'download document'}
                     />
                 </Button>
@@ -222,8 +223,8 @@ const Attachment = ({
                                     name="delete_to_trash"
                                     color={
                                         deleteStatus === AsyncStatus.LOADING
-                                            ? '#000000'
-                                            : '#ffffff'
+                                            ? COLORS.black
+                                            : COLORS.white
                                     }
                                     alt="Delete attachment"
                                     size={32}

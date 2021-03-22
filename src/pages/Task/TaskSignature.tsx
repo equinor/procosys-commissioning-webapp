@@ -1,5 +1,6 @@
 import { Button } from '@equinor/eds-core-react';
-import React, { useState } from 'react';
+import Axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import { Task } from '../../services/apiTypes';
@@ -18,7 +19,7 @@ type TaskSignatureProps = {
     isSigned: boolean;
     setIsSigned: React.Dispatch<React.SetStateAction<boolean>>;
     setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
-    task: Task | undefined;
+    task: Task;
     fetchTaskStatus: AsyncStatus;
     refreshTask: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -32,16 +33,25 @@ const TaskSignature = ({
 }: TaskSignatureProps) => {
     const { api, params } = useCommonHooks();
     const [taskSignStatus, setTaskSignStatus] = useState(AsyncStatus.INACTIVE);
+    const cancelTokenSource = Axios.CancelToken.source();
 
     const handleSign = async () => {
         setTaskSignStatus(AsyncStatus.LOADING);
         try {
             if (isSigned) {
-                await api.postTaskUnsign(params.plant, params.taskId);
+                await api.postTaskUnsign(
+                    cancelTokenSource.token,
+                    params.plant,
+                    params.taskId
+                );
                 setIsSigned(false);
                 setSnackbarText('Task successfully unsigned');
             } else {
-                await api.postTaskSign(params.plant, params.taskId);
+                await api.postTaskSign(
+                    cancelTokenSource.token,
+                    params.plant,
+                    params.taskId
+                );
                 setIsSigned(true);
                 setSnackbarText('Task successfully signed');
             }
@@ -53,33 +63,35 @@ const TaskSignature = ({
         }
     };
 
-    if (task) {
-        return (
-            <TaskSignatureWrapper>
-                {task.signedAt ? (
-                    <>
-                        <p>{`Signed at ${new Date(
-                            task.signedAt
-                        ).toLocaleDateString('en-GB')} by ${
-                            task.signedByFirstName
-                        } ${task.signedByLastName} (${task.signedByUser})`}</p>
-                    </>
-                ) : (
-                    <>
-                        <p>This task is not signed.</p>
-                    </>
-                )}
-                <Button
-                    disabled={taskSignStatus === AsyncStatus.LOADING}
-                    onClick={handleSign}
-                >
-                    {isSigned ? 'Unsign' : 'Sign'}
-                </Button>
-            </TaskSignatureWrapper>
-        );
-    } else {
-        return <></>;
-    }
+    useEffect(() => {
+        return () => {
+            cancelTokenSource.cancel();
+        };
+    }, []);
+
+    return (
+        <TaskSignatureWrapper>
+            {task.signedAt ? (
+                <>
+                    <p>{`Signed at ${new Date(task.signedAt).toLocaleDateString(
+                        'en-GB'
+                    )} by ${task.signedByFirstName} ${task.signedByLastName} (${
+                        task.signedByUser
+                    })`}</p>
+                </>
+            ) : (
+                <>
+                    <p>This task is not signed.</p>
+                </>
+            )}
+            <Button
+                disabled={taskSignStatus === AsyncStatus.LOADING}
+                onClick={handleSign}
+            >
+                {isSigned ? 'Unsign' : 'Sign'}
+            </Button>
+        </TaskSignatureWrapper>
+    );
 };
 
 export default TaskSignature;

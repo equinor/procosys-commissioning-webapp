@@ -5,13 +5,14 @@ import { SearchStatus } from '../useSearchPageFacade';
 import { CommPkgPreview } from '../../../services/apiTypes';
 import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
 import { PackageStatusIcon } from '../../../components/icons/PackageStatusIcon';
+import { COLORS } from '../../../style/GlobalStyles';
 
 const SearchResult = styled.article`
     cursor: pointer;
     width: 100%;
     display: flex;
     align-items: center;
-    border-top: 1px solid #e5e5e5;
+    border-top: 1px solid ${COLORS.lightGrey};
     & p {
         flex: auto;
         width: 200px;
