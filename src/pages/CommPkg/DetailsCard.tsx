@@ -18,10 +18,11 @@ const DetailsWrapper = styled.div<{ atBookmarksPage?: Boolean }>`
     grid-column-gap: 8px;
     grid-row-gap: 8px;
     padding: 16px 4%;
+    border-radius: 5px;
+    cursor: ${(props) => (props.atBookmarksPage ? 'pointer' : 'initial')};
     background-color: ${(props) =>
         props.atBookmarksPage ? COLORS.white : COLORS.fadedBlue};
     box-shadow: ${(props) => (props.atBookmarksPage ? SHADOW : 'none')};
-    border-radius: 5px;
     margin: ${(props) => (props.atBookmarksPage ? '0 4% 10px 4%' : '0')};
 `;
 
@@ -81,13 +82,16 @@ const DetailsCard = ({
         (async () => {
             try {
                 const detailsFromApi = await api.getCommPackageDetails(
+                    source.token,
                     params.plant,
                     commPkgId
                 );
                 setDetails(detailsFromApi);
                 setFetchDetailsStatus(AsyncStatus.SUCCESS);
             } catch (error) {
-                setFetchDetailsStatus(AsyncStatus.ERROR);
+                if (!axios.isCancel(error)) {
+                    setFetchDetailsStatus(AsyncStatus.ERROR);
+                }
             }
         })();
         return () => {
@@ -147,7 +151,7 @@ const DetailsCard = ({
 
     return (
         <DetailsCardShell atBookmarksPage={atBookmarksPage}>
-            <DotProgress variant="green" />
+            <DotProgress color="primary" />
         </DetailsCardShell>
     );
 };
