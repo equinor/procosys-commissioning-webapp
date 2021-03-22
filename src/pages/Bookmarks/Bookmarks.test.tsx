@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { withPlantContext } from '../../test/contexts';
 import { testProjects } from '../../test/dummyData';
-import { getCommPkgDetails, rest, server } from '../../test/setupServer';
+import { ENDPOINTS, rest, server } from '../../test/setupServer';
 import Bookmarks from './Bookmarks';
 import { StorageKey } from './useBookmarks';
 
@@ -32,9 +32,12 @@ describe('<Bookmarks/>', () => {
     });
     it('Renders error message if unable to load bookmarked commPkgs', async () => {
         server.use(
-            rest.get(getCommPkgDetails, (request, response, context) => {
-                return response(context.status(400));
-            })
+            rest.get(
+                ENDPOINTS.getCommPkgDetails,
+                (request, response, context) => {
+                    return response(context.status(400));
+                }
+            )
         );
         renderBookmarks();
         await expect(
