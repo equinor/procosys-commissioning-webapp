@@ -1,5 +1,6 @@
 import { Button, Divider } from '@equinor/eds-core-react';
-import React, { useRef, useState } from 'react';
+import Axios from 'axios';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import { Task } from '../../services/apiTypes';
@@ -45,6 +46,13 @@ const TaskDescription = ({
     );
     const [editComment, setEditComment] = useState(false);
     const commentRef = useRef<HTMLDivElement>(null);
+    const cancelTokenSource = Axios.CancelToken.source();
+
+    useEffect(() => {
+        return () => {
+            cancelTokenSource.cancel();
+        };
+    }, []);
 
     const saveComment = async () => {
         setPutCommentStatus(AsyncStatus.LOADING);
@@ -55,13 +63,19 @@ const TaskDescription = ({
                 : '',
         };
         try {
-            await api.putTaskComment(params.plant, dto);
+            await api.putTaskComment(
+                cancelTokenSource.token,
+                params.plant,
+                dto
+            );
             setPutCommentStatus(AsyncStatus.SUCCESS);
             setSnackbarText('Comment successfully saved.');
             setEditComment(false);
         } catch (error) {
-            setPutCommentStatus(AsyncStatus.ERROR);
-            setSnackbarText(error.toString());
+            if (!Axios.isCancel(error)) {
+                setPutCommentStatus(AsyncStatus.ERROR);
+                setSnackbarText(error.toString());
+            }
         }
     };
 
@@ -83,19 +97,20 @@ const TaskDescription = ({
                     dangerouslySetInnerHTML={{
                         __html: `<p>${task.descriptionAsHtml}</p>`,
                     }}
-                ></div>
+                />
                 <Divider variant="medium" />
                 <div>
                     <label>Comment:</label>
                     <CommentField
+                        role="textbox"
+                        aria-readonly={!editComment}
                         editable={editComment}
                         contentEditable={editComment}
                         ref={commentRef}
                         dangerouslySetInnerHTML={{
                             __html: task.commentAsHtml,
                         }}
-                    ></CommentField>
-
+                    />
                     <CommentButton
                         disabled={
                             isSigned || putCommentStatus === AsyncStatus.LOADING
