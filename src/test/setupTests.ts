@@ -10,7 +10,6 @@ declare global {
     }
 }
 
-let URL = window.URL;
 //Fixes MSAL interfering with the globals
 const crypto = require('crypto');
 Object.defineProperty(global, 'crypto', {
