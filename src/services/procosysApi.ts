@@ -376,6 +376,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     };
 
     const getTaskAttachment = async (
+        cancelToken: CancelToken,
         plantId: string,
         taskId: string,
         attachmentId: number
@@ -383,6 +384,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         const { data } = await axios.get(
             `CommPkg/Task/Attachment?plantId=PCS$${plantId}&taskId=${taskId}&attachmentId=${attachmentId}${apiVersion}`,
             {
+                cancelToken: cancelToken,
                 responseType: 'blob',
                 headers: {
                     'Content-Disposition':
@@ -404,6 +406,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     };
 
     const getChecklistAttachment = async (
+        cancelToken: CancelToken,
         plantId: string,
         checklistId: string,
         attachmentId: number
@@ -411,6 +414,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         const { data } = await axios.get(
             `CheckList/Attachment?plantId=PCS$${plantId}&checkListId=${checklistId}&attachmentId=${attachmentId}${apiVersion}`,
             {
+                cancelToken: cancelToken,
                 responseType: 'blob',
                 headers: {
                     'Content-Disposition':
@@ -422,6 +426,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     };
 
     const deleteChecklistAttachment = async (
+        cancelToken: CancelToken,
         plantId: string,
         checklistId: string,
         attachmentId: number
@@ -432,7 +437,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         };
         await axios.delete(
             `CheckList/Attachment?plantId=PCS$${plantId}&api-version=4.1`,
-            { data: dto }
+            { data: dto, cancelToken: cancelToken }
         );
     };
 
@@ -459,6 +464,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     };
 
     const getPunchAttachment = async (
+        cancelToken: CancelToken,
         plantId: string,
         punchItemId: string,
         attachmentId: number
@@ -466,6 +472,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         const { data } = await axios.get(
             `PunchListItem/Attachment?plantId=PCS$${plantId}&punchItemId=${punchItemId}&attachmentId=${attachmentId}${apiVersion}`,
             {
+                cancelToken: cancelToken,
                 responseType: 'blob',
                 headers: {
                     'Content-Disposition':
@@ -477,6 +484,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     };
 
     const deletePunchAttachment = async (
+        cancelToken: CancelToken,
         plantId: string,
         punchItemId: string,
         attachmentId: number
@@ -487,7 +495,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         };
         await axios.delete(
             `PunchListItem/Attachment?plantId=PCS$${plantId}${apiVersion}`,
-            { data: dto }
+            { data: dto, cancelToken: cancelToken }
         );
     };
 
