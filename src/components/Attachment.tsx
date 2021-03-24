@@ -120,7 +120,6 @@ const Attachment = ({
         setLoadingStatus(AsyncStatus.LOADING);
         try {
             const blob = await getAttachment(source.token);
-            console.log(blob);
             let imageUrl = '';
             try {
                 imageUrl = window.URL.createObjectURL(blob);
