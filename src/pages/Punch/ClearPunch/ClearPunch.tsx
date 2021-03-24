@@ -21,6 +21,7 @@ import UploadAttachment from '../../../components/UploadAttachment';
 import EdsIcon from '../../../components/icons/EdsIcon';
 import useAttachments from '../../../utils/useAttachments';
 import buildEndpoint from '../../../utils/buildEndpoint';
+import { CancelToken } from 'axios';
 
 export const PunchWrapper = styled.main``;
 
@@ -211,14 +212,29 @@ const ClearPunch = () => {
                                 {attachments.map((attachment) => (
                                     <Attachment
                                         key={attachment.id}
-                                        getAttachment={api.getPunchAttachment}
-                                        deleteAttachment={
-                                            api.deletePunchAttachment
+                                        getAttachment={(
+                                            cancelToken: CancelToken
+                                        ) =>
+                                            api.getPunchAttachment(
+                                                cancelToken,
+                                                params.plant,
+                                                params.punchItemId,
+                                                attachment.id
+                                            )
+                                        }
+                                        deleteAttachment={(
+                                            cancelToken: CancelToken
+                                        ) =>
+                                            api.deletePunchAttachment(
+                                                cancelToken,
+                                                params.plant,
+                                                params.punchItemId,
+                                                attachment.id
+                                            )
                                         }
                                         setSnackbarText={setSnackbarText}
                                         attachment={attachment}
                                         refreshAttachments={refreshAttachments}
-                                        parentId={params.punchItemId}
                                     />
                                 ))}
                             </AttachmentsWrapper>

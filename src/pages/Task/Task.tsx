@@ -6,13 +6,13 @@ import useCommonHooks from '../../utils/useCommonHooks';
 import TaskDescription from './TaskDescription';
 import TaskParameters from './TaskParameters/TaskParameters';
 import TaskSignature from './TaskSignature';
+import Attachment, { AttachmentsWrapper } from '../../components/Attachment';
 import {
     Task as TaskType,
     TaskParameter,
     TaskPreview,
 } from '../../services/apiTypes';
 import { AsyncStatus } from '../../contexts/CommAppContext';
-import TaskAttachments from './TaskAttachments';
 import { IsSignedBanner } from '../Checklist/Checklist';
 import EdsIcon from '../../components/icons/EdsIcon';
 import AsyncCard from '../../components/AsyncCard';
@@ -86,6 +86,7 @@ const Task = () => {
             } catch (error) {
                 if (!Axios.isCancel(error)) {
                     setFetchTaskStatus(AsyncStatus.ERROR);
+                    setSnackbarText('Unable to load task');
                 }
             }
         })();
@@ -111,6 +112,7 @@ const Task = () => {
             } catch (error) {
                 if (!Axios.isCancel(error)) {
                     setFetchNextTaskStatus(AsyncStatus.ERROR);
+                    setSnackbarText('Unable to load next task.');
                 }
             }
         })();
@@ -166,8 +168,7 @@ const Task = () => {
                     )}
                 </AsyncCard>
 
-                {fetchAttachmentsStatus !== AsyncStatus.EMPTY_RESPONSE &&
-                attachments ? (
+                {fetchAttachmentsStatus !== AsyncStatus.EMPTY_RESPONSE ? (
                     <AsyncCard
                         fetchStatus={fetchAttachmentsStatus}
                         errorMessage={
@@ -176,10 +177,23 @@ const Task = () => {
                         emptyContentMessage={'This task has no attachments.'}
                         cardTitle={'Attachments'}
                     >
-                        <TaskAttachments
-                            setSnackbarText={setSnackbarText}
-                            attachments={attachments}
-                        />
+                        <AttachmentsWrapper>
+                            {attachments?.map((attachment) => (
+                                <Attachment
+                                    setSnackbarText={setSnackbarText}
+                                    attachment={attachment}
+                                    key={attachment.id}
+                                    getAttachment={(cancelToken: CancelToken) =>
+                                        api.getTaskAttachment(
+                                            cancelToken,
+                                            params.plant,
+                                            params.taskId,
+                                            attachment.id
+                                        )
+                                    }
+                                />
+                            ))}
+                        </AttachmentsWrapper>
                     </AsyncCard>
                 ) : null}
 

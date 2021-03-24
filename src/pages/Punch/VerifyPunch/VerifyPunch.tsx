@@ -1,5 +1,5 @@
 import { Button } from '@equinor/eds-core-react';
-import axios from 'axios';
+import axios, { CancelToken } from 'axios';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Attachment, { AttachmentsWrapper } from '../../../components/Attachment';
@@ -145,8 +145,16 @@ const VerifyPunch = () => {
                                         attachment={attachment}
                                         key={attachment.id}
                                         refreshAttachments={refreshAttachments}
-                                        parentId={params.punchItemId}
-                                        getAttachment={api.getPunchAttachment}
+                                        getAttachment={(
+                                            cancelToken: CancelToken
+                                        ) =>
+                                            api.getPunchAttachment(
+                                                cancelToken,
+                                                params.plant,
+                                                params.punchItemId,
+                                                attachment.id
+                                            )
+                                        }
                                     />
                                 ))}
                             </AttachmentsWrapper>

@@ -4,10 +4,12 @@ import {
     Scrim,
     Typography,
 } from '@equinor/eds-core-react';
-import React, { useState } from 'react';
+import Axios, { CancelToken } from 'axios';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { AsyncStatus } from '../contexts/CommAppContext';
 import { Attachment as AttachmentType } from '../services/apiTypes';
+import { ProcosysApiService } from '../services/procosysApi';
 import { COLORS } from '../style/GlobalStyles';
 import { handleDownload } from '../utils/general';
 import useCommonHooks from '../utils/useCommonHooks';
@@ -86,31 +88,10 @@ export const ImageModal = styled.div`
 
 type AttachmentProps = {
     attachment: AttachmentType;
-    refreshAttachments: React.Dispatch<React.SetStateAction<boolean>>;
-    parentId: string;
+    refreshAttachments?: React.Dispatch<React.SetStateAction<boolean>>;
     isSigned?: boolean;
-    deleteAttachment?:
-        | ((
-              plantId: string,
-              checklistId: string,
-              attachmentId: number
-          ) => Promise<void>)
-        | ((
-              plantId: string,
-              punchItemId: string,
-              attachmentId: number
-          ) => Promise<void>);
-    getAttachment:
-        | ((
-              plantId: string,
-              checklistId: string,
-              attachmentId: number
-          ) => Promise<Blob>)
-        | ((
-              plantId: string,
-              punchListId: string,
-              attachmentId: number
-          ) => Promise<Blob>);
+    deleteAttachment?: (cancelToken: CancelToken) => Promise<void>;
+    getAttachment: (cancelToken: CancelToken) => Promise<Blob>;
     setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
 };
 
@@ -120,26 +101,32 @@ const Attachment = ({
     deleteAttachment,
     refreshAttachments,
     setSnackbarText,
-    parentId,
     isSigned = false,
 }: AttachmentProps) => {
-    const { params } = useCommonHooks();
     const [showFullScreenImage, setShowFullScreenImage] = useState(false);
     const [attachmentFileURL, setAttachmentFileURL] = useState('');
     const [loadingStatus, setLoadingStatus] = useState(AsyncStatus.INACTIVE);
     const [deleteStatus, setDeleteStatus] = useState(AsyncStatus.INACTIVE);
     const isDocument = attachment.mimeType.substr(0, 5) !== 'image';
+    const source = Axios.CancelToken.source();
+
+    useEffect(() => {
+        return () => {
+            source.cancel();
+        };
+    }, []);
 
     const loadAttachment = async () => {
         setLoadingStatus(AsyncStatus.LOADING);
         try {
-            const blob = await getAttachment(
-                params.plant,
-                // The parentID is the ID of the punch/task/checklist the attachment is attached to
-                parentId,
-                attachment.id
-            );
-            const imageUrl = window.URL.createObjectURL(blob);
+            const blob = await getAttachment(source.token);
+            console.log(blob);
+            let imageUrl = '';
+            try {
+                imageUrl = window.URL.createObjectURL(blob);
+            } catch {
+                console.log('Failed to create object URL from blob: ', blob);
+            }
             setAttachmentFileURL(imageUrl);
             if (!isDocument) {
                 setShowFullScreenImage(true);
@@ -147,9 +134,11 @@ const Attachment = ({
                 handleDownload(imageUrl, attachment.fileName);
             }
             setLoadingStatus(AsyncStatus.SUCCESS);
-        } catch {
-            setSnackbarText('Unable to load image.');
-            setLoadingStatus(AsyncStatus.ERROR);
+        } catch (error) {
+            if (!Axios.isCancel(error)) {
+                setSnackbarText('Unable to load image.');
+                setLoadingStatus(AsyncStatus.ERROR);
+            }
         }
     };
 
@@ -157,14 +146,16 @@ const Attachment = ({
         if (!deleteAttachment) return;
         setDeleteStatus(AsyncStatus.LOADING);
         try {
-            await deleteAttachment(params.plant, parentId, attachment.id);
+            await deleteAttachment(source.token);
             setSnackbarText('Attachment successfully removed');
-            refreshAttachments((prev) => !prev);
+            refreshAttachments && refreshAttachments((prev) => !prev);
             setDeleteStatus(AsyncStatus.SUCCESS);
             setShowFullScreenImage(false);
         } catch (error) {
-            setDeleteStatus(AsyncStatus.ERROR);
-            setSnackbarText(error.toString());
+            if (!Axios.isCancel(error)) {
+                setDeleteStatus(AsyncStatus.ERROR);
+                setSnackbarText(error.toString());
+            }
         }
     };
 
@@ -210,7 +201,7 @@ const Attachment = ({
                             <EdsIcon name="cloud_download" />
                             Download
                         </Button>
-                        {isSigned ? null : (
+                        {isSigned || !deleteAttachment ? null : (
                             <Button
                                 color={'danger'}
                                 onClick={handleDelete}
@@ -244,7 +235,7 @@ const Attachment = ({
             ) : (
                 <AttachmentImage
                     src={`data:image/png;base64, ${attachment.thumbnailAsBase64}`}
-                    alt={attachment.title}
+                    alt={`${attachment.title} thumbnail`}
                     onClick={loadAttachment}
                 />
             )}

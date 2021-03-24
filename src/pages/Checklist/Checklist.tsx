@@ -9,7 +9,7 @@ import ChecklistSignature from './ChecklistSignature';
 import ChecklistDetailsCard from './ChecklistDetailsCard';
 import styled from 'styled-components';
 import EdsIcon from '../../components/icons/EdsIcon';
-import axios from 'axios';
+import axios, { CancelToken } from 'axios';
 import useCommonHooks from '../../utils/useCommonHooks';
 import AsyncCard from '../../components/AsyncCard';
 import Attachment, {
@@ -152,17 +152,30 @@ const Checklist = () => {
                                     <Attachment
                                         key={attachment.id}
                                         isSigned={isSigned}
-                                        getAttachment={
-                                            api.getChecklistAttachment
+                                        getAttachment={(
+                                            cancelToken: CancelToken
+                                        ) =>
+                                            api.getChecklistAttachment(
+                                                cancelToken,
+                                                params.plant,
+                                                params.checklistId,
+                                                attachment.id
+                                            )
                                         }
-                                        parentId={params.checklistId}
                                         setSnackbarText={setSnackbarText}
                                         attachment={attachment}
                                         refreshAttachments={
                                             setRefreshAttachments
                                         }
-                                        deleteAttachment={
-                                            api.deleteChecklistAttachment
+                                        deleteAttachment={(
+                                            cancelToken: CancelToken
+                                        ) =>
+                                            api.deleteChecklistAttachment(
+                                                cancelToken,
+                                                params.plant,
+                                                params.checklistId,
+                                                attachment.id
+                                            )
                                         }
                                     />
                                 ))}
