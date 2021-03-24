@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { CheckItem as CheckItemType } from '../../../../services/apiTypes';
 import { Checkbox } from '@equinor/eds-core-react';
 import MetaTable from './MetaTable/MetaTable';
-import { CommParams } from '../../../../App';
 import { AsyncStatus } from '../../../../contexts/CommAppContext';
 import EdsIcon from '../../../../components/icons/EdsIcon';
 import useCommonHooks from '../../../../utils/useCommonHooks';
