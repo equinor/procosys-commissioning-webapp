@@ -67,17 +67,13 @@ const UploadAttachment = ({
         if (!selectedFile) return;
         setPostAttachmentStatus(AsyncStatus.LOADING);
         const formData = new FormData();
-        try {
-            formData.append('myFile', selectedFile, selectedFile.name);
-        } catch {
-            console.log('Unable to append form data');
-        }
+        formData.append(selectedFile.name, selectedFile);
         try {
             await postAttachment({
                 plantId: params.plant,
                 parentId: parentId,
                 data: formData,
-                title: '',
+                title: selectedFile.name,
             });
             setPostAttachmentStatus(AsyncStatus.SUCCESS);
             setSnackbarText('File successfully added.');
