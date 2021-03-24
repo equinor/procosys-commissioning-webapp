@@ -39,89 +39,66 @@ export const server = setupServer(
     }),
     rest.get(ENDPOINTS.getChecklist, (request, response, context) => {
         return response(
-            context.delay(200),
             context.json(objectToCamelCase(dummyChecklistResponse)),
             context.status(200)
         );
     }),
     rest.get(ENDPOINTS.getScope, (request, response, context) => {
         return response(
-            context.delay(10),
             context.json(objectToCamelCase(dummyScopeResponse)),
             context.status(200)
         );
     }),
     rest.get(ENDPOINTS.getTasks, (request, response, context) => {
         return response(
-            context.delay(10),
             context.json(objectToCamelCase(dummyTasksResponse)),
             context.status(200)
         );
     }),
     rest.get(ENDPOINTS.getPunchList, (request, response, context) => {
         return response(
-            context.delay(10),
             context.json(objectToCamelCase(dummyPunchListResponse)),
             context.status(200)
         );
     }),
     rest.get(ENDPOINTS.getCommPkgDetails, (request, response, context) => {
         return response(
-            context.delay(10),
             context.json(objectToCamelCase(dummyCommPkgDetailsResponse)),
             context.status(200)
         );
     }),
     rest.get(ENDPOINTS.getProjects, (request, response, context) => {
-        return response(
-            context.delay(10),
-            context.json(testProjects),
-            context.status(200)
-        );
+        return response(context.json(testProjects), context.status(200));
     }),
     rest.get(ENDPOINTS.getPermissions, (request, response, context) => {
-        return response(
-            context.delay(10),
-            context.json(['COMMPKG/READ']),
-            context.status(200)
-        );
+        return response(context.json(['COMMPKG/READ']), context.status(200));
     }),
     rest.get(ENDPOINTS.getTask, (request, response, context) => {
-        return response(
-            context.delay(10),
-            context.json(dummyTaskResponse),
-            context.status(200)
-        );
+        return response(context.json(dummyTaskResponse), context.status(200));
     }),
     rest.get(ENDPOINTS.getTaskAttachments, (request, response, context) => {
         return response(
-            context.delay(10),
             context.json(dummyTaskAttachmentsResponse),
             context.status(200)
         );
     }),
     rest.get(ENDPOINTS.getTaskAttachment, (request, response, context) => {
-        return response(
-            context.delay(10),
-            context.json(new Blob()),
-            context.status(200)
-        );
+        return response(context.json(new Blob()), context.status(200));
     }),
     rest.get(ENDPOINTS.getTaskParameters, (request, response, context) => {
         return response(
-            context.delay(10),
             context.json(dummyTaskParametersResponse),
             context.status(200)
         );
     }),
     rest.put(ENDPOINTS.putTaskComment, (request, response, context) => {
-        return response(context.delay(10), context.status(200));
+        return response(context.status(200));
     }),
     rest.post(ENDPOINTS.postTaskSign, (request, response, context) => {
-        return response(context.delay(10), context.status(200));
+        return response(context.status(200));
     }),
     rest.post(ENDPOINTS.postTaskUnsign, (request, response, context) => {
-        return response(context.delay(10), context.status(200));
+        return response(context.status(200));
     }),
     rest.put(ENDPOINTS.putTaskParameter, (request, response, context) => {
         return response(context.status(200));
