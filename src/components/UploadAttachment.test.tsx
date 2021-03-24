@@ -26,4 +26,7 @@ describe('<UploadAttachment/>', () => {
         renderUploadModal();
         expect(screen.getByText('Choose image...')).toBeInTheDocument();
     });
+    test.todo('It allows user to select an image');
+    test.todo('It allows user to upload the image');
+    test.todo('It renders an error message if image upload fails');
 });
