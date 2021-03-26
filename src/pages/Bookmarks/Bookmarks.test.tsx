@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { withPlantContext } from '../../test/contexts';
 import { testProjects } from '../../test/dummyData';
-import { ENDPOINTS, rest, server } from '../../test/setupServer';
+import { causeApiError, ENDPOINTS, rest, server } from '../../test/setupServer';
 import Bookmarks from './Bookmarks';
 import { StorageKey } from './useBookmarks';
 
@@ -31,14 +31,7 @@ describe('<Bookmarks/>', () => {
         ).toBeInTheDocument();
     });
     it('Renders error message if unable to load bookmarked commPkgs', async () => {
-        server.use(
-            rest.get(
-                ENDPOINTS.getCommPkgDetails,
-                (request, response, context) => {
-                    return response(context.status(400));
-                }
-            )
-        );
+        causeApiError(ENDPOINTS.getCommPkgDetails, 'get');
         renderBookmarks();
         await expect(
             await screen.findByText(
