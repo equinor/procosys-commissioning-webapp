@@ -148,10 +148,10 @@ export const dummyChecklistResponse = {
         SystemModule: 'COMM',
         FormularType: 'dummy-formular-type',
         FormularGroup: 'dummy-formular-group',
-        Comment: 'dummy-comment',
-        SignedByUser: 'dummy-signed-user',
-        SignedByFirstName: 'dummy-signed-first-name',
-        SignedByLastName: 'dimmy-signed-last-name',
+        Comment: '',
+        SignedByUser: null,
+        SignedByFirstName: null,
+        SignedByLastName: null,
         SignedAt: null,
         UpdatedAt: '2021-02-05T09:05:09Z',
         UpdatedByUser: 'dummy-updated-user',
@@ -162,7 +162,7 @@ export const dummyChecklistResponse = {
     },
     CheckItems: [
         {
-            Id: 4957494,
+            Id: 1,
             SequenceNumber: '1',
             Text: 'dummy-check-item-header-text',
             DetailText: null,
@@ -175,19 +175,58 @@ export const dummyChecklistResponse = {
             IsNotApplicable: true,
         },
         {
-            Id: 962955,
+            Id: 2,
+            SequenceNumber: '1',
+            Text: 'dummy-check-item-1',
+            DetailText: null,
+            IsHeading: false,
+            HasImage: false,
+            ImageFileId: 0,
+            HasMetaTable: false,
+            MetaTable: null,
+            IsOk: false,
+            IsNotApplicable: true,
+        },
+        {
+            Id: 3,
             SequenceNumber: '01',
-            Text: 'dimmy-check-item-text',
+            Text: 'dimmy-check-item-2',
             DetailText: 'dummy-details-text',
             IsHeading: false,
             HasImage: false,
             ImageFileId: 0,
             HasMetaTable: false,
             MetaTable: null,
-            IsOk: true,
+            IsOk: false,
             IsNotApplicable: false,
         },
     ],
+};
+
+export const dummySignedChecklistResponse = {
+    CheckList: {
+        Id: 321421,
+        TagNo: 'dummy-tag-no',
+        TagDescription: 'dummy-tag-description',
+        ResponsibleCode: 'dummy-responsible-code',
+        ResponsibleDescription: 'dummy-responsible-description',
+        Status: 'OS',
+        SystemModule: 'COMM',
+        FormularType: 'dummy-formular-type',
+        FormularGroup: 'dummy-formular-group',
+        Comment: '',
+        SignedByUser: 'dummy-user',
+        SignedByFirstName: 'dummy-user',
+        SignedByLastName: 'dummy-user',
+        SignedAt: '2021-02-05T09:05:09Z',
+        UpdatedAt: '2021-02-05T09:05:09Z',
+        UpdatedByUser: 'dummy-updated-user',
+        UpdatedByFirstName: 'dummy-update-first-name',
+        UpdatedByLastName: 'dummy-updated-last-name',
+        IsRestrictedForUser: false,
+        HasElectronicForm: true,
+    },
+    CheckItems: [],
 };
 
 export const dummyScopeResponse = [
@@ -280,7 +319,7 @@ export const dummyTaskParametersResponse = [
     },
 ];
 
-export const dummyTaskAttachmentsResponse = [
+export const dummyAttachmentsResponse = [
     {
         Id: 123,
         FileName: '960x0.jpg',

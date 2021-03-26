@@ -17,12 +17,14 @@ type CheckAllButtonProps = {
     items: CheckItem[];
     updateOk: (value: boolean, checkItemId: number) => void;
     allItemsCheckedOrNA: boolean;
+    setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const CheckAllButton = ({
     items,
     updateOk,
     allItemsCheckedOrNA,
+    setSnackbarText,
 }: CheckAllButtonProps) => {
     const { api, params } = useCommonHooks();
     const [checkAllStatus, setCheckAllStatus] = useState(AsyncStatus.INACTIVE);
@@ -43,8 +45,10 @@ const CheckAllButton = ({
             );
             itemsToCheck.forEach((item) => updateOk(true, item.id));
             setCheckAllStatus(AsyncStatus.SUCCESS);
+            setSnackbarText('Changes saved.');
         } catch (error) {
             setCheckAllStatus(AsyncStatus.ERROR);
+            setSnackbarText('Unable to save changes.');
         }
     };
 
@@ -65,8 +69,10 @@ const CheckAllButton = ({
             );
             itemsToCheck.forEach((item) => updateOk(false, item.id));
             setCheckAllStatus(AsyncStatus.SUCCESS);
+            setSnackbarText('Uncheck complete.');
         } catch (error) {
             setCheckAllStatus(AsyncStatus.ERROR);
+            setSnackbarText('Unable to save changes.');
         }
     };
 

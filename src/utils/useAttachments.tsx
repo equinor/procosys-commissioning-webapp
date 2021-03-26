@@ -1,3 +1,4 @@
+import Axios from 'axios';
 import { useEffect, useState } from 'react';
 import { AsyncStatus } from '../contexts/CommAppContext';
 import { Attachment } from '../services/apiTypes';
@@ -11,17 +12,23 @@ const useAttachments = (endpoint: string) => {
     const [fetchAttachmentsStatus, setFetchAttachmentsStatus] = useState(
         AsyncStatus.LOADING
     );
-
+    const source = Axios.CancelToken.source();
     useEffect(() => {
         (async () => {
             try {
-                const attachmentsFromApi = await api.getAttachments(endpoint);
+                const attachmentsFromApi = await api.getAttachments(
+                    source.token,
+                    endpoint
+                );
                 setFetchAttachmentsStatus(AsyncStatus.SUCCESS);
                 setAttachments(attachmentsFromApi);
-            } catch {
-                setFetchAttachmentsStatus(AsyncStatus.ERROR);
+            } catch (error) {
+                if (!Axios.isCancel(error)) {
+                    setFetchAttachmentsStatus(AsyncStatus.ERROR);
+                }
             }
         })();
+        return () => source.cancel();
     }, [api, refreshAttachments, endpoint]);
 
     return {

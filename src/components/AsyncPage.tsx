@@ -1,34 +1,17 @@
 import { Banner } from '@equinor/eds-core-react';
 import React from 'react';
-import styled from 'styled-components';
 import { AsyncStatus } from '../contexts/CommAppContext';
-import { COLORS, SHADOW } from '../style/GlobalStyles';
+import { COLORS } from '../style/GlobalStyles';
 import EdsIcon from './icons/EdsIcon';
 import SkeletonLoadingPage from './loading/SkeletonLoader';
 const { BannerIcon, BannerMessage } = Banner;
 
-export const ContentWrapper = styled.article`
-    & h3,
-    label {
-        margin: 0;
-    }
-    & h5 {
-        margin: 12px 0;
-    }
-    & p {
-        margin-bottom: 8px;
-        margin-top: 0;
-    }
-    margin-bottom: 16px;
-    box-shadow: ${SHADOW};
-    border-radius: 10px;
-`;
-
-type ProcosysCardProps = {
+type AsyncPageProps = {
     fetchStatus: AsyncStatus;
     errorMessage: string;
     emptyContentMessage?: string;
     children: JSX.Element;
+    loadingMessage?: string;
 };
 
 const AsyncPage = ({
@@ -36,7 +19,8 @@ const AsyncPage = ({
     errorMessage,
     emptyContentMessage,
     children,
-}: ProcosysCardProps) => {
+    loadingMessage,
+}: AsyncPageProps) => {
     const content = () => {
         if (fetchStatus === AsyncStatus.SUCCESS) {
             return <>{children}</>;
@@ -49,7 +33,9 @@ const AsyncPage = ({
                             color={COLORS.mossGreen}
                         />
                     </BannerIcon>
-                    <BannerMessage>{emptyContentMessage!}</BannerMessage>
+                    <BannerMessage role={'paragraph'}>
+                        {emptyContentMessage!}
+                    </BannerMessage>
                 </Banner>
             );
         } else if (fetchStatus === AsyncStatus.ERROR) {
@@ -62,7 +48,7 @@ const AsyncPage = ({
                 </Banner>
             );
         } else {
-            return <SkeletonLoadingPage nrOfRows={10} />;
+            return <SkeletonLoadingPage nrOfRows={10} text={loadingMessage} />;
         }
     };
 

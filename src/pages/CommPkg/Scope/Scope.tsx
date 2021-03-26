@@ -21,6 +21,7 @@ export const PreviewButton = styled(Link)`
     align-items: center;
     padding: 8px 0;
     margin: 10px 4% 0 4%;
+    cursor: pointer;
     text-decoration: none;
     justify-content: space-between;
     & img {
