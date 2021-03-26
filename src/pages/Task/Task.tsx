@@ -7,20 +7,16 @@ import TaskDescription from './TaskDescription';
 import TaskParameters from './TaskParameters/TaskParameters';
 import TaskSignature from './TaskSignature';
 import Attachment, { AttachmentsWrapper } from '../../components/Attachment';
-import {
-    Task as TaskType,
-    TaskParameter,
-    TaskPreview,
-} from '../../services/apiTypes';
+import { Task as TaskType, TaskPreview } from '../../services/apiTypes';
 import { AsyncStatus } from '../../contexts/CommAppContext';
-import { IsSignedBanner } from '../Checklist/Checklist';
 import EdsIcon from '../../components/icons/EdsIcon';
 import AsyncCard from '../../components/AsyncCard';
 import useSnackbar from '../../utils/useSnackbar';
 import { TaskPreviewButton } from '../CommPkg/Tasks/Tasks';
-import { Typography } from '@equinor/eds-core-react';
+import { Banner, Typography } from '@equinor/eds-core-react';
 import Axios, { CancelToken } from 'axios';
 import useAsyncGet from '../../utils/useAsyncGet';
+const { BannerIcon, BannerMessage } = Banner;
 
 const NextTaskButton = styled(TaskPreviewButton)`
     padding: 0;
@@ -132,10 +128,14 @@ const Task = () => {
                 }}
             />
             {isSigned ? (
-                <IsSignedBanner>
-                    <EdsIcon name="info_circle" />
-                    <p>This task is signed. Unsign to make changes.</p>
-                </IsSignedBanner>
+                <Banner>
+                    <BannerIcon variant={'info'}>
+                        <EdsIcon name={'info_circle'} />
+                    </BannerIcon>
+                    <BannerMessage>
+                        This task is signed. Unsign to make changes.
+                    </BannerMessage>
+                </Banner>
             ) : null}
             <TaskWrapper>
                 <AsyncCard

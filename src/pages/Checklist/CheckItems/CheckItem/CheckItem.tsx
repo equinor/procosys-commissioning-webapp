@@ -66,11 +66,20 @@ type CheckItemProps = {
     updateOk: (value: boolean, checkItemId: number) => void;
     checklistId: number;
     isSigned: boolean;
+    setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const CheckItem = ({ item, isSigned, updateNA, updateOk }: CheckItemProps) => {
+const CheckItem = ({
+    item,
+    isSigned,
+    updateNA,
+    updateOk,
+    setSnackbarText,
+}: CheckItemProps) => {
     const { api, params } = useCommonHooks();
-    const [postOkStatus, setPostOkStatus] = useState(AsyncStatus.INACTIVE);
+    const [postCheckStatus, setPostCheckStatus] = useState(
+        AsyncStatus.INACTIVE
+    );
     const [postNAStatus, setPostNAStatus] = useState(AsyncStatus.INACTIVE);
     const [showDescription, setShowDescription] = useState(false);
 
@@ -79,33 +88,44 @@ const CheckItem = ({ item, isSigned, updateNA, updateOk }: CheckItemProps) => {
             await api.postClear(params.plant, params.checklistId, item.id);
             updateOk(false, item.id);
             updateNA(false, item.id);
+            setSnackbarText('Change saved.');
+            setPostNAStatus(AsyncStatus.SUCCESS);
         } catch (error) {
-            console.log(error);
+            setSnackbarText(error.toString());
+            setPostNAStatus(AsyncStatus.ERROR);
         }
     };
 
     const handleSetNA = async () => {
-        if (item.isNotApplicable) return clearCheckmarks();
         setPostNAStatus(AsyncStatus.LOADING);
+        if (item.isNotApplicable) {
+            clearCheckmarks();
+            return;
+        }
         try {
             await api.postSetNA(params.plant, params.checklistId, item.id);
-            setPostNAStatus(AsyncStatus.SUCCESS);
             updateOk(false, item.id);
             updateNA(true, item.id);
+            setSnackbarText('Change saved.');
+            setPostNAStatus(AsyncStatus.SUCCESS);
         } catch (error) {
+            setSnackbarText(error.toString());
             setPostNAStatus(AsyncStatus.ERROR);
-            console.log(error);
         }
     };
 
     const handleSetOk = async () => {
         if (item.isOk) return clearCheckmarks();
+        setPostCheckStatus(AsyncStatus.LOADING);
         try {
             await api.postSetOk(params.plant, params.checklistId, item.id);
             updateNA(false, item.id);
             updateOk(true, item.id);
+            setSnackbarText('Change saved.');
+            setPostCheckStatus(AsyncStatus.SUCCESS);
         } catch (error) {
-            console.log(error);
+            setSnackbarText(error.toString());
+            setPostCheckStatus(AsyncStatus.ERROR);
         }
     };
 
@@ -139,20 +159,26 @@ const CheckItem = ({ item, isSigned, updateNA, updateOk }: CheckItemProps) => {
                     </LeftWrapper>
                     <CheckboxGroup>
                         <Checkbox
-                            disabled={isSigned || item.isNotApplicable}
-                            enterKeyHint
+                            disabled={
+                                isSigned ||
+                                item.isNotApplicable ||
+                                postCheckStatus === AsyncStatus.LOADING
+                            }
+                            enterKeyHint={'send'}
                             onChange={handleSetOk}
                             checked={item.isOk}
+                            data-testid={'checked-' + item.id}
                             label={''}
-                            name={'Checked'}
                         />
                         <Checkbox
-                            disabled={isSigned}
-                            enterKeyHint
+                            disabled={
+                                isSigned || postNAStatus === AsyncStatus.LOADING
+                            }
+                            enterKeyHint={'send'}
                             onChange={handleSetNA}
                             checked={item.isNotApplicable}
                             label={''}
-                            name={'Not Applicable'}
+                            data-testid={'NA-' + item.id}
                         />
                     </CheckboxGroup>
                 </DescriptionAndCheckWrapper>

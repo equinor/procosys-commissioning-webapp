@@ -27,8 +27,8 @@ export const UploadImageButton = styled(Button)`
     width: ${ATTACHMENT_SIZE};
     margin: 8px;
     &:disabled {
-        height: 82px;
-        width: 82px;
+        height: ${ATTACHMENT_SIZE};
+        width: ${ATTACHMENT_SIZE};
         margin: 8px;
     }
 `;

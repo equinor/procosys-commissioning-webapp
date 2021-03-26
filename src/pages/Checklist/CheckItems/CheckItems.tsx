@@ -31,6 +31,7 @@ type CheckItemsProps = {
     isSigned: boolean;
     setAllItemsCheckedOrNA: React.Dispatch<React.SetStateAction<boolean>>;
     allItemsCheckedOrNA: boolean;
+    setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const CheckItems = ({
@@ -39,6 +40,7 @@ const CheckItems = ({
     isSigned,
     allItemsCheckedOrNA,
     setAllItemsCheckedOrNA,
+    setSnackbarText,
 }: CheckItemsProps) => {
     const [items, setItems] = useState(checkItems);
 
@@ -92,6 +94,7 @@ const CheckItems = ({
                     updateOk={updateOk}
                     checklistId={details.id}
                     isSigned={isSigned}
+                    setSnackbarText={setSnackbarText}
                 />
             </>
         );
@@ -112,6 +115,7 @@ const CheckItems = ({
         <CheckItemsWrapper>
             {!isSigned && (
                 <CheckAllButton
+                    setSnackbarText={setSnackbarText}
                     allItemsCheckedOrNA={allItemsCheckedOrNA}
                     items={items}
                     updateOk={updateOk}

@@ -1,7 +1,9 @@
 import { withPlantContext } from '../../../test/contexts';
-import React from 'react';
 import Tasks from './Tasks';
-import { render, screen, waitFor } from '@testing-library/react';
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import { rest } from 'msw';
+import { server, ENDPOINTS, causeApiError } from '../../../test/setupServer';
 
 const renderTasks = () => {
     render(
@@ -12,12 +14,29 @@ const renderTasks = () => {
 };
 
 describe('<Tasks />', () => {
-    it('Renders a task preview button with task title and task number', async () => {
+    it('Renders a checklist preview button with tag description', async () => {
         renderTasks();
-        expect(await screen.findByText('dummy-task-title')).toBeInTheDocument();
+        const previewButton = await screen.findByText('dummy-task-number');
+        expect(previewButton).toBeInTheDocument();
     });
-    test.todo(
-        'Renders placeholder text when an empty task list is returned from API'
-    );
-    test.todo('Renders error page');
+    it('Renders placeholder text when an empty tasks is returned from API', async () => {
+        server.use(
+            rest.get(ENDPOINTS.getTasks, (request, response, context) => {
+                return response(context.json([]), context.status(200));
+            })
+        );
+        renderTasks();
+        const noContentMessage = await screen.findByText(
+            'There are no tasks for this CommPkg.'
+        );
+        expect(noContentMessage).toBeInTheDocument();
+    });
+    it('Renders error message if unable to get tasks', async () => {
+        causeApiError(ENDPOINTS.getTasks, 'get');
+        renderTasks();
+        const errorMessage = await screen.findByText(
+            'Unable to load tasks. Please try again.'
+        );
+        expect(errorMessage).toBeInTheDocument();
+    });
 });

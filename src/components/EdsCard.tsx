@@ -1,5 +1,4 @@
 import React from 'react';
-
 import styled from 'styled-components';
 import { SHADOW } from '../style/GlobalStyles';
 import { Card } from '@equinor/eds-core-react';
@@ -12,10 +11,6 @@ export const CardWrapper = styled.article`
     }
     & h5 {
         margin: 12px 0;
-    }
-    & p {
-        margin-bottom: 8px;
-        margin-top: 0;
     }
     margin-bottom: 16px;
     box-shadow: ${SHADOW};

@@ -3,7 +3,7 @@ import React from 'react';
 import MetaTableCell, { MetaTableCellProps } from './MetaTableCell';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { server, rest, ENDPOINTS } from '../../../../../test/setupServer';
+import { ENDPOINTS, causeApiError } from '../../../../../test/setupServer';
 import { withCommAppContext } from '../../../../../test/contexts';
 
 jest.mock('../../../../../services/authService');
@@ -64,14 +64,7 @@ describe('<MetaTableCell>', () => {
         await waitForElementToBeRemoved(() => screen.getByText('Data saved.'));
     });
     it('Renders "Unable to save." upon error', async () => {
-        server.use(
-            rest.put(
-                ENDPOINTS.putMetaTableCell,
-                (request, response, context) => {
-                    return response(context.status(400));
-                }
-            )
-        );
+        causeApiError(ENDPOINTS.putMetaTableCell, 'put');
         await setupWithInputTypedIn();
         userEvent.tab();
         await waitForElementToBeRemoved(() =>
