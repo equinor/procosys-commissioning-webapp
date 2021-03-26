@@ -9,16 +9,13 @@ import {
 import styled from 'styled-components';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import {
-    determineHelperIcon,
     determineHelperText,
     determineVariant,
 } from '../../utils/textFieldHelpers';
-import { Card } from '@equinor/eds-core-react';
 import useCommonHooks from '../../utils/useCommonHooks';
-
-const AllMustBeSignedWarning = styled(Card)`
-    margin-bottom: 16px;
-`;
+import EdsIcon from '../../components/icons/EdsIcon';
+import { Banner } from '@equinor/eds-core-react';
+const { BannerMessage, BannerIcon } = Banner;
 
 const ChecklistSignatureWrapper = styled.div<{ helperTextVisible: boolean }>`
     display: flex;
@@ -65,8 +62,10 @@ const ChecklistSignature = ({
         AsyncStatus.INACTIVE
     );
     const [signStatus, setSignStatus] = useState(AsyncStatus.INACTIVE);
+    let commentBeforeFocus = '';
 
     const putComment = async () => {
+        if (comment === commentBeforeFocus) return;
         setPutCommentStatus(AsyncStatus.LOADING);
         try {
             await api.putChecklistComment(
@@ -109,10 +108,14 @@ const ChecklistSignature = ({
     };
 
     useEffect(() => {
-        if (putCommentStatus !== AsyncStatus.SUCCESS) return;
+        if (
+            putCommentStatus === AsyncStatus.INACTIVE ||
+            putCommentStatus === AsyncStatus.LOADING
+        )
+            return;
         setTimeout(() => {
             setPutCommentStatus(AsyncStatus.INACTIVE);
-        }, 3000);
+        }, 2000);
     }, [putCommentStatus]);
 
     return (
@@ -133,14 +136,13 @@ const ChecklistSignature = ({
             <Divider />
 
             <TextField
-                id={'Comment field'}
+                id={'comment-field'}
                 maxLength={500}
                 variant={determineVariant(putCommentStatus)}
                 disabled={isSigned || putCommentStatus === AsyncStatus.LOADING}
                 multiline
                 rows={5}
                 label="Comment"
-                helperIcon={determineHelperIcon(putCommentStatus)}
                 helperText={
                     putCommentStatus === AsyncStatus.INACTIVE &&
                     details.updatedAt
@@ -151,14 +153,18 @@ const ChecklistSignature = ({
                 onChange={(
                     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
                 ) => setComment(e.target.value)}
+                onFocus={() => (commentBeforeFocus = comment)}
                 onBlur={putComment}
             />
             {!isSigned && !allItemsCheckedOrNA && (
-                <AllMustBeSignedWarning variant="warning">
-                    <Typography type="body_long">
-                        All applicable items must be checked before signing
-                    </Typography>
-                </AllMustBeSignedWarning>
+                <Banner>
+                    <BannerIcon variant={'warning'}>
+                        <EdsIcon name={'warning_outlined'} />
+                    </BannerIcon>
+                    <BannerMessage>
+                        All applicable items must be checked before signing.
+                    </BannerMessage>
+                </Banner>
             )}
             <Button
                 onClick={handleSignClick}
