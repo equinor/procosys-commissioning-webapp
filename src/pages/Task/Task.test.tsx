@@ -8,7 +8,7 @@ import { withPlantContext } from '../../test/contexts';
 import Task from './Task';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
-import { ENDPOINTS, rest, server } from '../../test/setupServer';
+import { causeApiError, ENDPOINTS, rest, server } from '../../test/setupServer';
 
 const renderTask = async () => {
     render(withPlantContext({ Component: <Task /> }));
@@ -28,11 +28,7 @@ const editAndSaveComment = async () => {
 
 describe('<Task/> loading errors', () => {
     it('Renders error message if unable to load task', async () => {
-        server.use(
-            rest.get(ENDPOINTS.getTask, (request, response, context) => {
-                return response(context.status(400));
-            })
-        );
+        causeApiError(ENDPOINTS.getTask, 'get');
         render(withPlantContext({ Component: <Task /> }));
         const errorMessageInSnackbar = await screen.findByText(
             'Unable to load task'
@@ -41,14 +37,7 @@ describe('<Task/> loading errors', () => {
     });
 
     it('Renders error message if unable to load task attachments', async () => {
-        server.use(
-            rest.get(
-                ENDPOINTS.getTaskAttachments,
-                (request, response, context) => {
-                    return response(context.status(400));
-                }
-            )
-        );
+        causeApiError(ENDPOINTS.getTaskAttachments, 'get');
         render(withPlantContext({ Component: <Task /> }));
         const errorMessageInCard = await screen.findByText(
             'Unable to load attachments. Please refresh or try again later.'
@@ -57,11 +46,7 @@ describe('<Task/> loading errors', () => {
     });
 
     it('Renders error message if unable to load next task', async () => {
-        server.use(
-            rest.get(ENDPOINTS.getTasks, (request, response, context) => {
-                return response(context.status(400));
-            })
-        );
+        causeApiError(ENDPOINTS.getTasks, 'get');
         render(withPlantContext({ Component: <Task /> }));
         const errorMessageInCard = await screen.findByText(
             'Unable to retrieve next task. Please go back to task list.'
@@ -84,13 +69,9 @@ describe('<Task/> after successful loading', () => {
     });
 
     it('Renders error message if user is unable to edit and save a comment', async () => {
-        server.use(
-            rest.put(ENDPOINTS.putTaskComment, (request, response, context) => {
-                return response(context.status(400));
-            })
-        );
+        causeApiError(ENDPOINTS.putTaskComment, 'put');
         await editAndSaveComment();
-        const messageInSnackbar = await screen.findByText('Error');
+        const messageInSnackbar = await screen.findByText('Error: dummy error');
         expect(messageInSnackbar).toBeInTheDocument();
     });
 
@@ -98,7 +79,7 @@ describe('<Task/> after successful loading', () => {
         const editButton = screen.getByRole('button', {
             name: 'Edit comment',
         });
-        expect(editButton).not.toBeDisabled();
+        expect(editButton).toBeEnabled();
         const signButton = screen.getByRole('button', { name: 'Sign' });
         userEvent.click(signButton);
         let messageInSnackbar = await screen.findByText(
@@ -112,36 +93,29 @@ describe('<Task/> after successful loading', () => {
             'Task successfully unsigned'
         );
         expect(messageInSnackbar).toBeInTheDocument();
-        expect(editButton).not.toBeDisabled();
+        expect(editButton).toBeEnabled();
     });
 
     it('Renders error message when task signing fails', async () => {
-        server.use(
-            rest.post(ENDPOINTS.postTaskSign, (request, response, context) => {
-                return response(context.status(400));
-            })
-        );
+        causeApiError(ENDPOINTS.postTaskSign, 'post');
         const signButton = screen.getByRole('button', { name: 'Sign' });
         userEvent.click(signButton);
-        const errorMessageInSnackbar = await screen.findByText('Error');
+        const errorMessageInSnackbar = await screen.findByText(
+            'Error: dummy error'
+        );
         expect(errorMessageInSnackbar).toBeInTheDocument();
     });
 
     it('Renders error message when task unsigning fails', async () => {
-        server.use(
-            rest.post(
-                ENDPOINTS.postTaskUnsign,
-                (request, response, context) => {
-                    return response(context.status(400));
-                }
-            )
-        );
+        causeApiError(ENDPOINTS.postTaskUnsign, 'post');
         const signButton = screen.getByRole('button', { name: 'Sign' });
         userEvent.click(signButton);
         await screen.findByText('Task successfully signed');
         const unsignButton = screen.getByRole('button', { name: 'Unsign' });
         userEvent.click(unsignButton);
-        const errorMessageInSnackbar = await screen.findByText('Error');
+        const errorMessageInSnackbar = await screen.findByText(
+            'Error: dummy error'
+        );
         expect(errorMessageInSnackbar).toBeInTheDocument();
     });
 
@@ -158,20 +132,15 @@ describe('<Task/> after successful loading', () => {
     });
 
     it('Renders error if failing to save parameter input.', async () => {
-        server.use(
-            rest.put(
-                ENDPOINTS.putTaskParameter,
-                (request, response, context) => {
-                    return response(context.status(400));
-                }
-            )
-        );
+        causeApiError(ENDPOINTS.putTaskParameter, 'put');
         const measuredInput = screen.getByRole('textbox', {
             name: 'Measured V',
         });
         userEvent.type(measuredInput, '230');
         userEvent.tab();
-        const errorMessageInSnackbar = await screen.findByText('Error');
+        const errorMessageInSnackbar = await screen.findByText(
+            'Error: dummy error'
+        );
         expect(errorMessageInSnackbar).toBeInTheDocument();
     });
 
