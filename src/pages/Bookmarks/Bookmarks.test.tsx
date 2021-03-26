@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { withPlantContext } from '../../test/contexts';
 import { testProjects } from '../../test/dummyData';
-import { causeApiError, ENDPOINTS, rest, server } from '../../test/setupServer';
+import { causeApiError, ENDPOINTS } from '../../test/setupServer';
 import Bookmarks from './Bookmarks';
 import { StorageKey } from './useBookmarks';
 
