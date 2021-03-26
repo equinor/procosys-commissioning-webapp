@@ -458,8 +458,13 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         );
     };
 
-    const getAttachments = async (endpoint: string) => {
-        const { data } = await axios.get(`${endpoint}${apiVersion}`);
+    const getAttachments = async (
+        cancelToken: CancelToken,
+        endpoint: string
+    ) => {
+        const { data } = await axios.get(`${endpoint}${apiVersion}`, {
+            cancelToken: cancelToken,
+        });
         return data as Attachment[];
     };
 
