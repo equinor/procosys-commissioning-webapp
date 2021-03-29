@@ -156,16 +156,7 @@ const ChecklistSignature = ({
                 onFocus={() => (commentBeforeFocus = comment)}
                 onBlur={putComment}
             />
-            {!isSigned && !allItemsCheckedOrNA && (
-                <Banner>
-                    <BannerIcon variant={'warning'}>
-                        <EdsIcon name={'warning_outlined'} />
-                    </BannerIcon>
-                    <BannerMessage>
-                        All applicable items must be checked before signing.
-                    </BannerMessage>
-                </Banner>
-            )}
+
             <Button
                 onClick={handleSignClick}
                 disabled={

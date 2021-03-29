@@ -159,6 +159,7 @@ describe('<Checklist/> after loading', () => {
         });
         expect(updatedByText).toBeInTheDocument();
     });
+
     it('Renders error message if unable to save comment', async () => {
         causeApiError(ENDPOINTS.putChecklistComment, 'put');
         const commentField = screen.getByRole('textbox', { name: 'Comment' });
