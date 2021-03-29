@@ -519,7 +519,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
                 },
             }
         );
-        return data.Id as string;
+        return data.id as string;
     };
 
     const postPunchAttachment = async ({

@@ -9,7 +9,7 @@ const renderUploadModal = () => {
             Component: (
                 <UploadAttachment
                     parentId={'123'}
-                    refreshAttachments={() => {}}
+                    updateAttachments={() => {}}
                     setSnackbarText={() => {}}
                     setShowModal={() => {}}
                     postAttachment={() => {

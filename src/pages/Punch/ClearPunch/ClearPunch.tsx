@@ -203,7 +203,7 @@ const ClearPunch = () => {
                                     <UploadAttachment
                                         setShowModal={setShowUploadModal}
                                         postAttachment={api.postPunchAttachment}
-                                        refreshAttachments={refreshAttachments}
+                                        updateAttachments={refreshAttachments}
                                         parentId={params.punchItemId}
                                         setSnackbarText={setSnackbarText}
                                     />

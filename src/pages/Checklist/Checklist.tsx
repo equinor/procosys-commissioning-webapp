@@ -124,7 +124,7 @@ const Checklist = () => {
                                 <UploadAttachment
                                     setShowModal={setShowUploadModal}
                                     setSnackbarText={setSnackbarText}
-                                    refreshAttachments={setRefreshAttachments}
+                                    updateAttachments={setRefreshAttachments}
                                     postAttachment={api.postChecklistAttachment}
                                     parentId={params.checklistId}
                                 />
