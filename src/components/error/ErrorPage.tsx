@@ -3,11 +3,12 @@ import styled from 'styled-components';
 import { Banner } from '@equinor/eds-core-react';
 import { COLORS } from '../../style/GlobalStyles';
 import EdsIcon from '../icons/EdsIcon';
-const { BannerIcon, BannerMessage } = Banner;
+const { BannerIcon, BannerMessage, BannerActions } = Banner;
 
 interface CommError {
     title: string;
     description?: string;
+    actions?: JSX.Element[];
 }
 
 const ErrorPageWrapper = styled.main`
@@ -15,7 +16,7 @@ const ErrorPageWrapper = styled.main`
     flex-direction: column;
 `;
 
-const ErrorPage = ({ title, description }: CommError) => {
+const ErrorPage = ({ title, description, actions }: CommError) => {
     return (
         <ErrorPageWrapper>
             <Banner>
@@ -34,6 +35,11 @@ const ErrorPage = ({ title, description }: CommError) => {
                         <EdsIcon name="info_circle" title="Error icon" />
                     </BannerIcon>
                     <BannerMessage>{description}</BannerMessage>
+                    {actions ? (
+                        <BannerActions placement={'bottom'}>
+                            {actions.map((button) => button)}
+                        </BannerActions>
+                    ) : null}
                 </Banner>
             )}
         </ErrorPageWrapper>

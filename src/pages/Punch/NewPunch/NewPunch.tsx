@@ -24,7 +24,9 @@ import {
     UploadImageButton,
 } from '../../../components/Attachment';
 import EdsIcon from '../../../components/icons/EdsIcon';
-import { UploadContainer } from '../../../components/UploadAttachment';
+import UploadAttachment, {
+    UploadContainer,
+} from '../../../components/UploadAttachment';
 import EdsCard from '../../../components/EdsCard';
 import useSnackbar from '../../../utils/useSnackbar';
 
@@ -36,7 +38,7 @@ export type PunchFormData = {
     clearingBy: string;
 };
 
-type TempAttachment = { id: string; file: File };
+export type TempAttachment = { id: string; file: File };
 
 const newPunchInitialValues = {
     category: '',
@@ -83,7 +85,7 @@ const NewPunch = () => {
         if (!selectedFile) return;
         setPostAttachmentStatus(AsyncStatus.LOADING);
         const formData = new FormData();
-        formData.append('myFile', selectedFile, selectedFile.name);
+        formData.append(selectedFile.name, selectedFile);
         try {
             const attachmentId = await api.postTempPunchAttachment({
                 plantId: params.plant,
@@ -240,39 +242,13 @@ const NewPunch = () => {
                         </Scrim>
                     ) : null}
                     {showUploadModal ? (
-                        <Scrim
-                            isDismissable
-                            onClose={() => setShowUploadModal(false)}
-                        >
-                            <UploadContainer>
-                                {selectedFile ? (
-                                    <img
-                                        src={URL.createObjectURL(selectedFile)}
-                                        alt={selectedFile.name}
-                                    />
-                                ) : null}
-                                <input
-                                    type="file"
-                                    onChange={onFileChange}
-                                    accept="image/*"
-                                />
-                                <Button
-                                    disabled={
-                                        !selectedFile ||
-                                        postAttachmentStatus ===
-                                            AsyncStatus.LOADING
-                                    }
-                                    onClick={onFileUpload}
-                                >
-                                    {postAttachmentStatus ===
-                                    AsyncStatus.LOADING ? (
-                                        <DotProgress color="primary" />
-                                    ) : (
-                                        'Upload image'
-                                    )}
-                                </Button>
-                            </UploadContainer>
-                        </Scrim>
+                        <UploadAttachment
+                            setShowModal={setShowUploadModal}
+                            postAttachment={api.postTempPunchAttachment}
+                            parentId={''}
+                            setSnackbarText={setSnackbarText}
+                            updateTempAttachments={setTempAttachments}
+                        />
                     ) : null}
                 </>
             );

@@ -1,7 +1,8 @@
 import { Button, DotProgress, Scrim } from '@equinor/eds-core-react';
-import React, { useRef, useState } from 'react';
+import React, { Dispatch, SetStateAction, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { AsyncStatus } from '../contexts/CommAppContext';
+import { TempAttachment } from '../pages/Punch/NewPunch/NewPunch';
 import { ProcosysApiService } from '../services/procosysApi';
 import { COLORS } from '../style/GlobalStyles';
 import useCommonHooks from '../utils/useCommonHooks';
@@ -20,7 +21,7 @@ export const UploadContainer = styled.div`
     & > button,
     button:disabled {
         margin-top: 12px;
-        margin-right: 24px;
+        margin-left: 8px;
         float: right;
     }
 `;
@@ -36,20 +37,26 @@ const ChooseImageContainer = styled.div`
 
 type PostChecklistAttachment = ProcosysApiService['postChecklistAttachment'];
 type PostPunchAttachment = ProcosysApiService['postPunchAttachment'];
+type PostTempAttachment = ProcosysApiService['postTempPunchAttachment'];
 
 type UploadAttachmentProps = {
-    setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-    postAttachment: PostPunchAttachment | PostChecklistAttachment;
-    refreshAttachments: React.Dispatch<React.SetStateAction<boolean>>;
-    setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
+    setShowModal: Dispatch<SetStateAction<boolean>>;
+    postAttachment:
+        | PostPunchAttachment
+        | PostChecklistAttachment
+        | PostTempAttachment;
+    updateAttachments?: Dispatch<SetStateAction<boolean>>;
+    updateTempAttachments?: Dispatch<SetStateAction<TempAttachment[]>>;
+    setSnackbarText: Dispatch<SetStateAction<string>>;
     parentId: string;
 };
 
 const UploadAttachment = ({
     setShowModal,
     postAttachment,
-    refreshAttachments,
+    updateAttachments,
     setSnackbarText,
+    updateTempAttachments,
     parentId,
 }: UploadAttachmentProps) => {
     const { params } = useCommonHooks();
@@ -58,7 +65,6 @@ const UploadAttachment = ({
         AsyncStatus.INACTIVE
     );
     const fileInputRef = useRef(document.createElement('input'));
-
     const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedFile(e.currentTarget.files![0]);
     };
@@ -69,15 +75,30 @@ const UploadAttachment = ({
         const formData = new FormData();
         formData.append(selectedFile.name, selectedFile);
         try {
-            await postAttachment({
+            const response = await postAttachment({
                 plantId: params.plant,
                 parentId: parentId,
                 data: formData,
                 title: selectedFile.name,
             });
+            if (updateTempAttachments) {
+                //For new punch, this adds the new attachment to the list of attachments
+                if (typeof response === 'string') {
+                    updateTempAttachments((attachments) => [
+                        ...attachments,
+                        { id: response, file: selectedFile },
+                    ]);
+                } else {
+                    console.error(
+                        'Expected an ID response, but did not receive one.'
+                    );
+                }
+            }
+            if (updateAttachments) {
+                updateAttachments((prev) => !prev);
+            }
             setPostAttachmentStatus(AsyncStatus.SUCCESS);
             setSnackbarText('File successfully added.');
-            refreshAttachments((currentValue) => !currentValue);
             setShowModal(false);
         } catch (error) {
             setPostAttachmentStatus(AsyncStatus.ERROR);

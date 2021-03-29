@@ -124,7 +124,7 @@ const Checklist = () => {
                                 <UploadAttachment
                                     setShowModal={setShowUploadModal}
                                     setSnackbarText={setSnackbarText}
-                                    refreshAttachments={setRefreshAttachments}
+                                    updateAttachments={setRefreshAttachments}
                                     postAttachment={api.postChecklistAttachment}
                                     parentId={params.checklistId}
                                 />
@@ -158,6 +158,7 @@ const Checklist = () => {
                             ))}
                         </AttachmentsWrapper>
                     </AsyncCard>
+
                     <AsyncCard
                         fetchStatus={fetchChecklistStatus}
                         errorMessage={'Unable to load checklist signature.'}
@@ -172,6 +173,17 @@ const Checklist = () => {
                             setIsSigned={setIsSigned}
                         />
                     </AsyncCard>
+                    {!isSigned && !allItemsCheckedOrNA && (
+                        <Banner>
+                            <BannerIcon variant={'warning'}>
+                                <EdsIcon name={'warning_outlined'} />
+                            </BannerIcon>
+                            <BannerMessage>
+                                All applicable items must be checked before
+                                signing.
+                            </BannerMessage>
+                        </Banner>
+                    )}
                 </ChecklistWrapper>
             </>
         );
