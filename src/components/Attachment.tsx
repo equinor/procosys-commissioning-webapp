@@ -80,6 +80,10 @@ export const ImageModal = styled.div`
     }
 `;
 
+const DeleteButton = styled(Button)`
+    left: 0;
+`;
+
 const ButtonGroup = styled.div`
     margin: 0 auto;
     display: flex;
@@ -165,9 +169,28 @@ const Attachment = ({
     };
 
     if (attachment.mimeType.substr(0, 5) !== 'image') {
+        if (deleteStatus === AsyncStatus.LOADING) {
+            return (
+                <AttachmentWrapper>
+                    <CircularProgress />
+                </AttachmentWrapper>
+            );
+        }
         return (
             <DocumentAttachmentWrapper>
                 <Typography lines={3}>{attachment.title}</Typography>
+                {/* 
+                *
+                Uncomment this to enable deletion of document attachments
+                *
+                <DeleteButton variant={'ghost_icon'} onClick={handleDelete}>
+                    <EdsIcon
+                        name="delete_to_trash"
+                        color={COLORS.mossGreen}
+                        alt={'delete document'}
+                    />
+                </DeleteButton> */}
+
                 <Button variant={'ghost_icon'} onClick={loadAttachment}>
                     <EdsIcon
                         name="cloud_download"
