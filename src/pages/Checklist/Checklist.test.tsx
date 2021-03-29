@@ -207,7 +207,6 @@ describe('<Checklist/> after loading', () => {
         expect(checklistIsSignedBanner).toBeInTheDocument();
         const commentField = screen.getByRole('textbox', { name: 'Comment' });
         expect(commentField).toBeDisabled();
-        screen.debug(undefined, 20000);
         await screen.findByText('Signed by', { exact: false });
     });
     test.todo('It renders an error message if unable to sign');
