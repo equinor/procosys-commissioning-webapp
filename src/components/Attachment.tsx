@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import { AsyncStatus } from '../contexts/CommAppContext';
 import { Attachment as AttachmentType } from '../services/apiTypes';
 import { ProcosysApiService } from '../services/procosysApi';
-import { COLORS } from '../style/GlobalStyles';
+import { BREAKPOINT, COLORS } from '../style/GlobalStyles';
 import { handleDownload } from '../utils/general';
 import useCommonHooks from '../utils/useCommonHooks';
 import EdsIcon from './icons/EdsIcon';
@@ -75,14 +75,24 @@ export const ImageModal = styled.div`
     padding: 16px;
     & > img {
         width: 100%;
-        max-height: 80vh;
+        max-height: 65vh;
         object-fit: contain;
     }
-    & button,
+`;
+
+const DeleteButton = styled(Button)`
+    left: 0;
+`;
+
+const ButtonGroup = styled.div`
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    max-width: 160px;
+    justify-content: center;
+    & > button,
     button:disabled {
-        float: right;
-        margin-top: 12px;
-        margin-left: 12px;
+        margin-top: 4px;
     }
 `;
 
@@ -159,9 +169,28 @@ const Attachment = ({
     };
 
     if (attachment.mimeType.substr(0, 5) !== 'image') {
+        if (deleteStatus === AsyncStatus.LOADING) {
+            return (
+                <AttachmentWrapper>
+                    <CircularProgress />
+                </AttachmentWrapper>
+            );
+        }
         return (
             <DocumentAttachmentWrapper>
                 <Typography lines={3}>{attachment.title}</Typography>
+                {/* 
+                *
+                Uncomment this to enable deletion of document attachments
+                *
+                <DeleteButton variant={'ghost_icon'} onClick={handleDelete}>
+                    <EdsIcon
+                        name="delete_to_trash"
+                        color={COLORS.mossGreen}
+                        alt={'delete document'}
+                    />
+                </DeleteButton> */}
+
                 <Button variant={'ghost_icon'} onClick={loadAttachment}>
                     <EdsIcon
                         name="cloud_download"
@@ -182,48 +211,51 @@ const Attachment = ({
                 >
                     <ImageModal>
                         <img src={attachmentFileURL} alt={attachment.title} />
-                        <Button onClick={() => setShowFullScreenImage(false)}>
-                            <EdsIcon name="close" />
-                            Close
-                        </Button>
-                        <Button
-                            onClick={() => {
-                                handleDownload(
-                                    attachmentFileURL,
-                                    attachment.fileName
-                                );
-                                setSnackbarText(
-                                    'Image successfully downloaded.'
-                                );
-                            }}
-                        >
-                            <EdsIcon name="cloud_download" />
-                            Download
-                        </Button>
-                        {isSigned || !deleteAttachment ? null : (
+                        <ButtonGroup>
                             <Button
-                                color={'danger'}
-                                onClick={handleDelete}
-                                disabled={
-                                    deleteStatus === AsyncStatus.LOADING ||
-                                    !deleteAttachment
-                                }
+                                onClick={() => setShowFullScreenImage(false)}
                             >
-                                <EdsIcon
-                                    name="delete_to_trash"
-                                    color={
-                                        deleteStatus === AsyncStatus.LOADING
-                                            ? COLORS.black
-                                            : COLORS.white
-                                    }
-                                    alt="Delete attachment"
-                                    size={32}
-                                />
-                                {deleteStatus === AsyncStatus.LOADING
-                                    ? 'Loading...'
-                                    : 'Delete'}
+                                <EdsIcon name="close" />
+                                Close
                             </Button>
-                        )}
+                            <Button
+                                onClick={() => {
+                                    handleDownload(
+                                        attachmentFileURL,
+                                        attachment.fileName
+                                    );
+                                    setSnackbarText(
+                                        'Image successfully downloaded.'
+                                    );
+                                }}
+                            >
+                                <EdsIcon name="cloud_download" size={32} />
+                                Download
+                            </Button>
+                            {isSigned || !deleteAttachment ? null : (
+                                <Button
+                                    color={'danger'}
+                                    onClick={handleDelete}
+                                    disabled={
+                                        deleteStatus === AsyncStatus.LOADING ||
+                                        !deleteAttachment
+                                    }
+                                >
+                                    <EdsIcon
+                                        name="delete_to_trash"
+                                        color={
+                                            deleteStatus === AsyncStatus.LOADING
+                                                ? COLORS.black
+                                                : COLORS.white
+                                        }
+                                        alt="Delete attachment"
+                                    />
+                                    {deleteStatus === AsyncStatus.LOADING
+                                        ? 'Loading...'
+                                        : 'Delete'}
+                                </Button>
+                            )}
+                        </ButtonGroup>
                     </ImageModal>
                 </Scrim>
             ) : null}

@@ -1,3 +1,4 @@
+import { Button } from '@equinor/eds-core-react';
 import React, { ReactNode, useEffect, useState } from 'react';
 import ErrorPage from '../components/error/ErrorPage';
 import LoadingPage from '../components/loading/LoadingPage';
@@ -50,10 +51,15 @@ export const CommAppContextProvider: React.FC<{
     }
     if (fetchPlantsStatus === AsyncStatus.ERROR) {
         return (
-            <ErrorPage
-                title="Error: Could not load plants"
-                description="We were unable to get a list of available plants. Please check your connection, sign in with a different user or refresh this page."
-            ></ErrorPage>
+            <>
+                <ErrorPage
+                    actions={[
+                        <Button onClick={() => auth.logout()}>Sign out</Button>,
+                    ]}
+                    title="Error: Could not load plants"
+                    description="We were unable to get a list of available plants. Please check your connection, sign in with a different user or refresh this page."
+                ></ErrorPage>
+            </>
         );
     }
     return (
