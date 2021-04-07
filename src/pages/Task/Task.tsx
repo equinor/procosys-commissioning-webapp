@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Navbar from '../../components/navigation/Navbar';
-import { removeSubdirectories } from '../../utils/general';
 import useCommonHooks from '../../utils/useCommonHooks';
 import TaskDescription from './TaskDescription';
 import TaskParameters from './TaskParameters/TaskParameters';
@@ -16,6 +15,7 @@ import { TaskPreviewButton } from '../CommPkg/Tasks/Tasks';
 import { Banner, Typography } from '@equinor/eds-core-react';
 import Axios, { CancelToken } from 'axios';
 import useAsyncGet from '../../utils/useAsyncGet';
+import removeSubdirectories from '../../utils/removeSubdirectories';
 const { BannerIcon, BannerMessage } = Banner;
 
 const NextTaskButton = styled(TaskPreviewButton)`
