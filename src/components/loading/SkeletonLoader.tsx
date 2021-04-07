@@ -3,7 +3,8 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
 const SkeletonLoadingPageWrapper = styled.div`
-    padding-top: 24px;
+    padding: 24px 0;
+    min-height: 90vh;
     & h3 {
         margin: 0;
         text-align: center;
