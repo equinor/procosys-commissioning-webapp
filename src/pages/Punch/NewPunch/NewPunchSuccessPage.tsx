@@ -2,7 +2,7 @@ import { Button } from '@equinor/eds-core-react';
 import React from 'react';
 import styled from 'styled-components';
 import EdsIcon from '../../../components/icons/EdsIcon';
-import { removeSubdirectories } from '../../../utils/general';
+import removeSubdirectories from '../../../utils/removeSubdirectories';
 import useCommonHooks from '../../../utils/useCommonHooks';
 
 const ButtonGroup = styled.div`

@@ -43,6 +43,7 @@ const initialize = async () => {
     const configurationAccessToken = await authInstance.getAccessToken(
         configurationScope
     );
+
     const { procosysApiConfig, appInsightsConfig } = await getAppConfig(
         configurationEndpoint,
         configurationAccessToken
@@ -52,6 +53,7 @@ const initialize = async () => {
         baseURL: procosysApiConfig.baseUrl,
         scope: procosysApiConfig.scope,
     });
+
     const procosysApiInstance = procosysApiService({
         axios: baseApiInstance,
         apiVersion: procosysApiConfig.apiVersion,
@@ -86,6 +88,7 @@ const initialize = async () => {
             />
         );
     } catch (error) {
+        console.log(error);
         if (error === 'redirecting') {
             render(<LoadingPage loadingText={'Redirecting to login...'} />);
         } else {

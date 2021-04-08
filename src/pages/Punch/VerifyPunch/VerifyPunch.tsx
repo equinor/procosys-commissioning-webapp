@@ -10,13 +10,13 @@ import AsyncCard from '../../../components/AsyncCard';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
 import { PunchItem } from '../../../services/apiTypes';
 import buildEndpoint from '../../../utils/buildEndpoint';
-import { removeSubdirectories } from '../../../utils/general';
 import useAttachments from '../../../utils/useAttachments';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import { PunchWrapper } from '../ClearPunch/ClearPunch';
 import PunchDetailsCard from '../ClearPunch/PunchDetailsCard';
 import { PunchAction } from '../ClearPunch/useClearPunchFacade';
 import useSnackbar from '../../../utils/useSnackbar';
+import removeSubdirectories from '../../../utils/removeSubdirectories';
 
 const VerifyPunchWrapper = styled.main`
     padding: 16px 4%;
@@ -213,7 +213,7 @@ const VerifyPunch = () => {
                 </>
             );
         } else if (fetchPunchItemStatus === AsyncStatus.ERROR) {
-            return <ErrorPage title="Unable to load punch item" />;
+            return <ErrorPage title="Unable to load punch item." />;
         } else {
             return <SkeletonLoadingPage text="Loading punch item" />;
         }

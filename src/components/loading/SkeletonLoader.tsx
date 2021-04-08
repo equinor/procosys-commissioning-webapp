@@ -2,8 +2,9 @@ import { Card } from '@equinor/eds-core-react';
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
-const SkeletonLoadingPageWrapper = styled.div`
-    padding-top: 24px;
+const SkeletonLoadingPageWrapper = styled.div<{ adjustableHeight?: boolean }>`
+    padding: 24px 0;
+    min-height: ${(props) => (props.adjustableHeight ? 'auto' : '92vh')};
     & h3 {
         margin: 0;
         text-align: center;
@@ -53,6 +54,7 @@ const SkeletonRow = styled(BaseSkeleton)<{ fullWidth: boolean }>`
 type SkeletonLoadingPageProps = {
     text?: string;
     fullWidth?: boolean;
+    adjustableHeight?: boolean;
     nrOfRows?: number;
 };
 
@@ -60,6 +62,7 @@ const SkeletonLoadingPage = ({
     text,
     fullWidth,
     nrOfRows = 10,
+    adjustableHeight,
 }: SkeletonLoadingPageProps) => {
     const SkeletonRowsToRender: JSX.Element[] = [];
 
@@ -78,7 +81,7 @@ const SkeletonLoadingPage = ({
     }
 
     return (
-        <SkeletonLoadingPageWrapper>
+        <SkeletonLoadingPageWrapper adjustableHeight={adjustableHeight}>
             {text && <h3>{text}</h3>}
             {SkeletonRowsToRender}
         </SkeletonLoadingPageWrapper>

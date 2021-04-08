@@ -6,7 +6,8 @@ import {
     PunchOrganization,
     PunchItem,
 } from '../../../services/apiTypes';
-import { ensure, removeSubdirectories } from '../../../utils/general';
+import ensure from '../../../utils/ensure';
+import removeSubdirectories from '../../../utils/removeSubdirectories';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import useSnackbar from '../../../utils/useSnackbar';
 
@@ -179,7 +180,6 @@ const useClearPunchFacade = () => {
         categories,
         types,
         organizations,
-        url,
         setSnackbarText,
         snackbar,
         updateDatabase,

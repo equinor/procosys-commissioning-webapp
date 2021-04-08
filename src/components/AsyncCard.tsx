@@ -26,7 +26,7 @@ const AsyncCard = ({
         } else if (fetchStatus === AsyncStatus.ERROR) {
             return <p>{errorMessage}</p>;
         } else {
-            return <SkeletonLoadingPage nrOfRows={3} />;
+            return <SkeletonLoadingPage nrOfRows={3} adjustableHeight={true} />;
         }
     };
 

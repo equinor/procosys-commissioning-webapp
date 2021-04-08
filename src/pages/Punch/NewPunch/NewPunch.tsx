@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import SkeletonLoader from '../../../components/loading/SkeletonLoader';
 import {
     ChecklistDetails,
     PunchCategory,
@@ -7,7 +6,6 @@ import {
     PunchType,
 } from '../../../services/apiTypes';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
-import ErrorPage from '../../../components/error/ErrorPage';
 import Navbar from '../../../components/navigation/Navbar';
 import ChecklistDetailsCard from '../../Checklist/ChecklistDetailsCard';
 import NewPunchForm from './NewPunchForm';
@@ -16,7 +14,7 @@ import { NewPunch as NewPunchType } from '../../../services/apiTypes';
 import NewPunchSuccessPage from './NewPunchSuccessPage';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import { PunchWrapper } from '../ClearPunch/ClearPunch';
-import { Button, DotProgress, Scrim } from '@equinor/eds-core-react';
+import { Button, Scrim } from '@equinor/eds-core-react';
 import {
     AttachmentImage,
     AttachmentsWrapper,
@@ -24,11 +22,10 @@ import {
     UploadImageButton,
 } from '../../../components/Attachment';
 import EdsIcon from '../../../components/icons/EdsIcon';
-import UploadAttachment, {
-    UploadContainer,
-} from '../../../components/UploadAttachment';
+import UploadAttachment from '../../../components/UploadAttachment';
 import EdsCard from '../../../components/EdsCard';
 import useSnackbar from '../../../utils/useSnackbar';
+import AsyncPage from '../../../components/AsyncPage';
 
 export type PunchFormData = {
     category: string;
@@ -69,43 +66,9 @@ const NewPunch = () => {
         []
     );
     const [showUploadModal, setShowUploadModal] = useState(false);
-    const [selectedFile, setSelectedFile] = useState<File>();
-    const [postAttachmentStatus, setPostAttachmentStatus] = useState(
-        AsyncStatus.INACTIVE
-    );
     const { snackbar, setSnackbarText } = useSnackbar();
     const [showFullImageModal, setShowFullImageModal] = useState(false);
     const [attachmentToShow, setAttachmentToShow] = useState<TempAttachment>();
-
-    const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedFile(e.currentTarget.files![0]);
-    };
-
-    const onFileUpload = async () => {
-        if (!selectedFile) return;
-        setPostAttachmentStatus(AsyncStatus.LOADING);
-        const formData = new FormData();
-        formData.append(selectedFile.name, selectedFile);
-        try {
-            const attachmentId = await api.postTempPunchAttachment({
-                plantId: params.plant,
-                parentId: '',
-                data: formData,
-                title: '',
-            });
-            setTempAttachments((attachments) => [
-                ...attachments,
-                { id: attachmentId, file: selectedFile },
-            ]);
-            setPostAttachmentStatus(AsyncStatus.SUCCESS);
-            setSnackbarText('File successfully added.');
-            setSelectedFile(undefined);
-            setShowUploadModal(false);
-        } catch (error) {
-            setPostAttachmentStatus(AsyncStatus.ERROR);
-            setSnackbarText(error.toString());
-        }
-    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -161,13 +124,12 @@ const NewPunch = () => {
         })();
     }, [params.plant, params.checklistId, api]);
 
+    if (submitPunchStatus === AsyncStatus.SUCCESS) {
+        return <NewPunchSuccessPage />;
+    }
+
     const content = () => {
-        if (submitPunchStatus === AsyncStatus.SUCCESS) {
-            return <NewPunchSuccessPage />;
-        } else if (
-            fetchNewPunchStatus === AsyncStatus.SUCCESS &&
-            checklistDetails
-        ) {
+        if (checklistDetails) {
             return (
                 <>
                     <ChecklistDetailsCard
@@ -252,10 +214,6 @@ const NewPunch = () => {
                     ) : null}
                 </>
             );
-        } else if (fetchNewPunchStatus === AsyncStatus.ERROR) {
-            return <ErrorPage title="Could not load new punch" />;
-        } else {
-            return <SkeletonLoader text="Loading new punch" />;
         }
     };
 
@@ -265,7 +223,15 @@ const NewPunch = () => {
                 noBorder
                 leftContent={{ name: 'back', label: 'Checklist' }}
             />
-            <PunchWrapper>{content()}</PunchWrapper>
+            <AsyncPage
+                fetchStatus={fetchNewPunchStatus}
+                errorMessage={
+                    'Unable to load new punch. Please check your connection, permissions, or refresh this page.'
+                }
+                loadingMessage={'Loading new punch.'}
+            >
+                <PunchWrapper>{content()}</PunchWrapper>
+            </AsyncPage>
             {snackbar}
         </>
     );

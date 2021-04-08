@@ -7,7 +7,6 @@ import Tasks from './Tasks/Tasks';
 import PunchList from './PunchList/PunchList';
 import Navbar from '../../components/navigation/Navbar';
 import styled from 'styled-components';
-import { calculateHighestStatus } from '../../utils/general';
 import useCommonHooks from '../../utils/useCommonHooks';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import {
@@ -19,6 +18,7 @@ import { DotProgress } from '@equinor/eds-core-react';
 import NavigationFooterShell from './NavigationFooterShell';
 import withAccessControl from '../../services/withAccessControl';
 import Axios from 'axios';
+import calculateHighestStatus from '../../utils/calculateHighestStatus';
 
 const CommPkgWrapper = styled.main``;
 

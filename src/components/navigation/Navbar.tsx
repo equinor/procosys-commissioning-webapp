@@ -5,8 +5,8 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import EdsIcon from '../icons/EdsIcon';
 import { useSpring } from 'react-spring';
 import SideMenu from './SideMenu';
-import { removeSubdirectories } from '../../utils/general';
 import { BREAKPOINT, COLORS } from '../../style/GlobalStyles';
+import removeSubdirectories from '../../utils/removeSubdirectories';
 
 const NavbarWrapper = styled.nav<{ noBorder: boolean }>`
     height: 54px;
