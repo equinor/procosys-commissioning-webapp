@@ -268,6 +268,60 @@ export const dummyPunchListResponse = [
     },
 ];
 
+export const dummyPunchItemUncleared = {
+    Id: 1,
+    ChecklistId: 2,
+    FormularType: 'E-65',
+    Status: 'PB',
+    Description: 'dummy-punch-description',
+    TypeCode: '1',
+    TypeDescription: 'dummy-type-1',
+    RaisedByCode: 'ENG',
+    RaisedByDescription: 'ENGINEERING',
+    ClearingByCode: 'CON',
+    ClearingByDescription: 'CONTRACTOR',
+    ClearedAt: null,
+    ClearedByUser: null,
+    ClearedByFirstName: null,
+    ClearedByLastName: null,
+    VerifiedAt: null,
+    VerifiedByUser: null,
+    VerifiedByFirstName: null,
+    VerifiedByLastName: null,
+    RejectedAt: null,
+    RejectedByUser: null,
+    RejectedByFirstName: null,
+    RejectedByLastName: null,
+    DueDate: null,
+    Estimate: null,
+    PriorityId: null,
+    PriorityCode: null,
+    PriorityDescription: null,
+    ActionByPerson: 0,
+    ActionByPersonFirstName: null,
+    ActionByPersonLastName: null,
+    MaterialRequired: false,
+    MaterialEta: null,
+    MaterialNo: null,
+    SystemModule: 'COMM',
+    TagDescription: 'For testing purposes (test 37221)',
+    TagId: 2,
+    TagNo: 'dummy-tag-no',
+    ResponsibleCode: 'dummy-res-code',
+    ResponsibleDescription: 'dummy-res-description',
+    Sorting: null,
+    StatusControlledBySwcr: false,
+    IsRestrictedForUser: false,
+    AttachmentCount: 1,
+};
+export const dummyPunchItemCleared = {
+    ...dummyPunchItemUncleared,
+    ClearedAt: '2021-02-05T09:05:09Z',
+    ClearedByUser: 'dummy-user',
+    ClearedByFirstName: 'dummy-first-name',
+    ClearedByLastName: 'dummy-last-name',
+};
+
 export const dummyCommPkgDetailsResponse = {
     Id: 42323,
     CommPkgNo: 'dummy-commPkg-no',
@@ -343,4 +397,19 @@ export const dummyAttachmentsResponse = [
         ThumbnailAsBase64: null,
         HasFile: true,
     },
+];
+
+export const dummyPunchOrganizations = [
+    { Id: 1, ParentId: null, Code: 'ENG', Description: 'dummy-org-1' },
+    { Id: 2, ParentId: null, Code: 'CON', Description: 'dummy-org-2' },
+];
+
+export const dummyPunchCategories = [
+    { Id: 1, Code: 'PA', Description: 'dummy-category-1' },
+    { Id: 2, Code: 'PB', Description: 'dummy-category-2' },
+];
+
+export const dummyPunchTypes = [
+    { Id: 1, ParentId: null, Code: '1', Description: 'dummy-type-1' },
+    { Id: 2, ParentId: null, Code: '2', Description: 'dummy-type-2' },
 ];
