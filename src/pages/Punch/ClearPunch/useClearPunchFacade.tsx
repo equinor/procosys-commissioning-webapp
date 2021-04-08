@@ -180,7 +180,6 @@ const useClearPunchFacade = () => {
         categories,
         types,
         organizations,
-        url,
         setSnackbarText,
         snackbar,
         updateDatabase,

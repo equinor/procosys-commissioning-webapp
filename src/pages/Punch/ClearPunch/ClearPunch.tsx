@@ -35,7 +35,6 @@ const ClearPunch = () => {
         categories,
         types,
         organizations,
-        url,
         snackbar,
         setSnackbarText,
         updateDatabase,
@@ -46,7 +45,7 @@ const ClearPunch = () => {
         handleRaisedByChange,
         handleClearingByChange,
     } = useClearPunchFacade();
-    const { api, params } = useCommonHooks();
+    const { api, params, url } = useCommonHooks();
     const {
         attachments,
         fetchAttachmentsStatus,
