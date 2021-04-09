@@ -35,7 +35,8 @@
     "build": "react-scripts build",
     "test": "jest",
     "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint-all": "./node_modules/.bin/eslint --ext .ts,.tsx src/"
   },
   "eslintConfig": {
     "extends": [

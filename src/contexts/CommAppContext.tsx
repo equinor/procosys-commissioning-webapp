@@ -57,7 +57,7 @@ export const CommAppContextProvider: React.FC<CommAppContextProviderProps>
             <>
                 <ErrorPage
                     actions={[
-                        <Button key={'signOut'} onClick={() => auth.logout()}>Sign out</Button>, // TODO: rule could also just be disabled for this line (?)
+                        <Button key={'signOut'} onClick={auth.logout}>Sign out</Button>,
                     ]}
                     title="Error: Could not load plants"
                     description="We were unable to get a list of available plants. Please check your connection, sign in with a different user or refresh this page."
