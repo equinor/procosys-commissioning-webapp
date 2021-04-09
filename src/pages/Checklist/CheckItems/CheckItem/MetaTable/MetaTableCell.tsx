@@ -68,7 +68,7 @@ const MetaTableCell = ({
 
     useEffect(() => {
         if (submitStatus !== AsyncStatus.SUCCESS) return;
-        let timerId = setTimeout(() => {
+        const timerId = setTimeout(() => {
             setSubmitStatus(AsyncStatus.INACTIVE);
         }, 2000);
         return () => clearTimeout(timerId);

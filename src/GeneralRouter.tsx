@@ -13,14 +13,14 @@ const CommRouter = () => {
             <Switch>
                 <Route exact path={'/'} component={SelectPlant} />
                 <Route exact path={'/:plant'} component={SelectProject} />
-                <Route exact path={`/:plant/:project`} component={Bookmarks} />
+                <Route exact path={'/:plant/:project'} component={Bookmarks} />
                 <Route
                     exact
-                    path={`/:plant/:project/search`}
+                    path={'/:plant/:project/search'}
                     component={Search}
                 />
                 <Route
-                    path={`/:plant/:project/:commPkg`}
+                    path={'/:plant/:project/:commPkg'}
                     component={CommPkgRouter}
                 />
             </Switch>

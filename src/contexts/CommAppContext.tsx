@@ -23,11 +23,14 @@ export enum AsyncStatus {
 
 const CommAppContext = React.createContext({} as CommAppContextProps);
 
-export const CommAppContextProvider: React.FC<{
-    children: ReactNode;
-    auth: IAuthService;
-    api: ProcosysApiService;
-}> = ({ children, auth, api }) => {
+type CommAppContextProviderProps = {
+    children: ReactNode,
+    auth: IAuthService,
+    api: ProcosysApiService
+}
+
+export const CommAppContextProvider: React.FC<CommAppContextProviderProps> 
+= ({ children, auth, api }: CommAppContextProviderProps) => {
     const [availablePlants, setAvailablePlants] = useState<Plant[]>([]);
     const [fetchPlantsStatus, setFetchPlantsStatus] = useState<AsyncStatus>(
         AsyncStatus.LOADING
@@ -54,7 +57,7 @@ export const CommAppContextProvider: React.FC<{
             <>
                 <ErrorPage
                     actions={[
-                        <Button onClick={() => auth.logout()}>Sign out</Button>,
+                        <Button key={'signOut'} onClick={() => auth.logout()}>Sign out</Button>, // TODO: rule could also just be disabled for this line (?)
                     ]}
                     title="Error: Could not load plants"
                     description="We were unable to get a list of available plants. Please check your connection, sign in with a different user or refresh this page."

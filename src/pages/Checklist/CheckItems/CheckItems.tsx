@@ -101,7 +101,7 @@ const CheckItems = ({
     };
 
     const itemsToDisplay = items.map((item, index) => {
-        let nextItemIsHeading = items[index + 1]
+        const nextItemIsHeading = items[index + 1]
             ? items[index + 1].isHeading
             : true;
         return (

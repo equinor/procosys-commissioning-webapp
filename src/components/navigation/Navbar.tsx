@@ -70,7 +70,7 @@ const Navbar = ({
     const history = useHistory();
     const { url } = useRouteMatch();
     const sideDrawerAnimation = useSpring({
-        transform: drawerIsOpen ? `translateX(0px)` : `translateX(-300px)`,
+        transform: drawerIsOpen ? 'translateX(0px)' : 'translateX(-300px)',
     });
     const backdropAnimation = useSpring({
         opacity: drawerIsOpen ? 0.6 : 0,

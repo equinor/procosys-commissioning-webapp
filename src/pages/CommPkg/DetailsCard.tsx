@@ -11,7 +11,7 @@ import { AsyncStatus } from '../../contexts/CommAppContext';
 import DetailsCardShell from './DetailsCardShell';
 import axios from 'axios';
 
-const DetailsWrapper = styled.div<{ atBookmarksPage?: Boolean }>`
+const DetailsWrapper = styled.div<{ atBookmarksPage?: boolean }>`
     display: grid;
     grid-template-columns: repeat(2, 1fr) repeat(2, 0.5fr);
     grid-template-rows: repeat(2);
