@@ -26,7 +26,8 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        "react",
+        "prettier"
     ],
     "overrides": [
         {
@@ -35,7 +36,8 @@
                 "**/*.tsx"
             ],
             "extends": [
-                "plugin:@typescript-eslint/recommended"
+                "plugin:@typescript-eslint/recommended",
+                "plugin:prettier/recommended"
             ],
             "plugins": [
                 "@typescript-eslint"
