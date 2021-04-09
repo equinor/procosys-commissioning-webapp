@@ -199,21 +199,21 @@ const Task = () => {
 
                 {fetchParametersStatus !== AsyncStatus.EMPTY_RESPONSE &&
                 parameters ? (
-                        <AsyncCard
-                            fetchStatus={fetchParametersStatus}
-                            errorMessage={
-                                'Unable to load parameters. Please refresh or try again later.'
-                            }
-                            emptyContentMessage={'This task has no parameters'}
-                            cardTitle={'Parameters'}
-                        >
-                            <TaskParameters
-                                setSnackbarText={setSnackbarText}
-                                isSigned={isSigned}
-                                parameters={parameters}
-                            />
-                        </AsyncCard>
-                    ) : null}
+                    <AsyncCard
+                        fetchStatus={fetchParametersStatus}
+                        errorMessage={
+                            'Unable to load parameters. Please refresh or try again later.'
+                        }
+                        emptyContentMessage={'This task has no parameters'}
+                        cardTitle={'Parameters'}
+                    >
+                        <TaskParameters
+                            setSnackbarText={setSnackbarText}
+                            isSigned={isSigned}
+                            parameters={parameters}
+                        />
+                    </AsyncCard>
+                ) : null}
 
                 <AsyncCard
                     cardTitle={'Next task'}

@@ -51,7 +51,8 @@ const FooterButton = styled.button<{ active: boolean }>`
     & p {
         margin: 0;
         font-weight: ${(props) => (props.active ? 'initial' : 'initial')};
-        border-bottom: ${(props) => props.active ? `3px solid ${COLORS.darkGrey}` : 'initial'};
+        border-bottom: ${(props) =>
+            props.active ? `3px solid ${COLORS.darkGrey}` : 'initial'};
         margin-bottom: ${(props) => (props.active ? '3px' : 'initial')};
     }
     &:focus,

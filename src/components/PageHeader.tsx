@@ -10,7 +10,8 @@ const PageHeaderWrapper = styled.div<{ hasSubtitle: boolean }>`
     margin-top: 16px;
     & h2 {
         text-align: center;
-        margin: ${(props) => props.hasSubtitle ? '16px 0 0 0' : '16px 0 24px 0'};
+        margin: ${(props) =>
+            props.hasSubtitle ? '16px 0 0 0' : '16px 0 24px 0'};
     }
     & h6 {
         text-align: center;

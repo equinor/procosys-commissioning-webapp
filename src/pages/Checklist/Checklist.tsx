@@ -49,9 +49,10 @@ const Checklist = () => {
         AsyncStatus.LOADING
     );
     const [checkItems, setCheckItems] = useState<CheckItem[]>([]);
-    const [checklistDetails, setChecklistDetails] = useState<
-        ChecklistDetails
-    >();
+    const [
+        checklistDetails,
+        setChecklistDetails,
+    ] = useState<ChecklistDetails>();
     const [isSigned, setIsSigned] = useState(false);
     const [allItemsCheckedOrNA, setAllItemsCheckedOrNA] = useState(true);
     const [reloadChecklist, setReloadChecklist] = useState(false);
