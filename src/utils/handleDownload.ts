@@ -1,4 +1,7 @@
-const handleDownload = async (blobUrl: string, fileName: string) => {
+const handleDownload = async (
+    blobUrl: string,
+    fileName: string
+): Promise<void> => {
     const tempLink = document.createElement('a');
     tempLink.style.display = 'none';
     tempLink.href = blobUrl;

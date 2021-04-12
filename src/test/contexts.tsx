@@ -42,7 +42,7 @@ export const withCommAppContext = ({
     plants = testPlants,
     auth = authInstance,
     api = procosysApiInstance,
-}: WithCommAppContextProps) => {
+}: WithCommAppContextProps): JSX.Element => {
     return (
         <MemoryRouter initialEntries={['/test/sub/directory']}>
             <CommAppContext.Provider
@@ -76,7 +76,7 @@ export const withPlantContext = ({
     currentProject = testProjects[1],
     permissions = dummyPermissions,
     Component,
-}: WithPlantContextProps) => {
+}: WithPlantContextProps): JSX.Element => {
     return withCommAppContext({
         Component: (
             <PlantContext.Provider

@@ -1,3 +1,5 @@
+// TODO: how to do return types for f.eks. onclick & stuff (see front end??)
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { TextField } from '@equinor/eds-core-react';
 import React, { useState } from 'react';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
@@ -15,7 +17,7 @@ const MeasuredValueInput = ({
     parameter,
     setSnackbarText,
     isSigned,
-}: MeasuredValueInputProps) => {
+}: MeasuredValueInputProps): JSX.Element => {
     const { api, params } = useCommonHooks();
     const [value, setValue] = useState(parameter.measuredValue);
     const [updateValueStatus, setUpdateValueStatus] = useState(
@@ -23,7 +25,7 @@ const MeasuredValueInput = ({
     );
     let valueBeforeFocus = '';
 
-    const updateValue = async () => {
+    const updateValue = async (): Promise<void> => {
         setUpdateValueStatus(AsyncStatus.LOADING);
         const dto: TaskParameterDto = {
             ParameterId: parameter.id,

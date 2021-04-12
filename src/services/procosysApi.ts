@@ -1,3 +1,5 @@
+// TODO: What to do?? The functions already show the type in the return + the main function has over 40 different things it returns
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { AxiosInstance, CancelToken } from 'axios';
 import {
     PunchAction,

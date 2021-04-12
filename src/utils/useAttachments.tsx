@@ -4,6 +4,7 @@ import { AsyncStatus } from '../contexts/CommAppContext';
 import { Attachment } from '../services/apiTypes';
 import useCommonHooks from './useCommonHooks';
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const useAttachments = (endpoint: string) => {
     const { api } = useCommonHooks();
     const [refreshAttachments, setRefreshAttachments] = useState(false);
@@ -14,7 +15,7 @@ const useAttachments = (endpoint: string) => {
     );
     const source = Axios.CancelToken.source();
     useEffect(() => {
-        (async () => {
+        (async (): Promise<void> => {
             try {
                 const attachmentsFromApi = await api.getAttachments(
                     source.token,
@@ -28,7 +29,7 @@ const useAttachments = (endpoint: string) => {
                 }
             }
         })();
-        return () => source.cancel();
+        return (): void => source.cancel();
     }, [api, refreshAttachments, endpoint]);
 
     return {

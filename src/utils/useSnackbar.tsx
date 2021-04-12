@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Snackbar as EdsSnackbar } from '@equinor/eds-core-react';
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const useSnackbar = () => {
     const [showSnackbar, setShowSnackbar] = useState(false);
     const [snackbarText, setSnackbarText] = useState('');
     const snackbar = (
         <EdsSnackbar
             autoHideDuration={3000}
-            onClose={() => {
+            onClose={(): void => {
                 setShowSnackbar(false);
                 setSnackbarText('');
             }}

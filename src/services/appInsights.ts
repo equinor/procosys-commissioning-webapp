@@ -2,6 +2,8 @@ import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import { ReactPlugin } from '@microsoft/applicationinsights-react-js';
 import { createBrowserHistory } from 'history';
 
+// TODO: research type vs. interface (?)
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const initializeAppInsights = (instrumentationKey: string) => {
     const browserHistory = createBrowserHistory({ basename: '' });
     const reactPlugin = new ReactPlugin();

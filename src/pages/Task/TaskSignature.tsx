@@ -30,12 +30,12 @@ const TaskSignature = ({
     task,
     setSnackbarText,
     refreshTask,
-}: TaskSignatureProps) => {
+}: TaskSignatureProps): JSX.Element => {
     const { api, params } = useCommonHooks();
     const [taskSignStatus, setTaskSignStatus] = useState(AsyncStatus.INACTIVE);
     const cancelTokenSource = Axios.CancelToken.source();
 
-    const handleSign = async () => {
+    const handleSign = async (): Promise<void> => {
         setTaskSignStatus(AsyncStatus.LOADING);
         try {
             if (isSigned) {
@@ -64,7 +64,7 @@ const TaskSignature = ({
     };
 
     useEffect(() => {
-        return () => {
+        return (): void => {
             cancelTokenSource.cancel();
         };
     }, []);

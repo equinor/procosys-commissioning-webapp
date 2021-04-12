@@ -1,3 +1,5 @@
+// TODO: type for prop functions (best practise & front end)
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Navbar from '../../components/navigation/Navbar';
@@ -43,7 +45,7 @@ const findNextTask = (
     return null;
 };
 
-const Task = () => {
+const Task = (): JSX.Element => {
     const { url, api, params } = useCommonHooks();
     const {
         response: attachments,
@@ -69,7 +71,7 @@ const Task = () => {
     const source = Axios.CancelToken.source();
 
     useEffect(() => {
-        (async () => {
+        (async (): Promise<void> => {
             try {
                 const taskFromApi = await api.getTask(
                     source.token,
@@ -86,13 +88,13 @@ const Task = () => {
                 }
             }
         })();
-        return () => {
+        return (): void => {
             source.cancel();
         };
     }, [api, params.plant, params.taskId, refreshTask]);
 
     useEffect(() => {
-        (async () => {
+        (async (): Promise<void> => {
             try {
                 const tasksFromApi = await api.getTasks(
                     source.token,
@@ -112,7 +114,7 @@ const Task = () => {
                 }
             }
         })();
-        return () => {
+        return (): void => {
             source.cancel();
         };
     }, [api, params.taskId, params.plant, params.commPkg]);

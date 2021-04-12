@@ -1,3 +1,5 @@
+// TODO: reseach type vs. interface (?)
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import axios from 'axios';
 
 const Settings = require('../settings.json');
