@@ -11,7 +11,7 @@ import {
 import ClearPunch from './ClearPunch';
 
 jest.mock('../../../utils/removeSubdirectories', () => {
-    return (str: string, num: number) => '/';
+    return (str: string, num: number): string => '/';
 });
 describe('<ClearPunch/> loading errors', () => {
     it('Renders an error message if unable to load punch item', async () => {

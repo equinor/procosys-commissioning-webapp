@@ -32,7 +32,7 @@ const App = ({
     authInstance,
     appInsightsInstance,
     appInsightsReactPlugin: reactPlugin,
-}: AppProps) => {
+}: AppProps): JSX.Element => {
     let rootDirectory = '';
     if (window.location.pathname.substr(0, 5) === '/comm') {
         rootDirectory = '/comm';
@@ -51,7 +51,7 @@ const App = ({
                                 path="/:plant?/:project?"
                                 component={GeneralRouter}
                             />
-                            <Route render={() => <h1>404</h1>} />
+                            <Route render={(): JSX.Element => <h1>404</h1>} />
                         </Switch>
                     </ErrorBoundary>
                 </Router>

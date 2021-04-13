@@ -25,6 +25,7 @@ export const getCurrentBookmarks = (projectId: string) => {
     return [];
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const useBookmarks = (commPkgId: string) => {
     const { currentProject } = useContext(PlantContext);
     const projectId = currentProject?.id.toString() as string;

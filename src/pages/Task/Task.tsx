@@ -1,5 +1,3 @@
-// TODO: type for prop functions (best practise & front end)
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Navbar from '../../components/navigation/Navbar';
@@ -185,7 +183,9 @@ const Task = (): JSX.Element => {
                                     setSnackbarText={setSnackbarText}
                                     attachment={attachment}
                                     key={attachment.id}
-                                    getAttachment={(cancelToken: CancelToken) =>
+                                    getAttachment={(
+                                        cancelToken: CancelToken
+                                    ): Promise<Blob> =>
                                         api.getTaskAttachment(
                                             cancelToken,
                                             params.plant,

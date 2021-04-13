@@ -34,6 +34,7 @@ export type UpdatePunchData =
     | { ClearingByOrganizationId: number }
     | { Description: string };
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const useClearPunchFacade = () => {
     const { api, params, url, history } = useCommonHooks();
     const { snackbar, setSnackbarText } = useSnackbar();
@@ -53,7 +54,7 @@ const useClearPunchFacade = () => {
     const updateDatabase = async (
         endpoint: UpdatePunchEndpoint,
         updateData: UpdatePunchData
-    ) => {
+    ): Promise<void> => {
         setUpdatePunchStatus(AsyncStatus.LOADING);
         setSnackbarText('Saving change.');
         try {
@@ -71,7 +72,9 @@ const useClearPunchFacade = () => {
         }
     };
 
-    const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleCategoryChange = (
+        e: React.ChangeEvent<HTMLSelectElement>
+    ): void => {
         setPunchItem((prev) => ({
             ...prev,
             status: ensure(
@@ -85,7 +88,9 @@ const useClearPunchFacade = () => {
         });
     };
 
-    const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleTypeChange = (
+        e: React.ChangeEvent<HTMLSelectElement>
+    ): void => {
         setPunchItem((prev) => ({
             ...prev,
             typeCode: ensure(
@@ -99,13 +104,15 @@ const useClearPunchFacade = () => {
 
     const handleDescriptionChange = (
         e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-    ) =>
+    ): void =>
         setPunchItem((prev) => ({
             ...prev,
             description: e.target.value,
         }));
 
-    const handleRaisedByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleRaisedByChange = (
+        e: React.ChangeEvent<HTMLSelectElement>
+    ): void => {
         setPunchItem((prev) => ({
             ...prev,
             raisedByCode: ensure(
@@ -119,7 +126,7 @@ const useClearPunchFacade = () => {
 
     const handleClearingByChange = (
         e: React.ChangeEvent<HTMLSelectElement>
-    ) => {
+    ): void => {
         setPunchItem((prev) => ({
             ...prev,
             clearingByCode: ensure(
@@ -131,7 +138,7 @@ const useClearPunchFacade = () => {
         });
     };
 
-    const clearPunchItem = async (e: React.FormEvent) => {
+    const clearPunchItem = async (e: React.FormEvent): Promise<void> => {
         e.preventDefault();
         setClearPunchStatus(AsyncStatus.LOADING);
         try {
@@ -148,7 +155,7 @@ const useClearPunchFacade = () => {
     };
 
     useEffect(() => {
-        (async () => {
+        (async (): Promise<void> => {
             try {
                 const [
                     categoriesFromApi,

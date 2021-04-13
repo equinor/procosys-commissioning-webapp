@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import React from 'react';
 import { withPlantContext } from '../../../test/contexts';
 import { dummyPunchItemCleared } from '../../../test/dummyData';
 import {
@@ -10,7 +11,7 @@ import {
 import VerifyPunch from './VerifyPunch';
 
 jest.mock('../../../utils/removeSubdirectories', () => {
-    return (str: string, num: number) => '/';
+    return (str: string, num: number): string => '/';
 });
 
 beforeAll(() => {

@@ -78,6 +78,7 @@ const fetchHits = async (
     }
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const useSearchPageFacade = () => {
     const { api } = useContext(CommAppContext);
     const [{ hits, searchStatus }, dispatch] = useReducer(fetchReducer, {

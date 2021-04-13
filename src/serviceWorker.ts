@@ -103,7 +103,7 @@ function registerValidSW(swUrl: string, config?: Config): void {
         });
 }
 
-function checkValidServiceWorker(swUrl: string, config?: Config) {
+function checkValidServiceWorker(swUrl: string, config?: Config): void {
     // Check if the service worker can be found. If it can't reload the page.
     fetch(swUrl, {
         headers: { 'Service-Worker': 'script' },
@@ -134,7 +134,7 @@ function checkValidServiceWorker(swUrl: string, config?: Config) {
         });
 }
 
-export function unregister() {
+export function unregister(): void {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.ready
             .then((registration) => {

@@ -10,14 +10,14 @@ import React from 'react';
 import userEvent from '@testing-library/user-event';
 import { causeApiError, ENDPOINTS, rest, server } from '../../test/setupServer';
 
-const renderTask = async () => {
+const renderTask = async (): Promise<void> => {
     render(withPlantContext({ Component: <Task /> }));
     expect(
         await screen.findByText('dummy-task-description')
     ).toBeInTheDocument();
 };
 
-const editAndSaveComment = async () => {
+const editAndSaveComment = async (): Promise<void> => {
     const editButton = screen.getByRole('button', {
         name: 'Edit comment',
     });

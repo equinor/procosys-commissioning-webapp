@@ -57,7 +57,7 @@ const NewPunchForm = ({
     formData,
     buttonText,
     children,
-}: NewPunchFormProps) => {
+}: NewPunchFormProps): JSX.Element => {
     return (
         <NewPunchFormWrapper onSubmit={handleSubmit}>
             <NativeSelect
