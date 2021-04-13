@@ -1,3 +1,5 @@
+// TODO: interface vs. type && what is dispatch?
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React, { useContext, useEffect, useReducer, useState } from 'react';
 import axios, { CancelToken } from 'axios';
 import PlantContext from '../../contexts/PlantContext';
@@ -104,7 +106,7 @@ const useSearchPageFacade = () => {
                 ),
             300
         );
-        return () => {
+        return (): void => {
             cancel('A new search has taken place instead');
             clearTimeout(timeOutId);
         };
