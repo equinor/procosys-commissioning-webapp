@@ -1,3 +1,5 @@
+// TODO: return type in styled component
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { CheckItem as CheckItemType } from '../../../../services/apiTypes';
@@ -75,7 +77,7 @@ const CheckItem = ({
     updateNA,
     updateOk,
     setSnackbarText,
-}: CheckItemProps) => {
+}: CheckItemProps): JSX.Element => {
     const { api, params } = useCommonHooks();
     const [postCheckStatus, setPostCheckStatus] = useState(
         AsyncStatus.INACTIVE
@@ -83,7 +85,7 @@ const CheckItem = ({
     const [postNAStatus, setPostNAStatus] = useState(AsyncStatus.INACTIVE);
     const [showDescription, setShowDescription] = useState(false);
 
-    const clearCheckmarks = async () => {
+    const clearCheckmarks = async (): Promise<void> => {
         try {
             await api.postClear(params.plant, params.checklistId, item.id);
             updateOk(false, item.id);
@@ -96,7 +98,7 @@ const CheckItem = ({
         }
     };
 
-    const handleSetNA = async () => {
+    const handleSetNA = async (): Promise<void> => {
         setPostNAStatus(AsyncStatus.LOADING);
         if (item.isNotApplicable) {
             clearCheckmarks();
@@ -114,7 +116,7 @@ const CheckItem = ({
         }
     };
 
-    const handleSetOk = async () => {
+    const handleSetOk = async (): Promise<void> => {
         if (item.isOk) return clearCheckmarks();
         setPostCheckStatus(AsyncStatus.LOADING);
         try {
@@ -137,7 +139,7 @@ const CheckItem = ({
                         <p>{item.text}</p>
                         {item.detailText && (
                             <button
-                                onClick={() =>
+                                onClick={(): void =>
                                     setShowDescription((current) => !current)
                                 }
                             >

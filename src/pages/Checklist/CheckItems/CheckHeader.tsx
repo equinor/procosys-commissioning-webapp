@@ -1,3 +1,5 @@
+// TODO: return type in styled component
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React from 'react';
 import styled from 'styled-components';
 import { COLORS } from '../../../style/GlobalStyles';
@@ -31,7 +33,7 @@ type CheckHeaderProps = {
     removeLabels?: boolean;
 };
 
-const CheckHeader = ({ text, removeLabels }: CheckHeaderProps) => {
+const CheckHeader = ({ text, removeLabels }: CheckHeaderProps): JSX.Element => {
     return (
         <CheckHeaderWrapper noBorder={removeLabels}>
             <h4>{text}</h4>

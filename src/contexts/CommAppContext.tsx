@@ -40,7 +40,7 @@ export const CommAppContextProvider: React.FC<CommAppContextProviderProps> = ({
     );
 
     useEffect(() => {
-        (async () => {
+        (async (): Promise<void> => {
             setFetchPlantsStatus(AsyncStatus.LOADING);
             try {
                 const plantsFromApi = await api.getPlants();

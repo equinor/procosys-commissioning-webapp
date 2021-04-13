@@ -6,7 +6,7 @@ import { causeApiError, ENDPOINTS } from '../../test/setupServer';
 import Bookmarks from './Bookmarks';
 import { StorageKey } from './useBookmarks';
 
-const renderBookmarks = () => {
+const renderBookmarks = (): void => {
     window.localStorage.clear();
     window.localStorage.setItem(
         `${StorageKey.BOOKMARK}: ${testProjects[1].id}`,

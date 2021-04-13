@@ -1,3 +1,5 @@
+// TODO: return types in styled components
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import CompletionStatusIcon from '../../components/icons/CompletionStatusIcon';
@@ -49,7 +51,7 @@ const ChecklistDetailsCard = ({
     details,
     isSigned,
     descriptionLabel,
-}: ChecklistDetailsCardProps) => {
+}: ChecklistDetailsCardProps): JSX.Element => {
     return (
         <ChecklistDetailsCardWrapper isSigned={isSigned}>
             <CompletionStatusIcon status={details.status} />

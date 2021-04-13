@@ -1,3 +1,5 @@
+// TODO: return type in styled component
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React from 'react';
 import styled from 'styled-components';
 
@@ -23,7 +25,7 @@ type PageHeaderProps = {
     title: string;
     subtitle?: string;
 };
-const PageHeader = ({ title, subtitle }: PageHeaderProps) => {
+const PageHeader = ({ title, subtitle }: PageHeaderProps): JSX.Element => {
     return (
         <PageHeaderWrapper hasSubtitle={!!subtitle}>
             <h2>{title}</h2>

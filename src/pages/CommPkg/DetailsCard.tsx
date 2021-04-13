@@ -1,3 +1,5 @@
+// TODO: types in styped components
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { CommPkg } from '../../services/apiTypes';
@@ -69,7 +71,7 @@ const DetailsCard = ({
     commPkgId,
     atBookmarksPage = false,
     onClickAction,
-}: DetailsCardProps) => {
+}: DetailsCardProps): JSX.Element => {
     const { api, params } = useCommonHooks();
     const { isBookmarked, setIsBookmarked } = useBookmarks(commPkgId);
     const [details, setDetails] = useState<CommPkg>();
@@ -79,7 +81,7 @@ const DetailsCard = ({
 
     useEffect(() => {
         const source = axios.CancelToken.source();
-        (async () => {
+        (async (): Promise<void> => {
             try {
                 const detailsFromApi = await api.getCommPackageDetails(
                     source.token,
@@ -94,7 +96,7 @@ const DetailsCard = ({
                 }
             }
         })();
-        return () => {
+        return (): void => {
             source.cancel('Detailscard unmounted');
         };
     }, [params, api, commPkgId]);
@@ -124,7 +126,7 @@ const DetailsCard = ({
                 <BookmarkIconWrapper>
                     <Button
                         variant="ghost_icon"
-                        onClick={(e: React.MouseEvent<HTMLElement>) => {
+                        onClick={(e: React.MouseEvent<HTMLElement>): void => {
                             e.stopPropagation();
                             setIsBookmarked((prev) => !prev);
                         }}

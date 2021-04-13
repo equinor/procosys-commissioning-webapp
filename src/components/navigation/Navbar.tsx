@@ -1,3 +1,5 @@
+// TODO: return type in styled component
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Button } from '@equinor/eds-core-react';
@@ -65,7 +67,7 @@ const Navbar = ({
     midContent = '',
     rightContent,
     noBorder = false,
-}: NavbarProps) => {
+}: NavbarProps): JSX.Element => {
     const [drawerIsOpen, setDrawerIsOpen] = useState(false);
     const history = useHistory();
     const { url } = useRouteMatch();
@@ -77,10 +79,13 @@ const Navbar = ({
         display: drawerIsOpen ? 'block' : 'none',
     });
 
-    const determineLeftContent = () => {
+    const determineLeftContent = (): JSX.Element => {
         if (leftContent?.name === 'hamburger') {
             return (
-                <Button variant="ghost" onClick={() => setDrawerIsOpen(true)}>
+                <Button
+                    variant="ghost"
+                    onClick={(): void => setDrawerIsOpen(true)}
+                >
                     <EdsIcon
                         name={'menu'}
                         color={COLORS.darkGrey}
@@ -94,7 +99,7 @@ const Navbar = ({
             return (
                 <Button
                     variant="ghost"
-                    onClick={() => {
+                    onClick={(): void => {
                         if (leftContent.url) {
                             history.push(leftContent.url);
                         } else {
@@ -110,12 +115,12 @@ const Navbar = ({
         return <></>;
     };
 
-    const determineRightContent = () => {
+    const determineRightContent = (): JSX.Element => {
         if (rightContent?.name === 'search') {
             return (
                 <Button
                     variant="ghost_icon"
-                    onClick={() => history.push(`${url}/search`)}
+                    onClick={(): void => history.push(`${url}/search`)}
                 >
                     <EdsIcon name={'search'} title="Search" />
                 </Button>
@@ -125,7 +130,7 @@ const Navbar = ({
             return (
                 <Button
                     variant="ghost"
-                    onClick={() => history.push(`${url}/new-punch`)}
+                    onClick={(): void => history.push(`${url}/new-punch`)}
                 >
                     New punch
                 </Button>

@@ -11,7 +11,7 @@ import procosysApiService from './services/procosysApi';
 import { getAppConfig, getAuthConfig } from './services/appConfiguration';
 import initializeAppInsights from './services/appInsights';
 
-const render = (content: JSX.Element) => {
+const render = (content: JSX.Element): void => {
     ReactDOM.render(
         <React.StrictMode>
             <>
@@ -23,6 +23,8 @@ const render = (content: JSX.Element) => {
     );
 };
 
+// TODO: type vs. interface
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const initialize = async () => {
     // Get auth config, setup auth client and handle login
     const {
@@ -70,7 +72,7 @@ const initialize = async () => {
     };
 };
 
-(async () => {
+(async (): Promise<void> => {
     render(<LoadingPage loadingText={'Initializing...'} />);
     try {
         const {

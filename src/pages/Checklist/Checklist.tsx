@@ -33,7 +33,7 @@ const ChecklistWrapper = styled.div`
     }
 `;
 
-const Checklist = () => {
+const Checklist = (): JSX.Element => {
     const { params, api } = useCommonHooks();
     const getAttachmentsEndpoint = buildEndpoint().getChecklistAttachments(
         params.plant,
@@ -60,7 +60,7 @@ const Checklist = () => {
     const source = axios.CancelToken.source();
 
     useEffect(() => {
-        (async () => {
+        (async (): Promise<void> => {
             try {
                 const checklistResponse = await api.getChecklist(
                     params.plant,
@@ -74,12 +74,12 @@ const Checklist = () => {
                 setFetchChecklistStatus(AsyncStatus.ERROR);
             }
         })();
-        return () => {
+        return (): void => {
             source.cancel('Checklist component unmounted');
         };
     }, [params.checklistId, params.plant, reloadChecklist, api]);
 
-    const content = () => {
+    const content = (): JSX.Element => {
         if (!checklistDetails) return <></>;
         return (
             <>
@@ -117,7 +117,7 @@ const Checklist = () => {
                         <AttachmentsWrapper>
                             <UploadImageButton
                                 disabled={isSigned}
-                                onClick={() => setShowUploadModal(true)}
+                                onClick={(): void => setShowUploadModal(true)}
                             >
                                 <EdsIcon name="camera_add_photo" />
                             </UploadImageButton>
@@ -134,7 +134,9 @@ const Checklist = () => {
                                 <Attachment
                                     key={attachment.id}
                                     isSigned={isSigned}
-                                    getAttachment={(cancelToken: CancelToken) =>
+                                    getAttachment={(
+                                        cancelToken: CancelToken
+                                    ): Promise<Blob> =>
                                         api.getChecklistAttachment(
                                             cancelToken,
                                             params.plant,
@@ -147,7 +149,7 @@ const Checklist = () => {
                                     refreshAttachments={setRefreshAttachments}
                                     deleteAttachment={(
                                         cancelToken: CancelToken
-                                    ) =>
+                                    ): Promise<void> =>
                                         api.deleteChecklistAttachment(
                                             cancelToken,
                                             params.plant,

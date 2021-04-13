@@ -1,3 +1,5 @@
+// TODO: return type in styled component
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React, { useEffect, useState } from 'react';
 import { ChecklistDetails } from '../../services/apiTypes';
 import {
@@ -29,7 +31,10 @@ const ChecklistSignatureWrapper = styled.div<{ helperTextVisible: boolean }>`
     }
 `;
 
-const determineSignButtonText = (isSigned: boolean, status: AsyncStatus) => {
+const determineSignButtonText = (
+    isSigned: boolean,
+    status: AsyncStatus
+): string => {
     if (status === AsyncStatus.LOADING) {
         if (isSigned) return 'Unsigning...';
         return 'Signing...';
@@ -55,7 +60,7 @@ const ChecklistSignature = ({
     allItemsCheckedOrNA,
     reloadChecklist,
     setSnackbarText,
-}: ChecklistSignatureProps) => {
+}: ChecklistSignatureProps): JSX.Element => {
     const { api, params } = useCommonHooks();
     const [comment, setComment] = useState(details.comment);
     const [putCommentStatus, setPutCommentStatus] = useState(
@@ -64,7 +69,7 @@ const ChecklistSignature = ({
     const [signStatus, setSignStatus] = useState(AsyncStatus.INACTIVE);
     let commentBeforeFocus = '';
 
-    const putComment = async () => {
+    const putComment = async (): Promise<void> => {
         if (comment === commentBeforeFocus) return;
         setPutCommentStatus(AsyncStatus.LOADING);
         try {
@@ -80,7 +85,7 @@ const ChecklistSignature = ({
         }
     };
 
-    const handleSignClick = async () => {
+    const handleSignClick = async (): Promise<void> => {
         setSignStatus(AsyncStatus.LOADING);
         try {
             if (isSigned) {
@@ -101,7 +106,7 @@ const ChecklistSignature = ({
         }
     };
 
-    const updatedByText = () => {
+    const updatedByText = (): string => {
         return `Updated by ${details.updatedByFirstName} ${
             details.updatedByLastName
         } at ${new Date(details.updatedAt).toLocaleDateString('en-GB')}`;
@@ -152,8 +157,8 @@ const ChecklistSignature = ({
                 value={comment}
                 onChange={(
                     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-                ) => setComment(e.target.value)}
-                onFocus={() => (commentBeforeFocus = comment)}
+                ): void => setComment(e.target.value)}
+                onFocus={(): string => (commentBeforeFocus = comment)}
                 onBlur={putComment}
             />
 

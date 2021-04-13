@@ -1,3 +1,5 @@
+// TODO: diskuter med Erlend
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Button, DotProgress, Scrim } from '@equinor/eds-core-react';
 import React, { Dispatch, SetStateAction, useRef, useState } from 'react';
 import styled from 'styled-components';
@@ -58,18 +60,18 @@ const UploadAttachment = ({
     setSnackbarText,
     updateTempAttachments,
     parentId,
-}: UploadAttachmentProps) => {
+}: UploadAttachmentProps): JSX.Element => {
     const { params } = useCommonHooks();
     const [selectedFile, setSelectedFile] = useState<File>();
     const [postAttachmentStatus, setPostAttachmentStatus] = useState(
         AsyncStatus.INACTIVE
     );
     const fileInputRef = useRef(document.createElement('input'));
-    const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setSelectedFile(e.currentTarget.files![0]);
     };
 
-    const onFileUpload = async () => {
+    const onFileUpload = async (): Promise<void> => {
         if (!selectedFile) return;
         setPostAttachmentStatus(AsyncStatus.LOADING);
         const formData = new FormData();
@@ -107,7 +109,7 @@ const UploadAttachment = ({
     };
 
     return (
-        <Scrim isDismissable onClose={() => setShowModal(false)}>
+        <Scrim isDismissable onClose={(): void => setShowModal(false)}>
             <UploadContainer>
                 {selectedFile ? (
                     <img
@@ -116,7 +118,9 @@ const UploadAttachment = ({
                     />
                 ) : (
                     <ChooseImageContainer>
-                        <Button onClick={() => fileInputRef.current.click()}>
+                        <Button
+                            onClick={(): void => fileInputRef.current.click()}
+                        >
                             Choose image...
                         </Button>
                     </ChooseImageContainer>
@@ -143,7 +147,7 @@ const UploadAttachment = ({
                     )}
                 </Button>
                 {selectedFile ? (
-                    <Button onClick={() => fileInputRef.current.click()}>
+                    <Button onClick={(): void => fileInputRef.current.click()}>
                         Choose other
                     </Button>
                 ) : null}

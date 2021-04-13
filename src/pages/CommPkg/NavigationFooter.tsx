@@ -1,3 +1,5 @@
+// TODO: types in styled components
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React from 'react';
 import styled from 'styled-components';
 import EdsIcon from '../../components/icons/EdsIcon';
@@ -95,7 +97,7 @@ const NavigationFooter = ({
     numberOfTasks,
     numberOfPunches,
     status,
-}: CommPkgFooterProps) => {
+}: CommPkgFooterProps): JSX.Element => {
     const history = useHistory();
     const { url } = useRouteMatch();
 
@@ -104,7 +106,7 @@ const NavigationFooter = ({
             <FooterButton
                 data-testid="scope-button"
                 active={history.location.pathname.includes('/scope')}
-                onClick={() => history.push(`${url}/scope`)}
+                onClick={(): void => history.push(`${url}/scope`)}
             >
                 {numberOfChecklists > 0 && (
                     <ItemCount>
@@ -118,7 +120,7 @@ const NavigationFooter = ({
             </FooterButton>
             <FooterButton
                 active={history.location.pathname.includes('/tasks')}
-                onClick={() => history.push(`${url}/tasks`)}
+                onClick={(): void => history.push(`${url}/tasks`)}
             >
                 {numberOfTasks > 0 && (
                     <ItemCount>
@@ -132,7 +134,7 @@ const NavigationFooter = ({
             </FooterButton>
             <FooterButton
                 active={history.location.pathname.includes('/punch-list')}
-                onClick={() => history.push(`${url}/punch-list`)}
+                onClick={(): void => history.push(`${url}/punch-list`)}
             >
                 {numberOfPunches > 0 && (
                     <ItemCount>

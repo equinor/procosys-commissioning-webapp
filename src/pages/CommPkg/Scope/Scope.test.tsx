@@ -5,7 +5,7 @@ import { findByText, render, screen, waitFor } from '@testing-library/react';
 import { rest } from 'msw';
 import { server, ENDPOINTS, causeApiError } from '../../../test/setupServer';
 
-const renderScope = () => {
+const renderScope = (): void => {
     render(
         withPlantContext({
             Component: <Scope />,

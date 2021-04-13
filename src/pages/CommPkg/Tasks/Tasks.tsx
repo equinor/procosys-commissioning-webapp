@@ -16,7 +16,7 @@ export const TaskPreviewButton = styled(PreviewButton)`
     }
 `;
 
-const Tasks = () => {
+const Tasks = (): JSX.Element => {
     const { params, api, url } = useCommonHooks();
     const {
         response: tasks,

@@ -1,3 +1,6 @@
+// TODO: study code in /UploadAttachment
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { render, screen } from '@testing-library/react';
 import { withPlantContext } from '../test/contexts';
 import UploadAttachment from './UploadAttachment';

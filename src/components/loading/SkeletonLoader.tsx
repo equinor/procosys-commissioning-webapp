@@ -1,3 +1,5 @@
+// TODO: return type in styled component
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Card } from '@equinor/eds-core-react';
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
@@ -63,7 +65,7 @@ const SkeletonLoadingPage = ({
     fullWidth,
     nrOfRows = 10,
     adjustableHeight,
-}: SkeletonLoadingPageProps) => {
+}: SkeletonLoadingPageProps): JSX.Element => {
     const SkeletonRowsToRender: JSX.Element[] = [];
 
     for (let i = 0; i < nrOfRows; i++) {

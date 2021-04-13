@@ -1,3 +1,5 @@
+// TODO: return types inside styled components
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import styled from 'styled-components';
 import React from 'react';
 import { COLORS, SHADOW } from '../../style/GlobalStyles';
@@ -28,7 +30,7 @@ type DetailsCardSkeletonProps = {
 const DetailsCardShell = ({
     atBookmarksPage,
     children,
-}: DetailsCardSkeletonProps) => {
+}: DetailsCardSkeletonProps): JSX.Element => {
     return (
         <DetailsCardShellWrapper atBookmarksPage={atBookmarksPage}>
             {children}

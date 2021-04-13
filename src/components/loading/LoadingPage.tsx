@@ -22,7 +22,7 @@ type LoadingPageProps = {
     loadingText: string;
 };
 
-const LoadingPage = ({ loadingText }: LoadingPageProps) => {
+const LoadingPage = ({ loadingText }: LoadingPageProps): JSX.Element => {
     return (
         <LoadingPageWrapper>
             <h1>{loadingText}</h1>

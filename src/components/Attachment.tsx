@@ -110,7 +110,7 @@ const Attachment = ({
     refreshAttachments,
     setSnackbarText,
     isSigned = false,
-}: AttachmentProps) => {
+}: AttachmentProps): JSX.Element => {
     const [showFullScreenImage, setShowFullScreenImage] = useState(false);
     const [attachmentFileURL, setAttachmentFileURL] = useState('');
     const [loadingStatus, setLoadingStatus] = useState(AsyncStatus.INACTIVE);
@@ -119,12 +119,12 @@ const Attachment = ({
     const source = Axios.CancelToken.source();
 
     useEffect(() => {
-        return () => {
+        return (): void => {
             source.cancel();
         };
     }, []);
 
-    const loadAttachment = async () => {
+    const loadAttachment = async (): Promise<void> => {
         setLoadingStatus(AsyncStatus.LOADING);
         try {
             const blob = await getAttachment(source.token);
@@ -149,7 +149,7 @@ const Attachment = ({
         }
     };
 
-    const handleDelete = async () => {
+    const handleDelete = async (): Promise<void> => {
         if (!deleteAttachment) return;
         setDeleteStatus(AsyncStatus.LOADING);
         try {
@@ -205,19 +205,21 @@ const Attachment = ({
             {showFullScreenImage ? (
                 <Scrim
                     isDismissable
-                    onClose={() => setShowFullScreenImage(false)}
+                    onClose={(): void => setShowFullScreenImage(false)}
                 >
                     <ImageModal>
                         <img src={attachmentFileURL} alt={attachment.title} />
                         <ButtonGroup>
                             <Button
-                                onClick={() => setShowFullScreenImage(false)}
+                                onClick={(): void =>
+                                    setShowFullScreenImage(false)
+                                }
                             >
                                 <EdsIcon name="close" />
                                 Close
                             </Button>
                             <Button
-                                onClick={() => {
+                                onClick={(): void => {
                                     handleDownload(
                                         attachmentFileURL,
                                         attachment.fileName

@@ -1,3 +1,5 @@
+// TODO: diskuter med Erlend
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Banner } from '@equinor/eds-core-react';
 import React from 'react';
 import { AsyncStatus } from '../contexts/CommAppContext';
@@ -20,8 +22,8 @@ const AsyncPage = ({
     emptyContentMessage,
     children,
     loadingMessage,
-}: AsyncPageProps) => {
-    const content = () => {
+}: AsyncPageProps): JSX.Element => {
+    const content = (): JSX.Element => {
         if (fetchStatus === AsyncStatus.SUCCESS) {
             return <>{children}</>;
         } else if (fetchStatus === AsyncStatus.EMPTY_RESPONSE) {

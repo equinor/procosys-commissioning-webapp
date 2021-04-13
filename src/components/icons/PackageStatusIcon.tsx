@@ -14,14 +14,14 @@ type PackageStatusIconProps = {
     commStatus: CompletionStatus;
 };
 
-const determineCommImage = (status: CompletionStatus) => {
+const determineCommImage = (status: CompletionStatus): string | undefined => {
     if (status === CompletionStatus.OS) return leftGrey;
     if (status === CompletionStatus.PA) return leftRed;
     if (status === CompletionStatus.PB) return leftYellow;
     if (status === CompletionStatus.OK) return leftGreen;
 };
 
-const determineMCImage = (status: CompletionStatus) => {
+const determineMCImage = (status: CompletionStatus): string | undefined => {
     if (status === CompletionStatus.OS) return rightGrey;
     if (status === CompletionStatus.PA) return rightRed;
     if (status === CompletionStatus.PB) return rightYellow;
@@ -31,7 +31,7 @@ const determineMCImage = (status: CompletionStatus) => {
 export const PackageStatusIcon = ({
     mcStatus,
     commStatus,
-}: PackageStatusIconProps) => {
+}: PackageStatusIconProps): JSX.Element => {
     return (
         <>
             <img

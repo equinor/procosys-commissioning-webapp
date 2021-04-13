@@ -17,8 +17,8 @@ const AsyncCard = ({
     emptyContentMessage,
     cardTitle,
     children,
-}: AsyncCardProps) => {
-    const content = () => {
+}: AsyncCardProps): JSX.Element => {
+    const content = (): JSX.Element => {
         if (fetchStatus === AsyncStatus.SUCCESS) {
             return children;
         } else if (fetchStatus === AsyncStatus.EMPTY_RESPONSE) {

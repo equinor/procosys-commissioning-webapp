@@ -7,7 +7,7 @@ import SelectPlant from './pages/SelectPlant/SelectPlant';
 import CommPkgRouter from './CommPkgRouter';
 import Bookmarks from './pages/Bookmarks/Bookmarks';
 
-const CommRouter = () => {
+const CommRouter = (): JSX.Element => {
     return (
         <PlantContextProvider>
             <Switch>
