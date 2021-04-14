@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import axios from 'axios';
 
 const Settings = require('../settings.json');
@@ -18,13 +19,25 @@ type AppInsightsConfig = {
     instrumentationKey: string;
 };
 
-type AppConfig = {
-    procosysApiConfig: ProcosysApiSettings;
-    appInsightsConfig: AppInsightsConfig;
+type AuthConfigResponse = {
+    clientId: string;
+    authority: string;
+    scopes: string[];
+    configurationScope: string[];
+    configurationEndpoint: string;
+};
+
+type AppConfigResponse = {
+    configuration: {
+        procosysWebApi: ProcosysApiSettings;
+        appInsights: AppInsightsConfig;
+    };
 };
 
 export const getAuthConfig = async () => {
-    const { data } = await axios.get(Settings.authSettingsEndpoint);
+    const { data } = await axios.get<AuthConfigResponse>(
+        Settings.authSettingsEndpoint
+    );
     // Todo: TypeGuard authsettings
     const clientSettings = {
         auth: {
@@ -45,11 +58,8 @@ export const getAuthConfig = async () => {
     };
 };
 
-export const getAppConfig = async (
-    endpoint: string,
-    accessToken: string
-): Promise<AppConfig> => {
-    const { data } = await axios.get(endpoint, {
+export const getAppConfig = async (endpoint: string, accessToken: string) => {
+    const { data } = await axios.get<AppConfigResponse>(endpoint, {
         headers: {
             Authorization: 'Bearer ' + accessToken,
         },
