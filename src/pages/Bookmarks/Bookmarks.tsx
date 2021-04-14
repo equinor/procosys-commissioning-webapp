@@ -1,5 +1,3 @@
-// TODO: discuss with Erlend
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import DetailsCard from '../CommPkg/DetailsCard';
@@ -31,7 +29,9 @@ const NewBookmarkWrapper = styled.div`
 const Bookmarks = (): JSX.Element => {
     const { url, history } = useCommonHooks();
     const { currentProject, currentPlant } = useContext(PlantContext);
-    const bookmarks = getCurrentBookmarks(currentProject!.id.toString());
+    const bookmarks = currentProject
+        ? getCurrentBookmarks(currentProject.id.toString())
+        : [];
     const bookmarksToDisplay = bookmarks.map((bookmark) => (
         <DetailsCard
             key={bookmark}

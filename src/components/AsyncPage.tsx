@@ -1,5 +1,3 @@
-// TODO: diskuter med Erlend
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Banner } from '@equinor/eds-core-react';
 import React from 'react';
 import { AsyncStatus } from '../contexts/CommAppContext';
@@ -36,7 +34,7 @@ const AsyncPage = ({
                         />
                     </BannerIcon>
                     <BannerMessage role={'paragraph'}>
-                        {emptyContentMessage!}
+                        {emptyContentMessage ? emptyContentMessage : ''}
                     </BannerMessage>
                 </Banner>
             );

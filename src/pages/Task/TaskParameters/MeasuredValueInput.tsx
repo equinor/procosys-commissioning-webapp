@@ -1,5 +1,3 @@
-// TODO: how to do return types for f.eks. onclick & stuff (see front end??)
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { TextField } from '@equinor/eds-core-react';
 import React, { useState } from 'react';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
@@ -50,11 +48,13 @@ const MeasuredValueInput = ({
             id={'MeasuredValue ' + parameter.id.toString()}
             onChange={(
                 e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-            ) => {
+            ): void => {
                 setValue(e.target.value);
             }}
-            onFocus={() => (valueBeforeFocus = value)}
-            onBlur={() => value !== valueBeforeFocus && updateValue()}
+            onFocus={(): string => (valueBeforeFocus = value)}
+            onBlur={(): void => {
+                value !== valueBeforeFocus && updateValue();
+            }}
         />
     );
 };

@@ -1,5 +1,3 @@
-// TODO: interface vs. type && what is dispatch?
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React, { useContext, useEffect, useReducer, useState } from 'react';
 import axios, { CancelToken } from 'axios';
 import PlantContext from '../../contexts/PlantContext';
@@ -25,7 +23,7 @@ type Action =
     | { type: 'FETCH_ERROR'; error: string }
     | { type: 'FETCH_INACTIVE' };
 
-const fetchReducer = (state: SearchState, action: Action) => {
+const fetchReducer = (state: SearchState, action: Action): SearchState => {
     switch (action.type) {
         case 'FETCH_START':
             return {
@@ -60,7 +58,7 @@ const fetchHits = async (
     projectID: number,
     cancelToken: CancelToken,
     api: ProcosysApiService
-) => {
+): Promise<void> => {
     dispatch({ type: 'FETCH_START' });
     try {
         const commPackages = await api.searchForCommPackage(

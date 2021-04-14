@@ -1,5 +1,3 @@
-// TODO: return types inside styled components
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import styled from 'styled-components';
 import React from 'react';
 import { COLORS, SHADOW } from '../../style/GlobalStyles';
@@ -15,11 +13,12 @@ const DetailsCardShellWrapper = styled.div<{ atBookmarksPage: boolean }>`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: ${(props) =>
+    background-color: ${(props): any =>
         props.atBookmarksPage ? COLORS.white : COLORS.fadedBlue};
-    box-shadow: ${(props) => (props.atBookmarksPage ? SHADOW : 'none')};
+    box-shadow: ${(props): string => (props.atBookmarksPage ? SHADOW : 'none')};
     border-radius: 5px;
-    margin: ${(props) => (props.atBookmarksPage ? '0 4% 10px 4%' : '0')};
+    margin: ${(props): string =>
+        props.atBookmarksPage ? '0 4% 10px 4%' : '0'};
 `;
 
 type DetailsCardSkeletonProps = {

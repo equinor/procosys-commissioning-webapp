@@ -1,5 +1,3 @@
-// TODO: types in styled components
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React from 'react';
 import styled from 'styled-components';
 import EdsIcon from '../../components/icons/EdsIcon';
@@ -42,7 +40,7 @@ const FooterButton = styled.button<{ active: boolean }>`
     max-width: 100px;
     margin: 0 15px 0 15px;
     padding: 20px 0 0 0;
-    opacity: ${(props) => (props.active ? '1' : '0.8')};
+    opacity: ${(props): string => (props.active ? '1' : '0.8')};
     background-color: ${COLORS.white};
     position: relative;
     & img {
@@ -52,10 +50,11 @@ const FooterButton = styled.button<{ active: boolean }>`
     }
     & p {
         margin: 0;
-        font-weight: ${(props) => (props.active ? 'initial' : 'initial')};
-        border-bottom: ${(props) =>
+        font-weight: ${(props): string =>
+            props.active ? 'initial' : 'initial'};
+        border-bottom: ${(props): string =>
             props.active ? `3px solid ${COLORS.darkGrey}` : 'initial'};
-        margin-bottom: ${(props) => (props.active ? '3px' : 'initial')};
+        margin-bottom: ${(props): string => (props.active ? '3px' : 'initial')};
     }
     &:focus,
     &:hover,

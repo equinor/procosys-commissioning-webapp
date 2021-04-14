@@ -1,6 +1,9 @@
-// TODO: figure out what to do with the function below
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const buildEndpoint = () => {
+type BuildEndpoint = {
+    getChecklistAttachments: (plantId: string, checklistId: string) => string;
+    getPunchAttachments: (plantId: string, punchItemId: string) => string;
+};
+
+const buildEndpoint = (): BuildEndpoint => {
     const getChecklistAttachments = (
         plantId: string,
         checklistId: string

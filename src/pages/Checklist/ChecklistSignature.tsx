@@ -1,5 +1,3 @@
-// TODO: return type in styled component
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React, { useEffect, useState } from 'react';
 import { ChecklistDetails } from '../../services/apiTypes';
 import {
@@ -27,7 +25,8 @@ const ChecklistSignatureWrapper = styled.div<{ helperTextVisible: boolean }>`
     button:disabled {
         width: fit-content;
         margin-left: auto;
-        margin-top: ${(props) => (props.helperTextVisible ? '0' : '24px')};
+        margin-top: ${(props): string =>
+            props.helperTextVisible ? '0' : '24px'};
     }
 `;
 

@@ -1,5 +1,3 @@
-// TODO: diskuter med Erlend
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Button, DotProgress, Scrim } from '@equinor/eds-core-react';
 import React, { Dispatch, SetStateAction, useRef, useState } from 'react';
 import styled from 'styled-components';
@@ -68,7 +66,8 @@ const UploadAttachment = ({
     );
     const fileInputRef = useRef(document.createElement('input'));
     const onFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setSelectedFile(e.currentTarget.files![0]);
+        const currentFiles = e.currentTarget.files;
+        if (currentFiles) setSelectedFile(currentFiles[0]);
     };
 
     const onFileUpload = async (): Promise<void> => {

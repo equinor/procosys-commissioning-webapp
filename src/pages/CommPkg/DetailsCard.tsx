@@ -1,5 +1,3 @@
-// TODO: types in styped components
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { CommPkg } from '../../services/apiTypes';
@@ -21,11 +19,13 @@ const DetailsWrapper = styled.div<{ atBookmarksPage?: boolean }>`
     grid-row-gap: 8px;
     padding: 16px 4%;
     border-radius: 5px;
-    cursor: ${(props) => (props.atBookmarksPage ? 'pointer' : 'initial')};
-    background-color: ${(props) =>
+    cursor: ${(props): string =>
+        props.atBookmarksPage ? 'pointer' : 'initial'};
+    background-color: ${(props): any =>
         props.atBookmarksPage ? COLORS.white : COLORS.fadedBlue};
-    box-shadow: ${(props) => (props.atBookmarksPage ? SHADOW : 'none')};
-    margin: ${(props) => (props.atBookmarksPage ? '0 4% 10px 4%' : '0')};
+    box-shadow: ${(props): string => (props.atBookmarksPage ? SHADOW : 'none')};
+    margin: ${(props): string =>
+        props.atBookmarksPage ? '0 4% 10px 4%' : '0'};
 `;
 
 const Description = styled.div`

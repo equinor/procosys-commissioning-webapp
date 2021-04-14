@@ -1,5 +1,3 @@
-// TODO: return type in styled component
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { CheckItem as CheckItemType } from '../../../../services/apiTypes';
@@ -11,12 +9,13 @@ import useCommonHooks from '../../../../utils/useCommonHooks';
 import { COLORS } from '../../../../style/GlobalStyles';
 
 const CheckItemWrapper = styled.div<{ disabled: boolean }>`
-    background-color: ${(props) =>
+    background-color: ${(props): string =>
         props.disabled ? 'transparent' : 'transparent'};
     margin-top: 12px;
     & p,
     button {
-        color: ${(props) => (props.disabled ? COLORS.darkGrey : 'initial')};
+        color: ${(props): string =>
+            props.disabled ? COLORS.darkGrey : 'initial'};
     }
     transition: background-color 0.2s ease-in-out;
     transition: color 0.2s ease-in-out;

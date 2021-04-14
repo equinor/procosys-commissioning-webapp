@@ -1,5 +1,3 @@
-// TODO: reseach type vs. interface (?)
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import axios from 'axios';
 
 const Settings = require('../settings.json');
@@ -18,6 +16,11 @@ type ProcosysApiSettings = {
 
 type AppInsightsConfig = {
     instrumentationKey: string;
+};
+
+type AppConfig = {
+    procosysApiConfig: ProcosysApiSettings;
+    appInsightsConfig: AppInsightsConfig;
 };
 
 export const getAuthConfig = async () => {
@@ -42,7 +45,10 @@ export const getAuthConfig = async () => {
     };
 };
 
-export const getAppConfig = async (endpoint: string, accessToken: string) => {
+export const getAppConfig = async (
+    endpoint: string,
+    accessToken: string
+): Promise<AppConfig> => {
     const { data } = await axios.get(endpoint, {
         headers: {
             Authorization: 'Bearer ' + accessToken,

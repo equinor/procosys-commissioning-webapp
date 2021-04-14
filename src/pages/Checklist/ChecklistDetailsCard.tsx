@@ -1,5 +1,3 @@
-// TODO: return types in styled components
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import CompletionStatusIcon from '../../components/icons/CompletionStatusIcon';
@@ -23,7 +21,7 @@ const ChecklistDetailsCardWrapper = styled.div<{ isSigned?: boolean }>`
     padding: 16px 4%;
     box-sizing: border-box;
     width: 100%;
-    background-color: ${(props) =>
+    background-color: ${(props): any =>
         props.isSigned ? COLORS.fadedBlue : COLORS.lightGrey};
     display: flex;
     justify-content: space-between;

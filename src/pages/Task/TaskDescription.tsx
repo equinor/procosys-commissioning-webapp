@@ -1,5 +1,3 @@
-// TODO: how to disable for styled components (or how is it done in front end??)
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Button, Divider } from '@equinor/eds-core-react';
 import Axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
@@ -14,7 +12,7 @@ const CommentField = styled.div<{ editable: boolean }>`
     padding: 12px;
     font-family: 'Equinor';
     min-height: 80px;
-    border-bottom: ${(props) =>
+    border-bottom: ${(props): string =>
         props.editable ? `1px solid ${COLORS.black}` : 'none'};
 `;
 

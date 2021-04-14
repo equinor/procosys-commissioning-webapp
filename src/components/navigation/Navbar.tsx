@@ -1,5 +1,3 @@
-// TODO: return type in styled component
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Button } from '@equinor/eds-core-react';
@@ -15,7 +13,7 @@ const NavbarWrapper = styled.nav<{ noBorder: boolean }>`
     width: 100%;
     max-width: 768px;
     background-color: ${COLORS.white};
-    border-bottom: ${(props) =>
+    border-bottom: ${(props): string =>
         props.noBorder ? 'none' : `1px solid ${COLORS.fadedBlue}`};
     display: flex;
     flex-grow: 100;

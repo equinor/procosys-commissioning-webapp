@@ -23,7 +23,6 @@ const render = (content: JSX.Element): void => {
     );
 };
 
-// TODO: type vs. interface
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const initialize = async () => {
     // Get auth config, setup auth client and handle login

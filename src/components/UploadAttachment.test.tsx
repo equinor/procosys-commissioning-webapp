@@ -1,21 +1,24 @@
-// TODO: study code in /UploadAttachment
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { render, screen } from '@testing-library/react';
 import { withPlantContext } from '../test/contexts';
 import UploadAttachment from './UploadAttachment';
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 
-const renderUploadModal = () => {
+const renderUploadModal = (): void => {
     render(
         withPlantContext({
             Component: (
                 <UploadAttachment
                     parentId={'123'}
-                    updateAttachments={() => {}}
-                    setSnackbarText={() => {}}
-                    setShowModal={() => {}}
-                    postAttachment={() => {
+                    updateAttachments={(): void => {
+                        return;
+                    }}
+                    setSnackbarText={(): void => {
+                        return;
+                    }}
+                    setShowModal={(): void => {
+                        return;
+                    }}
+                    postAttachment={(): Promise<void> => {
                         return Promise.resolve();
                     }}
                 />

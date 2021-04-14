@@ -1,5 +1,3 @@
-// TODO: return type in styled component
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React from 'react';
 import styled from 'styled-components';
 
@@ -12,7 +10,7 @@ const PageHeaderWrapper = styled.div<{ hasSubtitle: boolean }>`
     margin-top: 16px;
     & h2 {
         text-align: center;
-        margin: ${(props) =>
+        margin: ${(props): string =>
             props.hasSubtitle ? '16px 0 0 0' : '16px 0 24px 0'};
     }
     & h6 {

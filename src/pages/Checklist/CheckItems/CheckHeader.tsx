@@ -1,5 +1,3 @@
-// TODO: return type in styled component
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React from 'react';
 import styled from 'styled-components';
 import { COLORS } from '../../../style/GlobalStyles';
@@ -10,7 +8,7 @@ const CheckHeaderWrapper = styled.div<{ noBorder?: boolean }>`
     align-items: flex-end;
     margin-top: 48px;
     padding-bottom: 12px;
-    border-bottom: ${(props) =>
+    border-bottom: ${(props): string =>
         props.noBorder ? 'none' : `2px solid ${COLORS.fadedBlue}`};
     & div {
         flex: 0 0 95px;
