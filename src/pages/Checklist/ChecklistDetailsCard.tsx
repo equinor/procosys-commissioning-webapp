@@ -21,7 +21,7 @@ const ChecklistDetailsCardWrapper = styled.div<{ isSigned?: boolean }>`
     padding: 16px 4%;
     box-sizing: border-box;
     width: 100%;
-    background-color: ${(props): any =>
+    background-color: ${(props): string =>
         props.isSigned ? COLORS.fadedBlue : COLORS.lightGrey};
     display: flex;
     justify-content: space-between;
