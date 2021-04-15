@@ -21,7 +21,7 @@ const NewPunchSuccess = styled.div`
     align-items: center;
 `;
 
-const NewPunchSuccessPage = () => {
+const NewPunchSuccessPage = (): JSX.Element => {
     const { history, params, url } = useCommonHooks();
     return (
         <NewPunchSuccess>
@@ -29,12 +29,14 @@ const NewPunchSuccessPage = () => {
             <h4>Successfully added new punch</h4>
             <ButtonGroup>
                 <Button
-                    onClick={() => history.push(removeSubdirectories(url, 1))}
+                    onClick={(): void =>
+                        history.push(removeSubdirectories(url, 1))
+                    }
                 >
                     Back to checklist
                 </Button>
                 <Button
-                    onClick={() =>
+                    onClick={(): void =>
                         history.push(
                             `/${params.plant}/${params.project}/${params.commPkg}/punch-list`
                         )

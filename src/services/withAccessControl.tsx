@@ -7,7 +7,7 @@ import { AsyncStatus } from '../contexts/CommAppContext';
 const withAccessControl = (
     WrappedComponent: () => ReactElement,
     requiredPermissions: string[] = []
-) => (props: JSX.IntrinsicAttributes) => {
+) => (props: JSX.IntrinsicAttributes): JSX.Element => {
     const { permissions } = useContext(PlantContext);
     const [checkPermissionsStatus, setCheckPermissionsStatus] = useState(
         AsyncStatus.LOADING

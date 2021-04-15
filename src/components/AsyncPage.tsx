@@ -20,8 +20,8 @@ const AsyncPage = ({
     emptyContentMessage,
     children,
     loadingMessage,
-}: AsyncPageProps) => {
-    const content = () => {
+}: AsyncPageProps): JSX.Element => {
+    const content = (): JSX.Element => {
         if (fetchStatus === AsyncStatus.SUCCESS) {
             return <>{children}</>;
         } else if (fetchStatus === AsyncStatus.EMPTY_RESPONSE) {
@@ -34,7 +34,7 @@ const AsyncPage = ({
                         />
                     </BannerIcon>
                     <BannerMessage role={'paragraph'}>
-                        {emptyContentMessage!}
+                        {emptyContentMessage ? emptyContentMessage : ''}
                     </BannerMessage>
                 </Banner>
             );

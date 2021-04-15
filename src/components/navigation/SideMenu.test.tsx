@@ -8,7 +8,9 @@ const sideMenuToTest = withPlantContext({
         <SideMenu
             animation={{}}
             backdropAnimation={{}}
-            setDrawerIsOpen={() => {}}
+            setDrawerIsOpen={(): void => {
+                return;
+            }}
         />
     ),
 });

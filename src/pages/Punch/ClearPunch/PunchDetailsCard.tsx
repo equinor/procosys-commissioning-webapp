@@ -23,7 +23,7 @@ type PunchDetailsCardProps = {
 const PunchDetailsCard = ({
     systemModule,
     tagDescription,
-}: PunchDetailsCardProps) => {
+}: PunchDetailsCardProps): JSX.Element => {
     return (
         <PunchDetailsCardWrapper>
             <div>

@@ -40,7 +40,7 @@ const FooterButton = styled.button<{ active: boolean }>`
     max-width: 100px;
     margin: 0 15px 0 15px;
     padding: 20px 0 0 0;
-    opacity: ${(props) => (props.active ? '1' : '0.8')};
+    opacity: ${(props): string => (props.active ? '1' : '0.8')};
     background-color: ${COLORS.white};
     position: relative;
     & img {
@@ -50,10 +50,11 @@ const FooterButton = styled.button<{ active: boolean }>`
     }
     & p {
         margin: 0;
-        font-weight: ${(props) => (props.active ? 'initial' : 'initial')};
-        border-bottom: ${(props) =>
+        font-weight: ${(props): string =>
+            props.active ? 'initial' : 'initial'};
+        border-bottom: ${(props): string =>
             props.active ? `3px solid ${COLORS.darkGrey}` : 'initial'};
-        margin-bottom: ${(props) => (props.active ? '3px' : 'initial')};
+        margin-bottom: ${(props): string => (props.active ? '3px' : 'initial')};
     }
     &:focus,
     &:hover,
@@ -95,7 +96,7 @@ const NavigationFooter = ({
     numberOfTasks,
     numberOfPunches,
     status,
-}: CommPkgFooterProps) => {
+}: CommPkgFooterProps): JSX.Element => {
     const history = useHistory();
     const { url } = useRouteMatch();
 
@@ -104,7 +105,7 @@ const NavigationFooter = ({
             <FooterButton
                 data-testid="scope-button"
                 active={history.location.pathname.includes('/scope')}
-                onClick={() => history.push(`${url}/scope`)}
+                onClick={(): void => history.push(`${url}/scope`)}
             >
                 {numberOfChecklists > 0 && (
                     <ItemCount>
@@ -118,7 +119,7 @@ const NavigationFooter = ({
             </FooterButton>
             <FooterButton
                 active={history.location.pathname.includes('/tasks')}
-                onClick={() => history.push(`${url}/tasks`)}
+                onClick={(): void => history.push(`${url}/tasks`)}
             >
                 {numberOfTasks > 0 && (
                     <ItemCount>
@@ -132,7 +133,7 @@ const NavigationFooter = ({
             </FooterButton>
             <FooterButton
                 active={history.location.pathname.includes('/punch-list')}
-                onClick={() => history.push(`${url}/punch-list`)}
+                onClick={(): void => history.push(`${url}/punch-list`)}
             >
                 {numberOfPunches > 0 && (
                     <ItemCount>

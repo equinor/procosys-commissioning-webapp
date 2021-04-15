@@ -10,7 +10,7 @@ class URLError extends Error {
 const matchProjectInURL = (
     availableProjects: Project[],
     projectInURL: string
-) => {
+): Project => {
     const matchedProject = availableProjects.find(
         (project) => project.title === projectInURL
     );

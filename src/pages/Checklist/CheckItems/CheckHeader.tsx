@@ -8,7 +8,7 @@ const CheckHeaderWrapper = styled.div<{ noBorder?: boolean }>`
     align-items: flex-end;
     margin-top: 48px;
     padding-bottom: 12px;
-    border-bottom: ${(props) =>
+    border-bottom: ${(props): string =>
         props.noBorder ? 'none' : `2px solid ${COLORS.fadedBlue}`};
     & div {
         flex: 0 0 95px;
@@ -31,7 +31,7 @@ type CheckHeaderProps = {
     removeLabels?: boolean;
 };
 
-const CheckHeader = ({ text, removeLabels }: CheckHeaderProps) => {
+const CheckHeader = ({ text, removeLabels }: CheckHeaderProps): JSX.Element => {
     return (
         <CheckHeaderWrapper noBorder={removeLabels}>
             <h4>{text}</h4>

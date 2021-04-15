@@ -22,7 +22,7 @@ import calculateHighestStatus from '../../utils/calculateHighestStatus';
 
 const CommPkgWrapper = styled.main``;
 
-const CommPkg = () => {
+const CommPkg = (): JSX.Element => {
     const { api, params, path } = useCommonHooks();
     const [scope, setScope] = useState<ChecklistPreview[]>();
     const [tasks, setTasks] = useState<TaskPreview[]>();
@@ -33,7 +33,7 @@ const CommPkg = () => {
 
     useEffect(() => {
         const source = Axios.CancelToken.source();
-        (async () => {
+        (async (): Promise<void> => {
             try {
                 const [
                     scopeFromApi,
@@ -52,12 +52,12 @@ const CommPkg = () => {
                 setFetchFooterDataStatus(AsyncStatus.ERROR);
             }
         })();
-        return () => {
+        return (): void => {
             source.cancel();
         };
     }, [api, params.plant, params.commPkg]);
 
-    const determineFooterToRender = () => {
+    const determineFooterToRender = (): JSX.Element => {
         if (
             fetchFooterDataStatus === AsyncStatus.SUCCESS &&
             tasks &&

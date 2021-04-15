@@ -1,4 +1,4 @@
-const slugify = (string: String) => {
+const slugify = (string: string): string => {
     const a =
         'àáâäæãåāăąçćčđďèéêëēėęěğǵḧîïíīįìłḿñńǹňôöòóœøōõőṕŕřßśšşșťțûüùúūǘůűųẃẍÿýžźż·/_,:;';
     const b =

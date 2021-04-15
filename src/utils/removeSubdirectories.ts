@@ -1,4 +1,4 @@
-const removeLastSubdirectory = (url: string) => {
+const removeLastSubdirectory = (url: string): string => {
     const matched = url.match(/.*\//);
     if (!matched) {
         throw Error('Routing failed: Unable to remove subdirectories');
@@ -9,7 +9,7 @@ const removeLastSubdirectory = (url: string) => {
 const removeSubdirectories = (
     url: string,
     numberOfSubdirectoriesToRemove: number
-) => {
+): string => {
     let modifiedUrl = url;
     for (let i = 0; i < numberOfSubdirectoriesToRemove; i++) {
         modifiedUrl = removeLastSubdirectory(modifiedUrl);

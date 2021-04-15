@@ -12,7 +12,7 @@ const CommentField = styled.div<{ editable: boolean }>`
     padding: 12px;
     font-family: 'Equinor';
     min-height: 80px;
-    border-bottom: ${(props) =>
+    border-bottom: ${(props): string =>
         props.editable ? `1px solid ${COLORS.black}` : 'none'};
 `;
 
@@ -39,7 +39,7 @@ const TaskDescription = ({
     task,
     isSigned,
     setSnackbarText,
-}: TaskDescriptionProps) => {
+}: TaskDescriptionProps): JSX.Element => {
     const { api, params } = useCommonHooks();
     const [putCommentStatus, setPutCommentStatus] = useState(
         AsyncStatus.INACTIVE
@@ -49,12 +49,12 @@ const TaskDescription = ({
     const cancelTokenSource = Axios.CancelToken.source();
 
     useEffect(() => {
-        return () => {
+        return (): void => {
             cancelTokenSource.cancel();
         };
     }, []);
 
-    const saveComment = async () => {
+    const saveComment = async (): Promise<void> => {
         setPutCommentStatus(AsyncStatus.LOADING);
         const dto: TaskCommentDto = {
             TaskId: parseInt(params.taskId),
@@ -79,7 +79,7 @@ const TaskDescription = ({
         }
     };
 
-    const handleCommentClick = () => {
+    const handleCommentClick = (): void => {
         if (editComment) {
             saveComment();
         } else {

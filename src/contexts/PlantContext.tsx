@@ -71,7 +71,7 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
 
     useEffect(() => {
         if (!currentPlant) return;
-        (async () => {
+        (async (): Promise<void> => {
             setFetchProjectsAndPermissionsStatus(AsyncStatus.LOADING);
             try {
                 const [
@@ -96,7 +96,7 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
         })();
     }, [currentPlant, api]);
 
-    const renderChildren = () => {
+    const renderChildren = (): boolean => {
         if (params.plant && !currentPlant) return false;
         if (params.project && !currentProject) return false;
         return true;

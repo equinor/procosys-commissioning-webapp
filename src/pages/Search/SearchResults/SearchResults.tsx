@@ -45,7 +45,10 @@ type SearchResultsProps = {
     commPackages: CommPkgPreview[];
 };
 
-const SearchResults = ({ searchStatus, commPackages }: SearchResultsProps) => {
+const SearchResults = ({
+    searchStatus,
+    commPackages,
+}: SearchResultsProps): JSX.Element => {
     const history = useHistory();
     if (searchStatus === SearchStatus.LOADING) {
         return <SkeletonLoadingPage fullWidth />;
@@ -56,7 +59,9 @@ const SearchResults = ({ searchStatus, commPackages }: SearchResultsProps) => {
                 {commPackages.map((commPackage) => {
                     return (
                         <SearchResult
-                            onClick={() => history.push(`${commPackage.id}`)}
+                            onClick={(): void =>
+                                history.push(`${commPackage.id}`)
+                            }
                             key={commPackage.id}
                         >
                             <StatusImageWrapper>

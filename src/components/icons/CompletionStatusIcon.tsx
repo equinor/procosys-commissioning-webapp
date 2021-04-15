@@ -9,7 +9,9 @@ type CompletionStatusIconProps = {
     status: CompletionStatus;
 };
 
-const CompletionStatusIcon = ({ status }: CompletionStatusIconProps) => {
+const CompletionStatusIcon = ({
+    status,
+}: CompletionStatusIconProps): JSX.Element => {
     if (status === CompletionStatus.OS) {
         return <img src={greyStatus} alt="OS" />;
     }

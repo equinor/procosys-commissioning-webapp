@@ -46,14 +46,14 @@ const FormulaTypeText = styled.p`
     flex: 1;
 `;
 
-const Scope = () => {
+const Scope = (): JSX.Element => {
     const { params, api, url } = useCommonHooks();
     const [scope, setScope] = useState<ChecklistPreview[]>();
     const [fetchScopeStatus, setFetchScopeStatus] = useState(
         AsyncStatus.LOADING
     );
     useEffect(() => {
-        (async () => {
+        (async (): Promise<void> => {
             setFetchScopeStatus(AsyncStatus.LOADING);
             try {
                 const scopeFromApi = await api.getScope(

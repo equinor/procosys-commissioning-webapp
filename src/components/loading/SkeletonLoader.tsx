@@ -4,7 +4,8 @@ import styled, { keyframes } from 'styled-components';
 
 const SkeletonLoadingPageWrapper = styled.div<{ adjustableHeight?: boolean }>`
     padding: 24px 0;
-    min-height: ${(props) => (props.adjustableHeight ? 'auto' : '92vh')};
+    min-height: ${(props): string =>
+        props.adjustableHeight ? 'auto' : '92vh'};
     & h3 {
         margin: 0;
         text-align: center;
@@ -46,7 +47,7 @@ const BaseSkeleton = styled(Card)`
 `;
 
 const SkeletonRow = styled(BaseSkeleton)<{ fullWidth: boolean }>`
-    width: ${(props) => (props.fullWidth ? '100%' : '92%')};
+    width: ${(props): string => (props.fullWidth ? '100%' : '92%')};
     height: 50px;
     margin: 15px auto 15px auto;
 `;
@@ -63,7 +64,7 @@ const SkeletonLoadingPage = ({
     fullWidth,
     nrOfRows = 10,
     adjustableHeight,
-}: SkeletonLoadingPageProps) => {
+}: SkeletonLoadingPageProps): JSX.Element => {
     const SkeletonRowsToRender: JSX.Element[] = [];
 
     for (let i = 0; i < nrOfRows; i++) {

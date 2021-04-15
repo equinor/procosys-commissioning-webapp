@@ -25,10 +25,10 @@ const CheckAllButton = ({
     updateOk,
     allItemsCheckedOrNA,
     setSnackbarText,
-}: CheckAllButtonProps) => {
+}: CheckAllButtonProps): JSX.Element => {
     const { api, params } = useCommonHooks();
     const [checkAllStatus, setCheckAllStatus] = useState(AsyncStatus.INACTIVE);
-    const checkAll = async () => {
+    const checkAll = async (): Promise<void> => {
         setCheckAllStatus(AsyncStatus.LOADING);
         const itemsToCheck = items.filter(
             (item) => !item.isOk && !item.isNotApplicable
@@ -52,7 +52,7 @@ const CheckAllButton = ({
         }
     };
 
-    const uncheckAll = async () => {
+    const uncheckAll = async (): Promise<void> => {
         setCheckAllStatus(AsyncStatus.LOADING);
         const itemsToCheck = items.filter(
             (item) => item.isOk && !item.isNotApplicable

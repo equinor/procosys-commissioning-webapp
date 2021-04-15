@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import objectToCamelCase from '../utils/objectToCamelCase';
 import { IAuthService } from './authService';
 
@@ -8,7 +8,11 @@ type baseApiProps = {
     scope: string[];
 };
 
-const baseApiService = ({ authInstance, baseURL, scope }: baseApiProps) => {
+const baseApiService = ({
+    authInstance,
+    baseURL,
+    scope,
+}: baseApiProps): AxiosInstance => {
     const axiosInstance = axios.create();
     axiosInstance.defaults.baseURL = baseURL;
     axiosInstance.interceptors.request.use(async (request) => {

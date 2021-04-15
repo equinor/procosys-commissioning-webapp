@@ -13,7 +13,7 @@ const NavbarWrapper = styled.nav<{ noBorder: boolean }>`
     width: 100%;
     max-width: 768px;
     background-color: ${COLORS.white};
-    border-bottom: ${(props) =>
+    border-bottom: ${(props): string =>
         props.noBorder ? 'none' : `1px solid ${COLORS.fadedBlue}`};
     display: flex;
     flex-grow: 100;
@@ -65,22 +65,25 @@ const Navbar = ({
     midContent = '',
     rightContent,
     noBorder = false,
-}: NavbarProps) => {
+}: NavbarProps): JSX.Element => {
     const [drawerIsOpen, setDrawerIsOpen] = useState(false);
     const history = useHistory();
     const { url } = useRouteMatch();
     const sideDrawerAnimation = useSpring({
-        transform: drawerIsOpen ? `translateX(0px)` : `translateX(-300px)`,
+        transform: drawerIsOpen ? 'translateX(0px)' : 'translateX(-300px)',
     });
     const backdropAnimation = useSpring({
         opacity: drawerIsOpen ? 0.6 : 0,
         display: drawerIsOpen ? 'block' : 'none',
     });
 
-    const determineLeftContent = () => {
+    const determineLeftContent = (): JSX.Element => {
         if (leftContent?.name === 'hamburger') {
             return (
-                <Button variant="ghost" onClick={() => setDrawerIsOpen(true)}>
+                <Button
+                    variant="ghost"
+                    onClick={(): void => setDrawerIsOpen(true)}
+                >
                     <EdsIcon
                         name={'menu'}
                         color={COLORS.darkGrey}
@@ -94,7 +97,7 @@ const Navbar = ({
             return (
                 <Button
                     variant="ghost"
-                    onClick={() => {
+                    onClick={(): void => {
                         if (leftContent.url) {
                             history.push(leftContent.url);
                         } else {
@@ -110,12 +113,12 @@ const Navbar = ({
         return <></>;
     };
 
-    const determineRightContent = () => {
+    const determineRightContent = (): JSX.Element => {
         if (rightContent?.name === 'search') {
             return (
                 <Button
                     variant="ghost_icon"
-                    onClick={() => history.push(`${url}/search`)}
+                    onClick={(): void => history.push(`${url}/search`)}
                 >
                     <EdsIcon name={'search'} title="Search" />
                 </Button>
@@ -125,7 +128,7 @@ const Navbar = ({
             return (
                 <Button
                     variant="ghost"
-                    onClick={() => history.push(`${url}/new-punch`)}
+                    onClick={(): void => history.push(`${url}/new-punch`)}
                 >
                     New punch
                 </Button>

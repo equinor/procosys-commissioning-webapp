@@ -46,7 +46,7 @@ const TaskParameters = ({
     setSnackbarText,
     isSigned,
     parameters,
-}: TaskParametersProps) => {
+}: TaskParametersProps): JSX.Element => {
     return (
         <>
             {parameters.map((parameter, i) => (

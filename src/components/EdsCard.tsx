@@ -23,7 +23,7 @@ type EdsCardProps = {
     children: JSX.Element;
 };
 
-const EdsCard = ({ title, icon, children }: EdsCardProps) => {
+const EdsCard = ({ title, icon, children }: EdsCardProps): JSX.Element => {
     return (
         <CardWrapper>
             <Card>

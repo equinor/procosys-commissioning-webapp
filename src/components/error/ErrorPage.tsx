@@ -16,7 +16,7 @@ const ErrorPageWrapper = styled.main`
     flex-direction: column;
 `;
 
-const ErrorPage = ({ title, description, actions }: CommError) => {
+const ErrorPage = ({ title, description, actions }: CommError): JSX.Element => {
     return (
         <ErrorPageWrapper>
             <Banner>

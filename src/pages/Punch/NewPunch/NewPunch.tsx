@@ -45,7 +45,7 @@ const newPunchInitialValues = {
     clearingBy: '',
 };
 
-const NewPunch = () => {
+const NewPunch = (): JSX.Element => {
     const { api, params } = useCommonHooks();
     const { formFields, createChangeHandler } = useFormFields(
         newPunchInitialValues
@@ -70,7 +70,7 @@ const NewPunch = () => {
     const [showFullImageModal, setShowFullImageModal] = useState(false);
     const [attachmentToShow, setAttachmentToShow] = useState<TempAttachment>();
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent): Promise<void> => {
         e.preventDefault();
         const NewPunchDTO: NewPunchType = {
             CheckListId: parseInt(params.checklistId),
@@ -92,7 +92,7 @@ const NewPunch = () => {
         }
     };
 
-    const handleDelete = (attachmentId: string) => {
+    const handleDelete = (attachmentId: string): void => {
         setTempAttachments((attachments) =>
             attachments.filter((item) => item.id !== attachmentId)
         );
@@ -100,7 +100,7 @@ const NewPunch = () => {
     };
 
     useEffect(() => {
-        (async () => {
+        (async (): Promise<void> => {
             try {
                 const [
                     categoriesFromApi,
@@ -128,7 +128,7 @@ const NewPunch = () => {
         return <NewPunchSuccessPage />;
     }
 
-    const content = () => {
+    const content = (): JSX.Element => {
         if (checklistDetails) {
             return (
                 <>
@@ -149,7 +149,9 @@ const NewPunch = () => {
                         <EdsCard title={'Add attachments'}>
                             <AttachmentsWrapper>
                                 <UploadImageButton
-                                    onClick={() => setShowUploadModal(true)}
+                                    onClick={(): void =>
+                                        setShowUploadModal(true)
+                                    }
                                 >
                                     <EdsIcon name="camera_add_photo" />
                                 </UploadImageButton>
@@ -164,7 +166,7 @@ const NewPunch = () => {
                                                 'Temp attachment ' +
                                                 attachment.id
                                             }
-                                            onClick={() => {
+                                            onClick={(): void => {
                                                 setAttachmentToShow(attachment);
                                                 setShowFullImageModal(true);
                                             }}
@@ -177,7 +179,7 @@ const NewPunch = () => {
                     {showFullImageModal && attachmentToShow ? (
                         <Scrim
                             isDismissable
-                            onClose={() => setShowFullImageModal(false)}
+                            onClose={(): void => setShowFullImageModal(false)}
                         >
                             <ImageModal>
                                 <img
@@ -189,14 +191,16 @@ const NewPunch = () => {
                                     }
                                 />
                                 <Button
-                                    onClick={() =>
+                                    onClick={(): void =>
                                         handleDelete(attachmentToShow.id)
                                     }
                                 >
                                     Delete
                                 </Button>
                                 <Button
-                                    onClick={() => setShowFullImageModal(false)}
+                                    onClick={(): void =>
+                                        setShowFullImageModal(false)
+                                    }
                                 >
                                     Close
                                 </Button>
@@ -215,6 +219,7 @@ const NewPunch = () => {
                 </>
             );
         }
+        return <></>;
     };
 
     return (

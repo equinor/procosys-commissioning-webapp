@@ -9,7 +9,7 @@ import {
     server,
 } from '../../../test/setupServer';
 
-const renderPunchList = () => {
+const renderPunchList = (): void => {
     render(
         withPlantContext({
             Component: <PunchList />,

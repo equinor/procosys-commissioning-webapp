@@ -7,7 +7,7 @@ import ClearPunch from './pages/Punch/ClearPunch/ClearPunch';
 import VerifyPunch from './pages/Punch/VerifyPunch/VerifyPunch';
 import Task from './pages/Task/Task';
 
-const CommPkgRouter = () => {
+const CommPkgRouter = (): JSX.Element => {
     const { path } = useRouteMatch();
     return (
         <Switch>

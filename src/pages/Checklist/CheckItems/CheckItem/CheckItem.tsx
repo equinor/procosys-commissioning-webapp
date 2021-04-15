@@ -9,12 +9,13 @@ import useCommonHooks from '../../../../utils/useCommonHooks';
 import { COLORS } from '../../../../style/GlobalStyles';
 
 const CheckItemWrapper = styled.div<{ disabled: boolean }>`
-    background-color: ${(props) =>
+    background-color: ${(props): string =>
         props.disabled ? 'transparent' : 'transparent'};
     margin-top: 12px;
     & p,
     button {
-        color: ${(props) => (props.disabled ? COLORS.darkGrey : 'initial')};
+        color: ${(props): string =>
+            props.disabled ? COLORS.darkGrey : 'initial'};
     }
     transition: background-color 0.2s ease-in-out;
     transition: color 0.2s ease-in-out;
@@ -75,7 +76,7 @@ const CheckItem = ({
     updateNA,
     updateOk,
     setSnackbarText,
-}: CheckItemProps) => {
+}: CheckItemProps): JSX.Element => {
     const { api, params } = useCommonHooks();
     const [postCheckStatus, setPostCheckStatus] = useState(
         AsyncStatus.INACTIVE
@@ -83,7 +84,7 @@ const CheckItem = ({
     const [postNAStatus, setPostNAStatus] = useState(AsyncStatus.INACTIVE);
     const [showDescription, setShowDescription] = useState(false);
 
-    const clearCheckmarks = async () => {
+    const clearCheckmarks = async (): Promise<void> => {
         try {
             await api.postClear(params.plant, params.checklistId, item.id);
             updateOk(false, item.id);
@@ -96,7 +97,7 @@ const CheckItem = ({
         }
     };
 
-    const handleSetNA = async () => {
+    const handleSetNA = async (): Promise<void> => {
         setPostNAStatus(AsyncStatus.LOADING);
         if (item.isNotApplicable) {
             clearCheckmarks();
@@ -114,7 +115,7 @@ const CheckItem = ({
         }
     };
 
-    const handleSetOk = async () => {
+    const handleSetOk = async (): Promise<void> => {
         if (item.isOk) return clearCheckmarks();
         setPostCheckStatus(AsyncStatus.LOADING);
         try {
@@ -137,7 +138,7 @@ const CheckItem = ({
                         <p>{item.text}</p>
                         {item.detailText && (
                             <button
-                                onClick={() =>
+                                onClick={(): void =>
                                     setShowDescription((current) => !current)
                                 }
                             >
