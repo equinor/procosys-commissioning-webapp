@@ -34,8 +34,10 @@ const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
         return account;
     };
 
-    const getUserName = (): string | undefined => {
-        return getCurrentUser()?.username;
+    const getUserName = (): string => {
+        const currentUser = getCurrentUser();
+        if (!currentUser) return '';
+        return currentUser.username;
     };
 
     const getAccessToken = async (scope: string[]): Promise<string> => {
