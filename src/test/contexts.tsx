@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import PlantContext from '../contexts/PlantContext';
 import CommAppContext, { AsyncStatus } from '../contexts/CommAppContext';
 import * as Msal from '@azure/msal-browser';
@@ -42,9 +42,9 @@ export const withCommAppContext = ({
     plants = testPlants,
     auth = authInstance,
     api = procosysApiInstance,
-}: WithCommAppContextProps) => {
+}: WithCommAppContextProps): JSX.Element => {
     return (
-        <Router>
+        <MemoryRouter initialEntries={['/test/sub/directory']}>
             <CommAppContext.Provider
                 value={{
                     availablePlants: plants,
@@ -55,7 +55,7 @@ export const withCommAppContext = ({
             >
                 {Component}
             </CommAppContext.Provider>
-        </Router>
+        </MemoryRouter>
     );
 };
 
@@ -76,7 +76,7 @@ export const withPlantContext = ({
     currentProject = testProjects[1],
     permissions = dummyPermissions,
     Component,
-}: WithPlantContextProps) => {
+}: WithPlantContextProps): JSX.Element => {
     return withCommAppContext({
         Component: (
             <PlantContext.Provider

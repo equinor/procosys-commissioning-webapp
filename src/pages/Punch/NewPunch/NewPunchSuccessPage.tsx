@@ -2,7 +2,7 @@ import { Button } from '@equinor/eds-core-react';
 import React from 'react';
 import styled from 'styled-components';
 import EdsIcon from '../../../components/icons/EdsIcon';
-import { removeSubdirectories } from '../../../utils/general';
+import removeSubdirectories from '../../../utils/removeSubdirectories';
 import useCommonHooks from '../../../utils/useCommonHooks';
 
 const ButtonGroup = styled.div`
@@ -21,7 +21,7 @@ const NewPunchSuccess = styled.div`
     align-items: center;
 `;
 
-const NewPunchSuccessPage = () => {
+const NewPunchSuccessPage = (): JSX.Element => {
     const { history, params, url } = useCommonHooks();
     return (
         <NewPunchSuccess>
@@ -29,12 +29,14 @@ const NewPunchSuccessPage = () => {
             <h4>Successfully added new punch</h4>
             <ButtonGroup>
                 <Button
-                    onClick={() => history.push(removeSubdirectories(url, 1))}
+                    onClick={(): void =>
+                        history.push(removeSubdirectories(url, 1))
+                    }
                 >
                     Back to checklist
                 </Button>
                 <Button
-                    onClick={() =>
+                    onClick={(): void =>
                         history.push(
                             `/${params.plant}/${params.project}/${params.commPkg}/punch-list`
                         )

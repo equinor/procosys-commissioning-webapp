@@ -36,10 +36,10 @@ export const SelectorButton = styled(Link)`
     }
 `;
 
-const SelectPlant = () => {
+const SelectPlant = (): JSX.Element => {
     const { availablePlants } = useContext(CommAppContext);
 
-    const content = () => {
+    const content = (): JSX.Element => {
         if (availablePlants.length < 1) {
             return (
                 <ErrorPage

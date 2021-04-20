@@ -21,7 +21,9 @@ const CheckItemsWrapper = styled.div`
     }
 `;
 
-const determineIfAllAreCheckedOrNA = (itemsToDetermine: CheckItemType[]) => {
+const determineIfAllAreCheckedOrNA = (
+    itemsToDetermine: CheckItemType[]
+): boolean => {
     return itemsToDetermine.every((item) => item.isOk || item.isNotApplicable);
 };
 
@@ -41,14 +43,14 @@ const CheckItems = ({
     allItemsCheckedOrNA,
     setAllItemsCheckedOrNA,
     setSnackbarText,
-}: CheckItemsProps) => {
+}: CheckItemsProps): JSX.Element => {
     const [items, setItems] = useState(checkItems);
 
     useEffect(() => {
         setAllItemsCheckedOrNA(determineIfAllAreCheckedOrNA(items));
     }, [items, setAllItemsCheckedOrNA]);
 
-    const updateNA = (value: boolean, checkItemId: number) => {
+    const updateNA = (value: boolean, checkItemId: number): void => {
         setItems((items) =>
             items.map((existingItem) =>
                 existingItem.id === checkItemId
@@ -58,7 +60,7 @@ const CheckItems = ({
         );
     };
 
-    const updateOk = (value: boolean, checkItemId: number) => {
+    const updateOk = (value: boolean, checkItemId: number): void => {
         setItems((items) =>
             items.map((existingItem) =>
                 existingItem.id === checkItemId
@@ -72,7 +74,7 @@ const CheckItems = ({
         item: CheckItemType,
         index: number,
         nextItemIsHeading: boolean
-    ) => {
+    ): JSX.Element => {
         if (item.isHeading && nextItemIsHeading) {
             return <></>;
         }
@@ -101,7 +103,7 @@ const CheckItems = ({
     };
 
     const itemsToDisplay = items.map((item, index) => {
-        let nextItemIsHeading = items[index + 1]
+        const nextItemIsHeading = items[index + 1]
             ? items[index + 1].isHeading
             : true;
         return (

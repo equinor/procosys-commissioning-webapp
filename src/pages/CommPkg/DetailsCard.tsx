@@ -11,7 +11,7 @@ import { AsyncStatus } from '../../contexts/CommAppContext';
 import DetailsCardShell from './DetailsCardShell';
 import axios from 'axios';
 
-const DetailsWrapper = styled.div<{ atBookmarksPage?: Boolean }>`
+const DetailsWrapper = styled.div<{ atBookmarksPage?: boolean }>`
     display: grid;
     grid-template-columns: repeat(2, 1fr) repeat(2, 0.5fr);
     grid-template-rows: repeat(2);
@@ -19,11 +19,13 @@ const DetailsWrapper = styled.div<{ atBookmarksPage?: Boolean }>`
     grid-row-gap: 8px;
     padding: 16px 4%;
     border-radius: 5px;
-    cursor: ${(props) => (props.atBookmarksPage ? 'pointer' : 'initial')};
-    background-color: ${(props) =>
+    cursor: ${(props): string =>
+        props.atBookmarksPage ? 'pointer' : 'initial'};
+    background-color: ${(props): any =>
         props.atBookmarksPage ? COLORS.white : COLORS.fadedBlue};
-    box-shadow: ${(props) => (props.atBookmarksPage ? SHADOW : 'none')};
-    margin: ${(props) => (props.atBookmarksPage ? '0 4% 10px 4%' : '0')};
+    box-shadow: ${(props): string => (props.atBookmarksPage ? SHADOW : 'none')};
+    margin: ${(props): string =>
+        props.atBookmarksPage ? '0 4% 10px 4%' : '0'};
 `;
 
 const Description = styled.div`
@@ -69,7 +71,7 @@ const DetailsCard = ({
     commPkgId,
     atBookmarksPage = false,
     onClickAction,
-}: DetailsCardProps) => {
+}: DetailsCardProps): JSX.Element => {
     const { api, params } = useCommonHooks();
     const { isBookmarked, setIsBookmarked } = useBookmarks(commPkgId);
     const [details, setDetails] = useState<CommPkg>();
@@ -79,7 +81,7 @@ const DetailsCard = ({
 
     useEffect(() => {
         const source = axios.CancelToken.source();
-        (async () => {
+        (async (): Promise<void> => {
             try {
                 const detailsFromApi = await api.getCommPackageDetails(
                     source.token,
@@ -94,7 +96,7 @@ const DetailsCard = ({
                 }
             }
         })();
-        return () => {
+        return (): void => {
             source.cancel('Detailscard unmounted');
         };
     }, [params, api, commPkgId]);
@@ -124,7 +126,7 @@ const DetailsCard = ({
                 <BookmarkIconWrapper>
                     <Button
                         variant="ghost_icon"
-                        onClick={(e: React.MouseEvent<HTMLElement>) => {
+                        onClick={(e: React.MouseEvent<HTMLElement>): void => {
                             e.stopPropagation();
                             setIsBookmarked((prev) => !prev);
                         }}

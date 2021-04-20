@@ -31,7 +31,7 @@ const metaTableCellForTesting = withCommAppContext({
     ),
 });
 
-async function setupWithInputTypedIn() {
+async function setupWithInputTypedIn(): Promise<void> {
     render(metaTableCellForTesting);
     const input = await screen.findByDisplayValue(metaTableCellTestProps.value);
     userEvent.type(input, 's');

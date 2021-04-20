@@ -15,7 +15,7 @@ function useAsyncGet<T>(
 
     useEffect(() => {
         const source = Axios.CancelToken.source();
-        (async () => {
+        (async (): Promise<void> => {
             setFetchStatus(AsyncStatus.LOADING);
             try {
                 const responseFromApi = await asyncFunction(source.token);
@@ -33,7 +33,7 @@ function useAsyncGet<T>(
                 if (!Axios.isCancel(error)) setFetchStatus(AsyncStatus.ERROR);
             }
         })();
-        return () => {
+        return (): void => {
             source.cancel();
         };
     }, [refresh]);

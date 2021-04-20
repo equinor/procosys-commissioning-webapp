@@ -11,7 +11,7 @@ import procosysApiService from './services/procosysApi';
 import { getAppConfig, getAuthConfig } from './services/appConfiguration';
 import initializeAppInsights from './services/appInsights';
 
-const render = (content: JSX.Element) => {
+const render = (content: JSX.Element): void => {
     ReactDOM.render(
         <React.StrictMode>
             <>
@@ -23,6 +23,7 @@ const render = (content: JSX.Element) => {
     );
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const initialize = async () => {
     // Get auth config, setup auth client and handle login
     const {
@@ -43,6 +44,7 @@ const initialize = async () => {
     const configurationAccessToken = await authInstance.getAccessToken(
         configurationScope
     );
+
     const { procosysApiConfig, appInsightsConfig } = await getAppConfig(
         configurationEndpoint,
         configurationAccessToken
@@ -52,6 +54,7 @@ const initialize = async () => {
         baseURL: procosysApiConfig.baseUrl,
         scope: procosysApiConfig.scope,
     });
+
     const procosysApiInstance = procosysApiService({
         axios: baseApiInstance,
         apiVersion: procosysApiConfig.apiVersion,
@@ -68,7 +71,7 @@ const initialize = async () => {
     };
 };
 
-(async () => {
+(async (): Promise<void> => {
     render(<LoadingPage loadingText={'Initializing...'} />);
     try {
         const {
@@ -86,6 +89,7 @@ const initialize = async () => {
             />
         );
     } catch (error) {
+        console.log(error);
         if (error === 'redirecting') {
             render(<LoadingPage loadingText={'Redirecting to login...'} />);
         } else {

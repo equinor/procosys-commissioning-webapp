@@ -10,7 +10,7 @@ const PageHeaderWrapper = styled.div<{ hasSubtitle: boolean }>`
     margin-top: 16px;
     & h2 {
         text-align: center;
-        margin: ${(props) =>
+        margin: ${(props): string =>
             props.hasSubtitle ? '16px 0 0 0' : '16px 0 24px 0'};
     }
     & h6 {
@@ -23,7 +23,7 @@ type PageHeaderProps = {
     title: string;
     subtitle?: string;
 };
-const PageHeader = ({ title, subtitle }: PageHeaderProps) => {
+const PageHeader = ({ title, subtitle }: PageHeaderProps): JSX.Element => {
     return (
         <PageHeaderWrapper hasSubtitle={!!subtitle}>
             <h2>{title}</h2>

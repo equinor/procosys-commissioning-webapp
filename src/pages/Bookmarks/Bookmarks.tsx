@@ -26,20 +26,22 @@ const NewBookmarkWrapper = styled.div`
     justify-content: flex-end;
 `;
 
-const Bookmarks = () => {
+const Bookmarks = (): JSX.Element => {
     const { url, history } = useCommonHooks();
     const { currentProject, currentPlant } = useContext(PlantContext);
-    const bookmarks = getCurrentBookmarks(currentProject!.id.toString());
+    const bookmarks = currentProject
+        ? getCurrentBookmarks(currentProject.id.toString())
+        : [];
     const bookmarksToDisplay = bookmarks.map((bookmark) => (
         <DetailsCard
             key={bookmark}
             commPkgId={bookmark}
             atBookmarksPage={true}
-            onClickAction={() => history.push(`${url}/${bookmark}`)}
+            onClickAction={(): void => history.push(`${url}/${bookmark}`)}
         />
     ));
 
-    const content = () => {
+    const content = (): JSX.Element => {
         if (bookmarks.length < 1) {
             return <PageHeader title="No bookmarks to display" />;
         } else {
@@ -64,7 +66,7 @@ const Bookmarks = () => {
             <BookmarksWrapper>
                 {content()}
                 <NewBookmarkWrapper>
-                    <Button onClick={() => history.push(`${url}/search`)}>
+                    <Button onClick={(): void => history.push(`${url}/search`)}>
                         <EdsIcon name="search" color="white" />
                         Find comm. pkg
                     </Button>

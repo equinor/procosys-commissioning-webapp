@@ -16,11 +16,11 @@ export interface IAuthServiceProps {
 }
 
 const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
-    const logout = async () => {
+    const logout = async (): Promise<void> => {
         return await MSAL.logout();
     };
 
-    const login = async () => {
+    const login = async (): Promise<void> => {
         let pathName = window.location.pathname;
         if (pathName.substr(0, 5) === '/comm')
             pathName = '/' + pathName.slice(6);
@@ -34,11 +34,13 @@ const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
         return account;
     };
 
-    const getUserName = (): string | undefined => {
-        return getCurrentUser()?.username;
+    const getUserName = (): string => {
+        const currentUser = getCurrentUser();
+        if (!currentUser) return '';
+        return currentUser.username;
     };
 
-    const getAccessToken = async (scope: string[]) => {
+    const getAccessToken = async (scope: string[]): Promise<string> => {
         const account = MSAL.getAllAccounts()[0];
         if (!account) return '';
         const { accessToken } = await MSAL.acquireTokenSilent({
@@ -54,7 +56,7 @@ const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
         }
     };
 
-    const isLoggedIn = async () => {
+    const isLoggedIn = async (): Promise<boolean> => {
         const cachedAccount = MSAL.getAllAccounts()[0];
         if (cachedAccount == null) return false;
         // User is able to get accessToken, no login required
@@ -73,7 +75,7 @@ const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
         }
     };
 
-    const handleLogin = async () => {
+    const handleLogin = async (): Promise<boolean> => {
         const redirectFromSigninResponse = await MSAL.handleRedirectPromise();
         if (redirectFromSigninResponse !== null) {
             return Promise.resolve(false);

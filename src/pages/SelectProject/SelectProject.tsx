@@ -6,7 +6,7 @@ import PlantContext from '../../contexts/PlantContext';
 import { SelectPlantWrapper, SelectorButton } from '../SelectPlant/SelectPlant';
 import AsyncPage from '../../components/AsyncPage';
 
-const SelectProject = () => {
+const SelectProject = (): JSX.Element => {
     const {
         availableProjects: projects,
         currentPlant,

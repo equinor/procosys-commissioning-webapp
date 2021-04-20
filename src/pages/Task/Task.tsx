@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Navbar from '../../components/navigation/Navbar';
-import { removeSubdirectories } from '../../utils/general';
 import useCommonHooks from '../../utils/useCommonHooks';
 import TaskDescription from './TaskDescription';
 import TaskParameters from './TaskParameters/TaskParameters';
@@ -16,6 +15,7 @@ import { TaskPreviewButton } from '../CommPkg/Tasks/Tasks';
 import { Banner, Typography } from '@equinor/eds-core-react';
 import Axios, { CancelToken } from 'axios';
 import useAsyncGet from '../../utils/useAsyncGet';
+import removeSubdirectories from '../../utils/removeSubdirectories';
 const { BannerIcon, BannerMessage } = Banner;
 
 const NextTaskButton = styled(TaskPreviewButton)`
@@ -43,7 +43,7 @@ const findNextTask = (
     return null;
 };
 
-const Task = () => {
+const Task = (): JSX.Element => {
     const { url, api, params } = useCommonHooks();
     const {
         response: attachments,
@@ -69,7 +69,7 @@ const Task = () => {
     const source = Axios.CancelToken.source();
 
     useEffect(() => {
-        (async () => {
+        (async (): Promise<void> => {
             try {
                 const taskFromApi = await api.getTask(
                     source.token,
@@ -86,13 +86,13 @@ const Task = () => {
                 }
             }
         })();
-        return () => {
+        return (): void => {
             source.cancel();
         };
     }, [api, params.plant, params.taskId, refreshTask]);
 
     useEffect(() => {
-        (async () => {
+        (async (): Promise<void> => {
             try {
                 const tasksFromApi = await api.getTasks(
                     source.token,
@@ -112,7 +112,7 @@ const Task = () => {
                 }
             }
         })();
-        return () => {
+        return (): void => {
             source.cancel();
         };
     }, [api, params.taskId, params.plant, params.commPkg]);
@@ -139,7 +139,7 @@ const Task = () => {
             ) : null}
             <TaskWrapper>
                 <AsyncCard
-                    cardTitle={task ? `Task ${task.number}` : `Task`}
+                    cardTitle={task ? `Task ${task.number}` : 'Task'}
                     errorMessage={'Unable to load task description.'}
                     fetchStatus={fetchTaskStatus}
                 >
@@ -183,7 +183,9 @@ const Task = () => {
                                     setSnackbarText={setSnackbarText}
                                     attachment={attachment}
                                     key={attachment.id}
-                                    getAttachment={(cancelToken: CancelToken) =>
+                                    getAttachment={(
+                                        cancelToken: CancelToken
+                                    ): Promise<Blob> =>
                                         api.getTaskAttachment(
                                             cancelToken,
                                             params.plant,

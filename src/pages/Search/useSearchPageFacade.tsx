@@ -23,7 +23,7 @@ type Action =
     | { type: 'FETCH_ERROR'; error: string }
     | { type: 'FETCH_INACTIVE' };
 
-const fetchReducer = (state: SearchState, action: Action) => {
+const fetchReducer = (state: SearchState, action: Action): SearchState => {
     switch (action.type) {
         case 'FETCH_START':
             return {
@@ -58,7 +58,7 @@ const fetchHits = async (
     projectID: number,
     cancelToken: CancelToken,
     api: ProcosysApiService
-) => {
+): Promise<void> => {
     dispatch({ type: 'FETCH_START' });
     try {
         const commPackages = await api.searchForCommPackage(
@@ -76,6 +76,7 @@ const fetchHits = async (
     }
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const useSearchPageFacade = () => {
     const { api } = useContext(CommAppContext);
     const [{ hits, searchStatus }, dispatch] = useReducer(fetchReducer, {
@@ -104,7 +105,7 @@ const useSearchPageFacade = () => {
                 ),
             300
         );
-        return () => {
+        return (): void => {
             cancel('A new search has taken place instead');
             clearTimeout(timeOutId);
         };

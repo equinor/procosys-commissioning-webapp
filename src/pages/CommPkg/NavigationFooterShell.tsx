@@ -11,7 +11,9 @@ type NavigationFooterShellProps = {
     children: JSX.Element;
 };
 
-const NavigationFooterShell = ({ children }: NavigationFooterShellProps) => {
+const NavigationFooterShell = ({
+    children,
+}: NavigationFooterShellProps): JSX.Element => {
     return (
         <NavigationFooterShellWrapper>{children}</NavigationFooterShellWrapper>
     );

@@ -24,7 +24,7 @@ export type MetaTableCellProps = {
     label: string;
 };
 
-function determineHelperText(submitStatus: AsyncStatus) {
+function determineHelperText(submitStatus: AsyncStatus): string {
     if (submitStatus === AsyncStatus.ERROR) return 'Unable to save.';
     if (submitStatus === AsyncStatus.LOADING) return 'Saving data...';
     if (submitStatus === AsyncStatus.SUCCESS) return 'Data saved.';
@@ -39,7 +39,7 @@ const MetaTableCell = ({
     columnId,
     checkItemId,
     label,
-}: MetaTableCellProps) => {
+}: MetaTableCellProps): JSX.Element => {
     const { api, params } = useCommonHooks();
     const [inputValue, setInputValue] = useState(value);
     const [submitStatus, setSubmitStatus] = useState<AsyncStatus>(
@@ -48,7 +48,7 @@ const MetaTableCell = ({
     const [errorMessage, setErrorMessage] = useState('');
     let valueBeforeFocus = '';
 
-    const submitData = async () => {
+    const submitData = async (): Promise<void> => {
         setSubmitStatus(AsyncStatus.LOADING);
         try {
             await api.putMetaTableCell(
@@ -68,10 +68,10 @@ const MetaTableCell = ({
 
     useEffect(() => {
         if (submitStatus !== AsyncStatus.SUCCESS) return;
-        let timerId = setTimeout(() => {
+        const timerId = setTimeout(() => {
             setSubmitStatus(AsyncStatus.INACTIVE);
         }, 2000);
-        return () => clearTimeout(timerId);
+        return (): void => clearTimeout(timerId);
     }, [submitStatus]);
 
     return (
@@ -87,15 +87,15 @@ const MetaTableCell = ({
                     (submitStatus === AsyncStatus.SUCCESS && 'success') ||
                     'default'
                 }
-                onFocus={() => (valueBeforeFocus = value)}
-                onBlur={() => {
+                onFocus={(): string => (valueBeforeFocus = value)}
+                onBlur={(): void => {
                     value !== valueBeforeFocus && submitData();
                 }}
                 onChange={(
                     event: React.ChangeEvent<
                         HTMLTextAreaElement | HTMLInputElement
                     >
-                ) => setInputValue(event.target.value)}
+                ): void => setInputValue(event.target.value)}
             />
             <HelperText>
                 <p>{determineHelperText(submitStatus)}</p>

@@ -8,14 +8,14 @@ export enum StorageKey {
     REDIRECTPATH = 'ProCoSys-CWA-redirectPath',
 }
 
-const cleanUpBookmarks = (bookmarks: any) => {
+const cleanUpBookmarks = (bookmarks: any): string[] => {
     const commPkgIds: string[] = bookmarks.filter(
         (bookmark: unknown) => typeof bookmark === 'string'
     );
     return Array.from(new Set(commPkgIds));
 };
 
-export const getCurrentBookmarks = (projectId: string) => {
+export const getCurrentBookmarks = (projectId: string): string[] => {
     const bookmarksFromLocalStorage = window.localStorage.getItem(
         `${StorageKey.BOOKMARK}: ${projectId}`
     );
@@ -25,6 +25,7 @@ export const getCurrentBookmarks = (projectId: string) => {
     return [];
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const useBookmarks = (commPkgId: string) => {
     const { currentProject } = useContext(PlantContext);
     const projectId = currentProject?.id.toString() as string;

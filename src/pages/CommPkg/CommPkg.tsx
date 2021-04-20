@@ -7,7 +7,6 @@ import Tasks from './Tasks/Tasks';
 import PunchList from './PunchList/PunchList';
 import Navbar from '../../components/navigation/Navbar';
 import styled from 'styled-components';
-import { calculateHighestStatus } from '../../utils/general';
 import useCommonHooks from '../../utils/useCommonHooks';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import {
@@ -19,10 +18,11 @@ import { DotProgress } from '@equinor/eds-core-react';
 import NavigationFooterShell from './NavigationFooterShell';
 import withAccessControl from '../../services/withAccessControl';
 import Axios from 'axios';
+import calculateHighestStatus from '../../utils/calculateHighestStatus';
 
 const CommPkgWrapper = styled.main``;
 
-const CommPkg = () => {
+const CommPkg = (): JSX.Element => {
     const { api, params, path } = useCommonHooks();
     const [scope, setScope] = useState<ChecklistPreview[]>();
     const [tasks, setTasks] = useState<TaskPreview[]>();
@@ -33,7 +33,7 @@ const CommPkg = () => {
 
     useEffect(() => {
         const source = Axios.CancelToken.source();
-        (async () => {
+        (async (): Promise<void> => {
             try {
                 const [
                     scopeFromApi,
@@ -52,12 +52,12 @@ const CommPkg = () => {
                 setFetchFooterDataStatus(AsyncStatus.ERROR);
             }
         })();
-        return () => {
+        return (): void => {
             source.cancel();
         };
     }, [api, params.plant, params.commPkg]);
 
-    const determineFooterToRender = () => {
+    const determineFooterToRender = (): JSX.Element => {
         if (
             fetchFooterDataStatus === AsyncStatus.SUCCESS &&
             tasks &&

@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 import { rest } from 'msw';
 import { server, ENDPOINTS, causeApiError } from '../../../test/setupServer';
 
-const renderTasks = () => {
+const renderTasks = (): void => {
     render(
         withPlantContext({
             Component: <Tasks />,

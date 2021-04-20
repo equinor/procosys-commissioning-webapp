@@ -19,7 +19,7 @@ const ModuleAndTagWrapper = styled.div`
     display: flex;
 `;
 
-const PunchList = () => {
+const PunchList = (): JSX.Element => {
     const { api, url, params } = useCommonHooks();
     const [punchList, setPunchList] = useState<PunchPreview[]>();
     const [fetchPunchListStatus, setFetchPunchListStatus] = useState(
@@ -27,7 +27,7 @@ const PunchList = () => {
     );
 
     useEffect(() => {
-        (async () => {
+        (async (): Promise<void> => {
             setFetchPunchListStatus(AsyncStatus.LOADING);
             try {
                 const punchListFromApi = await api.getPunchList(

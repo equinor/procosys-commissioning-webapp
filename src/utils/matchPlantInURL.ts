@@ -7,7 +7,10 @@ class URLError extends Error {
     }
 }
 
-const matchPlantInURL = (availablePlants: Plant[], plantFromURL: string) => {
+const matchPlantInURL = (
+    availablePlants: Plant[],
+    plantFromURL: string
+): Plant | undefined => {
     if (availablePlants.length < 1) return;
     const matchedPlant = availablePlants.find(
         (plant) => plant.slug === plantFromURL

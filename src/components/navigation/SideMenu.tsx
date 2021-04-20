@@ -82,21 +82,21 @@ const SideMenu = ({
     animation,
     backdropAnimation,
     setDrawerIsOpen,
-}: SideMenuProps) => {
+}: SideMenuProps): JSX.Element => {
     const { auth, history, params } = useCommonHooks();
     const { currentPlant, currentProject } = useContext(PlantContext);
     return (
         <>
             <Backdrop
                 style={backdropAnimation}
-                onClick={() => setDrawerIsOpen(false)}
+                onClick={(): void => setDrawerIsOpen(false)}
             />
             <SideMenuWrapper style={animation}>
                 <TopContent>
                     <h2>Welcome</h2>
                     <Button
                         variant="ghost"
-                        onClick={() => setDrawerIsOpen(false)}
+                        onClick={(): void => setDrawerIsOpen(false)}
                     >
                         <EdsIcon name="close" color={COLORS.black} />
                     </Button>
@@ -112,7 +112,7 @@ const SideMenu = ({
                     <p>Selected plant:</p>
                     <h4>{currentPlant ? currentPlant.title : 'None'}</h4>
                     <Button
-                        onClick={() => {
+                        onClick={(): void => {
                             window.localStorage.removeItem(StorageKey.PLANT);
                             window.localStorage.removeItem(StorageKey.PROJECT);
                             setDrawerIsOpen(false);
@@ -131,7 +131,7 @@ const SideMenu = ({
                                     : 'None'}
                             </h4>
                             <Button
-                                onClick={() => {
+                                onClick={(): void => {
                                     window.localStorage.removeItem(
                                         StorageKey.PROJECT
                                     );

@@ -2,7 +2,7 @@ import { IAuthService, IAuthServiceProps } from '../authService';
 import { AccountInfo } from '@azure/msal-browser';
 
 const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
-    const login = async () => {
+    const login = async (): Promise<void> => {
         return Promise.resolve();
     };
     const getCurrentUser = (): AccountInfo | null => {
@@ -10,23 +10,23 @@ const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
         if (!account) return null;
         return account;
     };
-    const logout = async () => {
+    const logout = async (): Promise<void> => {
         return Promise.resolve();
     };
 
-    const getUserName = () => {
+    const getUserName = (): string => {
         return 'dummy-user';
     };
 
-    const getAccessToken = () => {
+    const getAccessToken = (): Promise<string> => {
         return Promise.resolve('dummy-bearer-token');
     };
 
-    const isLoggedIn = async () => {
+    const isLoggedIn = async (): Promise<boolean> => {
         return true;
     };
 
-    const handleLogin = async () => {
+    const handleLogin = async (): Promise<boolean> => {
         return Promise.resolve(false);
     };
     return {

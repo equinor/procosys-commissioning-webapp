@@ -7,8 +7,8 @@ import Navbar from './Navbar';
 jest.mock('react-spring', () => ({
     useSpring: jest.fn().mockImplementation(() => [{ mockProp: 1 }, jest.fn()]),
     animated: {
-        div: () => <div data-testid="ANIMATED-COMPONENT" />,
-        aside: () => <aside data-testid="ANIMATED-COMPONENT" />,
+        div: (): JSX.Element => <div data-testid="ANIMATED-COMPONENT" />,
+        aside: (): JSX.Element => <aside data-testid="ANIMATED-COMPONENT" />,
     },
 }));
 

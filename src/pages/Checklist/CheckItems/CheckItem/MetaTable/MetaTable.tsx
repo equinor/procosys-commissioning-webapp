@@ -64,7 +64,12 @@ type MetaTableProps = {
     disabled: boolean;
 };
 
-const MetaTable = ({ labels, rows, disabled, checkItemId }: MetaTableProps) => {
+const MetaTable = ({
+    labels,
+    rows,
+    disabled,
+    checkItemId,
+}: MetaTableProps): JSX.Element => {
     const [tableIsScrollable, setTableIsScrollable] = useState(false);
     const tableContainerRef = useRef<HTMLDivElement>(
         document.createElement('div')

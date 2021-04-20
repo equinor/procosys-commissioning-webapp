@@ -18,7 +18,7 @@ const SearchPageWrapper = styled.main`
     }
 `;
 
-const Search = () => {
+const Search = (): JSX.Element => {
     const { hits, searchStatus, query, setQuery } = useSearchPageFacade();
     const searchbarRef = useRef<HTMLInputElement>(
         document.createElement('input')
@@ -28,7 +28,7 @@ const Search = () => {
         searchbarRef.current?.focus();
     }, []);
 
-    const searchHeaderToRender = () => {
+    const searchHeaderToRender = (): JSX.Element => {
         if (searchStatus === SearchStatus.SUCCESS) {
             return (
                 <h4>
@@ -50,7 +50,7 @@ const Search = () => {
                 <SearchField
                     placeholder={'For example: "1002-D01"'}
                     value={query}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    onChange={(e: ChangeEvent<HTMLInputElement>): void =>
                         setQuery(e.target.value)
                     }
                     ref={searchbarRef}

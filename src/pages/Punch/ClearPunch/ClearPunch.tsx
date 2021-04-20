@@ -4,7 +4,6 @@ import ErrorPage from '../../../components/error/ErrorPage';
 import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
 import Navbar from '../../../components/navigation/Navbar';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
-import { ensure, removeSubdirectories } from '../../../utils/general';
 import PunchDetailsCard from './PunchDetailsCard';
 import { NewPunchFormWrapper } from '../NewPunch/NewPunchForm';
 import useClearPunchFacade, {
@@ -22,10 +21,12 @@ import EdsIcon from '../../../components/icons/EdsIcon';
 import useAttachments from '../../../utils/useAttachments';
 import buildEndpoint from '../../../utils/buildEndpoint';
 import { CancelToken } from 'axios';
+import ensure from '../../../utils/ensure';
+import removeSubdirectories from '../../../utils/removeSubdirectories';
 
 export const PunchWrapper = styled.main``;
 
-const ClearPunch = () => {
+const ClearPunch = (): JSX.Element => {
     const {
         updatePunchStatus,
         fetchPunchItemStatus,
@@ -34,7 +35,6 @@ const ClearPunch = () => {
         categories,
         types,
         organizations,
-        url,
         snackbar,
         setSnackbarText,
         updateDatabase,
@@ -45,7 +45,7 @@ const ClearPunch = () => {
         handleRaisedByChange,
         handleClearingByChange,
     } = useClearPunchFacade();
-    const { api, params } = useCommonHooks();
+    const { api, params, url } = useCommonHooks();
     const {
         attachments,
         fetchAttachmentsStatus,
@@ -58,7 +58,7 @@ const ClearPunch = () => {
 
     let descriptionBeforeEntering = '';
 
-    const content = () => {
+    const content = (): JSX.Element => {
         if (fetchPunchItemStatus === AsyncStatus.SUCCESS && punchItem) {
             return (
                 <>
@@ -120,11 +120,11 @@ const ClearPunch = () => {
                             rows={5}
                             id="NewPunchDescription"
                             disabled={clearPunchStatus === AsyncStatus.LOADING}
-                            onFocus={() =>
+                            onFocus={(): string =>
                                 (descriptionBeforeEntering =
                                     punchItem.description)
                             }
-                            onBlur={() => {
+                            onBlur={(): void => {
                                 if (
                                     punchItem.description !==
                                     descriptionBeforeEntering
@@ -195,7 +195,9 @@ const ClearPunch = () => {
                         >
                             <AttachmentsWrapper>
                                 <UploadImageButton
-                                    onClick={() => setShowUploadModal(true)}
+                                    onClick={(): void =>
+                                        setShowUploadModal(true)
+                                    }
                                 >
                                     <EdsIcon name="camera_add_photo" />
                                 </UploadImageButton>
@@ -214,7 +216,7 @@ const ClearPunch = () => {
                                         key={attachment.id}
                                         getAttachment={(
                                             cancelToken: CancelToken
-                                        ) =>
+                                        ): Promise<Blob> =>
                                             api.getPunchAttachment(
                                                 cancelToken,
                                                 params.plant,
@@ -224,7 +226,7 @@ const ClearPunch = () => {
                                         }
                                         deleteAttachment={(
                                             cancelToken: CancelToken
-                                        ) =>
+                                        ): Promise<void> =>
                                             api.deletePunchAttachment(
                                                 cancelToken,
                                                 params.plant,
@@ -254,7 +256,7 @@ const ClearPunch = () => {
         } else if (fetchPunchItemStatus === AsyncStatus.ERROR) {
             return (
                 <ErrorPage
-                    title="Unable to fetch punch item"
+                    title="Unable to load punch item."
                     description="Please check your connection, reload this page or try again later."
                 />
             );

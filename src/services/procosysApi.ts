@@ -37,11 +37,13 @@ type ProcosysApiServiceProps = {
     apiVersion: string;
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
-    const getVersion = () => {
+    // General
+    const getVersion = (): string => {
         return apiVersion;
     };
-    const getPlants = async () => {
+    const getPlants = async (): Promise<Plant[]> => {
         const { data } = await axios.get(
             `Plants?includePlantsWithoutAccess=false${apiVersion}`
         );
@@ -55,14 +57,16 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         return camelCasedResponseWithSlug as Plant[];
     };
 
-    const getProjectsForPlant = async (plantId: string) => {
+    const getProjectsForPlant = async (plantId: string): Promise<Project[]> => {
         const { data } = await axios.get(
             `Projects?plantId=${plantId}${apiVersion}`
         );
         return data as Project[];
     };
 
-    const getPermissionsForPlant = async (plantId: string) => {
+    const getPermissionsForPlant = async (
+        plantId: string
+    ): Promise<string[]> => {
         const { data } = await axios.get(
             `Permissions?plantId=${plantId}${apiVersion}`
         );
@@ -74,7 +78,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         projectId: number,
         plantId: string,
         cancelToken?: CancelToken
-    ) => {
+    ): Promise<CommPkgSearchResults> => {
         const {
             data,
         } = await axios.get(
@@ -89,7 +93,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         cancelToken: CancelToken,
         plantId: string,
         commPkgId: string
-    ) => {
+    ): Promise<CommPkg> => {
         const { data } = await axios.get(
             `CommPkg?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}
 `,
@@ -98,36 +102,34 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         return data as CommPkg;
     };
 
-    const getScope = async (plantId: string, commPkgId: string) => {
+    const getAttachments = async (
+        cancelToken: CancelToken,
+        endpoint: string
+    ): Promise<Attachment[]> => {
+        const { data } = await axios.get(`${endpoint}${apiVersion}`, {
+            cancelToken: cancelToken,
+        });
+        return data as Attachment[];
+    };
+
+    //------------
+    // CHECKLIST
+    // -----------
+
+    const getScope = async (
+        plantId: string,
+        commPkgId: string
+    ): Promise<ChecklistPreview[]> => {
         const { data } = await axios.get(
             `CommPkg/Checklists?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}`
         );
         return data as ChecklistPreview[];
     };
 
-    const getTasks = async (
-        cancelToken: CancelToken,
+    const getChecklist = async (
         plantId: string,
-        commPkgId: string
-    ): Promise<TaskPreview[]> => {
-        const {
-            data,
-        } = await axios.get(
-            `CommPkg/Tasks?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}`,
-            { cancelToken: cancelToken }
-        );
-
-        return data as TaskPreview[];
-    };
-
-    const getPunchList = async (plantId: string, commPkgId: string) => {
-        const { data } = await axios.get(
-            `CommPkg/PunchList?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}`
-        );
-        return data as PunchPreview[];
-    };
-
-    const getChecklist = async (plantId: string, checklistId: string) => {
+        checklistId: string
+    ): Promise<ChecklistResponse> => {
         const { data } = await axios.get(
             `Checklist/Comm?plantId=PCS$${plantId}&checklistId=${checklistId}${apiVersion}`
         );
@@ -138,7 +140,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         checklistId: string,
         checkItemId: number
-    ) => {
+    ): Promise<void> => {
         await axios.post(
             `CheckList/Item/SetOk?plantId=PCS$${plantId}${apiVersion}`,
             {
@@ -152,7 +154,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         checklistId: string,
         checkItemId: number
-    ) => {
+    ): Promise<void> => {
         await axios.post(
             `CheckList/Item/SetNA?plantId=PCS$${plantId}${apiVersion}`,
             {
@@ -166,7 +168,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         checklistId: string,
         checkItemId: number
-    ) => {
+    ): Promise<void> => {
         await axios.post(
             `CheckList/Item/Clear?plantId=PCS$${plantId}${apiVersion}`,
             {
@@ -183,7 +185,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         columnId: number,
         rowId: number,
         value: string
-    ) => {
+    ): Promise<void> => {
         await axios.put(
             `CheckList/Item/MetaTableCell?plantId=PCS$${plantId}${apiVersion}`,
             {
@@ -200,14 +202,17 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         checklistId: string,
         Comment: string
-    ) => {
+    ): Promise<void> => {
         await axios.put(
             `CheckList/Comm/Comment?plantId=PCS$${plantId}${apiVersion}`,
             { CheckListId: checklistId, Comment: Comment }
         );
     };
 
-    const postSign = async (plantId: string, checklistId: string) => {
+    const postSign = async (
+        plantId: string,
+        checklistId: string
+    ): Promise<void> => {
         await axios.post(
             `CheckList/Comm/Sign?plantId=PCS$${plantId}${apiVersion}`,
             checklistId,
@@ -215,7 +220,10 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         );
     };
 
-    const postUnsign = async (plantId: string, checklistId: string) => {
+    const postUnsign = async (
+        plantId: string,
+        checklistId: string
+    ): Promise<void> => {
         await axios.post(
             `CheckList/Comm/Unsign?plantId=PCS$${plantId}${apiVersion}`,
             checklistId,
@@ -223,182 +231,10 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         );
     };
 
-    const getPunchCategories = async (plantId: string) => {
-        const { data } = await axios.get(
-            `PunchListItem/Categories?plantId=PCS$${plantId}${apiVersion}`
-        );
-        return data as PunchCategory[];
-    };
-
-    const getPunchTypes = async (plantId: string) => {
-        const { data } = await axios.get(
-            `PunchListItem/Types?plantId=PCS$${plantId}${apiVersion}`
-        );
-        return data as PunchType[];
-    };
-
-    const getPunchOrganizations = async (plantId: string) => {
-        const { data } = await axios.get(
-            `PunchListItem/Organizations?plantId=PCS$${plantId}${apiVersion}`
-        );
-        return data as PunchOrganization[];
-    };
-
-    const postNewPunch = async (plantId: string, newPunchData: NewPunch) => {
-        await axios.post(
-            `PunchListItem?plantId=PCS$${plantId}${apiVersion}`,
-            newPunchData
-        );
-    };
-
-    const getPunchItem = async (plantId: string, punchItemId: string) => {
-        const { data } = await axios.get(
-            `PunchListItem?plantId=PCS$${plantId}&punchItemId=${punchItemId}${apiVersion}`
-        );
-        return data as PunchItem;
-    };
-
-    const putUpdatePunch = async (
-        plantId: string,
-        punchItemId: string,
-        updateData: UpdatePunchData,
-        endpoint: UpdatePunchEndpoint
-    ) => {
-        const dto = { PunchItemId: punchItemId, ...updateData };
-        await axios.put(
-            `PunchListItem/${endpoint}?plantId=PCS$${plantId}${apiVersion}`,
-            dto
-        );
-    };
-
-    const getTask = async (
-        cancelToken: CancelToken,
-        plantId: string,
-        taskId: string
-    ) => {
-        const {
-            data,
-        } = await axios.get(
-            `CommPkg/Task?plantId=PCS$${plantId}&taskId=${taskId}${apiVersion}`,
-            { cancelToken: cancelToken }
-        );
-        return data as Task;
-    };
-
-    /* Used for clearing, unclearing, rejecting and verifying a */
-    const postPunchAction = async (
-        plantId: string,
-        punchItemId: string,
-        punchAction: PunchAction
-    ) => {
-        await axios.post(
-            `PunchListItem/${punchAction}?plantId=PCS$${plantId}${apiVersion}`,
-            punchItemId,
-            { headers: { 'Content-Type': 'application/json' } }
-        );
-    };
-
-    const postTaskSign = async (
-        cancelToken: CancelToken,
-        plantId: string,
-        taskId: string
-    ) => {
-        await axios.post(
-            `CommPkg/Task/Sign?plantId=PCS$${plantId}${apiVersion}`,
-            taskId,
-            {
-                cancelToken: cancelToken,
-                headers: { 'Content-Type': 'application/json' },
-            }
-        );
-    };
-
-    const postTaskUnsign = async (
-        cancelToken: CancelToken,
-        plantId: string,
-        taskId: string
-    ) => {
-        await axios.post(
-            `CommPkg/Task/Unsign?plantId=PCS$${plantId}${apiVersion}`,
-            taskId,
-            {
-                cancelToken: cancelToken,
-                headers: { 'Content-Type': 'application/json' },
-            }
-        );
-    };
-
-    const putTaskComment = async (
-        cancelToken: CancelToken,
-        plantId: string,
-        dto: TaskCommentDto
-    ) => {
-        await axios.put(
-            `CommPkg/Task/Comment?plantId=PCS$${plantId}${apiVersion}`,
-            dto,
-            { cancelToken: cancelToken }
-        );
-    };
-
-    const getTaskParameters = async (
-        cancelToken: CancelToken,
-        plantId: string,
-        taskId: string
-    ) => {
-        const {
-            data,
-        } = await axios.get(
-            `CommPkg/Task/Parameters?plantId=PCS$${plantId}&taskId=${taskId}${apiVersion}`,
-            { cancelToken: cancelToken }
-        );
-        return data as TaskParameter[];
-    };
-
-    const putTaskParameter = async (plantId: string, dto: TaskParameterDto) => {
-        await axios.put(
-            `CommPkg/Task/Parameters/Parameter?plantId=PCS$${plantId}${apiVersion}`,
-            dto
-        );
-    };
-
-    const getTaskAttachments = async (
-        cancelToken: CancelToken,
-        plantId: string,
-        taskId: string
-    ) => {
-        const {
-            data,
-        } = await axios.get(
-            `CommPkg/Task/Attachments?plantId=PCS$${plantId}&taskId=${taskId}&thumbnailSize=32${apiVersion}`,
-            { cancelToken: cancelToken }
-        );
-        return data as Attachment[];
-    };
-
-    const getTaskAttachment = async (
-        cancelToken: CancelToken,
-        plantId: string,
-        taskId: string,
-        attachmentId: number
-    ) => {
-        const { data } = await axios.get(
-            `CommPkg/Task/Attachment?plantId=PCS$${plantId}&taskId=${taskId}&attachmentId=${attachmentId}${apiVersion}`,
-            {
-                cancelToken: cancelToken,
-                responseType: 'blob',
-                headers: {
-                    'Content-Disposition':
-                        'attachment; filename="filename.jpg"',
-                },
-            }
-        );
-        return data as Blob;
-    };
-
     const getChecklistAttachments = async (
         plantId: string,
         checklistId: string
-    ) => {
+    ): Promise<Attachment[]> => {
         const { data } = await axios.get(
             `CheckList/Attachments?plantId=PCS$${plantId}&checkListId=${checklistId}&thumbnailSize=32${apiVersion}`
         );
@@ -410,7 +246,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         checklistId: string,
         attachmentId: number
-    ) => {
+    ): Promise<Blob> => {
         const { data } = await axios.get(
             `CheckList/Attachment?plantId=PCS$${plantId}&checkListId=${checklistId}&attachmentId=${attachmentId}${apiVersion}`,
             {
@@ -430,7 +266,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         checklistId: string,
         attachmentId: number
-    ) => {
+    ): Promise<void> => {
         const dto = {
             CheckListId: parseInt(checklistId),
             AttachmentId: attachmentId,
@@ -446,7 +282,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         parentId,
         data,
         title,
-    }: PostAttachmentProps) => {
+    }: PostAttachmentProps): Promise<void> => {
         await axios.post(
             `CheckList/Attachment?plantId=PCS$${plantId}&checkListId=${parentId}&title=${title}${apiVersion}`,
             data,
@@ -458,14 +294,221 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         );
     };
 
-    const getAttachments = async (
+    //------------
+    // PUNCH ITEMS
+    // -----------
+
+    const getPunchList = async (
+        plantId: string,
+        commPkgId: string
+    ): Promise<PunchPreview[]> => {
+        const { data } = await axios.get(
+            `CommPkg/PunchList?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}`
+        );
+        return data as PunchPreview[];
+    };
+
+    const getPunchCategories = async (
+        plantId: string
+    ): Promise<PunchCategory[]> => {
+        const { data } = await axios.get(
+            `PunchListItem/Categories?plantId=PCS$${plantId}${apiVersion}`
+        );
+        return data as PunchCategory[];
+    };
+
+    const getPunchTypes = async (plantId: string): Promise<PunchType[]> => {
+        const { data } = await axios.get(
+            `PunchListItem/Types?plantId=PCS$${plantId}${apiVersion}`
+        );
+        return data as PunchType[];
+    };
+
+    const getPunchOrganizations = async (
+        plantId: string
+    ): Promise<PunchOrganization[]> => {
+        const { data } = await axios.get(
+            `PunchListItem/Organizations?plantId=PCS$${plantId}${apiVersion}`
+        );
+        return data as PunchOrganization[];
+    };
+
+    const postNewPunch = async (
+        plantId: string,
+        newPunchData: NewPunch
+    ): Promise<void> => {
+        await axios.post(
+            `PunchListItem?plantId=PCS$${plantId}${apiVersion}`,
+            newPunchData
+        );
+    };
+
+    const getPunchItem = async (
+        plantId: string,
+        punchItemId: string
+    ): Promise<PunchItem> => {
+        const { data } = await axios.get(
+            `PunchListItem?plantId=PCS$${plantId}&punchItemId=${punchItemId}${apiVersion}`
+        );
+        return data as PunchItem;
+    };
+
+    const putUpdatePunch = async (
+        plantId: string,
+        punchItemId: string,
+        updateData: UpdatePunchData,
+        endpoint: UpdatePunchEndpoint
+    ): Promise<void> => {
+        const dto = { PunchItemId: punchItemId, ...updateData };
+        await axios.put(
+            `PunchListItem/${endpoint}?plantId=PCS$${plantId}${apiVersion}`,
+            dto
+        );
+    };
+
+    // Used for clearing, unclearing, rejecting and verifying a
+    const postPunchAction = async (
+        plantId: string,
+        punchItemId: string,
+        punchAction: PunchAction
+    ): Promise<void> => {
+        await axios.post(
+            `PunchListItem/${punchAction}?plantId=PCS$${plantId}${apiVersion}`,
+            punchItemId,
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+    };
+
+    //---------
+    // TASKS
+    //---------
+
+    const getTasks = async (
         cancelToken: CancelToken,
-        endpoint: string
-    ) => {
-        const { data } = await axios.get(`${endpoint}${apiVersion}`, {
-            cancelToken: cancelToken,
-        });
+        plantId: string,
+        commPkgId: string
+    ): Promise<TaskPreview[]> => {
+        const {
+            data,
+        } = await axios.get(
+            `CommPkg/Tasks?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}`,
+            { cancelToken: cancelToken }
+        );
+        return data as TaskPreview[];
+    };
+
+    const getTask = async (
+        cancelToken: CancelToken,
+        plantId: string,
+        taskId: string
+    ): Promise<Task> => {
+        const {
+            data,
+        } = await axios.get(
+            `CommPkg/Task?plantId=PCS$${plantId}&taskId=${taskId}${apiVersion}`,
+            { cancelToken: cancelToken }
+        );
+        return data as Task;
+    };
+
+    const postTaskSign = async (
+        cancelToken: CancelToken,
+        plantId: string,
+        taskId: string
+    ): Promise<void> => {
+        await axios.post(
+            `CommPkg/Task/Sign?plantId=PCS$${plantId}${apiVersion}`,
+            taskId,
+            {
+                cancelToken: cancelToken,
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
+    };
+
+    const postTaskUnsign = async (
+        cancelToken: CancelToken,
+        plantId: string,
+        taskId: string
+    ): Promise<void> => {
+        await axios.post(
+            `CommPkg/Task/Unsign?plantId=PCS$${plantId}${apiVersion}`,
+            taskId,
+            {
+                cancelToken: cancelToken,
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
+    };
+
+    const putTaskComment = async (
+        cancelToken: CancelToken,
+        plantId: string,
+        dto: TaskCommentDto
+    ): Promise<void> => {
+        await axios.put(
+            `CommPkg/Task/Comment?plantId=PCS$${plantId}${apiVersion}`,
+            dto,
+            { cancelToken: cancelToken }
+        );
+    };
+
+    const getTaskParameters = async (
+        cancelToken: CancelToken,
+        plantId: string,
+        taskId: string
+    ): Promise<TaskParameter[]> => {
+        const {
+            data,
+        } = await axios.get(
+            `CommPkg/Task/Parameters?plantId=PCS$${plantId}&taskId=${taskId}${apiVersion}`,
+            { cancelToken: cancelToken }
+        );
+        return data as TaskParameter[];
+    };
+
+    const putTaskParameter = async (
+        plantId: string,
+        dto: TaskParameterDto
+    ): Promise<void> => {
+        await axios.put(
+            `CommPkg/Task/Parameters/Parameter?plantId=PCS$${plantId}${apiVersion}`,
+            dto
+        );
+    };
+
+    const getTaskAttachments = async (
+        cancelToken: CancelToken,
+        plantId: string,
+        taskId: string
+    ): Promise<Attachment[]> => {
+        const {
+            data,
+        } = await axios.get(
+            `CommPkg/Task/Attachments?plantId=PCS$${plantId}&taskId=${taskId}&thumbnailSize=32${apiVersion}`,
+            { cancelToken: cancelToken }
+        );
         return data as Attachment[];
+    };
+
+    const getTaskAttachment = async (
+        cancelToken: CancelToken,
+        plantId: string,
+        taskId: string,
+        attachmentId: number
+    ): Promise<Blob> => {
+        const { data } = await axios.get(
+            `CommPkg/Task/Attachment?plantId=PCS$${plantId}&taskId=${taskId}&attachmentId=${attachmentId}${apiVersion}`,
+            {
+                cancelToken: cancelToken,
+                responseType: 'blob',
+                headers: {
+                    'Content-Disposition':
+                        'attachment; filename="filename.jpg"',
+                },
+            }
+        );
+        return data as Blob;
     };
 
     const getPunchAttachment = async (
@@ -473,7 +516,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         punchItemId: string,
         attachmentId: number
-    ) => {
+    ): Promise<Blob> => {
         const { data } = await axios.get(
             `PunchListItem/Attachment?plantId=PCS$${plantId}&punchItemId=${punchItemId}&attachmentId=${attachmentId}${apiVersion}`,
             {
@@ -493,7 +536,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         punchItemId: string,
         attachmentId: number
-    ) => {
+    ): Promise<void> => {
         const dto = {
             PunchItemId: parseInt(punchItemId),
             AttachmentId: attachmentId,
@@ -509,7 +552,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         parentId,
         data: formData,
         title,
-    }: PostAttachmentProps) => {
+    }: PostAttachmentProps): Promise<string> => {
         const { data } = await axios.post(
             `PunchListItem/TempAttachment?plantId=PCS$${plantId}${apiVersion}`,
             formData,
@@ -527,7 +570,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         parentId,
         data,
         title,
-    }: PostAttachmentProps) => {
+    }: PostAttachmentProps): Promise<void> => {
         await axios.post(
             `PunchListItem/Attachment?plantId=PCS$${plantId}&punchItemId=${parentId}&title=${title}${apiVersion}`,
             data,

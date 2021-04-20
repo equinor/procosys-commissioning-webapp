@@ -10,13 +10,13 @@ import AsyncCard from '../../../components/AsyncCard';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
 import { PunchItem } from '../../../services/apiTypes';
 import buildEndpoint from '../../../utils/buildEndpoint';
-import { removeSubdirectories } from '../../../utils/general';
 import useAttachments from '../../../utils/useAttachments';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import { PunchWrapper } from '../ClearPunch/ClearPunch';
 import PunchDetailsCard from '../ClearPunch/PunchDetailsCard';
 import { PunchAction } from '../ClearPunch/useClearPunchFacade';
 import useSnackbar from '../../../utils/useSnackbar';
+import removeSubdirectories from '../../../utils/removeSubdirectories';
 
 const VerifyPunchWrapper = styled.main`
     padding: 16px 4%;
@@ -35,7 +35,7 @@ const ButtonGroup = styled.div`
     }
 `;
 
-const VerifyPunch = () => {
+const VerifyPunch = (): JSX.Element => {
     const { url, history, params, api } = useCommonHooks();
     const [fetchPunchItemStatus, setFetchPunchItemStatus] = useState(
         AsyncStatus.LOADING
@@ -55,7 +55,7 @@ const VerifyPunch = () => {
 
     useEffect(() => {
         const source = axios.CancelToken.source();
-        (async () => {
+        (async (): Promise<void> => {
             try {
                 const punchItemFromApi = await api.getPunchItem(
                     params.plant,
@@ -67,7 +67,7 @@ const VerifyPunch = () => {
                 setFetchPunchItemStatus(AsyncStatus.ERROR);
             }
         })();
-        return () => {
+        return (): void => {
             source.cancel('Verify Punch component unmounted');
         };
     }, [params.plant, params.punchItemId, api]);
@@ -75,7 +75,7 @@ const VerifyPunch = () => {
     const handlePunchAction = async (
         punchAction: PunchAction,
         nextStep: () => void
-    ) => {
+    ): Promise<void> => {
         setPunchActionStatus(AsyncStatus.LOADING);
         try {
             await api.postPunchAction(
@@ -90,7 +90,7 @@ const VerifyPunch = () => {
         }
     };
 
-    const content = () => {
+    const content = (): JSX.Element => {
         if (
             fetchPunchItemStatus === AsyncStatus.SUCCESS &&
             punchItem &&
@@ -147,7 +147,7 @@ const VerifyPunch = () => {
                                         refreshAttachments={refreshAttachments}
                                         getAttachment={(
                                             cancelToken: CancelToken
-                                        ) =>
+                                        ): Promise<Blob> =>
                                             api.getPunchAttachment(
                                                 cancelToken,
                                                 params.plant,
@@ -164,7 +164,7 @@ const VerifyPunch = () => {
                                 disabled={
                                     punchActionStatus === AsyncStatus.LOADING
                                 }
-                                onClick={() =>
+                                onClick={(): Promise<void> =>
                                     handlePunchAction(PunchAction.UNCLEAR, () =>
                                         history.push(
                                             removeSubdirectories(url, 1) +
@@ -179,7 +179,7 @@ const VerifyPunch = () => {
                                 disabled={
                                     punchActionStatus === AsyncStatus.LOADING
                                 }
-                                onClick={() =>
+                                onClick={(): Promise<void> =>
                                     handlePunchAction(PunchAction.REJECT, () =>
                                         history.push(
                                             removeSubdirectories(url, 1) +
@@ -195,7 +195,7 @@ const VerifyPunch = () => {
                                 disabled={
                                     punchActionStatus === AsyncStatus.LOADING
                                 }
-                                onClick={() =>
+                                onClick={(): Promise<void> =>
                                     handlePunchAction(
                                         PunchAction.VERIFY,
                                         () => {
@@ -213,7 +213,7 @@ const VerifyPunch = () => {
                 </>
             );
         } else if (fetchPunchItemStatus === AsyncStatus.ERROR) {
-            return <ErrorPage title="Unable to load punch item" />;
+            return <ErrorPage title="Unable to load punch item." />;
         } else {
             return <SkeletonLoadingPage text="Loading punch item" />;
         }

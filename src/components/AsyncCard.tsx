@@ -17,8 +17,8 @@ const AsyncCard = ({
     emptyContentMessage,
     cardTitle,
     children,
-}: AsyncCardProps) => {
-    const content = () => {
+}: AsyncCardProps): JSX.Element => {
+    const content = (): JSX.Element => {
         if (fetchStatus === AsyncStatus.SUCCESS) {
             return children;
         } else if (fetchStatus === AsyncStatus.EMPTY_RESPONSE) {
@@ -26,7 +26,7 @@ const AsyncCard = ({
         } else if (fetchStatus === AsyncStatus.ERROR) {
             return <p>{errorMessage}</p>;
         } else {
-            return <SkeletonLoadingPage nrOfRows={3} />;
+            return <SkeletonLoadingPage nrOfRows={3} adjustableHeight={true} />;
         }
     };
 

@@ -15,7 +15,7 @@ const MeasuredValueInput = ({
     parameter,
     setSnackbarText,
     isSigned,
-}: MeasuredValueInputProps) => {
+}: MeasuredValueInputProps): JSX.Element => {
     const { api, params } = useCommonHooks();
     const [value, setValue] = useState(parameter.measuredValue);
     const [updateValueStatus, setUpdateValueStatus] = useState(
@@ -23,7 +23,7 @@ const MeasuredValueInput = ({
     );
     let valueBeforeFocus = '';
 
-    const updateValue = async () => {
+    const updateValue = async (): Promise<void> => {
         setUpdateValueStatus(AsyncStatus.LOADING);
         const dto: TaskParameterDto = {
             ParameterId: parameter.id,
@@ -48,11 +48,13 @@ const MeasuredValueInput = ({
             id={'MeasuredValue ' + parameter.id.toString()}
             onChange={(
                 e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-            ) => {
+            ): void => {
                 setValue(e.target.value);
             }}
-            onFocus={() => (valueBeforeFocus = value)}
-            onBlur={() => value !== valueBeforeFocus && updateValue()}
+            onFocus={(): string => (valueBeforeFocus = value)}
+            onBlur={(): void => {
+                value !== valueBeforeFocus && updateValue();
+            }}
         />
     );
 };
