@@ -16,7 +16,6 @@ import useCommonHooks from '../../../utils/useCommonHooks';
 import { PunchWrapper } from '../ClearPunch/ClearPunch';
 import { Button, Scrim } from '@equinor/eds-core-react';
 import {
-    AttachmentImage,
     AttachmentsWrapper,
     ImageModal,
     UploadImageButton,
@@ -158,7 +157,7 @@ const NewPunch = (): JSX.Element => {
                                 </UploadImageButton>
                                 {tempAttachments.map((attachment) => (
                                     <>
-                                        <AttachmentImage
+                                        <img
                                             key={attachment.id}
                                             src={URL.createObjectURL(
                                                 attachment.file

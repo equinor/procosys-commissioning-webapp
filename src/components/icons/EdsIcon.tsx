@@ -38,6 +38,7 @@ import {
     hourglass_empty,
     check,
     assignment_turned_in,
+    external_link,
 } from '@equinor/eds-icons';
 import { Icon } from '@equinor/eds-core-react';
 import React from 'react';
@@ -49,6 +50,7 @@ Icon.add({
     tune,
     file,
     link,
+    external_link,
     delete_to_trash,
     cloud_download,
     chevron_right,
