@@ -51,6 +51,7 @@ const useClearPunchFacade = () => {
     const [clearPunchStatus, setClearPunchStatus] = useState(
         AsyncStatus.INACTIVE
     );
+    const [defaultTypeId, setDefaultTypeId] = useState<number>();
     const updateDatabase = async (
         endpoint: UpdatePunchEndpoint,
         updateData: UpdatePunchData
@@ -154,6 +155,16 @@ const useClearPunchFacade = () => {
         }
     };
 
+    const findDefaultType = (
+        punchItemTypeCode: string,
+        types: PunchType[]
+    ): number | undefined => {
+        const matchedType = types.find(
+            (type) => type.code === punchItemTypeCode
+        );
+        return matchedType ? matchedType.id : undefined;
+    };
+
     useEffect(() => {
         (async (): Promise<void> => {
             try {
@@ -172,6 +183,9 @@ const useClearPunchFacade = () => {
                 setTypes(typesFromApi);
                 setOrganizations(organizationsFromApi);
                 setPunchItem(punchItemFromApi);
+                setDefaultTypeId(
+                    findDefaultType(punchItemFromApi.typeCode, typesFromApi)
+                );
                 setFetchPunchItemStatus(AsyncStatus.SUCCESS);
             } catch (error) {
                 setFetchPunchItemStatus(AsyncStatus.ERROR);
@@ -189,6 +203,7 @@ const useClearPunchFacade = () => {
         organizations,
         setSnackbarText,
         snackbar,
+        defaultTypeId,
         updateDatabase,
         clearPunchItem,
         handleCategoryChange,

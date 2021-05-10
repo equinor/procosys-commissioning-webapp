@@ -40,12 +40,12 @@ const App = ({
 
     return (
         <AppInsightsContext.Provider value={reactPlugin}>
-            <CommAppContextProvider
-                api={procosysApiInstance}
-                auth={authInstance}
-            >
-                <Router basename={rootDirectory}>
-                    <ErrorBoundary>
+            <ErrorBoundary appInsights={reactPlugin}>
+                <CommAppContextProvider
+                    api={procosysApiInstance}
+                    auth={authInstance}
+                >
+                    <Router basename={rootDirectory}>
                         <Switch>
                             <Route
                                 path="/:plant?/:project?"
@@ -53,9 +53,9 @@ const App = ({
                             />
                             <Route render={(): JSX.Element => <h1>404</h1>} />
                         </Switch>
-                    </ErrorBoundary>
-                </Router>
-            </CommAppContextProvider>
+                    </Router>
+                </CommAppContextProvider>
+            </ErrorBoundary>
         </AppInsightsContext.Provider>
     );
 };
