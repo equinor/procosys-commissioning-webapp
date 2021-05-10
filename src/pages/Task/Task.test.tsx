@@ -86,7 +86,6 @@ describe('<Task/> after successful loading', () => {
             'Task successfully signed'
         );
         expect(messageInSnackbar).toBeInTheDocument();
-        expect(editButton).toBeDisabled();
         const unsignButton = screen.getByRole('button', { name: 'Unsign' });
         userEvent.click(unsignButton);
         messageInSnackbar = await screen.findByText(

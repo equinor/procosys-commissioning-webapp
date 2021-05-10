@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { animated, AnimatedValue } from 'react-spring';
+import { animated } from 'react-spring';
 import { Button } from '@equinor/eds-core-react';
 import EdsIcon from '../icons/EdsIcon';
 import PlantContext from '../../contexts/PlantContext';
@@ -73,8 +73,8 @@ const PlantInfo = styled.div`
 `;
 
 type SideMenuProps = {
-    animation: AnimatedValue<any>;
-    backdropAnimation: AnimatedValue<any>;
+    animation: any;
+    backdropAnimation: any;
     setDrawerIsOpen: (drawerIsOpen: boolean) => void;
 };
 

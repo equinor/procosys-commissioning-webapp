@@ -16,7 +16,6 @@ import { Banner, Typography } from '@equinor/eds-core-react';
 import Axios, { CancelToken } from 'axios';
 import useAsyncGet from '../../utils/useAsyncGet';
 import removeSubdirectories from '../../utils/removeSubdirectories';
-const { BannerIcon, BannerMessage } = Banner;
 
 const NextTaskButton = styled(TaskPreviewButton)`
     padding: 0;
@@ -129,12 +128,12 @@ const Task = (): JSX.Element => {
             />
             {isSigned ? (
                 <Banner>
-                    <BannerIcon variant={'info'}>
+                    <Banner.Icon variant={'info'}>
                         <EdsIcon name={'info_circle'} />
-                    </BannerIcon>
-                    <BannerMessage>
+                    </Banner.Icon>
+                    <Banner.Message>
                         This task is signed. Unsign to make changes.
-                    </BannerMessage>
+                    </Banner.Message>
                 </Banner>
             ) : null}
             <TaskWrapper>

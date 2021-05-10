@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ChecklistDetails } from '../../services/apiTypes';
-import {
-    Button,
-    Divider,
-    TextField,
-    Typography,
-} from '@equinor/eds-core-react';
+import { Button, Divider, TextField } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import {
@@ -13,9 +8,6 @@ import {
     determineVariant,
 } from '../../utils/textFieldHelpers';
 import useCommonHooks from '../../utils/useCommonHooks';
-import EdsIcon from '../../components/icons/EdsIcon';
-import { Banner } from '@equinor/eds-core-react';
-const { BannerMessage, BannerIcon } = Banner;
 
 const ChecklistSignatureWrapper = styled.div<{ helperTextVisible: boolean }>`
     display: flex;

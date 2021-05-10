@@ -33,6 +33,7 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
         setFetchProjectsAndPermissionsStatus,
     ] = useState(AsyncStatus.LOADING);
 
+    //Sends user to the last selected plant and project. This will be his/hers landing page.
     useEffect(() => {
         const plantInStorage = window.localStorage.getItem(StorageKey.PLANT);
         const projectInStorage = window.localStorage.getItem(
@@ -51,6 +52,7 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
             history.push(`/${plantInStorage}/${projectInStorage}`);
     }, [params.plant, params.project]);
 
+    //Sets the last visited plant/project as the users landing page
     useEffect(() => {
         window.localStorage.setItem(StorageKey.PLANT, params.plant);
         if (!params.project) return;
@@ -60,13 +62,33 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
     useEffect(() => {
         if (!params.plant) setCurrentPlant(undefined);
         if (availablePlants.length < 1) return;
-        setCurrentPlant(matchPlantInURL(availablePlants, params.plant));
+        let matchedPlant: Plant | undefined;
+        try {
+            matchedPlant = matchPlantInURL(availablePlants, params.plant);
+            setCurrentPlant(matchedPlant);
+        } catch (error) {
+            // Prevents an invalid plant being set as the users home-plant
+            window.localStorage.removeItem(StorageKey.PLANT);
+            window.localStorage.removeItem(StorageKey.PROJECT);
+            throw error;
+        }
     }, [availablePlants, params.plant]);
 
     useEffect(() => {
         if (!params.project) setCurrentProject(undefined);
         if (availableProjects.length < 1 || !params.project) return;
-        setCurrentProject(matchProjectInURL(availableProjects, params.project));
+        let matchedProject: Project | undefined;
+        try {
+            matchedProject = matchProjectInURL(
+                availableProjects,
+                params.project
+            );
+            setCurrentProject(matchedProject);
+        } catch (error) {
+            // Prevents an invalid project being set as the users home-plant
+            window.localStorage.removeItem(StorageKey.PROJECT);
+            throw error;
+        }
     }, [availableProjects, params.project]);
 
     useEffect(() => {

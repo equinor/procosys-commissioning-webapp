@@ -44,6 +44,7 @@ const ClearPunch = (): JSX.Element => {
         handleTypeChange,
         handleRaisedByChange,
         handleClearingByChange,
+        defaultTypeId,
     } = useClearPunchFacade();
     const { api, params, url } = useCommonHooks();
     const {
@@ -94,14 +95,7 @@ const ClearPunch = (): JSX.Element => {
                             id="PunchTypeSelect"
                             label="Type"
                             disabled={clearPunchStatus === AsyncStatus.LOADING}
-                            defaultValue={
-                                ensure(
-                                    types.find(
-                                        (type) =>
-                                            type.code === punchItem.typeCode
-                                    )
-                                ).id
-                            }
+                            defaultValue={defaultTypeId}
                             onChange={handleTypeChange}
                         >
                             {types.map((type) => (

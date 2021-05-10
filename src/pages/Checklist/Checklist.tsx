@@ -21,7 +21,6 @@ import buildEndpoint from '../../utils/buildEndpoint';
 import useSnackbar from '../../utils/useSnackbar';
 import AsyncPage from '../../components/AsyncPage';
 import { Banner } from '@equinor/eds-core-react';
-const { BannerIcon, BannerMessage } = Banner;
 
 const ChecklistWrapper = styled.div`
     padding: 0 4%;
@@ -90,12 +89,12 @@ const Checklist = (): JSX.Element => {
                 />
                 {isSigned && (
                     <Banner>
-                        <BannerIcon variant={'info'}>
+                        <Banner.Icon variant={'info'}>
                             <EdsIcon name={'info_circle'} />
-                        </BannerIcon>
-                        <BannerMessage>
+                        </Banner.Icon>
+                        <Banner.Message>
                             This checklist is signed. Unsign to make changes.
-                        </BannerMessage>
+                        </Banner.Message>
                     </Banner>
                 )}
                 <ChecklistWrapper>
@@ -178,13 +177,13 @@ const Checklist = (): JSX.Element => {
                     </AsyncCard>
                     {!isSigned && !allItemsCheckedOrNA && (
                         <Banner>
-                            <BannerIcon variant={'warning'}>
+                            <Banner.Icon variant={'warning'}>
                                 <EdsIcon name={'warning_outlined'} />
-                            </BannerIcon>
-                            <BannerMessage>
+                            </Banner.Icon>
+                            <Banner.Message>
                                 All applicable items must be checked before
                                 signing.
-                            </BannerMessage>
+                            </Banner.Message>
                         </Banner>
                     )}
                 </ChecklistWrapper>

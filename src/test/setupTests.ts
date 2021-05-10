@@ -12,18 +12,11 @@ declare global {
 }
 
 configure({
-    getElementError: (message: string, container) => {
+    getElementError: (message: string | null) => {
+        if (!message) return new Error('no error message');
         const error = new Error(message);
         error.name = 'TestingLibraryElementError';
         error.stack = undefined;
         return error;
-    },
-});
-
-//Fixes MSAL interfering with the globals
-const crypto = require('crypto');
-Object.defineProperty(global, 'crypto', {
-    value: {
-        getRandomValues: (arr: any) => crypto.randomBytes(arr.length),
     },
 });
