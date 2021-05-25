@@ -86,6 +86,7 @@ stages:
       clusterName: '${{ variables.aksTestName }}'
       kvName: '${{ variables.kvName }}'
       kvRgName: '${{ variables.kvRgName }}'
+      replicas: 2
 
 # Deploy to Test
 - stage: test
@@ -114,6 +115,7 @@ stages:
       clusterName: '${{ variables.aksTestName }}'
       kvName: '${{ variables.kvName }}'
       kvRgName: '${{ variables.kvRgName }}'
+      replicas: 2
 
 # Deploy to Prod
 - stage: prod
@@ -142,3 +144,4 @@ stages:
       clusterName: '${{ variables.aksProdName }}'
       kvName: '${{ variables.kvName }}'
       kvRgName: '${{ variables.kvRgName }}'
+      replicas: 3
