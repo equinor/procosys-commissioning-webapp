@@ -1,6 +1,7 @@
 {
   "name": "procosys-commissioning-webapp",
   "version": "0.1.0",
+  "homepage": ".",
   "private": true,
   "dependencies": {
     "@azure/msal-browser": "^2.14.1",
