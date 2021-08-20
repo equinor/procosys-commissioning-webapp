@@ -33,11 +33,6 @@ const App = ({
     appInsightsInstance,
     appInsightsReactPlugin: reactPlugin,
 }: AppProps): JSX.Element => {
-    let rootDirectory = '';
-    if (window.location.pathname.substr(0, 5) === '/comm') {
-        rootDirectory = '/comm';
-    }
-
     return (
         <AppInsightsContext.Provider value={reactPlugin}>
             <ErrorBoundary appInsights={reactPlugin}>
@@ -45,7 +40,7 @@ const App = ({
                     api={procosysApiInstance}
                     auth={authInstance}
                 >
-                    <Router basename={rootDirectory}>
+                    <Router basename={'/comm'}>
                         <Switch>
                             <Route
                                 path="/:plant?/:project?"
