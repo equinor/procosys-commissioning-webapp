@@ -45,29 +45,30 @@ const initialize = async () => {
         configurationScope
     );
 
-    const { procosysApiConfig, appInsightsConfig } = await getAppConfig(
+    const { appConfig, featureFlags } = await getAppConfig(
         configurationEndpoint,
         configurationAccessToken
     );
     const baseApiInstance = baseApiService({
         authInstance,
-        baseURL: procosysApiConfig.baseUrl,
-        scope: procosysApiConfig.scope,
+        baseURL: appConfig.procosysWebApi.baseUrl,
+        scope: appConfig.procosysWebApi.scope,
     });
 
     const procosysApiInstance = procosysApiService({
         axios: baseApiInstance,
-        apiVersion: procosysApiConfig.apiVersion,
+        apiVersion: appConfig.procosysWebApi.apiVersion,
     });
     const {
         appInsightsInstance,
         appInsightsReactPlugin,
-    } = initializeAppInsights(appInsightsConfig.instrumentationKey);
+    } = initializeAppInsights(appConfig.appInsights.instrumentationKey);
     return {
         authInstance,
         procosysApiInstance,
         appInsightsInstance,
         appInsightsReactPlugin,
+        featureFlags,
     };
 };
 
@@ -79,6 +80,7 @@ const initialize = async () => {
             procosysApiInstance,
             appInsightsInstance,
             appInsightsReactPlugin,
+            featureFlags,
         } = await initialize();
         render(
             <App
@@ -86,6 +88,7 @@ const initialize = async () => {
                 procosysApiInstance={procosysApiInstance}
                 appInsightsInstance={appInsightsInstance}
                 appInsightsReactPlugin={appInsightsReactPlugin}
+                featureFlags={featureFlags}
             />
         );
     } catch (error) {
