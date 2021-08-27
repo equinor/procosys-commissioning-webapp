@@ -2,13 +2,14 @@ import React, { useState, useEffect, useContext, ReactElement } from 'react';
 import ErrorPage from '../components/error/ErrorPage';
 import SkeletonLoader from '../components/loading/SkeletonLoader';
 import PlantContext from '../contexts/PlantContext';
-import { AsyncStatus } from '../contexts/CommAppContext';
+import CommAppContext, { AsyncStatus } from '../contexts/CommAppContext';
 
 const withAccessControl = (
     WrappedComponent: () => ReactElement,
     requiredPermissions: string[] = []
 ) => (props: JSX.IntrinsicAttributes): JSX.Element => {
     const { permissions } = useContext(PlantContext);
+    const { featureFlags } = useContext(CommAppContext);
     const [checkPermissionsStatus, setCheckPermissionsStatus] = useState(
         AsyncStatus.LOADING
     );
@@ -25,6 +26,12 @@ const withAccessControl = (
 
     if (checkPermissionsStatus === AsyncStatus.LOADING) {
         return <SkeletonLoader text="Checking permissions" />;
+    }
+
+    if (!featureFlags.commAppIsEnabled) {
+        return (
+            <ErrorPage title="This app is currently disabled. See procosys.com for more info." />
+        );
     }
 
     if (checkPermissionsStatus === AsyncStatus.SUCCESS) {

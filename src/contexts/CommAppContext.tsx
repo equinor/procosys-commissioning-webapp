@@ -3,6 +3,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import ErrorPage from '../components/error/ErrorPage';
 import LoadingPage from '../components/loading/LoadingPage';
 import { Plant } from '../services/apiTypes';
+import { FeatureFlags } from '../services/appConfiguration';
 import { IAuthService } from '../services/authService';
 import { ProcosysApiService } from '../services/procosysApi';
 
@@ -11,6 +12,7 @@ type CommAppContextProps = {
     fetchPlantsStatus: AsyncStatus;
     api: ProcosysApiService;
     auth: IAuthService;
+    featureFlags: FeatureFlags;
 };
 
 export enum AsyncStatus {
@@ -27,9 +29,11 @@ type CommAppContextProviderProps = {
     children: ReactNode;
     auth: IAuthService;
     api: ProcosysApiService;
+    featureFlags: FeatureFlags;
 };
 
 export const CommAppContextProvider: React.FC<CommAppContextProviderProps> = ({
+    featureFlags,
     children,
     auth,
     api,
@@ -75,6 +79,7 @@ export const CommAppContextProvider: React.FC<CommAppContextProviderProps> = ({
             value={{
                 fetchPlantsStatus,
                 availablePlants,
+                featureFlags,
                 api,
                 auth,
             }}
