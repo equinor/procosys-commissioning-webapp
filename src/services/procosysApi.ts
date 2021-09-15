@@ -82,7 +82,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         const {
             data,
         } = await axios.get(
-            `CommPkg/Search?plantId=${plantId}&startsWithCommPkgNo=${query}&includeClosedProjects=false&projectId=${projectId}${apiVersion}`,
+            `CommPkg/Search?plantId=${plantId}&startsWithCommPkgNo=${query}&includeDecommissioningPkgs=true&projectId=${projectId}${apiVersion}`,
             { cancelToken }
         );
 
