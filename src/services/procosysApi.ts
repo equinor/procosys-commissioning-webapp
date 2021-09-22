@@ -79,9 +79,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         cancelToken?: CancelToken
     ): Promise<CommPkgSearchResults> => {
-        const {
-            data,
-        } = await axios.get(
+        const { data } = await axios.get(
             `CommPkg/Search?plantId=${plantId}&startsWithCommPkgNo=${query}&includeDecommissioningPkgs=true&projectId=${projectId}${apiVersion}`,
             { cancelToken }
         );
@@ -388,9 +386,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         commPkgId: string
     ): Promise<TaskPreview[]> => {
-        const {
-            data,
-        } = await axios.get(
+        const { data } = await axios.get(
             `CommPkg/Tasks?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}`,
             { cancelToken: cancelToken }
         );
@@ -402,9 +398,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         taskId: string
     ): Promise<Task> => {
-        const {
-            data,
-        } = await axios.get(
+        const { data } = await axios.get(
             `CommPkg/Task?plantId=PCS$${plantId}&taskId=${taskId}${apiVersion}`,
             { cancelToken: cancelToken }
         );
@@ -458,9 +452,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         taskId: string
     ): Promise<TaskParameter[]> => {
-        const {
-            data,
-        } = await axios.get(
+        const { data } = await axios.get(
             `CommPkg/Task/Parameters?plantId=PCS$${plantId}&taskId=${taskId}${apiVersion}`,
             { cancelToken: cancelToken }
         );
@@ -482,9 +474,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         taskId: string
     ): Promise<Attachment[]> => {
-        const {
-            data,
-        } = await axios.get(
+        const { data } = await axios.get(
             `CommPkg/Task/Attachments?plantId=PCS$${plantId}&taskId=${taskId}&thumbnailSize=32${apiVersion}`,
             { cancelToken: cancelToken }
         );
