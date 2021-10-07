@@ -4,8 +4,8 @@ import withAccessControl from '../../services/withAccessControl';
 import styled from 'styled-components';
 import useSearchPageFacade, { SearchStatus } from './useSearchPageFacade';
 import SearchResults from './SearchResults/SearchResults';
-import Navbar from '../../components/navigation/Navbar';
 import PageHeader from '../../components/PageHeader';
+import { BackButton, Navbar } from '@equinor/procosys-webapp-components';
 
 const SearchPageWrapper = styled.main`
     padding: 0 4%;
@@ -44,7 +44,7 @@ const Search = (): JSX.Element => {
     };
     return (
         <>
-            <Navbar leftContent={{ name: 'back', label: 'Bookmarks' }} />
+            <Navbar leftContent={<BackButton />} />
             <SearchPageWrapper>
                 {searchHeaderToRender()}
                 <SearchField

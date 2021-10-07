@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from '../../components/navigation/Navbar';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import { CheckItem, ChecklistDetails } from '../../services/apiTypes';
 import CheckItems from './CheckItems/CheckItems';
@@ -20,7 +19,12 @@ import useAttachments from '../../utils/useAttachments';
 import buildEndpoint from '../../utils/buildEndpoint';
 import useSnackbar from '../../utils/useSnackbar';
 import AsyncPage from '../../components/AsyncPage';
-import { Banner } from '@equinor/eds-core-react';
+import { Banner, Button } from '@equinor/eds-core-react';
+import {
+    BackButton,
+    Navbar,
+    removeSubdirectories,
+} from '@equinor/procosys-webapp-components';
 
 const ChecklistWrapper = styled.div`
     padding: 0 4%;
@@ -33,7 +37,7 @@ const ChecklistWrapper = styled.div`
 `;
 
 const Checklist = (): JSX.Element => {
-    const { params, api } = useCommonHooks();
+    const { params, api, history, url } = useCommonHooks();
     const getAttachmentsEndpoint = buildEndpoint().getChecklistAttachments(
         params.plant,
         params.checklistId
@@ -194,9 +198,33 @@ const Checklist = (): JSX.Element => {
     return (
         <>
             <Navbar
-                noBorder={true}
-                leftContent={{ name: 'back', label: 'CommPkg' }}
-                rightContent={{ name: 'newPunch' }}
+                leftContent={
+                    <BackButton
+                        to={
+                            history.location.pathname.includes('/new-punch')
+                                ? `${removeSubdirectories(
+                                      history.location.pathname,
+                                      1
+                                  )}`
+                                : `${removeSubdirectories(url, 2)}`
+                        }
+                    />
+                }
+                midContent={'MCCR'}
+                rightContent={
+                    history.location.pathname.includes(
+                        '/new-punch'
+                    ) ? undefined : (
+                        <Button
+                            variant="ghost"
+                            onClick={(): void =>
+                                history.push(`${url}/punch-list/new-punch`)
+                            }
+                        >
+                            New punch
+                        </Button>
+                    )
+                }
             />
             <AsyncPage
                 fetchStatus={fetchChecklistStatus}

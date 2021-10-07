@@ -5,10 +5,11 @@ import PageHeader from '../../components/PageHeader';
 import { getCurrentBookmarks } from './useBookmarks';
 import { Button } from '@equinor/eds-core-react';
 import PlantContext from '../../contexts/PlantContext';
-import Navbar from '../../components/navigation/Navbar';
 import EdsIcon from '../../components/icons/EdsIcon';
 import useCommonHooks from '../../utils/useCommonHooks';
 import withAccessControl from '../../services/withAccessControl';
+import { Navbar, ProcosysButton } from '@equinor/procosys-webapp-components';
+import SideMenu from '../../components/navigation/SideMenu';
 
 const BookmarksWrapper = styled.main`
     display: flex;
@@ -60,8 +61,8 @@ const Bookmarks = (): JSX.Element => {
     return (
         <main>
             <Navbar
-                leftContent={{ name: 'hamburger' }}
-                rightContent={{ name: 'search' }}
+                leftContent={<ProcosysButton />}
+                rightContent={<SideMenu />}
             />
             <BookmarksWrapper>
                 {content()}
