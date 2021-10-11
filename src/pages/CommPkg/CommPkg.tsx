@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DetailsCard from './DetailsCard';
 import NavigationFooter from './NavigationFooter';
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import Scope from './Scope/Scope';
 import Tasks from './Tasks/Tasks';
 import PunchList from './PunchList/PunchList';
