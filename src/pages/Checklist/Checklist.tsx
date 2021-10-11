@@ -210,7 +210,7 @@ const Checklist = (): JSX.Element => {
                         }
                     />
                 }
-                midContent={'MCCR'}
+                midContent={'CPCL'}
                 rightContent={
                     history.location.pathname.includes(
                         '/new-punch'
@@ -218,7 +218,7 @@ const Checklist = (): JSX.Element => {
                         <Button
                             variant="ghost"
                             onClick={(): void =>
-                                history.push(`${url}/punch-list/new-punch`)
+                                history.push(`${url}/new-punch`)
                             }
                         >
                             New punch
