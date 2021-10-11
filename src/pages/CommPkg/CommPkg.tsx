@@ -39,15 +39,16 @@ const CommPkg = (): JSX.Element => {
         const source = Axios.CancelToken.source();
         (async (): Promise<void> => {
             try {
-                const [
-                    scopeFromApi,
-                    tasksFromApi,
-                    punchListFromApi,
-                ] = await Promise.all([
-                    api.getScope(params.plant, params.commPkg),
-                    api.getTasks(source.token, params.plant, params.commPkg),
-                    api.getPunchList(params.plant, params.commPkg),
-                ]);
+                const [scopeFromApi, tasksFromApi, punchListFromApi] =
+                    await Promise.all([
+                        api.getScope(params.plant, params.commPkg),
+                        api.getTasks(
+                            source.token,
+                            params.plant,
+                            params.commPkg
+                        ),
+                        api.getPunchList(params.plant, params.commPkg),
+                    ]);
                 setScope(scopeFromApi);
                 setTasks(tasksFromApi);
                 setPunchList(punchListFromApi);

@@ -96,13 +96,12 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
         (async (): Promise<void> => {
             setFetchProjectsAndPermissionsStatus(AsyncStatus.LOADING);
             try {
-                const [
-                    projectsFromApi,
-                    permissionsFromApi,
-                ] = await Promise.all([
-                    api.getProjectsForPlant(currentPlant.id),
-                    await api.getPermissionsForPlant(currentPlant.id),
-                ]);
+                const [projectsFromApi, permissionsFromApi] = await Promise.all(
+                    [
+                        api.getProjectsForPlant(currentPlant.id),
+                        await api.getPermissionsForPlant(currentPlant.id),
+                    ]
+                );
                 setAvailableProjects(projectsFromApi);
                 setPermissions(permissionsFromApi);
                 if (projectsFromApi.length < 1) {

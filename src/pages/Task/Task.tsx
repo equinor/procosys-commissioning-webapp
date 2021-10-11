@@ -47,18 +47,14 @@ const findNextTask = (
 
 const Task = (): JSX.Element => {
     const { url, api, params } = useCommonHooks();
-    const {
-        response: attachments,
-        fetchStatus: fetchAttachmentsStatus,
-    } = useAsyncGet((cancelToken: CancelToken) =>
-        api.getTaskAttachments(cancelToken, params.plant, params.taskId)
-    );
-    const {
-        response: parameters,
-        fetchStatus: fetchParametersStatus,
-    } = useAsyncGet((token) =>
-        api.getTaskParameters(token, params.plant, params.taskId)
-    );
+    const { response: attachments, fetchStatus: fetchAttachmentsStatus } =
+        useAsyncGet((cancelToken: CancelToken) =>
+            api.getTaskAttachments(cancelToken, params.plant, params.taskId)
+        );
+    const { response: parameters, fetchStatus: fetchParametersStatus } =
+        useAsyncGet((token) =>
+            api.getTaskParameters(token, params.plant, params.taskId)
+        );
     const [task, setTask] = useState<TaskType>();
     const [nextTask, setNextTask] = useState<TaskPreview | null>(null);
     const [fetchNextTaskStatus, setFetchNextTaskStatus] = useState(

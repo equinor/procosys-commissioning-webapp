@@ -37,9 +37,11 @@ const Description = styled.div`
 const StatusIconWrapper = styled.div`
     grid-area: 2 / 3 / 2 / 4;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     & img {
         height: 20px;
-        margin-top: 10px;
         margin-right: -1.2px;
     }
 `;
