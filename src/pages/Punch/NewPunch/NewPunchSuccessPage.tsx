@@ -1,8 +1,8 @@
 import { Button } from '@equinor/eds-core-react';
+import { removeSubdirectories } from '@equinor/procosys-webapp-components';
 import React from 'react';
 import styled from 'styled-components';
 import EdsIcon from '../../../components/icons/EdsIcon';
-import removeSubdirectories from '../../../utils/removeSubdirectories';
 import useCommonHooks from '../../../utils/useCommonHooks';
 
 const ButtonGroup = styled.div`

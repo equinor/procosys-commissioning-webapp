@@ -2,7 +2,6 @@ import { Button, NativeSelect, TextField } from '@equinor/eds-core-react';
 import React from 'react';
 import ErrorPage from '../../../components/error/ErrorPage';
 import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
-import Navbar from '../../../components/navigation/Navbar';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
 import PunchDetailsCard from './PunchDetailsCard';
 import { NewPunchFormWrapper } from '../NewPunch/NewPunchForm';
@@ -22,7 +21,11 @@ import useAttachments from '../../../utils/useAttachments';
 import buildEndpoint from '../../../utils/buildEndpoint';
 import { CancelToken } from 'axios';
 import ensure from '../../../utils/ensure';
-import removeSubdirectories from '../../../utils/removeSubdirectories';
+import {
+    BackButton,
+    Navbar,
+    removeSubdirectories,
+} from '@equinor/procosys-webapp-components';
 
 export const PunchWrapper = styled.main``;
 
@@ -263,11 +266,9 @@ const ClearPunch = (): JSX.Element => {
         <>
             <Navbar
                 noBorder
-                leftContent={{
-                    name: 'back',
-                    label: 'Punch list',
-                    url: removeSubdirectories(url, 2),
-                }}
+                leftContent={
+                    <BackButton to={`${removeSubdirectories(url, 2)}`} />
+                }
             />
             <PunchWrapper>{content()}</PunchWrapper>
             {snackbar}

@@ -5,7 +5,6 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import Scope from './Scope/Scope';
 import Tasks from './Tasks/Tasks';
 import PunchList from './PunchList/PunchList';
-import Navbar from '../../components/navigation/Navbar';
 import styled from 'styled-components';
 import useCommonHooks from '../../utils/useCommonHooks';
 import { AsyncStatus } from '../../contexts/CommAppContext';
@@ -19,11 +18,16 @@ import NavigationFooterShell from './NavigationFooterShell';
 import withAccessControl from '../../services/withAccessControl';
 import Axios from 'axios';
 import calculateHighestStatus from '../../utils/calculateHighestStatus';
+import {
+    BackButton,
+    Navbar,
+    removeSubdirectories,
+} from '@equinor/procosys-webapp-components';
 
 const CommPkgWrapper = styled.main``;
 
 const CommPkg = (): JSX.Element => {
-    const { api, params, path } = useCommonHooks();
+    const { api, params, path, pathname } = useCommonHooks();
     const [scope, setScope] = useState<ChecklistPreview[]>();
     const [tasks, setTasks] = useState<TaskPreview[]>();
     const [punchList, setPunchList] = useState<PunchPreview[]>();
@@ -91,7 +95,9 @@ const CommPkg = (): JSX.Element => {
         <CommPkgWrapper>
             <Navbar
                 noBorder
-                leftContent={{ name: 'back', label: 'Bookmarks' }}
+                leftContent={
+                    <BackButton to={removeSubdirectories(pathname, 2)} />
+                }
             />
             <DetailsCard commPkgId={params.commPkg} />
             <Switch>

@@ -1,3 +1,4 @@
+import { removeSubdirectories } from '@equinor/procosys-webapp-components';
 import React, { useEffect, useState } from 'react';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
 import {
@@ -7,7 +8,6 @@ import {
     PunchItem,
 } from '../../../services/apiTypes';
 import ensure from '../../../utils/ensure';
-import removeSubdirectories from '../../../utils/removeSubdirectories';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import useSnackbar from '../../../utils/useSnackbar';
 
@@ -68,8 +68,9 @@ const useClearPunchFacade = () => {
             setUpdatePunchStatus(AsyncStatus.SUCCESS);
             setSnackbarText('Change successfully saved.');
         } catch (error) {
+            const procosysError = error as string;
             setUpdatePunchStatus(AsyncStatus.ERROR);
-            setSnackbarText(error.toString());
+            setSnackbarText(procosysError);
         }
     };
 
