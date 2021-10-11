@@ -7,7 +7,7 @@ import matchProjectInURL from '../utils/matchProjectInURL';
 import CommAppContext, { AsyncStatus } from './CommAppContext';
 import useCommonHooks from '../utils/useCommonHooks';
 import ErrorPage from '../components/error/ErrorPage';
-import Navbar from '../components/navigation/Navbar';
+import { Navbar } from '@equinor/procosys-webapp-components';
 
 export type PlantContextProps = {
     fetchProjectsAndPermissionsStatus: AsyncStatus;

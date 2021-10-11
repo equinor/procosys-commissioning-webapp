@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import Attachment, { AttachmentsWrapper } from '../../../components/Attachment';
 import ErrorPage from '../../../components/error/ErrorPage';
 import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
-import Navbar from '../../../components/navigation/Navbar';
 import AsyncCard from '../../../components/AsyncCard';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
 import { PunchItem } from '../../../services/apiTypes';
@@ -16,7 +15,11 @@ import { PunchWrapper } from '../ClearPunch/ClearPunch';
 import PunchDetailsCard from '../ClearPunch/PunchDetailsCard';
 import { PunchAction } from '../ClearPunch/useClearPunchFacade';
 import useSnackbar from '../../../utils/useSnackbar';
-import removeSubdirectories from '../../../utils/removeSubdirectories';
+import {
+    BackButton,
+    Navbar,
+    removeSubdirectories,
+} from '@equinor/procosys-webapp-components';
 
 const VerifyPunchWrapper = styled.main`
     padding: 16px 4%;
@@ -223,11 +226,7 @@ const VerifyPunch = (): JSX.Element => {
         <>
             <Navbar
                 noBorder
-                leftContent={{
-                    name: 'back',
-                    label: 'Punch list',
-                    url: removeSubdirectories(url, 2),
-                }}
+                leftContent={<BackButton to={removeSubdirectories(url, 2)} />}
             />
             <PunchWrapper>{content()}</PunchWrapper>
             {snackbar}
