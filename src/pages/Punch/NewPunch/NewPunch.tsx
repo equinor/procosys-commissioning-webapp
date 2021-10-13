@@ -6,7 +6,6 @@ import {
     PunchType,
 } from '../../../services/apiTypes';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
-import Navbar from '../../../components/navigation/Navbar';
 import ChecklistDetailsCard from '../../Checklist/ChecklistDetailsCard';
 import NewPunchForm from './NewPunchForm';
 import useFormFields from '../../../utils/useFormFields';
@@ -25,6 +24,11 @@ import UploadAttachment from '../../../components/UploadAttachment';
 import EdsCard from '../../../components/EdsCard';
 import useSnackbar from '../../../utils/useSnackbar';
 import AsyncPage from '../../../components/AsyncPage';
+import {
+    BackButton,
+    Navbar,
+    removeSubdirectories,
+} from '@equinor/procosys-webapp-components';
 
 export type PunchFormData = {
     category: string;
@@ -58,10 +62,8 @@ const NewPunch = (): JSX.Element => {
     const [submitPunchStatus, setSubmitPunchStatus] = useState(
         AsyncStatus.INACTIVE
     );
-    const [
-        checklistDetails,
-        setChecklistDetails,
-    ] = useState<ChecklistDetails>();
+    const [checklistDetails, setChecklistDetails] =
+        useState<ChecklistDetails>();
     const [tempAttachments, setTempAttachments] = useState<TempAttachment[]>(
         []
     );
@@ -224,10 +226,7 @@ const NewPunch = (): JSX.Element => {
 
     return (
         <>
-            <Navbar
-                noBorder
-                leftContent={{ name: 'back', label: 'Checklist' }}
-            />
+            <Navbar noBorder leftContent={<BackButton />} />
             <AsyncPage
                 fetchStatus={fetchNewPunchStatus}
                 errorMessage={

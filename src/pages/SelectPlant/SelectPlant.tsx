@@ -6,7 +6,8 @@ import ErrorPage from '../../components/error/ErrorPage';
 import CommAppContext from '../../contexts/CommAppContext';
 import { COLORS } from '../../style/GlobalStyles';
 import PageHeader from '../../components/PageHeader';
-import Navbar from '../../components/navigation/Navbar';
+import SideMenu from '../../components/navigation/SideMenu';
+import { Navbar, ProcosysButton } from '@equinor/procosys-webapp-components';
 
 export const SelectPlantWrapper = styled.main`
     display: flex;
@@ -67,7 +68,10 @@ const SelectPlant = (): JSX.Element => {
 
     return (
         <>
-            <Navbar leftContent={{ name: 'hamburger' }} />
+            <Navbar
+                rightContent={<SideMenu />}
+                leftContent={<ProcosysButton />}
+            />
             <SelectPlantWrapper>{content()}</SelectPlantWrapper>
         </>
     );

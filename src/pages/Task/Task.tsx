@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Navbar from '../../components/navigation/Navbar';
 import useCommonHooks from '../../utils/useCommonHooks';
 import TaskDescription from './TaskDescription';
 import TaskParameters from './TaskParameters/TaskParameters';
@@ -15,7 +14,11 @@ import { TaskPreviewButton } from '../CommPkg/Tasks/Tasks';
 import { Banner, Typography } from '@equinor/eds-core-react';
 import Axios, { CancelToken } from 'axios';
 import useAsyncGet from '../../utils/useAsyncGet';
-import removeSubdirectories from '../../utils/removeSubdirectories';
+import {
+    BackButton,
+    Navbar,
+    removeSubdirectories,
+} from '@equinor/procosys-webapp-components';
 
 const NextTaskButton = styled(TaskPreviewButton)`
     padding: 0;
@@ -44,18 +47,14 @@ const findNextTask = (
 
 const Task = (): JSX.Element => {
     const { url, api, params } = useCommonHooks();
-    const {
-        response: attachments,
-        fetchStatus: fetchAttachmentsStatus,
-    } = useAsyncGet((cancelToken: CancelToken) =>
-        api.getTaskAttachments(cancelToken, params.plant, params.taskId)
-    );
-    const {
-        response: parameters,
-        fetchStatus: fetchParametersStatus,
-    } = useAsyncGet((token) =>
-        api.getTaskParameters(token, params.plant, params.taskId)
-    );
+    const { response: attachments, fetchStatus: fetchAttachmentsStatus } =
+        useAsyncGet((cancelToken: CancelToken) =>
+            api.getTaskAttachments(cancelToken, params.plant, params.taskId)
+        );
+    const { response: parameters, fetchStatus: fetchParametersStatus } =
+        useAsyncGet((token) =>
+            api.getTaskParameters(token, params.plant, params.taskId)
+        );
     const [task, setTask] = useState<TaskType>();
     const [nextTask, setNextTask] = useState<TaskPreview | null>(null);
     const [fetchNextTaskStatus, setFetchNextTaskStatus] = useState(
@@ -118,14 +117,7 @@ const Task = (): JSX.Element => {
 
     return (
         <>
-            <Navbar
-                noBorder
-                leftContent={{
-                    name: 'back',
-                    label: 'Tasks',
-                    url: removeSubdirectories(url, 1),
-                }}
-            />
+            <Navbar noBorder leftContent={<BackButton />} />
             {isSigned ? (
                 <Banner>
                     <Banner.Icon variant={'info'}>
