@@ -1,4 +1,4 @@
-import { AxiosInstance, CancelToken } from 'axios';
+import { AxiosInstance, AxiosResponse, CancelToken } from 'axios';
 import {
     PunchAction,
     UpdatePunchData,
@@ -47,14 +47,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         const { data } = await axios.get(
             `Plants?includePlantsWithoutAccess=false${apiVersion}`
         );
-        const camelCasedResponse = data;
-        const camelCasedResponseWithSlug = camelCasedResponse.map(
-            (plant: Plant) => ({
-                ...plant,
-                slug: plant.id.substr(4),
-            })
-        );
-        return camelCasedResponseWithSlug as Plant[];
+        return data as Plant[];
     };
 
     const getProjectsForPlant = async (plantId: string): Promise<Project[]> => {
@@ -552,7 +545,15 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
                 },
             }
         );
-        return data.id as string;
+        type TempAttachmentReturn = { id: string };
+        function dataHasId(data: unknown): data is TempAttachmentReturn {
+            return (data as TempAttachmentReturn)['id'] !== undefined;
+        }
+        if (dataHasId(data)) {
+            return data.id as string;
+        } else {
+            throw new Error('Unable to upload attachment');
+        }
     };
 
     const postPunchAttachment = async ({

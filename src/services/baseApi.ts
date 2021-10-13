@@ -18,18 +18,19 @@ const baseApiService = ({
     axiosInstance.interceptors.request.use(async (request) => {
         try {
             const token = await authInstance.getAccessToken(scope);
-            request.headers['Authorization'] = `Bearer ${token}`;
+            if (request.headers) {
+                request.headers['Authorization'] = `Bearer ${token}`;
+            }
             return request;
         } catch (error) {
-            throw new Error(error.message);
+            if (error instanceof Error) throw new Error(error.message);
         }
     });
     axiosInstance.interceptors.response.use(
         (response) => {
-            if (
-                typeof response.data === 'object' &&
-                !(response.data instanceof Blob)
-            ) {
+            const dataIsObjectAndIsntBlob =
+                response.data && !(response.data instanceof Blob);
+            if (dataIsObjectAndIsntBlob) {
                 response.data = objectToCamelCase(response.data);
             }
             return response;
