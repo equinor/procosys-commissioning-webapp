@@ -4,15 +4,7 @@ import { withPlantContext } from '../../test/contexts';
 import SideMenu from './SideMenu';
 
 const sideMenuToTest = withPlantContext({
-    Component: (
-        <SideMenu
-            animation={{}}
-            backdropAnimation={{}}
-            setDrawerIsOpen={(): void => {
-                return;
-            }}
-        />
-    ),
+    Component: <SideMenu />,
 });
 
 describe('<SideMenu/>', () => {
