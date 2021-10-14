@@ -58,6 +58,7 @@ const TaskSignature = ({
             refreshTask((prev) => !prev);
             setTaskSignStatus(AsyncStatus.SUCCESS);
         } catch (error) {
+            if (!(error instanceof Error)) return;
             setTaskSignStatus(AsyncStatus.ERROR);
             setSnackbarText(error.toString());
         }

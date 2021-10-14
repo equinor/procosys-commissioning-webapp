@@ -92,6 +92,7 @@ const ChecklistSignature = ({
             );
             reloadChecklist((reloadStatus) => !reloadStatus);
         } catch (error) {
+            if (!(error instanceof Error)) return;
             setSignStatus(AsyncStatus.ERROR);
             setSnackbarText(error.toString());
         }

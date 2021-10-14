@@ -72,6 +72,7 @@ const TaskDescription = ({
             setSnackbarText('Comment successfully saved.');
             setEditComment(false);
         } catch (error) {
+            if (!(error instanceof Error)) return;
             if (!Axios.isCancel(error)) {
                 setPutCommentStatus(AsyncStatus.ERROR);
                 setSnackbarText(error.toString());

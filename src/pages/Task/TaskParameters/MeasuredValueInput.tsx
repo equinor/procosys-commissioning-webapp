@@ -34,6 +34,7 @@ const MeasuredValueInput = ({
             setUpdateValueStatus(AsyncStatus.SUCCESS);
             setSnackbarText('Parameter value saved');
         } catch (error) {
+            if (!(error instanceof Error)) return;
             setUpdateValueStatus(AsyncStatus.ERROR);
             setSnackbarText(error.toString());
         }

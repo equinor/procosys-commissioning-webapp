@@ -102,6 +102,7 @@ const UploadAttachment = ({
             setSnackbarText('File successfully added.');
             setShowModal(false);
         } catch (error) {
+            if (!(error instanceof Error)) return;
             setPostAttachmentStatus(AsyncStatus.ERROR);
             setSnackbarText(error.toString());
         }

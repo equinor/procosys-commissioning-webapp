@@ -140,6 +140,7 @@ const Attachment = ({
             setDeleteStatus(AsyncStatus.SUCCESS);
             setShowFullScreenImage(false);
         } catch (error) {
+            if (!(error instanceof Error)) return;
             if (!Axios.isCancel(error)) {
                 setDeleteStatus(AsyncStatus.ERROR);
                 setSnackbarText(error.toString());

@@ -28,11 +28,8 @@ const baseApiService = ({
     });
     axiosInstance.interceptors.response.use(
         (response) => {
-            const dataIsObjectAndIsntBlob =
-                response.data && !(response.data instanceof Blob);
-            if (dataIsObjectAndIsntBlob) {
-                response.data = objectToCamelCase(response.data);
-            }
+            if (response.data instanceof Blob) return response;
+            response.data = objectToCamelCase(response.data);
             return response;
         },
         (error) => {
