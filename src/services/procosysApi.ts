@@ -1,4 +1,4 @@
-import { AxiosInstance, AxiosResponse, CancelToken } from 'axios';
+import { AxiosInstance, CancelToken } from 'axios';
 import {
     PunchAction,
     UpdatePunchData,
@@ -47,7 +47,11 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         const { data } = await axios.get(
             `Plants?includePlantsWithoutAccess=false${apiVersion}`
         );
-        return data as Plant[];
+        const plantsWithoutSlug = data as Plant[];
+        return plantsWithoutSlug.map((plant: Plant) => ({
+            ...plant,
+            slug: plant.id.substr(4),
+        }));
     };
 
     const getProjectsForPlant = async (plantId: string): Promise<Project[]> => {
