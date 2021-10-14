@@ -16,7 +16,7 @@ const objectToCamelCase = (input: unknown): unknown => {
         Object.keys(input).forEach(
             (k) => (n[stringToCamelCase(k)] = objectToCamelCase(input[k]))
         );
-        return input;
+        return n;
     } else if (Array.isArray(input)) {
         return input.map((i) => {
             return objectToCamelCase(i);
