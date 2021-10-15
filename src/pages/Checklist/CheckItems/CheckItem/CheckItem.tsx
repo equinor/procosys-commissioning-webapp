@@ -92,6 +92,7 @@ const CheckItem = ({
             setSnackbarText('Change saved.');
             setPostNAStatus(AsyncStatus.SUCCESS);
         } catch (error) {
+            if (!(error instanceof Error)) return;
             setSnackbarText(error.toString());
             setPostNAStatus(AsyncStatus.ERROR);
         }
@@ -110,6 +111,7 @@ const CheckItem = ({
             setSnackbarText('Change saved.');
             setPostNAStatus(AsyncStatus.SUCCESS);
         } catch (error) {
+            if (!(error instanceof Error)) return;
             setSnackbarText(error.toString());
             setPostNAStatus(AsyncStatus.ERROR);
         }
@@ -125,6 +127,7 @@ const CheckItem = ({
             setSnackbarText('Change saved.');
             setPostCheckStatus(AsyncStatus.SUCCESS);
         } catch (error) {
+            if (!(error instanceof Error)) return;
             setSnackbarText(error.toString());
             setPostCheckStatus(AsyncStatus.ERROR);
         }

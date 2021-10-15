@@ -61,7 +61,8 @@ const MetaTableCell = ({
             );
             setSubmitStatus(AsyncStatus.SUCCESS);
         } catch (error) {
-            setErrorMessage(error);
+            if (!(error instanceof Error)) return;
+            setErrorMessage(error.toString());
             setSubmitStatus(AsyncStatus.ERROR);
         }
     };

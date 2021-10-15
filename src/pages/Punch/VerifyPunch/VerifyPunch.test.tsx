@@ -2,17 +2,13 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { withPlantContext } from '../../../test/contexts';
 import { dummyPunchItemCleared } from '../../../test/dummyData';
-import {
-    causeApiError,
-    ENDPOINTS,
-    rest,
-    server,
-} from '../../../test/setupServer';
+import { ENDPOINTS, rest, server } from '../../../test/setupServer';
 import VerifyPunch from './VerifyPunch';
 
-jest.mock('../../../utils/removeSubdirectories', () => {
-    return (str: string, num: number): string => '/';
-});
+jest.mock('@equinor/procosys-webapp-components', () => ({
+    ...jest.requireActual('@equinor/procosys-webapp-components'),
+    removeSubdirectories: (url: string, num: number): string => '/',
+}));
 
 beforeAll(() => {
     server.use(

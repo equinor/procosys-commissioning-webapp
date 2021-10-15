@@ -21,6 +21,7 @@ const GlobalStyles = createGlobalStyle`
         margin: 0 auto;
         padding-top: 54px;
         max-width: 768px;
+        min-height: calc(100vh - 54px);
         box-shadow: ${SHADOW};
     }
     h1 {
