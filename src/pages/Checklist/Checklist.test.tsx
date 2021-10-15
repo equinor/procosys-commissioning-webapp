@@ -22,13 +22,10 @@ describe('<Checklist/> loading errors', () => {
     it('Renders an error message if failing to load checklist', async () => {
         causeApiError(ENDPOINTS.getChecklist, 'get');
         render(withPlantContext({ Component: <Checklist /> }));
-        const loadingMessage = await screen.findByText('Loading checklist');
-        expect(loadingMessage).toBeInTheDocument();
         const errorMessage = await screen.findByText(
             'Unable to load checklist. Please reload or try again later.'
         );
         expect(errorMessage).toBeInTheDocument();
-        screen.debug();
     });
     it('Renders an error message if failing to load attachments', async () => {
         causeApiError(ENDPOINTS.getChecklistAttachments, 'get');
