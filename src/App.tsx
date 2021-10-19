@@ -10,7 +10,7 @@ import {
     AppInsightsContext,
     ReactPlugin,
 } from '@microsoft/applicationinsights-react-js';
-import { FeatureFlags } from './services/appConfiguration';
+import { AppConfig, FeatureFlags } from './services/appConfiguration';
 
 export type CommParams = {
     plant: string;
@@ -26,6 +26,7 @@ type AppProps = {
     procosysApiInstance: ProcosysApiService;
     appInsightsInstance: ApplicationInsights;
     appInsightsReactPlugin: ReactPlugin;
+    appConfig: AppConfig;
     featureFlags: FeatureFlags;
 };
 
@@ -33,6 +34,7 @@ const App = ({
     procosysApiInstance,
     authInstance,
     appInsightsReactPlugin: reactPlugin,
+    appConfig,
     featureFlags,
 }: AppProps): JSX.Element => {
     return (
@@ -41,6 +43,7 @@ const App = ({
                 <CommAppContextProvider
                     api={procosysApiInstance}
                     auth={authInstance}
+                    appConfig={appConfig}
                     featureFlags={featureFlags}
                 >
                     <Router basename={'/comm'}>

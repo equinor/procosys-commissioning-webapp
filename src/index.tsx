@@ -66,6 +66,7 @@ const initialize = async () => {
         procosysApiInstance,
         appInsightsInstance,
         appInsightsReactPlugin,
+        appConfig,
         featureFlags,
     };
 };
@@ -78,6 +79,7 @@ const initialize = async () => {
             procosysApiInstance,
             appInsightsInstance,
             appInsightsReactPlugin,
+            appConfig,
             featureFlags,
         } = await initialize();
         render(
@@ -86,6 +88,7 @@ const initialize = async () => {
                 procosysApiInstance={procosysApiInstance}
                 appInsightsInstance={appInsightsInstance}
                 appInsightsReactPlugin={appInsightsReactPlugin}
+                appConfig={appConfig}
                 featureFlags={featureFlags}
             />
         );
