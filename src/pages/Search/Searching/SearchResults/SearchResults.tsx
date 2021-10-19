@@ -1,11 +1,11 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { SearchStatus } from '../useSearchPageFacade';
-import { CommPkgPreview } from '../../../services/apiTypes';
-import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
-import { PackageStatusIcon } from '../../../components/icons/PackageStatusIcon';
-import { COLORS } from '../../../style/GlobalStyles';
+import { SearchStatus } from '../../useSearchPageFacade';
+import { CommPkgPreview } from '../../../../services/apiTypes';
+import SkeletonLoadingPage from '../../../../components/loading/SkeletonLoader';
+import { PackageStatusIcon } from '../../../../components/icons/PackageStatusIcon';
+import { COLORS } from '../../../../style/GlobalStyles';
 
 const SearchResult = styled.article`
     cursor: pointer;
