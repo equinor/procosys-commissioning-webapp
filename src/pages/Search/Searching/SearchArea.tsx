@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { TagPhotoRecognition } from '@equinor/procosys-webapp-components';
 import useCommonHooks from '../../../utils/useCommonHooks';
 
-export const TallSearchField = styled(SearchField)`
+const TallSearchField = styled(SearchField)`
     height: 54px;
     margin-top: 18px;
 `;

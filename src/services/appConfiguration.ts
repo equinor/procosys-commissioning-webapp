@@ -34,6 +34,7 @@ export type FeatureFlags = {
 export type AppConfig = {
     procosysWebApi: ProcosysApiSettings;
     appInsights: AppInsightsConfig;
+    ocrFunctionEndpoint: string;
 };
 
 type AppConfigResponse = {
