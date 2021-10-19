@@ -14,6 +14,7 @@ export const COLORS = {
     darkGrey: '#777',
     lightGrey: '#fafafa',
     black: '#000',
+    tagIcon: '#007079',
 };
 
 const GlobalStyles = createGlobalStyle`

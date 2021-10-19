@@ -4,12 +4,13 @@ import {
     UpdatePunchData,
     UpdatePunchEndpoint,
 } from '../pages/Punch/ClearPunch/useClearPunchFacade';
+import { SearchType } from '../pages/Search/Search';
 import { TaskCommentDto } from '../pages/Task/TaskDescription';
 import { TaskParameterDto } from '../pages/Task/TaskParameters/TaskParameters';
 import {
     Plant,
     Project,
-    CommPkgSearchResults,
+    SearchResults,
     CommPkg,
     ChecklistPreview,
     TaskPreview,
@@ -70,18 +71,24 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         return data as string[];
     };
 
-    const searchForCommPackage = async (
+    const getSearchResults = async (
         query: string,
         projectId: number,
         plantId: string,
+        searchType: string,
         cancelToken?: CancelToken
-    ): Promise<CommPkgSearchResults> => {
-        const { data } = await axios.get(
-            `CommPkg/Search?plantId=${plantId}&startsWithCommPkgNo=${query}&includeDecommissioningPkgs=true&projectId=${projectId}${apiVersion}`,
-            { cancelToken }
-        );
-
-        return data as CommPkgSearchResults;
+    ): Promise<SearchResults> => {
+        let url = '';
+        if (searchType === SearchType.Comm) {
+            url = `CommPkg/Search?plantId=${plantId}&startsWithCommPkgNo=${query}&includeDecommissioningPkgs=true&projectId=${projectId}${apiVersion}`;
+        } else if (searchType === SearchType.Tag) {
+            // TODO: needs to be cleaned up, so that MCCR tags aren't shown
+            url = `Tag/Search?plantId=${plantId}&startsWithTagNo=${query}&projectId=${projectId}${apiVersion}`;
+        } else {
+            throw new Error('An error occurred, please try again.');
+        }
+        const { data } = await axios.get(url, { cancelToken });
+        return data as SearchResults;
     };
 
     const getCommPackageDetails = async (
@@ -618,7 +625,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         putTaskComment,
         putTaskParameter,
         putUpdatePunch,
-        searchForCommPackage,
+        getSearchResults,
     };
 };
 

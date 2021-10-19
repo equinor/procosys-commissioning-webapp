@@ -2,10 +2,13 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { SearchStatus } from '../../useSearchPageFacade';
-import { CommPkgPreview } from '../../../../services/apiTypes';
+import { SearchResults as SearchResultsType } from '../../../../services/apiTypes';
 import SkeletonLoadingPage from '../../../../components/loading/SkeletonLoader';
 import { PackageStatusIcon } from '../../../../components/icons/PackageStatusIcon';
 import { COLORS } from '../../../../style/GlobalStyles';
+import { SearchType } from '../../Search';
+import useCommonHooks from '../../../../utils/useCommonHooks';
+import ResultsList from '../ResultsList';
 
 const SearchResult = styled.article`
     cursor: pointer;
@@ -42,44 +45,30 @@ const StatusImageWrapper = styled.div`
 
 type SearchResultsProps = {
     searchStatus: SearchStatus;
-    commPackages: CommPkgPreview[];
+    searchResults: SearchResultsType;
+    searchType: string;
 };
 
 const SearchResults = ({
     searchStatus,
-    commPackages,
+    searchResults,
+    searchType,
 }: SearchResultsProps): JSX.Element => {
-    const history = useHistory();
     if (searchStatus === SearchStatus.LOADING) {
         return <SkeletonLoadingPage fullWidth />;
-    }
-    if (searchStatus === SearchStatus.SUCCESS && commPackages.length > 0) {
+    } else if (
+        searchStatus === SearchStatus.SUCCESS &&
+        searchResults.items.length > 0
+    ) {
         return (
             <SearchResultsWrapper>
-                {commPackages.map((commPackage) => {
-                    return (
-                        <SearchResult
-                            onClick={(): void =>
-                                history.push(`${commPackage.id}`)
-                            }
-                            key={commPackage.id}
-                        >
-                            <StatusImageWrapper>
-                                <PackageStatusIcon
-                                    mcStatus={commPackage.mcStatus}
-                                    commStatus={commPackage.commStatus}
-                                />
-                            </StatusImageWrapper>
-
-                            <h6>{commPackage.commPkgNo}</h6>
-                            <p>{commPackage.description}</p>
-                        </SearchResult>
-                    );
-                })}
+                <ResultsList
+                    searchType={searchType}
+                    searchResults={searchResults}
+                />
             </SearchResultsWrapper>
         );
-    }
-    if (searchStatus === SearchStatus.INACTIVE) {
+    } else if (searchStatus === SearchStatus.INACTIVE) {
         return (
             <SearchResultsWrapper>
                 <p>
@@ -90,9 +79,7 @@ const SearchResults = ({
                 </p>
             </SearchResultsWrapper>
         );
-    }
-
-    if (searchStatus === SearchStatus.ERROR) {
+    } else if (searchStatus === SearchStatus.ERROR) {
         return (
             <SearchResultsWrapper>
                 <p>
@@ -103,15 +90,15 @@ const SearchResults = ({
                 </p>
             </SearchResultsWrapper>
         );
+    } else {
+        return (
+            <SearchResultsWrapper>
+                <p>
+                    <i>No packages found for this search.</i>
+                </p>
+            </SearchResultsWrapper>
+        );
     }
-
-    return (
-        <SearchResultsWrapper>
-            <p>
-                <i>No packages found for this search.</i>
-            </p>
-        </SearchResultsWrapper>
-    );
 };
 
 export default SearchResults;
