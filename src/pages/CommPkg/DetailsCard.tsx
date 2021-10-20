@@ -4,63 +4,61 @@ import { CommPkg } from '../../services/apiTypes';
 import EdsIcon from '../../components/icons/EdsIcon';
 import { Button, DotProgress } from '@equinor/eds-core-react';
 import useBookmarks from '../../utils/useBookmarks';
-import { COLORS, SHADOW } from '../../style/GlobalStyles';
+import { Caption, COLORS, SHADOW } from '../../style/GlobalStyles';
 import { PackageStatusIcon } from '../../components/icons/PackageStatusIcon';
 import useCommonHooks from '../../utils/useCommonHooks';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import DetailsCardShell from './DetailsCardShell';
 import axios from 'axios';
 
-const DetailsWrapper = styled.div<{ atBookmarksPage?: boolean }>`
-    display: grid;
-    grid-template-columns: repeat(2, 1fr) repeat(2, 0.5fr);
-    grid-template-rows: repeat(2);
-    grid-column-gap: 8px;
-    grid-row-gap: 8px;
-    padding: ${(props): string => (props.atBookmarksPage ? '0' : '16px 4%')};
-    border-radius: 5px;
+const CommDetailsWrapper = styled.div<{ atBookmarksPage?: boolean }>`
     cursor: ${(props): string =>
         props.atBookmarksPage ? 'pointer' : 'initial'};
-    background-color: ${(props): any =>
-        props.atBookmarksPage ? COLORS.white : COLORS.fadedBlue};
+    display: flex;
+    border-top: 1px solid ${COLORS.lightGrey};
+    padding: ${(props): string =>
+        props.atBookmarksPage ? '16px 0' : '16px 4%'};
     margin: 0;
+    text-decoration: none;
+    background-color: ${(props): string =>
+        props.atBookmarksPage ? COLORS.white : COLORS.fadedBlue};
     &:hover {
-        opacity: ${(props): string => (props.atBookmarksPage ? '0.7' : '1')};
+        opacity: ${(props): number => (props.atBookmarksPage ? 0.7 : 1)};
     }
 `;
 
-const Description = styled.div`
-    grid-area: 1 / 1 / 2 / 5;
-    & h4 {
-        margin: 0;
-    }
-`;
-const StatusIconWrapper = styled.div`
-    grid-area: 2 / 3 / 2 / 4;
-    text-align: center;
+const StatusImageWrapper = styled.div`
     display: flex;
-    align-items: center;
-    justify-content: center;
-    & img {
-        height: 20px;
-        margin-right: -1.2px;
+    padding-right: 12px;
+    align-self: center;
+    width: 24px;
+    & > img {
+        width: 12px;
+        height: 24px;
     }
 `;
-const BookmarkIconWrapper = styled.div`
-    grid-area: 2 / 4 / 2 / 4;
+
+const DetailsWrapper = styled.div`
+    flex-direction: column;
+    flex: 1;
+    & > p {
+        margin: 0;
+    }
+`;
+
+const HeaderWrapper = styled.div<{ atBookmarksPage: boolean }>`
     display: flex;
-    justify-content: center;
-`;
-const CommPkgNumberWrapper = styled.div`
-    grid-area: 2 / 1 / 3 / 3;
-    & p {
+    align-items: baseline;
+    & > h6 {
         margin: 0;
+        flex: 1.4;
+        color: ${(props): string =>
+            props.atBookmarksPage ? COLORS.mossGreen : COLORS.black};
     }
-`;
-const MCStatusWrapper = styled.div`
-    grid-area: 2 / 2 / 3 / 3;
-    & p {
+    & > p {
         margin: 0;
+        flex: 1;
+        text-align: right;
     }
 `;
 
@@ -110,55 +108,49 @@ const DetailsCard = ({
                 <p>Unable to load comm package details. Try reloading.</p>
             </DetailsCardShell>
         );
-    }
-    if (fetchDetailsStatus === AsyncStatus.SUCCESS && details) {
+    } else if (fetchDetailsStatus === AsyncStatus.SUCCESS && details) {
         return (
-            <DetailsWrapper
+            <CommDetailsWrapper
                 atBookmarksPage={atBookmarksPage}
                 onClick={onClickAction}
             >
-                <Description>
-                    <h4>{details.description}</h4>
-                </Description>
-                <StatusIconWrapper>
+                <StatusImageWrapper>
                     <PackageStatusIcon
                         mcStatus={details.mcStatus}
                         commStatus={details.commStatus}
                     />
-                </StatusIconWrapper>
-                <BookmarkIconWrapper>
-                    <Button
-                        variant="ghost_icon"
-                        onClick={(e: React.MouseEvent<HTMLElement>): void => {
-                            e.stopPropagation();
-                            setIsBookmarked((prev) => !prev);
-                        }}
-                    >
-                        <EdsIcon
-                            color={COLORS.mossGreen}
-                            name={
-                                isBookmarked
-                                    ? 'bookmark_filled'
-                                    : 'bookmark_outlined'
-                            }
-                        />
-                    </Button>
-                </BookmarkIconWrapper>
-                <CommPkgNumberWrapper>
-                    <label>PKG number:</label> <p>{details.commPkgNo}</p>
-                </CommPkgNumberWrapper>
-                <MCStatusWrapper>
-                    <label>MC Status:</label> <p>{details.mcStatus}</p>
-                </MCStatusWrapper>
-            </DetailsWrapper>
+                </StatusImageWrapper>
+                <DetailsWrapper>
+                    <HeaderWrapper atBookmarksPage={atBookmarksPage}>
+                        {details.commPkgNo}
+                    </HeaderWrapper>
+                    <Caption>{details.description}</Caption>
+                </DetailsWrapper>
+                <Button
+                    variant="ghost_icon"
+                    onClick={(e: React.MouseEvent<HTMLElement>): void => {
+                        e.stopPropagation();
+                        setIsBookmarked((prev) => !prev);
+                    }}
+                >
+                    <EdsIcon
+                        color={COLORS.mossGreen}
+                        name={
+                            isBookmarked
+                                ? 'bookmark_filled'
+                                : 'bookmark_outlined'
+                        }
+                    />
+                </Button>
+            </CommDetailsWrapper>
+        );
+    } else {
+        return (
+            <DetailsCardShell atBookmarksPage={atBookmarksPage}>
+                <DotProgress color="primary" />
+            </DetailsCardShell>
         );
     }
-
-    return (
-        <DetailsCardShell atBookmarksPage={atBookmarksPage}>
-            <DotProgress color="primary" />
-        </DetailsCardShell>
-    );
 };
 
 export default DetailsCard;
