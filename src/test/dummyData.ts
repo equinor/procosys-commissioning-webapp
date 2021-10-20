@@ -9,6 +9,7 @@ import {
     PunchPreview,
     TaskPreview,
     CommPkgPreview,
+    SearchResults,
 } from '../services/apiTypes';
 
 type DummyMetatableData = {
@@ -136,6 +137,29 @@ export const testPunchList: PunchPreview[] = [
         statusControlledBySwcr: true,
     },
 ];
+
+export const testCommSearch: SearchResults = {
+    maxAvailable: testCommPkgPreview.length,
+    items: testCommPkgPreview,
+};
+
+export const testTagSearch: SearchResults = {
+    maxAvailable: 1,
+    items: [
+        {
+            id: 1,
+            tagNo: '#432',
+            description: 'test tag description',
+            registerCode: 'tagCode',
+            tagFunctionCode: 'tagFunctionCode',
+            commPkgNo: '123-D01',
+            mcPkgNo: '123-C001',
+            callOffNo: 'C05',
+            punchaseOrderTitle: 'PO title',
+            mccrResponsibleCode: 'mccrRespCode',
+        },
+    ],
+};
 
 export const dummyChecklistResponse = {
     CheckList: {

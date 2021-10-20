@@ -1,15 +1,15 @@
 import { EntityDetails, TextIcon } from '@equinor/procosys-webapp-components';
 import React from 'react';
-import { PackageStatusIcon } from '../../../components/icons/PackageStatusIcon';
+import { PackageStatusIcon } from '../../../../components/icons/PackageStatusIcon';
 import {
     CommPkgPreview,
     SearchResults,
     TagPreview,
-} from '../../../services/apiTypes';
-import { COLORS } from '../../../style/GlobalStyles';
-import useCommonHooks from '../../../utils/useCommonHooks';
-import { SearchType } from '../Search';
-import { isArrayOfType } from './tempHelpers';
+} from '../../../../services/apiTypes';
+import { COLORS } from '../../../../style/GlobalStyles';
+import useCommonHooks from '../../../../utils/useCommonHooks';
+import { SearchType } from '../../Search';
+import { isArrayOfType } from '../tempHelpers';
 
 type ResultsListProps = {
     searchType: string;

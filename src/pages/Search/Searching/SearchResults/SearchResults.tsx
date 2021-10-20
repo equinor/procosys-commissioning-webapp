@@ -8,7 +8,7 @@ import { PackageStatusIcon } from '../../../../components/icons/PackageStatusIco
 import { COLORS } from '../../../../style/GlobalStyles';
 import { SearchType } from '../../Search';
 import useCommonHooks from '../../../../utils/useCommonHooks';
-import ResultsList from '../ResultsList';
+import ResultsList from './ResultsList';
 
 const SearchResult = styled.article`
     cursor: pointer;

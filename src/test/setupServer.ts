@@ -14,6 +14,8 @@ import {
     dummyPunchOrganizations,
     dummyPunchTypes,
     dummyPunchItemUncleared,
+    testCommSearch,
+    testTagSearch,
 } from './dummyData';
 import objectToCamelCase from '../utils/objectToCamelCase';
 
@@ -23,6 +25,10 @@ export const ENDPOINTS = {
     getCommPkgDetails: `${baseURL}/CommPkg`,
     getPermissions: `${baseURL}/Permissions`,
     getProjects: `${baseURL}/Projects`,
+
+    // Search
+    getCommSearch: `${baseURL}/CommPkg/Search`,
+    getTagSearch: `${baseURL}/Tag/Search`,
 
     // Checklist
     putMetaTableCell: `${baseURL}/CheckList/Item/MetaTableCell`,
@@ -84,6 +90,14 @@ export const server = setupServer(
     }),
     rest.get(ENDPOINTS.getPermissions, (_, response, context) => {
         return response(context.json(['COMMPKG/READ']), context.status(200));
+    }),
+
+    // Search
+    rest.get(ENDPOINTS.getCommSearch, (_, response, context) => {
+        return response(context.json(testCommSearch), context.status(200));
+    }),
+    rest.get(ENDPOINTS.getTagSearch, (_, response, context) => {
+        return response(context.json(testTagSearch), context.status(200));
     }),
 
     //Checklist
