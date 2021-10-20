@@ -9,7 +9,7 @@ import {
     Navbar,
     SearchTypeButton,
 } from '@equinor/procosys-webapp-components';
-import Bookmarks from '../Bookmarks/Bookmarks';
+import Bookmarks from './Bookmarks/Bookmarks';
 import SearchArea from './Searching/SearchArea';
 
 const SearchPageWrapper = styled.main`

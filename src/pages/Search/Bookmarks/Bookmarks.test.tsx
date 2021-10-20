@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import React from 'react';
-import { withPlantContext } from '../../test/contexts';
-import { testProjects } from '../../test/dummyData';
-import { causeApiError, ENDPOINTS } from '../../test/setupServer';
+import { withPlantContext } from '../../../test/contexts';
+import { testProjects } from '../../../test/dummyData';
+import { causeApiError, ENDPOINTS } from '../../../test/setupServer';
 import Bookmarks from './Bookmarks';
-import { StorageKey } from './useBookmarks';
+import { StorageKey } from '../../../utils/useBookmarks';
 
 const renderBookmarks = (): void => {
     window.localStorage.clear();

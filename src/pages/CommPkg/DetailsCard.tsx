@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { CommPkg } from '../../services/apiTypes';
 import EdsIcon from '../../components/icons/EdsIcon';
 import { Button, DotProgress } from '@equinor/eds-core-react';
-import useBookmarks from '../Bookmarks/useBookmarks';
+import useBookmarks from '../../utils/useBookmarks';
 import { COLORS, SHADOW } from '../../style/GlobalStyles';
 import { PackageStatusIcon } from '../../components/icons/PackageStatusIcon';
 import useCommonHooks from '../../utils/useCommonHooks';

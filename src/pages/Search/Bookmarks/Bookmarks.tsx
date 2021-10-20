@@ -1,15 +1,15 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import DetailsCard from '../CommPkg/DetailsCard';
-import PageHeader from '../../components/PageHeader';
-import { getCurrentBookmarks } from './useBookmarks';
+import DetailsCard from '../../CommPkg/DetailsCard';
+import PageHeader from '../../../components/PageHeader';
+import { getCurrentBookmarks } from '../../../utils/useBookmarks';
 import { Button } from '@equinor/eds-core-react';
-import PlantContext from '../../contexts/PlantContext';
-import EdsIcon from '../../components/icons/EdsIcon';
-import useCommonHooks from '../../utils/useCommonHooks';
-import withAccessControl from '../../services/withAccessControl';
+import PlantContext from '../../../contexts/PlantContext';
+import EdsIcon from '../../../components/icons/EdsIcon';
+import useCommonHooks from '../../../utils/useCommonHooks';
+import withAccessControl from '../../../services/withAccessControl';
 import { Navbar, ProcosysButton } from '@equinor/procosys-webapp-components';
-import SideMenu from '../../components/navigation/SideMenu';
+import SideMenu from '../../../components/navigation/SideMenu';
 
 const BookmarksWrapper = styled.main`
     display: flex;

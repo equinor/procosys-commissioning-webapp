@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import PlantContext from '../../contexts/PlantContext';
+import PlantContext from '../contexts/PlantContext';
 
 export enum StorageKey {
     PLANT = 'currentPlant',

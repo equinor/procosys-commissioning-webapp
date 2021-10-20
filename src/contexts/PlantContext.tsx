@@ -1,7 +1,7 @@
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import LoadingPage from '../components/loading/LoadingPage';
 import { Plant, Project } from '../services/apiTypes';
-import { StorageKey } from '../pages/Bookmarks/useBookmarks';
+import { StorageKey } from '../utils/useBookmarks';
 import matchPlantInURL from '../utils/matchPlantInURL';
 import matchProjectInURL from '../utils/matchProjectInURL';
 import CommAppContext, { AsyncStatus } from './CommAppContext';
