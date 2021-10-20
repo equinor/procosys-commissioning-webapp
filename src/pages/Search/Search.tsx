@@ -7,20 +7,15 @@ import SearchResults from './Searching/SearchResults/SearchResults';
 import {
     BackButton,
     Navbar,
+    ProcosysButton,
     SearchTypeButton,
 } from '@equinor/procosys-webapp-components';
 import Bookmarks from './Bookmarks/Bookmarks';
 import SearchArea from './Searching/SearchArea';
+import SideMenu from '../../components/navigation/SideMenu';
 
 const SearchPageWrapper = styled.main`
     padding: 0 4%;
-    & h4 {
-        text-align: center;
-    }
-    & span {
-        height: 60px;
-        margin-bottom: 10px;
-    }
 `;
 
 const ButtonsWrapper = styled.div`
@@ -41,7 +36,10 @@ const Search = (): JSX.Element => {
 
     return (
         <>
-            <Navbar leftContent={<BackButton />} />
+            <Navbar
+                leftContent={<ProcosysButton />}
+                rightContent={<SideMenu />}
+            />
             <SearchPageWrapper>
                 <p>Search for</p>
                 <ButtonsWrapper>

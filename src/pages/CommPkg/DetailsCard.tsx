@@ -17,15 +17,16 @@ const DetailsWrapper = styled.div<{ atBookmarksPage?: boolean }>`
     grid-template-rows: repeat(2);
     grid-column-gap: 8px;
     grid-row-gap: 8px;
-    padding: 16px 4%;
+    padding: ${(props): string => (props.atBookmarksPage ? '0' : '16px 4%')};
     border-radius: 5px;
     cursor: ${(props): string =>
         props.atBookmarksPage ? 'pointer' : 'initial'};
     background-color: ${(props): any =>
         props.atBookmarksPage ? COLORS.white : COLORS.fadedBlue};
-    box-shadow: ${(props): string => (props.atBookmarksPage ? SHADOW : 'none')};
-    margin: ${(props): string =>
-        props.atBookmarksPage ? '0 4% 10px 4%' : '0'};
+    margin: 0;
+    &:hover {
+        opacity: ${(props): string => (props.atBookmarksPage ? '0.7' : '1')};
+    }
 `;
 
 const Description = styled.div`

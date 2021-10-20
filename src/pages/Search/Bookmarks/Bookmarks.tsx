@@ -8,23 +8,15 @@ import PlantContext from '../../../contexts/PlantContext';
 import EdsIcon from '../../../components/icons/EdsIcon';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import withAccessControl from '../../../services/withAccessControl';
-import { Navbar, ProcosysButton } from '@equinor/procosys-webapp-components';
+import {
+    CollapsibleCard,
+    Navbar,
+    ProcosysButton,
+} from '@equinor/procosys-webapp-components';
 import SideMenu from '../../../components/navigation/SideMenu';
 
-const BookmarksWrapper = styled.main`
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    padding-bottom: 70px;
-    & h3 {
-        text-align: center;
-    }
-`;
-
-const NewBookmarkWrapper = styled.div`
-    margin: 12px 4% 10px 4%;
-    display: flex;
-    justify-content: flex-end;
+const BookmarksWrapper = styled.div`
+    margin: 16px 0;
 `;
 
 const Bookmarks = (): JSX.Element => {
@@ -33,47 +25,30 @@ const Bookmarks = (): JSX.Element => {
     const bookmarks = currentProject
         ? getCurrentBookmarks(currentProject.id.toString())
         : [];
-    const bookmarksToDisplay = bookmarks.map((bookmark) => (
-        <DetailsCard
-            key={bookmark}
-            commPkgId={bookmark}
-            atBookmarksPage={true}
-            onClickAction={(): void => history.push(`${url}/${bookmark}`)}
-        />
-    ));
-
-    const content = (): JSX.Element => {
-        if (bookmarks.length < 1) {
-            return <PageHeader title="No bookmarks to display" />;
-        } else {
-            return (
-                <>
-                    <PageHeader
-                        title={'Bookmarks'}
-                        subtitle={currentPlant?.title}
-                    />
-                    {bookmarksToDisplay}
-                </>
-            );
-        }
-    };
 
     return (
-        <main>
-            <Navbar
-                leftContent={<ProcosysButton />}
-                rightContent={<SideMenu />}
-            />
-            <BookmarksWrapper>
-                {content()}
-                <NewBookmarkWrapper>
-                    <Button onClick={(): void => history.push(`${url}/search`)}>
-                        <EdsIcon name="search" color="white" />
-                        Find comm. pkg
-                    </Button>
-                </NewBookmarkWrapper>
-            </BookmarksWrapper>
-        </main>
+        <BookmarksWrapper>
+            <CollapsibleCard cardTitle={'Bookmarks'}>
+                {bookmarks.length < 1 ? (
+                    <p>
+                        <i>No bookmarks to display</i>
+                    </p>
+                ) : (
+                    <>
+                        {bookmarks.map((bookmark) => (
+                            <DetailsCard
+                                key={bookmark}
+                                commPkgId={bookmark}
+                                atBookmarksPage={true}
+                                onClickAction={(): void =>
+                                    history.push(`${url}/${bookmark}`)
+                                }
+                            />
+                        ))}
+                    </>
+                )}
+            </CollapsibleCard>
+        </BookmarksWrapper>
     );
 };
 

@@ -5,7 +5,6 @@ import SelectProject from './pages/SelectProject/SelectProject';
 import Search from './pages/Search/Search';
 import SelectPlant from './pages/SelectPlant/SelectPlant';
 import CommPkgRouter from './CommPkgRouter';
-import Bookmarks from './pages/Search/Bookmarks/Bookmarks';
 
 const CommRouter = (): JSX.Element => {
     return (
