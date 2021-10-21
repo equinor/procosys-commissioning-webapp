@@ -2,7 +2,6 @@ trigger:
   branches:
     include:
     - main
-    - dev
 
 resources:
   repositories:
@@ -63,7 +62,7 @@ stages:
 - stage: dev
   displayName: 'Deploy to Dev'
   dependsOn: 'build'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   variables:
     envName: 'dev'
     envLabel: 'non-prod'
@@ -91,7 +90,7 @@ stages:
 # Deploy to Test
 - stage: test
   displayName: 'Deploy to Test'
-  dependsOn: 'build'
+  dependsOn: 'dev'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   variables:
     envName: 'test'
