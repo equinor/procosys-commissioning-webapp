@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import DetailsCard from './DetailsCard';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Scope from './Scope/Scope';
 import Tasks from './Tasks/Tasks';
@@ -25,6 +24,7 @@ import {
 } from '@equinor/procosys-webapp-components';
 import EdsIcon from '../../components/icons/EdsIcon';
 import { COLORS } from '../../style/GlobalStyles';
+import DetailsCard from '../../components/CommPkgDetailsCard/DetailsCard';
 
 const CommPkgWrapper = styled.main``;
 

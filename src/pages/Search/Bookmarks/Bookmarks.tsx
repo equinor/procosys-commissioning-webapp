@@ -13,7 +13,7 @@ import {
     ProcosysButton,
 } from '@equinor/procosys-webapp-components';
 import SideMenu from '../../../components/navigation/SideMenu';
-import DetailsCard from '../../EntityPage/DetailsCard';
+import DetailsCard from '../../../components/CommPkgDetailsCard/DetailsCard';
 
 const BookmarksWrapper = styled.div`
     margin: 16px 0;
