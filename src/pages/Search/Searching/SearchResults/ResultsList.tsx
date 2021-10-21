@@ -9,7 +9,7 @@ import {
 import { COLORS } from '../../../../style/GlobalStyles';
 import useCommonHooks from '../../../../utils/useCommonHooks';
 import { SearchType } from '../../Search';
-import { isArrayOfType } from '../tempHelpers';
+import { isArrayOfType } from '@equinor/procosys-webapp-components';
 
 type ResultsListProps = {
     searchType: string;

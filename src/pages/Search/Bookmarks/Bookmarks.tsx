@@ -41,7 +41,7 @@ const Bookmarks = (): JSX.Element => {
                                 commPkgId={bookmark}
                                 atBookmarksPage={true}
                                 onClickAction={(): void =>
-                                    history.push(`${url}/${bookmark}`)
+                                    history.push(`${url}/Comm/${bookmark}`)
                                 }
                             />
                         ))}

@@ -27,7 +27,7 @@ import {
 const CommPkgWrapper = styled.main``;
 
 const CommPkg = (): JSX.Element => {
-    const { api, params, path, pathname } = useCommonHooks();
+    const { api, params, path, url } = useCommonHooks();
     const [scope, setScope] = useState<ChecklistPreview[]>();
     const [tasks, setTasks] = useState<TaskPreview[]>();
     const [punchList, setPunchList] = useState<PunchPreview[]>();
@@ -96,14 +96,11 @@ const CommPkg = (): JSX.Element => {
         <CommPkgWrapper>
             <Navbar
                 noBorder
-                leftContent={
-                    <BackButton to={removeSubdirectories(pathname, 2)} />
-                }
+                leftContent={<BackButton to={removeSubdirectories(url, 2)} />}
             />
             <DetailsCard commPkgId={params.commPkg} />
             <Switch>
-                <Redirect exact path={path} to={`${path}/scope`} />
-                <Route exact path={`${path}/scope`} component={Scope} />
+                <Route exact path={`${path}`} component={Scope} />
                 <Route exact path={`${path}/tasks`} component={Tasks} />
                 <Route
                     exact

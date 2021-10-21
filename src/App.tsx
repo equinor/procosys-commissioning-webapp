@@ -11,10 +11,12 @@ import {
     ReactPlugin,
 } from '@microsoft/applicationinsights-react-js';
 import { AppConfig, FeatureFlags } from './services/appConfiguration';
+import { SearchType } from './pages/Search/Search';
 
 export type CommParams = {
     plant: string;
     project: string;
+    searchType: SearchType;
     commPkg: string;
     taskId: string;
     checklistId: string;

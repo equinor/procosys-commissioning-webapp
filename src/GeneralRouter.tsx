@@ -14,7 +14,7 @@ const CommRouter = (): JSX.Element => {
                 <Route exact path={'/:plant'} component={SelectProject} />
                 <Route exact path={'/:plant/:project'} component={Search} />
                 <Route
-                    path={'/:plant/:project/:commPkg'}
+                    path={'/:plant/:project/:searchType/:commPkg'}
                     component={CommPkgRouter}
                 />
             </Switch>
