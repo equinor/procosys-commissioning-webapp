@@ -1,19 +1,11 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import DetailsCard from '../../CommPkg/DetailsCard';
-import PageHeader from '../../../components/PageHeader';
 import { getCurrentBookmarks } from '../../../utils/useBookmarks';
-import { Button } from '@equinor/eds-core-react';
 import PlantContext from '../../../contexts/PlantContext';
-import EdsIcon from '../../../components/icons/EdsIcon';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import withAccessControl from '../../../services/withAccessControl';
-import {
-    CollapsibleCard,
-    Navbar,
-    ProcosysButton,
-} from '@equinor/procosys-webapp-components';
-import SideMenu from '../../../components/navigation/SideMenu';
+import { CollapsibleCard } from '@equinor/procosys-webapp-components';
 
 const BookmarksWrapper = styled.div`
     margin: 16px 0;
@@ -21,7 +13,7 @@ const BookmarksWrapper = styled.div`
 
 const Bookmarks = (): JSX.Element => {
     const { url, history } = useCommonHooks();
-    const { currentProject, currentPlant } = useContext(PlantContext);
+    const { currentProject } = useContext(PlantContext);
     const bookmarks = currentProject
         ? getCurrentBookmarks(currentProject.id.toString())
         : [];

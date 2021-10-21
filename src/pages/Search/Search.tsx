@@ -1,11 +1,7 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { Search as SearchField } from '@equinor/eds-core-react';
+import React, { useState } from 'react';
 import withAccessControl from '../../services/withAccessControl';
 import styled from 'styled-components';
-import useSearchPageFacade, { SearchStatus } from './useSearchPageFacade';
-import SearchResults from './Searching/SearchResults/SearchResults';
 import {
-    BackButton,
     Navbar,
     ProcosysButton,
     SearchTypeButton,
