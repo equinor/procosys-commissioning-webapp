@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import DetailsCard from './DetailsCard';
-import NavigationFooter from './NavigationFooter';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Scope from './Scope/Scope';
 import Tasks from './Tasks/Tasks';
@@ -14,20 +13,23 @@ import {
     PunchPreview,
 } from '../../services/apiTypes';
 import { DotProgress } from '@equinor/eds-core-react';
-import NavigationFooterShell from './NavigationFooterShell';
 import withAccessControl from '../../services/withAccessControl';
 import Axios from 'axios';
 import calculateHighestStatus from '../../utils/calculateHighestStatus';
 import {
     BackButton,
+    FooterButton,
     Navbar,
+    NavigationFooter,
     removeSubdirectories,
 } from '@equinor/procosys-webapp-components';
+import EdsIcon from '../../components/icons/EdsIcon';
+import { COLORS } from '../../style/GlobalStyles';
 
 const CommPkgWrapper = styled.main``;
 
 const CommPkg = (): JSX.Element => {
-    const { api, params, path, url } = useCommonHooks();
+    const { api, params, path, url, history } = useCommonHooks();
     const [scope, setScope] = useState<ChecklistPreview[]>();
     const [tasks, setTasks] = useState<TaskPreview[]>();
     const [punchList, setPunchList] = useState<PunchPreview[]>();
@@ -62,36 +64,6 @@ const CommPkg = (): JSX.Element => {
         };
     }, [api, params.plant, params.commPkg]);
 
-    const determineFooterToRender = (): JSX.Element => {
-        if (
-            fetchFooterDataStatus === AsyncStatus.SUCCESS &&
-            tasks &&
-            scope &&
-            punchList
-        ) {
-            return (
-                <NavigationFooter
-                    numberOfChecklists={scope.length}
-                    numberOfPunches={punchList.length}
-                    numberOfTasks={tasks.length}
-                    status={calculateHighestStatus(punchList)}
-                />
-            );
-        }
-        if (fetchFooterDataStatus === AsyncStatus.ERROR) {
-            return (
-                <NavigationFooterShell>
-                    <p>Unable to load footer. Please reload</p>
-                </NavigationFooterShell>
-            );
-        }
-        return (
-            <NavigationFooterShell>
-                <DotProgress color="primary" />
-            </NavigationFooterShell>
-        );
-    };
-
     return (
         <CommPkgWrapper>
             <Navbar
@@ -108,7 +80,36 @@ const CommPkg = (): JSX.Element => {
                     component={PunchList}
                 />
             </Switch>
-            {determineFooterToRender()}
+            <NavigationFooter footerStatus={fetchFooterDataStatus}>
+                <FooterButton
+                    active={
+                        !history.location.pathname.includes('/punch-list') &&
+                        !history.location.pathname.includes('/tasks')
+                    }
+                    goTo={(): void => history.push(url)}
+                    icon={<EdsIcon name="list" color={COLORS.mossGreen} />}
+                    label="Scope"
+                    numberOfItems={scope?.length}
+                />
+                {history.location.pathname.includes('/Comm') ? (
+                    <FooterButton
+                        active={history.location.pathname.includes('/tasks')}
+                        goTo={(): void => history.push(`${url}/tasks`)}
+                        icon={<EdsIcon name="list" color={COLORS.mossGreen} />}
+                        label="Tasks"
+                        numberOfItems={tasks?.length}
+                    />
+                ) : (
+                    <></>
+                )}
+                <FooterButton
+                    active={history.location.pathname.includes('/punch-list')}
+                    goTo={(): void => history.push(`${url}/punch-list`)}
+                    icon={<EdsIcon name="list" color={COLORS.mossGreen} />}
+                    label="Punch list"
+                    numberOfItems={punchList?.length}
+                />
+            </NavigationFooter>
         </CommPkgWrapper>
     );
 };

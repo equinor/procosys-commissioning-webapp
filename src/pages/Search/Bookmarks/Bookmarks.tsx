@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import DetailsCard from '../../CommPkg/DetailsCard';
 import PageHeader from '../../../components/PageHeader';
 import { getCurrentBookmarks } from '../../../utils/useBookmarks';
 import { Button } from '@equinor/eds-core-react';
@@ -14,6 +13,7 @@ import {
     ProcosysButton,
 } from '@equinor/procosys-webapp-components';
 import SideMenu from '../../../components/navigation/SideMenu';
+import DetailsCard from '../../EntityPage/DetailsCard';
 
 const BookmarksWrapper = styled.div`
     margin: 16px 0;
