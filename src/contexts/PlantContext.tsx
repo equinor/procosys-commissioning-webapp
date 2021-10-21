@@ -1,13 +1,12 @@
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import LoadingPage from '../components/loading/LoadingPage';
 import { Plant, Project } from '../services/apiTypes';
-import { StorageKey } from '../utils/useBookmarks';
 import matchPlantInURL from '../utils/matchPlantInURL';
 import matchProjectInURL from '../utils/matchProjectInURL';
 import CommAppContext, { AsyncStatus } from './CommAppContext';
 import useCommonHooks from '../utils/useCommonHooks';
 import ErrorPage from '../components/error/ErrorPage';
-import { Navbar } from '@equinor/procosys-webapp-components';
+import { Navbar, StorageKey } from '@equinor/procosys-webapp-components';
 
 export type PlantContextProps = {
     fetchProjectsAndPermissionsStatus: AsyncStatus;
@@ -40,11 +39,11 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
             StorageKey.PROJECT
         );
         const redirectPath = window.localStorage.getItem(
-            StorageKey.REDIRECTPATH
+            StorageKey.COMM_REDIRECTPATH
         );
         if (redirectPath && redirectPath.length > 1) {
             history.push(redirectPath);
-            window.localStorage.removeItem(StorageKey.REDIRECTPATH);
+            window.localStorage.removeItem(StorageKey.COMM_REDIRECTPATH);
         }
 
         if (params.plant || !plantInStorage || !projectInStorage) return;
