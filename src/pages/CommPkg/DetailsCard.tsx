@@ -32,10 +32,6 @@ const StatusImageWrapper = styled.div`
     padding-right: 12px;
     align-self: center;
     width: 24px;
-    & > img {
-        width: 12px;
-        height: 24px;
-    }
 `;
 
 const DetailsWrapper = styled.div`
