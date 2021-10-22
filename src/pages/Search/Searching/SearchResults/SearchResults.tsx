@@ -4,6 +4,7 @@ import { SearchStatus } from '../../useSearchPageFacade';
 import { SearchResults as SearchResultsType } from '../../../../services/apiTypes';
 import SkeletonLoadingPage from '../../../../components/loading/SkeletonLoader';
 import ResultsList from './ResultsList';
+import { SearchType } from '../../Search';
 
 const SearchResultsWrapper = styled.div`
     width: 100%;
@@ -35,12 +36,13 @@ const SearchResults = ({
             </SearchResultsWrapper>
         );
     } else if (searchStatus === SearchStatus.INACTIVE) {
+        const typeText =
+            searchType === SearchType.Comm ? 'Commissioning Package' : 'Tag';
         return (
             <SearchResultsWrapper>
                 <p>
                     <i>
-                        Start typing your Commissioning Package number in the
-                        field above. <br />
+                        Start typing your {typeText} number in the field above.
                     </i>
                 </p>
             </SearchResultsWrapper>
