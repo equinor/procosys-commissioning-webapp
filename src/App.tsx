@@ -17,7 +17,7 @@ export type CommParams = {
     plant: string;
     project: string;
     searchType: SearchType;
-    commPkg: string;
+    entityId: string;
     taskId: string;
     checklistId: string;
     punchItemId: string;
