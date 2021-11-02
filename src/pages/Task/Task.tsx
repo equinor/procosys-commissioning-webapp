@@ -93,9 +93,9 @@ const Task = (): JSX.Element => {
         (async (): Promise<void> => {
             try {
                 const tasksFromApi = await api.getTasks(
-                    source.token,
                     params.plant,
-                    params.commPkg
+                    params.entityId,
+                    source.token
                 );
                 if (tasksFromApi.length < 1) {
                     setNextTask(null);
@@ -113,7 +113,7 @@ const Task = (): JSX.Element => {
         return (): void => {
             source.cancel();
         };
-    }, [api, params.taskId, params.plant, params.commPkg]);
+    }, [api, params.taskId, params.plant, params.entityId]);
 
     return (
         <>

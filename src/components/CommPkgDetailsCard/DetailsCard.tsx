@@ -10,6 +10,8 @@ import useCommonHooks from '../../utils/useCommonHooks';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import DetailsCardShell from './DetailsCardShell';
 import axios from 'axios';
+import { isOfType } from '@equinor/procosys-webapp-components';
+import { SearchType } from '../../pages/Search/Search';
 
 const CommDetailsWrapper = styled.div<{ atBookmarksPage?: boolean }>`
     cursor: ${(props): string =>
@@ -51,11 +53,6 @@ const HeaderWrapper = styled.div<{ atBookmarksPage: boolean }>`
         color: ${(props): string =>
             props.atBookmarksPage ? COLORS.mossGreen : COLORS.black};
     }
-    & > p {
-        margin: 0;
-        flex: 1;
-        text-align: right;
-    }
 `;
 
 type DetailsCardProps = {
@@ -80,13 +77,18 @@ const DetailsCard = ({
         const source = axios.CancelToken.source();
         (async (): Promise<void> => {
             try {
-                const detailsFromApi = await api.getCommPackageDetails(
-                    source.token,
+                const detailsFromApi = await api.getEntityDetails(
                     params.plant,
-                    commPkgId
+                    SearchType.Comm,
+                    commPkgId,
+                    source.token
                 );
-                setDetails(detailsFromApi);
-                setFetchDetailsStatus(AsyncStatus.SUCCESS);
+                if (isOfType<CommPkg>(detailsFromApi, 'commStatus')) {
+                    setDetails(detailsFromApi);
+                    setFetchDetailsStatus(AsyncStatus.SUCCESS);
+                } else {
+                    setFetchDetailsStatus(AsyncStatus.ERROR);
+                }
             } catch (error) {
                 if (!axios.isCancel(error)) {
                     setFetchDetailsStatus(AsyncStatus.ERROR);
@@ -118,7 +120,7 @@ const DetailsCard = ({
                 </StatusImageWrapper>
                 <DetailsWrapper>
                     <HeaderWrapper atBookmarksPage={atBookmarksPage}>
-                        {details.commPkgNo}
+                        <h6>{details.commPkgNo}</h6>
                     </HeaderWrapper>
                     <Caption>{details.description}</Caption>
                 </DetailsWrapper>

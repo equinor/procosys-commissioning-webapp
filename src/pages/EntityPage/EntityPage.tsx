@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import Scope from './Scope/Scope';
 import Tasks from './Tasks/Tasks';
-import PunchList from './PunchList/PunchList';
 import styled from 'styled-components';
 import useCommonHooks from '../../utils/useCommonHooks';
 import { AsyncStatus } from '../../contexts/CommAppContext';
@@ -21,12 +19,20 @@ import {
     Navbar,
     NavigationFooter,
     removeSubdirectories,
+    Scope,
 } from '@equinor/procosys-webapp-components';
 import EdsIcon from '../../components/icons/EdsIcon';
 import { COLORS } from '../../style/GlobalStyles';
 import DetailsCard from '../../components/CommPkgDetailsCard/DetailsCard';
+import { SearchType } from '../Search/Search';
+import EntityPageDetailsCard from './EntityPageDetailsCard';
+import PunchList from './PunchList/PunchList';
 
 const CommPkgWrapper = styled.main``;
+
+const ContentWrapper = styled.div`
+    padding-bottom: 66px;
+`;
 
 const CommPkg = (): JSX.Element => {
     const { api, params, path, url, history } = useCommonHooks();
@@ -36,25 +42,63 @@ const CommPkg = (): JSX.Element => {
     const [fetchFooterDataStatus, setFetchFooterDataStatus] = useState(
         AsyncStatus.LOADING
     );
+    const [fetchScopeStatus, setFetchScopeStatus] = useState(
+        AsyncStatus.LOADING
+    );
+    const [fetchPunchListStatus, setFetchPunchListStatus] = useState(
+        AsyncStatus.LOADING
+    );
+    const source = Axios.CancelToken.source();
 
     useEffect(() => {
-        const source = Axios.CancelToken.source();
+        if (params.searchType === SearchType.Comm) {
+            (async (): Promise<void> => {
+                try {
+                    const tasksFromApi = await api.getTasks(
+                        params.plant,
+                        params.entityId,
+                        source.token
+                    );
+                    setTasks(tasksFromApi);
+                } catch {
+                    setFetchFooterDataStatus(AsyncStatus.ERROR);
+                }
+            })();
+        }
+    }, [api, params]);
+
+    useEffect(() => {
         (async (): Promise<void> => {
             try {
-                const [scopeFromApi, tasksFromApi, punchListFromApi] =
-                    await Promise.all([
-                        api.getScope(params.plant, params.commPkg),
-                        api.getTasks(
-                            source.token,
-                            params.plant,
-                            params.commPkg
-                        ),
-                        api.getPunchList(params.plant, params.commPkg),
-                    ]);
+                const [scopeFromApi, punchListFromApi] = await Promise.all([
+                    api.getScope(
+                        params.plant,
+                        params.searchType,
+                        params.entityId,
+                        source.token
+                    ),
+                    api.getPunchList(
+                        params.plant,
+                        params.searchType,
+                        params.entityId,
+                        source.token
+                    ),
+                ]);
                 setScope(scopeFromApi);
-                setTasks(tasksFromApi);
+                if (scopeFromApi.length > 0) {
+                    setFetchScopeStatus(AsyncStatus.SUCCESS);
+                } else {
+                    setFetchScopeStatus(AsyncStatus.EMPTY_RESPONSE);
+                }
                 setPunchList(punchListFromApi);
-                setFetchFooterDataStatus(AsyncStatus.SUCCESS);
+                if (punchListFromApi.length > 0) {
+                    setFetchPunchListStatus(AsyncStatus.SUCCESS);
+                } else {
+                    setFetchPunchListStatus(AsyncStatus.EMPTY_RESPONSE);
+                }
+                if (fetchFooterDataStatus != AsyncStatus.ERROR) {
+                    setFetchFooterDataStatus(AsyncStatus.SUCCESS);
+                }
             } catch {
                 setFetchFooterDataStatus(AsyncStatus.ERROR);
             }
@@ -62,7 +106,7 @@ const CommPkg = (): JSX.Element => {
         return (): void => {
             source.cancel();
         };
-    }, [api, params.plant, params.commPkg]);
+    }, [api, params]);
 
     return (
         <CommPkgWrapper>
@@ -70,16 +114,40 @@ const CommPkg = (): JSX.Element => {
                 noBorder
                 leftContent={<BackButton to={removeSubdirectories(url, 2)} />}
             />
-            <DetailsCard commPkgId={params.commPkg} />
-            <Switch>
-                <Route exact path={`${path}`} component={Scope} />
-                <Route exact path={`${path}/tasks`} component={Tasks} />
-                <Route
-                    exact
-                    path={`${path}/punch-list`}
-                    component={PunchList}
-                />
-            </Switch>
+            <EntityPageDetailsCard />
+            <ContentWrapper>
+                <Switch>
+                    <Route
+                        exact
+                        path={`${path}`}
+                        render={(): JSX.Element => (
+                            <Scope
+                                fetchScopeStatus={fetchScopeStatus}
+                                onChecklistClick={(checklistId: number): void =>
+                                    history.push(
+                                        `${history.location.pathname}/checklist/${checklistId}`
+                                    )
+                                }
+                                scope={scope}
+                                renderFilter={
+                                    params.searchType === SearchType.Tag
+                                }
+                            />
+                        )}
+                    />
+                    <Route exact path={`${path}/tasks`} component={Tasks} />
+                    <Route
+                        exact
+                        path={`${path}/punch-list`}
+                        render={(): JSX.Element => (
+                            <PunchList
+                                fetchPunchListStatus={fetchPunchListStatus}
+                                punchList={punchList}
+                            />
+                        )}
+                    />
+                </Switch>
+            </ContentWrapper>
             <NavigationFooter footerStatus={fetchFooterDataStatus}>
                 <FooterButton
                     active={
