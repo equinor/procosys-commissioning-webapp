@@ -59,14 +59,11 @@ const SearchResults = ({
             </SearchResultsWrapper>
         );
     } else {
+        const typeText = searchType === SearchType.Comm ? 'packages' : 'tags';
         return (
             <SearchResultsWrapper>
                 <p>
-                    <i>
-                        No
-                        {searchType === SearchType.Comm ? 'packages' : 'tags'}
-                        found for this search.
-                    </i>
+                    <i>No {typeText} found for this search.</i>
                 </p>
             </SearchResultsWrapper>
         );
