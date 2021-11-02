@@ -62,7 +62,11 @@ const SearchResults = ({
         return (
             <SearchResultsWrapper>
                 <p>
-                    <i>No packages found for this search.</i>
+                    <i>
+                        No
+                        {searchType === SearchType.Comm ? 'packages' : 'tags'}
+                        found for this search.
+                    </i>
                 </p>
             </SearchResultsWrapper>
         );

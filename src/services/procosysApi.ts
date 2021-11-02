@@ -82,7 +82,6 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         if (searchType === SearchType.Comm) {
             url = `CommPkg/Search?plantId=${plantId}&startsWithCommPkgNo=${query}&includeDecommissioningPkgs=true&projectId=${projectId}${apiVersion}`;
         } else if (searchType === SearchType.Tag) {
-            // TODO: needs to be cleaned up, so that MCCR tags aren't shown
             url = `Tag/Search?plantId=${plantId}&startsWithTagNo=${query}&projectId=${projectId}${apiVersion}`;
         } else {
             throw new Error('An error occurred, please try again.');
