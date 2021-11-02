@@ -118,7 +118,7 @@ const DetailsCard = ({
                 </StatusImageWrapper>
                 <DetailsWrapper>
                     <HeaderWrapper atBookmarksPage={atBookmarksPage}>
-                        {details.commPkgNo}
+                        <h6>{details.commPkgNo}</h6>
                     </HeaderWrapper>
                     <Caption>{details.description}</Caption>
                 </DetailsWrapper>
