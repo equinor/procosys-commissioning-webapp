@@ -27,6 +27,7 @@ import {
     TaskParameter,
     Attachment,
     Tag,
+    TagPreview,
 } from './apiTypes';
 
 type PostAttachmentProps = {
@@ -89,7 +90,6 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         if (searchType === SearchType.Comm) {
             url = `CommPkg/Search?plantId=${plantId}&startsWithCommPkgNo=${query}&includeDecommissioningPkgs=true&projectId=${projectId}${apiVersion}`;
         } else if (searchType === SearchType.Tag) {
-            // TODO: needs to be cleaned up, so that MCCR tags aren't shown
             url = `Tag/Search?plantId=${plantId}&startsWithTagNo=${query}&projectId=${projectId}${apiVersion}`;
         } else {
             throw new Error('An error occurred, please try again.');
@@ -98,6 +98,12 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         if (!isOfType<SearchResults>(data, 'maxAvailable')) {
             throw new Error(typeGuardErrorMessage('search results'));
         }
+        // if (isArrayOfType<TagPreview>(data.items, 'tagNo')) {
+        //     const filteredTags = data.items.filter(
+        //         (tagPreview) => tagPreview.commPkgNo != null
+        //     );
+        //     data.items = filteredTags;
+        // }
         return data;
     };
 
@@ -154,7 +160,10 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         if (!isArrayOfType<ChecklistPreview>(data, 'hasElectronicForm')) {
             throw new Error(typeGuardErrorMessage('checklist preview'));
         }
-        return data;
+        const filteredChecklists = data.filter(
+            (checklist) => checklist.formularGroup != 'MCCR'
+        );
+        return filteredChecklists;
     };
 
     const getChecklist = async (

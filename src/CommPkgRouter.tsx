@@ -13,7 +13,7 @@ const CommPkgRouter = (): JSX.Element => {
         <Switch>
             <Route
                 exact
-                path={`${path}/scope/:checklistId`}
+                path={`${path}/checklist/:checklistId`}
                 component={Checklist}
             />
             <Route
