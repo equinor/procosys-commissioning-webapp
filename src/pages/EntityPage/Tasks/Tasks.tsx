@@ -74,7 +74,6 @@ const Tasks = (): JSX.Element => {
                                 {task.title}
                             </Typography>
                         </div>
-                        <EdsIcon name="chevron_right" />
                     </TaskPreviewButton>
                 ))}
             </>

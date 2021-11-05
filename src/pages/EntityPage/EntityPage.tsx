@@ -65,7 +65,7 @@ const CommPkg = (): JSX.Element => {
                 }
             })();
         }
-    }, [api, params]);
+    }, [api, params.entityId]);
 
     useEffect(() => {
         (async (): Promise<void> => {
@@ -85,6 +85,8 @@ const CommPkg = (): JSX.Element => {
                     ),
                 ]);
                 setScope(scopeFromApi);
+                console.log('setting scope');
+                console.log(scopeFromApi);
                 if (scopeFromApi.length > 0) {
                     setFetchScopeStatus(AsyncStatus.SUCCESS);
                 } else {
@@ -106,7 +108,7 @@ const CommPkg = (): JSX.Element => {
         return (): void => {
             source.cancel();
         };
-    }, [api, params]);
+    }, [api, params.entityId]);
 
     return (
         <CommPkgWrapper>
@@ -129,8 +131,8 @@ const CommPkg = (): JSX.Element => {
                                     )
                                 }
                                 scope={scope}
-                                renderFilter={
-                                    params.searchType === SearchType.Tag
+                                hideFilter={
+                                    params.searchType === SearchType.Comm
                                 }
                             />
                         )}
