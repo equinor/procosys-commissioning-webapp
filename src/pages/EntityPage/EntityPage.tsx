@@ -115,6 +115,11 @@ const CommPkg = (): JSX.Element => {
             <Navbar
                 noBorder
                 leftContent={<BackButton to={removeSubdirectories(url, 2)} />}
+                midContent={
+                    params.searchType === SearchType.Comm
+                        ? 'Comm Package'
+                        : params.searchType
+                }
             />
             <EntityPageDetailsCard />
             <ContentWrapper>
