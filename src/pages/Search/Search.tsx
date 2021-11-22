@@ -1,64 +1,60 @@
-import React, { ChangeEvent, useEffect, useRef } from 'react';
-import { Search as SearchField } from '@equinor/eds-core-react';
+import React, { useState } from 'react';
 import withAccessControl from '../../services/withAccessControl';
 import styled from 'styled-components';
-import useSearchPageFacade, { SearchStatus } from './useSearchPageFacade';
-import SearchResults from './SearchResults/SearchResults';
-import PageHeader from '../../components/PageHeader';
-import { BackButton, Navbar } from '@equinor/procosys-webapp-components';
+import {
+    Navbar,
+    ProcosysButton,
+    SearchTypeButton,
+} from '@equinor/procosys-webapp-components';
+import Bookmarks from './Bookmarks/Bookmarks';
+import SearchArea from './Searching/SearchArea';
+import SideMenu from '../../components/navigation/SideMenu';
 
 const SearchPageWrapper = styled.main`
     padding: 0 4%;
-    & h4 {
-        text-align: center;
-    }
-    & span {
-        height: 60px;
-        margin-bottom: 10px;
+`;
+
+const ButtonsWrapper = styled.div`
+    display: flex;
+    height: 60px;
+    & > button:not(:last-child) {
+        margin-right: 10px;
     }
 `;
 
+export enum SearchType {
+    Comm = 'Comm',
+    Tag = 'Tag',
+}
+
 const Search = (): JSX.Element => {
-    const { hits, searchStatus, query, setQuery } = useSearchPageFacade();
-    const searchbarRef = useRef<HTMLInputElement>(
-        document.createElement('input')
-    );
+    const [searchType, setSearchType] = useState<string | undefined>(undefined);
 
-    useEffect(() => {
-        searchbarRef.current?.focus();
-    }, []);
-
-    const searchHeaderToRender = (): JSX.Element => {
-        if (searchStatus === SearchStatus.SUCCESS) {
-            return (
-                <h4>
-                    Displaying {hits.items.length} out of {hits.maxAvailable}{' '}
-                    packages
-                </h4>
-            );
-        }
-        if (searchStatus === SearchStatus.LOADING) {
-            return <h4>Loading</h4>;
-        }
-        return <PageHeader title="Search" subtitle="Find a comm. pkg" />;
-    };
     return (
         <>
-            <Navbar leftContent={<BackButton />} />
+            <Navbar
+                leftContent={<ProcosysButton />}
+                rightContent={<SideMenu />}
+            />
             <SearchPageWrapper>
-                {searchHeaderToRender()}
-                <SearchField
-                    placeholder={'For example: "1002-D01"'}
-                    value={query}
-                    onChange={(e: ChangeEvent<HTMLInputElement>): void =>
-                        setQuery(e.target.value)
-                    }
-                    ref={searchbarRef}
-                />
-                <SearchResults
-                    commPackages={hits.items}
-                    searchStatus={searchStatus}
-                />
+                <p>Search for</p>
+                <ButtonsWrapper>
+                    <SearchTypeButton
+                        searchType={SearchType.Comm}
+                        currentSearchType={searchType}
+                        setCurrentSearchType={setSearchType}
+                    />
+                    <SearchTypeButton
+                        searchType={SearchType.Tag}
+                        currentSearchType={searchType}
+                        setCurrentSearchType={setSearchType}
+                    />
+                </ButtonsWrapper>
+                {searchType ? (
+                    <SearchArea searchType={searchType} />
+                ) : (
+                    <Bookmarks />
+                )}
             </SearchPageWrapper>
         </>
     );

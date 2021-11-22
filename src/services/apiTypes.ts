@@ -29,9 +29,22 @@ export interface CommPkgPreview {
     operationHandoverStatus: string;
 }
 
-export type CommPkgSearchResults = {
+export interface TagPreview {
+    id: number;
+    tagNo: string;
+    description: string;
+    registerCode: string;
+    tagFunctionCode: string;
+    commPkgNo: string;
+    mcPkgNo: string;
+    callOffNo: string;
+    punchaseOrderTitle: string;
+    mccrResponsibleCode: string;
+}
+
+export type SearchResults = {
     maxAvailable: number;
-    items: CommPkgPreview[];
+    items: CommPkgPreview[] | TagPreview[];
 };
 
 // COMM PKG AND LISTS

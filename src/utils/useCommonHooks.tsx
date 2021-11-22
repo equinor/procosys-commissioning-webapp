@@ -10,7 +10,7 @@ import CommAppContext from '../contexts/CommAppContext';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const useCommonHooks = () => {
-    const { api, auth } = useContext(CommAppContext);
+    const { api, auth, appConfig } = useContext(CommAppContext);
     const params = useParams<CommParams>();
     const { pathname } = useLocation();
     const history = useHistory();
@@ -23,6 +23,7 @@ const useCommonHooks = () => {
         url,
         path,
         pathname,
+        appConfig,
     };
 };
 

@@ -12,7 +12,7 @@ import authService from '../services/__mocks__/authService';
 import { testProjects, testPlants, dummyPermissions } from './dummyData';
 import { IAuthService } from '../services/authService';
 import { baseURL } from './setupServer';
-import { FeatureFlags } from '../services/appConfiguration';
+import { AppConfig, FeatureFlags } from '../services/appConfiguration';
 
 const client = new Msal.PublicClientApplication({
     auth: { clientId: 'testId', authority: 'testAuthority' },
@@ -28,7 +28,17 @@ const procosysApiInstance = procosysApiService({
     axios: baseApiInstance,
     apiVersion: 'dummy-version',
 });
-
+const dummyAppConfig: AppConfig = {
+    procosysWebApi: {
+        baseUrl: 'testUrl',
+        scope: [''],
+        apiVersion: '',
+    },
+    appInsights: {
+        instrumentationKey: '',
+    },
+    ocrFunctionEndpoint: 'https://dummy-org-endpoint.com',
+};
 const dummyFeatureFlags: FeatureFlags = {
     commAppIsEnabled: true,
 };
@@ -56,6 +66,7 @@ export const withCommAppContext = ({
                     fetchPlantsStatus: asyncStatus,
                     auth: auth,
                     api: api,
+                    appConfig: dummyAppConfig,
                     featureFlags: dummyFeatureFlags,
                 }}
             >

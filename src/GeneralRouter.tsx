@@ -5,7 +5,6 @@ import SelectProject from './pages/SelectProject/SelectProject';
 import Search from './pages/Search/Search';
 import SelectPlant from './pages/SelectPlant/SelectPlant';
 import CommPkgRouter from './CommPkgRouter';
-import Bookmarks from './pages/Bookmarks/Bookmarks';
 
 const CommRouter = (): JSX.Element => {
     return (
@@ -13,14 +12,9 @@ const CommRouter = (): JSX.Element => {
             <Switch>
                 <Route exact path={'/'} component={SelectPlant} />
                 <Route exact path={'/:plant'} component={SelectProject} />
-                <Route exact path={'/:plant/:project'} component={Bookmarks} />
+                <Route exact path={'/:plant/:project'} component={Search} />
                 <Route
-                    exact
-                    path={'/:plant/:project/search'}
-                    component={Search}
-                />
-                <Route
-                    path={'/:plant/:project/:commPkg'}
+                    path={'/:plant/:project/:searchType/:commPkg'}
                     component={CommPkgRouter}
                 />
             </Switch>

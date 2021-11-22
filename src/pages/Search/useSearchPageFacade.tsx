@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useReducer, useState } from 'react';
 import axios, { CancelToken } from 'axios';
 import PlantContext from '../../contexts/PlantContext';
-import { CommPkgSearchResults } from '../../services/apiTypes';
+import { SearchResults } from '../../services/apiTypes';
 import { ProcosysApiService } from '../../services/procosysApi';
-import CommAppContext from '../../contexts/CommAppContext';
+import useCommonHooks from '../../utils/useCommonHooks';
 
 export enum SearchStatus {
     INACTIVE,
@@ -14,12 +14,12 @@ export enum SearchStatus {
 
 type SearchState = {
     searchStatus: SearchStatus;
-    hits: CommPkgSearchResults;
+    hits: SearchResults;
 };
 
 type Action =
     | { type: 'FETCH_START' }
-    | { type: 'FETCH_SUCCESS'; payload: CommPkgSearchResults }
+    | { type: 'FETCH_SUCCESS'; payload: SearchResults }
     | { type: 'FETCH_ERROR'; error: string }
     | { type: 'FETCH_INACTIVE' };
 
@@ -54,22 +54,24 @@ const fetchReducer = (state: SearchState, action: Action): SearchState => {
 const fetchHits = async (
     query: string,
     dispatch: React.Dispatch<Action>,
-    plantID: string,
-    projectID: number,
+    plantId: string,
+    projectId: number,
     cancelToken: CancelToken,
-    api: ProcosysApiService
+    api: ProcosysApiService,
+    searchType: string
 ): Promise<void> => {
     dispatch({ type: 'FETCH_START' });
     try {
-        const commPackages = await api.searchForCommPackage(
+        const results = await api.getSearchResults(
             query,
-            projectID,
-            plantID,
+            projectId,
+            plantId,
+            searchType,
             cancelToken
         );
         dispatch({
             type: 'FETCH_SUCCESS',
-            payload: commPackages,
+            payload: results,
         });
     } catch (err) {
         dispatch({ type: 'FETCH_ERROR', error: 'err' });
@@ -77,14 +79,18 @@ const fetchHits = async (
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const useSearchPageFacade = () => {
-    const { api } = useContext(CommAppContext);
+const useSearchPageFacade = (searchType: string) => {
+    const { api } = useCommonHooks();
     const [{ hits, searchStatus }, dispatch] = useReducer(fetchReducer, {
         hits: { maxAvailable: 0, items: [] },
         searchStatus: SearchStatus.INACTIVE,
     });
     const [query, setQuery] = useState('');
     const { currentProject, currentPlant } = useContext(PlantContext);
+
+    useEffect(() => {
+        setQuery('');
+    }, [searchType]);
 
     useEffect(() => {
         if (!currentPlant || !currentProject) return;
@@ -101,7 +107,8 @@ const useSearchPageFacade = () => {
                     currentPlant.id,
                     currentProject.id,
                     token,
-                    api
+                    api,
+                    searchType
                 ),
             300
         );
@@ -109,7 +116,7 @@ const useSearchPageFacade = () => {
             cancel('A new search has taken place instead');
             clearTimeout(timeOutId);
         };
-    }, [query, currentProject, currentPlant, api]);
+    }, [query, currentProject, currentPlant, api, searchType]);
 
     return {
         hits,
