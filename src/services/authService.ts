@@ -1,6 +1,6 @@
 import * as Msal from '@azure/msal-browser';
 import { AccountInfo } from '@azure/msal-browser';
-import { StorageKey } from '../utils/useBookmarks';
+import { StorageKey } from '@equinor/procosys-webapp-components';
 export interface IAuthService {
     login: () => Promise<void>;
     logout: () => Promise<void>;
@@ -24,7 +24,7 @@ const authService = ({ MSAL, scopes }: IAuthServiceProps): IAuthService => {
         let pathName = window.location.pathname;
         if (pathName.substr(0, 5) === '/comm')
             pathName = '/' + pathName.slice(6);
-        window.localStorage.setItem(StorageKey.REDIRECTPATH, pathName);
+        window.localStorage.setItem(StorageKey.COMM_REDIRECTPATH, pathName);
         MSAL.loginRedirect({ scopes: scopes });
     };
 

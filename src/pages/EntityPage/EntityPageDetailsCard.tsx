@@ -59,7 +59,7 @@ const EntityPageDetailsCard = (): JSX.Element => {
     if (fetchDetailsStatus === AsyncStatus.SUCCESS && details != undefined) {
         return (
             <EntityDetails
-                icon={<TextIcon color={COLORS.tagIcon} text="Tag" />}
+                icon={<TextIcon color={COLORS.pineGreen} text="Tag" />}
                 headerText={details.tag.tagNo}
                 description={details.tag.description}
                 onClick={(): void =>

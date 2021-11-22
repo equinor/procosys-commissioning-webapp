@@ -1,14 +1,10 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { SearchStatus } from '../../useSearchPageFacade';
 import { SearchResults as SearchResultsType } from '../../../../services/apiTypes';
 import SkeletonLoadingPage from '../../../../components/loading/SkeletonLoader';
-import { PackageStatusIcon } from '../../../../components/icons/PackageStatusIcon';
-import { COLORS } from '../../../../style/GlobalStyles';
-import { SearchType } from '../../Search';
-import useCommonHooks from '../../../../utils/useCommonHooks';
 import ResultsList from './ResultsList';
+import { SearchType } from '../../Search';
 
 const SearchResultsWrapper = styled.div`
     width: 100%;
@@ -40,12 +36,13 @@ const SearchResults = ({
             </SearchResultsWrapper>
         );
     } else if (searchStatus === SearchStatus.INACTIVE) {
+        const typeText =
+            searchType === SearchType.Comm ? 'Commissioning Package' : 'Tag';
         return (
             <SearchResultsWrapper>
                 <p>
                     <i>
-                        Start typing your Commissioning Package number in the
-                        field above. <br />
+                        Start typing your {typeText} number in the field above.
                     </i>
                 </p>
             </SearchResultsWrapper>
@@ -62,10 +59,11 @@ const SearchResults = ({
             </SearchResultsWrapper>
         );
     } else {
+        const typeText = searchType === SearchType.Comm ? 'packages' : 'tags';
         return (
             <SearchResultsWrapper>
                 <p>
-                    <i>No packages found for this search.</i>
+                    <i>No {typeText} found for this search.</i>
                 </p>
             </SearchResultsWrapper>
         );

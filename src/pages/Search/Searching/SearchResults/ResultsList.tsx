@@ -27,24 +27,22 @@ const ResultsList = ({
     ) {
         return (
             <>
-                {searchResults.items.map((searchResult) => {
-                    return (
-                        <EntityDetails
-                            key={searchResult.id}
-                            icon={
-                                <PackageStatusIcon
-                                    mcStatus={searchResult.mcStatus}
-                                    commStatus={searchResult.commStatus}
-                                />
-                            }
-                            headerText={searchResult.commPkgNo}
-                            description={searchResult.description}
-                            onClick={(): void =>
-                                history.push(`${url}/Comm/${searchResult.id}`)
-                            }
-                        />
-                    );
-                })}
+                {searchResults.items.map((searchResult) => (
+                    <EntityDetails
+                        key={searchResult.id}
+                        icon={
+                            <PackageStatusIcon
+                                mcStatus={searchResult.mcStatus}
+                                commStatus={searchResult.commStatus}
+                            />
+                        }
+                        headerText={searchResult.commPkgNo}
+                        description={searchResult.description}
+                        onClick={(): void =>
+                            history.push(`${url}/Comm/${searchResult.id}`)
+                        }
+                    />
+                ))}
             </>
         );
     } else if (
@@ -53,21 +51,17 @@ const ResultsList = ({
     ) {
         return (
             <>
-                {searchResults.items.map((searchResult) => {
-                    return (
-                        <EntityDetails
-                            key={searchResult.id}
-                            icon={
-                                <TextIcon color={COLORS.tagIcon} text="Tag" />
-                            }
-                            headerText={searchResult.tagNo}
-                            description={searchResult.description}
-                            onClick={(): void =>
-                                history.push(`${url}/Tag/${searchResult.id}`)
-                            }
-                        />
-                    );
-                })}
+                {searchResults.items.map((searchResult) => (
+                    <EntityDetails
+                        key={searchResult.id}
+                        icon={<TextIcon color={COLORS.pineGreen} text="Tag" />}
+                        headerText={searchResult.tagNo}
+                        description={searchResult.description}
+                        onClick={(): void =>
+                            history.push(`${url}/Tag/${searchResult.id}`)
+                        }
+                    />
+                ))}
             </>
         );
     } else return <></>;

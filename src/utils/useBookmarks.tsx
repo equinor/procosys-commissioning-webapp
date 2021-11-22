@@ -1,12 +1,6 @@
+import { StorageKey } from '@equinor/procosys-webapp-components';
 import { useContext, useEffect, useState } from 'react';
 import PlantContext from '../contexts/PlantContext';
-
-export enum StorageKey {
-    PLANT = 'currentPlant',
-    PROJECT = 'currentProject',
-    BOOKMARK = 'Procosys Bookmark',
-    REDIRECTPATH = 'ProCoSys-CWA-redirectPath',
-}
 
 const cleanUpBookmarks = (bookmarks: any): string[] => {
     const commPkgIds: string[] = bookmarks.filter(

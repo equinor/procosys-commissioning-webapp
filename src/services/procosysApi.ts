@@ -98,12 +98,6 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         if (!isOfType<SearchResults>(data, 'maxAvailable')) {
             throw new Error(typeGuardErrorMessage('search results'));
         }
-        // if (isArrayOfType<TagPreview>(data.items, 'tagNo')) {
-        //     const filteredTags = data.items.filter(
-        //         (tagPreview) => tagPreview.commPkgNo != null
-        //     );
-        //     data.items = filteredTags;
-        // }
         return data;
     };
 
