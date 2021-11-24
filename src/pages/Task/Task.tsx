@@ -10,7 +10,6 @@ import { AsyncStatus } from '../../contexts/CommAppContext';
 import EdsIcon from '../../components/icons/EdsIcon';
 import AsyncCard from '../../components/AsyncCard';
 import useSnackbar from '../../utils/useSnackbar';
-import { TaskPreviewButton } from '../CommPkg/Tasks/Tasks';
 import { Banner, Typography } from '@equinor/eds-core-react';
 import Axios, { CancelToken } from 'axios';
 import useAsyncGet from '../../utils/useAsyncGet';
@@ -19,6 +18,7 @@ import {
     Navbar,
     removeSubdirectories,
 } from '@equinor/procosys-webapp-components';
+import { TaskPreviewButton } from '../EntityPage/Tasks/Tasks';
 
 const NextTaskButton = styled(TaskPreviewButton)`
     padding: 0;
@@ -93,9 +93,9 @@ const Task = (): JSX.Element => {
         (async (): Promise<void> => {
             try {
                 const tasksFromApi = await api.getTasks(
-                    source.token,
                     params.plant,
-                    params.commPkg
+                    params.entityId,
+                    source.token
                 );
                 if (tasksFromApi.length < 1) {
                     setNextTask(null);
@@ -113,7 +113,7 @@ const Task = (): JSX.Element => {
         return (): void => {
             source.cancel();
         };
-    }, [api, params.taskId, params.plant, params.commPkg]);
+    }, [api, params.taskId, params.plant, params.entityId]);
 
     return (
         <>

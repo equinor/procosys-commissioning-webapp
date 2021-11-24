@@ -1,15 +1,18 @@
+import { isArrayOfType, isOfType } from '@equinor/procosys-webapp-components';
 import { AxiosInstance, CancelToken } from 'axios';
 import {
     PunchAction,
     UpdatePunchData,
     UpdatePunchEndpoint,
 } from '../pages/Punch/ClearPunch/useClearPunchFacade';
+import { SearchType } from '../pages/Search/Search';
 import { TaskCommentDto } from '../pages/Task/TaskDescription';
 import { TaskParameterDto } from '../pages/Task/TaskParameters/TaskParameters';
+import { isCorrectDetails } from './apiTypeGuards';
 import {
     Plant,
     Project,
-    CommPkgSearchResults,
+    SearchResults,
     CommPkg,
     ChecklistPreview,
     TaskPreview,
@@ -23,6 +26,8 @@ import {
     Task,
     TaskParameter,
     Attachment,
+    Tag,
+    TagPreview,
 } from './apiTypes';
 
 type PostAttachmentProps = {
@@ -30,6 +35,10 @@ type PostAttachmentProps = {
     parentId?: string;
     data: FormData;
     title?: string;
+};
+
+const typeGuardErrorMessage = (expectedType: string): string => {
+    return `Unable to retrieve ${expectedType}. Please try again.`;
 };
 
 type ProcosysApiServiceProps = {
@@ -70,31 +79,47 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         return data as string[];
     };
 
-    const searchForCommPackage = async (
+    const getSearchResults = async (
         query: string,
         projectId: number,
         plantId: string,
+        searchType: string,
         cancelToken?: CancelToken
-    ): Promise<CommPkgSearchResults> => {
-        const { data } = await axios.get(
-            `CommPkg/Search?plantId=${plantId}&startsWithCommPkgNo=${query}&includeDecommissioningPkgs=true&projectId=${projectId}${apiVersion}`,
-            { cancelToken }
-        );
-
-        return data as CommPkgSearchResults;
+    ): Promise<SearchResults> => {
+        let url = '';
+        if (searchType === SearchType.Comm) {
+            url = `CommPkg/Search?plantId=${plantId}&startsWithCommPkgNo=${query}&includeDecommissioningPkgs=true&projectId=${projectId}${apiVersion}`;
+        } else if (searchType === SearchType.Tag) {
+            url = `Tag/Search?plantId=${plantId}&startsWithTagNo=${query}&projectId=${projectId}${apiVersion}`;
+        } else {
+            throw new Error('An error occurred, please try again.');
+        }
+        const { data } = await axios.get(url, { cancelToken });
+        if (!isOfType<SearchResults>(data, 'maxAvailable')) {
+            throw new Error(typeGuardErrorMessage('search results'));
+        }
+        return data;
     };
 
-    const getCommPackageDetails = async (
-        cancelToken: CancelToken,
+    const getEntityDetails = async (
         plantId: string,
-        commPkgId: string
-    ): Promise<CommPkg> => {
-        const { data } = await axios.get(
-            `CommPkg?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}
-`,
-            { cancelToken: cancelToken }
-        );
-        return data as CommPkg;
+        searchType: SearchType,
+        entityId: string,
+        cancelToken: CancelToken
+    ): Promise<CommPkg | Tag> => {
+        let url = '';
+        if (searchType === SearchType.Comm) {
+            url = `CommPkg?plantId=PCS$${plantId}&commPkgId=${entityId}${apiVersion}`;
+        } else if (searchType === SearchType.Tag) {
+            url = `Tag?plantId=PCS$${plantId}&tagId=${entityId}${apiVersion}`;
+        } else {
+            throw new Error('The chosen scope type is not supported.');
+        }
+        const { data } = await axios.get(url, { cancelToken });
+        if (!isCorrectDetails(data, searchType)) {
+            throw new Error(typeGuardErrorMessage('details'));
+        }
+        return data;
     };
 
     const getAttachments = async (
@@ -113,12 +138,26 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
 
     const getScope = async (
         plantId: string,
-        commPkgId: string
+        searchType: SearchType,
+        entityId: string,
+        cancelToken: CancelToken
     ): Promise<ChecklistPreview[]> => {
-        const { data } = await axios.get(
-            `CommPkg/Checklists?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}`
+        let url = '';
+        if (searchType === SearchType.Comm) {
+            url = `CommPkg/Checklists?plantId=PCS$${plantId}&commPkgId=${entityId}${apiVersion}`;
+        } else if (searchType === SearchType.Tag) {
+            url = `Tag/CheckLists?plantId=PCS$${plantId}&tagId=${entityId}${apiVersion}`;
+        } else {
+            throw new Error('The chosen entity type is not supported.');
+        }
+        const { data } = await axios.get(url, { cancelToken });
+        if (!isArrayOfType<ChecklistPreview>(data, 'hasElectronicForm')) {
+            throw new Error(typeGuardErrorMessage('checklist preview'));
+        }
+        const filteredChecklists = data.filter(
+            (checklist) => checklist.formularGroup != 'MCCR'
         );
-        return data as ChecklistPreview[];
+        return filteredChecklists;
     };
 
     const getChecklist = async (
@@ -295,12 +334,23 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
 
     const getPunchList = async (
         plantId: string,
-        commPkgId: string
+        searchType: SearchType,
+        entityId: string,
+        cancelToken: CancelToken
     ): Promise<PunchPreview[]> => {
-        const { data } = await axios.get(
-            `CommPkg/PunchList?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}`
-        );
-        return data as PunchPreview[];
+        let url = '';
+        if (searchType === SearchType.Comm) {
+            url = `CommPkg/PunchList?plantId=PCS$${plantId}&commPkgId=${entityId}${apiVersion}`;
+        } else if (searchType === SearchType.Tag) {
+            url = `Tag/PunchList?plantId=PCS$${plantId}&tagId=${entityId}${apiVersion}`;
+        } else {
+            throw new Error('The chosen scope type is not supported.');
+        }
+        const { data } = await axios.get(url, { cancelToken });
+        if (!isArrayOfType<PunchPreview>(data, 'isRestrictedForUser')) {
+            throw new Error(typeGuardErrorMessage('punch preview'));
+        }
+        return data;
     };
 
     const getPunchCategories = async (
@@ -379,9 +429,9 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     //---------
 
     const getTasks = async (
-        cancelToken: CancelToken,
         plantId: string,
-        commPkgId: string
+        commPkgId: string,
+        cancelToken: CancelToken
     ): Promise<TaskPreview[]> => {
         const { data } = await axios.get(
             `CommPkg/Tasks?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}`,
@@ -592,7 +642,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         getProjectsForPlant,
         getPermissionsForPlant,
         getChecklist,
-        getCommPackageDetails,
+        getEntityDetails,
         getPunchOrganizations,
         getPunchList,
         getPunchTypes,
@@ -618,7 +668,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         putTaskComment,
         putTaskParameter,
         putUpdatePunch,
-        searchForCommPackage,
+        getSearchResults,
     };
 };
 

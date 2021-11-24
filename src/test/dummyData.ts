@@ -9,6 +9,7 @@ import {
     PunchPreview,
     TaskPreview,
     CommPkgPreview,
+    SearchResults,
 } from '../services/apiTypes';
 
 type DummyMetatableData = {
@@ -118,6 +119,13 @@ export const testScope: ChecklistPreview[] = [
         formularType: 'Test formular type',
         isRestrictedForUser: false,
         hasElectronicForm: true,
+        tagId: 1,
+        responsibleCode: 'code',
+        sheetNo: 3,
+        subSheetNo: 4,
+        attachmentCount: 2,
+        isSigned: true,
+        isVerified: false,
     },
 ];
 
@@ -134,8 +142,35 @@ export const testPunchList: PunchPreview[] = [
         cleared: true,
         rejected: false,
         statusControlledBySwcr: true,
+        formularType: 'ff',
+        responsibleCode: 'code',
+        verified: false,
+        attachmentCount: 0,
     },
 ];
+
+export const testCommSearch: SearchResults = {
+    maxAvailable: testCommPkgPreview.length,
+    items: testCommPkgPreview,
+};
+
+export const testTagSearch: SearchResults = {
+    maxAvailable: 1,
+    items: [
+        {
+            id: 1,
+            tagNo: '#432',
+            description: 'test tag description',
+            registerCode: 'tagCode',
+            tagFunctionCode: 'tagFunctionCode',
+            commPkgNo: '123-D01',
+            mcPkgNo: '123-C001',
+            callOffNo: 'C05',
+            punchaseOrderTitle: 'PO title',
+            mccrResponsibleCode: 'mccrRespCode',
+        },
+    ],
+};
 
 export const dummyChecklistResponse = {
     CheckList: {

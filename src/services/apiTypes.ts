@@ -29,9 +29,22 @@ export interface CommPkgPreview {
     operationHandoverStatus: string;
 }
 
-export type CommPkgSearchResults = {
+export interface TagPreview {
+    id: number;
+    tagNo: string;
+    description: string;
+    registerCode: string;
+    tagFunctionCode: string;
+    commPkgNo: string;
+    mcPkgNo: string;
+    callOffNo: string;
+    punchaseOrderTitle: string;
+    mccrResponsibleCode: string;
+}
+
+export type SearchResults = {
     maxAvailable: number;
-    items: CommPkgPreview[];
+    items: CommPkgPreview[] | TagPreview[];
 };
 
 // COMM PKG AND LISTS
@@ -49,19 +62,24 @@ export type CommPkg = {
     operationHandoverStatus: string;
     systemId: number;
 };
-
-export type ChecklistPreview = {
+export interface ChecklistPreview {
     id: number;
+    tagId: number;
     tagNo: string;
     tagDescription: string;
+    responsibleCode: string; // not in Comm version
     status: CompletionStatus;
     formularType: string;
     formularGroup: string;
+    sheetNo: number; // not in Comm version
+    subSheetNo: number; // not in Comm version
     isRestrictedForUser: boolean;
     hasElectronicForm: boolean;
-};
-
-export type PunchPreview = {
+    attachmentCount: number; // not in Comm version
+    isSigned: boolean; // not in Comm version
+    isVerified: boolean; // not in Comm version
+}
+export interface PunchPreview {
     id: number;
     status: CompletionStatus;
     description: string;
@@ -69,11 +87,16 @@ export type PunchPreview = {
     tagDescription: string;
     tagId: number;
     tagNo: string;
+    formularType: string; // Not in Comm punches
+    responsibleCode: string; // Not in Comm punches
     isRestrictedForUser: boolean;
     cleared: boolean;
     rejected: boolean;
+    verified: boolean; // Not in Comm punches
     statusControlledBySwcr: boolean;
-};
+    attachmentCount: number; // Not in Comm punches
+    callOffNo?: string; // Not in Comm punches
+}
 
 export type TaskPreview = {
     id: number;
@@ -260,4 +283,51 @@ export interface Attachment {
     thumbnailAsBase64: string;
     hasFile: boolean;
     fileName: string;
+}
+
+// TAG
+
+export interface TagDetails {
+    id: number;
+    tagNo: string;
+    description: string;
+    registerCode: string;
+    registerDescription: string;
+    statusCode: string;
+    statusDescription: string;
+    tagFunctionCode: string;
+    tagFunctionDescription: string;
+    commPkgNo: string;
+    mcPkgNo: string;
+    purchaseOrderNo: string;
+    callOffNo: string;
+    purchaseOrderTitle: string;
+    projectDescription: string;
+    sequence: string;
+    mountedOnTagNo: string;
+    remark: string;
+    systemCode: string;
+    systemDescription: string;
+    disciplineCode: string;
+    disciplineDescription: string;
+    areaCode: string;
+    areaDescription: string;
+    engineeringCodeCode: string;
+    engineeringCodeDescription: string;
+    contractorCode: string;
+    contractorDescription: string;
+    hasPreservation: boolean;
+    preservationMigrated: boolean;
+}
+
+export interface AdditionalTagField {
+    id: number;
+    label: string;
+    value: string;
+    type: string;
+    unit: string;
+}
+export interface Tag {
+    tag: TagDetails;
+    additionalFields: AdditionalTagField[];
 }

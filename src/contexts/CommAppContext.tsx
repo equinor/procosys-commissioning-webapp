@@ -3,7 +3,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import ErrorPage from '../components/error/ErrorPage';
 import LoadingPage from '../components/loading/LoadingPage';
 import { Plant } from '../services/apiTypes';
-import { FeatureFlags } from '../services/appConfiguration';
+import { AppConfig, FeatureFlags } from '../services/appConfiguration';
 import { IAuthService } from '../services/authService';
 import { ProcosysApiService } from '../services/procosysApi';
 
@@ -12,6 +12,7 @@ type CommAppContextProps = {
     fetchPlantsStatus: AsyncStatus;
     api: ProcosysApiService;
     auth: IAuthService;
+    appConfig: AppConfig;
     featureFlags: FeatureFlags;
 };
 
@@ -29,14 +30,16 @@ type CommAppContextProviderProps = {
     children: ReactNode;
     auth: IAuthService;
     api: ProcosysApiService;
+    appConfig: AppConfig;
     featureFlags: FeatureFlags;
 };
 
 export const CommAppContextProvider: React.FC<CommAppContextProviderProps> = ({
-    featureFlags,
     children,
     auth,
     api,
+    appConfig,
+    featureFlags,
 }: CommAppContextProviderProps) => {
     const [availablePlants, setAvailablePlants] = useState<Plant[]>([]);
     const [fetchPlantsStatus, setFetchPlantsStatus] = useState<AsyncStatus>(
@@ -77,11 +80,12 @@ export const CommAppContextProvider: React.FC<CommAppContextProviderProps> = ({
     return (
         <CommAppContext.Provider
             value={{
-                fetchPlantsStatus,
                 availablePlants,
-                featureFlags,
+                fetchPlantsStatus,
                 api,
                 auth,
+                appConfig,
+                featureFlags,
             }}
         >
             {children}

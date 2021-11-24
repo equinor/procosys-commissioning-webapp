@@ -8,6 +8,15 @@ import rightYellow from '../../assets/img/status/right_yellow.png';
 import rightGrey from '../../assets/img/status/right_grey.png';
 import rightGreen from '../../assets/img/status/right_green.png';
 import rightRed from '../../assets/img/status/right_red.png';
+import styled from 'styled-components';
+
+const PackageStatusIconWrapper = styled.div`
+    display: flex;
+    & > img {
+        width: 12px;
+        height: 24px;
+    }
+`;
 
 type PackageStatusIconProps = {
     mcStatus: CompletionStatus;
@@ -35,7 +44,7 @@ export const PackageStatusIcon = ({
     commStatus,
 }: PackageStatusIconProps): JSX.Element => {
     return (
-        <>
+        <PackageStatusIconWrapper>
             <img
                 src={determineCommImage(commStatus)}
                 alt={'Comm package status indicator, left side'}
@@ -44,6 +53,6 @@ export const PackageStatusIcon = ({
                 src={determineMCImage(mcStatus)}
                 alt={'MC package status indicator, right side'}
             />
-        </>
+        </PackageStatusIconWrapper>
     );
 };

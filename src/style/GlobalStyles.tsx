@@ -14,6 +14,7 @@ export const COLORS = {
     darkGrey: '#777',
     lightGrey: '#fafafa',
     black: '#000',
+    pineGreen: '#007079',
 };
 
 const GlobalStyles = createGlobalStyle`
@@ -65,6 +66,8 @@ const ParagraphOverlineImport = styled.p(tokens.typography.paragraph.overline);
 export const ParagraphOverline = styled(ParagraphOverlineImport)`
     margin: 0;
 `;
+
+export const Caption = styled.p(tokens.typography.paragraph.caption);
 
 export const BREAKPOINT = {
     xs: '@media (max-width: 0px)',
