@@ -9,6 +9,7 @@ import useCommonHooks from '../../../utils/useCommonHooks';
 import AsyncPage from '../../../components/AsyncPage';
 import { SearchType } from '../../Search/Search';
 import {
+    ensure,
     InfoItem,
     PunchList as TagPunchList,
 } from '@equinor/procosys-webapp-components';
@@ -32,7 +33,7 @@ const PreviewButton = styled(Link)`
     cursor: pointer;
     text-decoration: none;
     justify-content: space-between;
-    & img {
+    & > img {
         max-height: 20px;
         object-fit: contain;
         flex: 0.1;
@@ -44,7 +45,7 @@ const PreviewButton = styled(Link)`
             margin: 0;
         }
     }
-    & svg {
+    & > svg {
         flex: 0.5;
     }
 `;
@@ -61,10 +62,10 @@ const PunchList = ({
     const { url, params, history } = useCommonHooks();
 
     const handleTagPunchClicked = (punchId: number): void => {
-        const punch = punchList?.find((punch) => punch.id === punchId);
-        if (punch != undefined && punch.cleared === true) {
+        const punch = ensure(punchList?.find((punch) => punch.id === punchId));
+        if (punch.cleared === true) {
             history.push(`${url}/${punch.id}/verify`);
-        } else if (punch != undefined && punch.cleared === false) {
+        } else {
             history.push(`${url}/${punch.id}/clear`);
         }
     };

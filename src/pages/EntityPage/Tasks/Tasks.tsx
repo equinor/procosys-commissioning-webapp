@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Typography } from '@equinor/eds-core-react';
-import EdsIcon from '../../../components/icons/EdsIcon';
 import CompletionStatusIcon from '../../../components/icons/CompletionStatusIcon';
 import { CompletionStatus } from '../../../services/apiTypes';
 import useCommonHooks from '../../../utils/useCommonHooks';
@@ -9,14 +8,6 @@ import AsyncPage from '../../../components/AsyncPage';
 import useAsyncGet from '../../../utils/useAsyncGet';
 import { CancelToken } from 'axios';
 import { Link } from 'react-router-dom';
-
-export const CommPkgListWrapper = styled.div`
-    padding-bottom: 85px;
-    & h3 {
-        text-align: center;
-        margin-top: 16px;
-    }
-`;
 
 export const TaskPreviewButton = styled(Link)`
     display: flex;
@@ -26,7 +17,7 @@ export const TaskPreviewButton = styled(Link)`
     cursor: pointer;
     text-decoration: none;
     justify-content: space-between;
-    & img {
+    & > img {
         max-height: 20px;
         object-fit: contain;
         flex: 0.1;
@@ -38,7 +29,7 @@ export const TaskPreviewButton = styled(Link)`
             margin: 0;
         }
     }
-    & svg {
+    & > svg {
         flex: 0.5;
     }
 `;
@@ -52,7 +43,7 @@ const Tasks = (): JSX.Element => {
 
     return (
         <AsyncPage
-            errorMessage={'Unable to load tasks. Please try again.'}
+            errorMessage={'Unable to load tasks.'}
             fetchStatus={fetchStatus}
             emptyContentMessage={'There are no tasks for this CommPkg.'}
         >

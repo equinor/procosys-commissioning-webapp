@@ -69,11 +69,7 @@ const EntityPageDetailsCard = (): JSX.Element => {
             />
         );
     } else if (fetchDetailsStatus === AsyncStatus.ERROR) {
-        return (
-            <DetailsWrapper>
-                Unable to load details. Please reload
-            </DetailsWrapper>
-        );
+        return <DetailsWrapper>Unable to load details.</DetailsWrapper>;
     } else {
         return (
             <DetailsWrapper>

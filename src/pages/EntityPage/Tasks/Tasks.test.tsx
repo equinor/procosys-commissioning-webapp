@@ -34,9 +34,7 @@ describe('<Tasks />', () => {
     it('Renders error message if unable to get tasks', async () => {
         causeApiError(ENDPOINTS.getTasks, 'get');
         renderTasks();
-        const errorMessage = await screen.findByText(
-            'Unable to load tasks. Please try again.'
-        );
+        const errorMessage = await screen.findByText('Unable to load tasks.');
         expect(errorMessage).toBeInTheDocument();
     });
 });

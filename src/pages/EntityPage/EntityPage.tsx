@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import Tasks from './Tasks/Tasks';
 import styled from 'styled-components';
 import useCommonHooks from '../../utils/useCommonHooks';
@@ -9,10 +9,8 @@ import {
     TaskPreview,
     PunchPreview,
 } from '../../services/apiTypes';
-import { DotProgress } from '@equinor/eds-core-react';
 import withAccessControl from '../../services/withAccessControl';
 import Axios from 'axios';
-import calculateHighestStatus from '../../utils/calculateHighestStatus';
 import {
     BackButton,
     FooterButton,
@@ -23,12 +21,9 @@ import {
 } from '@equinor/procosys-webapp-components';
 import EdsIcon from '../../components/icons/EdsIcon';
 import { COLORS } from '../../style/GlobalStyles';
-import DetailsCard from '../../components/CommPkgDetailsCard/DetailsCard';
 import { SearchType } from '../Search/Search';
 import EntityPageDetailsCard from './EntityPageDetailsCard';
 import PunchList from './PunchList/PunchList';
-
-const CommPkgWrapper = styled.main``;
 
 const ContentWrapper = styled.div`
     padding-bottom: 66px;
@@ -49,22 +44,24 @@ const CommPkg = (): JSX.Element => {
         AsyncStatus.LOADING
     );
     const source = Axios.CancelToken.source();
+    const isOnScopePage =
+        !history.location.pathname.includes('/punch-list') &&
+        !history.location.pathname.includes('/tasks');
 
     useEffect(() => {
-        if (params.searchType === SearchType.Comm) {
-            (async (): Promise<void> => {
-                try {
-                    const tasksFromApi = await api.getTasks(
-                        params.plant,
-                        params.entityId,
-                        source.token
-                    );
-                    setTasks(tasksFromApi);
-                } catch {
-                    setFetchFooterDataStatus(AsyncStatus.ERROR);
-                }
-            })();
-        }
+        if (params.searchType != SearchType.Comm) return;
+        async (): Promise<void> => {
+            try {
+                const tasksFromApi = await api.getTasks(
+                    params.plant,
+                    params.entityId,
+                    source.token
+                );
+                setTasks(tasksFromApi);
+            } catch {
+                setFetchFooterDataStatus(AsyncStatus.ERROR);
+            }
+        };
     }, [api, params.entityId]);
 
     useEffect(() => {
@@ -85,8 +82,6 @@ const CommPkg = (): JSX.Element => {
                     ),
                 ]);
                 setScope(scopeFromApi);
-                console.log('setting scope');
-                console.log(scopeFromApi);
                 if (scopeFromApi.length > 0) {
                     setFetchScopeStatus(AsyncStatus.SUCCESS);
                 } else {
@@ -111,7 +106,7 @@ const CommPkg = (): JSX.Element => {
     }, [api, params.entityId]);
 
     return (
-        <CommPkgWrapper>
+        <main>
             <Navbar
                 noBorder
                 leftContent={<BackButton to={removeSubdirectories(url, 2)} />}
@@ -157,10 +152,7 @@ const CommPkg = (): JSX.Element => {
             </ContentWrapper>
             <NavigationFooter footerStatus={fetchFooterDataStatus}>
                 <FooterButton
-                    active={
-                        !history.location.pathname.includes('/punch-list') &&
-                        !history.location.pathname.includes('/tasks')
-                    }
+                    active={isOnScopePage}
                     goTo={(): void => history.push(url)}
                     icon={<EdsIcon name="list" color={COLORS.mossGreen} />}
                     label="Scope"
@@ -185,7 +177,7 @@ const CommPkg = (): JSX.Element => {
                     numberOfItems={punchList?.length}
                 />
             </NavigationFooter>
-        </CommPkgWrapper>
+        </main>
     );
 };
 
