@@ -38,7 +38,7 @@ const NewPunchSuccessPage = (): JSX.Element => {
                 <Button
                     onClick={(): void =>
                         history.push(
-                            `/${params.plant}/${params.project}/${params.commPkg}/punch-list`
+                            `/${params.plant}/${params.project}/${params.entityId}/punch-list`
                         )
                     }
                 >

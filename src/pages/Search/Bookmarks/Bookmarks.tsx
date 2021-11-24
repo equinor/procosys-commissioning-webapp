@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import DetailsCard from '../../CommPkg/DetailsCard';
 import { getCurrentBookmarks } from '../../../utils/useBookmarks';
 import PlantContext from '../../../contexts/PlantContext';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import withAccessControl from '../../../services/withAccessControl';
 import { CollapsibleCard } from '@equinor/procosys-webapp-components';
+import DetailsCard from '../../../components/CommPkgDetailsCard/DetailsCard';
 
 const BookmarksWrapper = styled.div`
     margin: 16px 0;

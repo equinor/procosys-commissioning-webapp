@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { CommPkgListWrapper, PreviewButton } from '../Scope/Scope';
 import styled from 'styled-components';
 import EdsIcon from '../../../components/icons/EdsIcon';
 import { Typography } from '@equinor/eds-core-react';
@@ -8,6 +7,13 @@ import { AsyncStatus } from '../../../contexts/CommAppContext';
 import { PunchPreview } from '../../../services/apiTypes';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import AsyncPage from '../../../components/AsyncPage';
+import { SearchType } from '../../Search/Search';
+import {
+    ensure,
+    InfoItem,
+    PunchList as TagPunchList,
+} from '@equinor/procosys-webapp-components';
+import { Link } from 'react-router-dom';
 
 const InfoRow = styled.div`
     &:first-child {
@@ -19,35 +25,61 @@ const ModuleAndTagWrapper = styled.div`
     display: flex;
 `;
 
-const PunchList = (): JSX.Element => {
-    const { api, url, params } = useCommonHooks();
-    const [punchList, setPunchList] = useState<PunchPreview[]>();
-    const [fetchPunchListStatus, setFetchPunchListStatus] = useState(
-        AsyncStatus.LOADING
-    );
+const PreviewButton = styled(Link)`
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    margin: 10px 4% 0 4%;
+    cursor: pointer;
+    text-decoration: none;
+    justify-content: space-between;
+    & > img {
+        max-height: 20px;
+        object-fit: contain;
+        flex: 0.1;
+    }
+    & > div {
+        margin-left: 24px;
+        flex: 3;
+        & p {
+            margin: 0;
+        }
+    }
+    & > svg {
+        flex: 0.5;
+    }
+`;
 
-    useEffect(() => {
-        (async (): Promise<void> => {
-            setFetchPunchListStatus(AsyncStatus.LOADING);
-            try {
-                const punchListFromApi = await api.getPunchList(
-                    params.plant,
-                    params.commPkg
-                );
-                setPunchList(punchListFromApi);
-                if (punchListFromApi.length < 1) {
-                    setFetchPunchListStatus(AsyncStatus.EMPTY_RESPONSE);
-                } else {
-                    setFetchPunchListStatus(AsyncStatus.SUCCESS);
-                }
-            } catch {
-                setFetchPunchListStatus(AsyncStatus.ERROR);
-            }
-        })();
-    }, [params.commPkg, params.plant, api]);
+type PunchListProps = {
+    fetchPunchListStatus: AsyncStatus;
+    punchList?: PunchPreview[];
+};
 
-    return (
-        <CommPkgListWrapper>
+const PunchList = ({
+    fetchPunchListStatus,
+    punchList,
+}: PunchListProps): JSX.Element => {
+    const { url, params, history } = useCommonHooks();
+
+    const handleTagPunchClicked = (punchId: number): void => {
+        const punch = ensure(punchList?.find((punch) => punch.id === punchId));
+        if (punch.cleared === true) {
+            history.push(`${url}/${punch.id}/verify`);
+        } else {
+            history.push(`${url}/${punch.id}/clear`);
+        }
+    };
+
+    if (params.searchType === SearchType.Tag) {
+        return (
+            <TagPunchList
+                fetchPunchListStatus={fetchPunchListStatus}
+                onPunchClick={handleTagPunchClicked}
+                punchList={punchList}
+            />
+        );
+    } else {
+        return (
             <AsyncPage
                 fetchStatus={fetchPunchListStatus}
                 errorMessage={
@@ -87,13 +119,12 @@ const PunchList = (): JSX.Element => {
                                     </InfoRow>
                                 </ModuleAndTagWrapper>
                             </div>
-                            <EdsIcon name="chevron_right" />
                         </PreviewButton>
                     ))}
                 </>
             </AsyncPage>
-        </CommPkgListWrapper>
-    );
+        );
+    }
 };
 
 export default PunchList;

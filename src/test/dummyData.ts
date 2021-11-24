@@ -119,6 +119,13 @@ export const testScope: ChecklistPreview[] = [
         formularType: 'Test formular type',
         isRestrictedForUser: false,
         hasElectronicForm: true,
+        tagId: 1,
+        responsibleCode: 'code',
+        sheetNo: 3,
+        subSheetNo: 4,
+        attachmentCount: 2,
+        isSigned: true,
+        isVerified: false,
     },
 ];
 
@@ -135,6 +142,10 @@ export const testPunchList: PunchPreview[] = [
         cleared: true,
         rejected: false,
         statusControlledBySwcr: true,
+        formularType: 'ff',
+        responsibleCode: 'code',
+        verified: false,
+        attachmentCount: 0,
     },
 ];
 

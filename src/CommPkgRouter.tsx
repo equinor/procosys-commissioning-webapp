@@ -1,11 +1,11 @@
 import React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import Checklist from './pages/Checklist/Checklist';
-import CommPkg from './pages/CommPkg/CommPkg';
 import NewPunch from './pages/Punch/NewPunch/NewPunch';
 import ClearPunch from './pages/Punch/ClearPunch/ClearPunch';
 import VerifyPunch from './pages/Punch/VerifyPunch/VerifyPunch';
 import Task from './pages/Task/Task';
+import EntityPage from './pages/EntityPage/EntityPage';
 
 const CommPkgRouter = (): JSX.Element => {
     const { path } = useRouteMatch();
@@ -13,7 +13,7 @@ const CommPkgRouter = (): JSX.Element => {
         <Switch>
             <Route
                 exact
-                path={`${path}/scope/:checklistId`}
+                path={`${path}/checklist/:checklistId`}
                 component={Checklist}
             />
             <Route
@@ -32,7 +32,7 @@ const CommPkgRouter = (): JSX.Element => {
                 path={`${path}/punch-list/:punchItemId/verify`}
                 component={VerifyPunch}
             />
-            <Route path={path} component={CommPkg} />
+            <Route path={path} component={EntityPage} />
         </Switch>
     );
 };
