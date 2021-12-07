@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import CompletionStatusIcon from '../../components/icons/CompletionStatusIcon';
 import { ChecklistDetails } from '../../services/apiTypes';
