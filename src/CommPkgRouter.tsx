@@ -18,7 +18,7 @@ const CommPkgRouter = (): JSX.Element => {
             />
             <Route
                 exact
-                path={`${path}/scope/:checklistId/new-punch`}
+                path={`${path}/checklist/:checklistId/new-punch`}
                 component={NewPunch}
             />
             <Route exact path={`${path}/tasks/:taskId`} component={Task} />
