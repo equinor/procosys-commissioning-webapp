@@ -95,7 +95,8 @@ const TaskDescription = ({
                     <label>Comment:</label>
                     <CommentField
                         role="textbox"
-                        aria-readonly={canEditComment}
+                        data-testid="commentField"
+                        aria-readonly={!canEditComment}
                         editable={canEditComment}
                         contentEditable={canEditComment}
                         ref={commentRef}
