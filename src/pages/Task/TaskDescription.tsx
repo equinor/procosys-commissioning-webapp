@@ -33,7 +33,7 @@ const TaskDescription = ({
     setSnackbarText,
 }: TaskDescriptionProps): JSX.Element => {
     const { api, params } = useCommonHooks();
-    const [putCommentStatus, setPutCommentStatus] = useState(
+    const [putCommentStatus, setPutCommentStatus] = useState<AsyncStatus>(
         AsyncStatus.INACTIVE
     );
 
