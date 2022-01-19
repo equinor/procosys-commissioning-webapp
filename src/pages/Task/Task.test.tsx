@@ -1,14 +1,9 @@
-import {
-    findByRole,
-    render,
-    screen,
-    waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { withPlantContext } from '../../test/contexts';
 import Task from './Task';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
-import { causeApiError, ENDPOINTS, rest, server } from '../../test/setupServer';
+import { causeApiError, ENDPOINTS } from '../../test/setupServer';
 
 const renderTask = async (): Promise<void> => {
     render(withPlantContext({ Component: <Task /> }));
@@ -18,12 +13,8 @@ const renderTask = async (): Promise<void> => {
 };
 
 const editAndSaveComment = async (): Promise<void> => {
-    const editButton = screen.getByRole('button', {
-        name: 'Edit comment',
-    });
-    userEvent.click(editButton);
-    const saveButton = screen.getByRole('button', { name: 'Save comment' });
-    userEvent.click(saveButton);
+    const commentField = screen.getByTestId('commentField');
+    fireEvent.focusOut(commentField);
 };
 
 describe('<Task/> loading errors', () => {
@@ -76,10 +67,8 @@ describe('<Task/> after successful loading', () => {
     });
 
     it('Allows user to sign and unsign the task, enabling and disabling the comment button', async () => {
-        const editButton = screen.getByRole('button', {
-            name: 'Edit comment',
-        });
-        expect(editButton).toBeEnabled();
+        const commentField = screen.getByTestId('commentField');
+        expect(commentField).toHaveAttribute('aria-readonly', 'false');
         const signButton = screen.getByRole('button', { name: 'Sign' });
         userEvent.click(signButton);
         let messageInSnackbar = await screen.findByText(
@@ -92,7 +81,7 @@ describe('<Task/> after successful loading', () => {
             'Task successfully unsigned'
         );
         expect(messageInSnackbar).toBeInTheDocument();
-        expect(editButton).toBeEnabled();
+        expect(commentField).toHaveAttribute('aria-readonly', 'false');
     });
 
     it('Renders error message when task signing fails', async () => {
