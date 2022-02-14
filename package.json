@@ -4,12 +4,12 @@
   "homepage": "https://apps.procosys.com/comm",
   "private": true,
   "dependencies": {
-    "@azure/msal-browser": "^2.19.0",
+    "@azure/msal-browser": "^2.21.0",
     "@equinor/eds-core-react": "^0.14.0",
     "@equinor/eds-icons": "^0.7.0",
-    "@equinor/procosys-webapp-components": "^1.12.3",
-    "@microsoft/applicationinsights-react-js": "^3.1.2",
-    "@microsoft/applicationinsights-web": "^2.6.1",
+    "@equinor/procosys-webapp-components": "^1.13.1",
+    "@microsoft/applicationinsights-react-js": "^3.2.2",
+    "@microsoft/applicationinsights-web": "^2.7.2",
     "axios": "^0.24.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -44,22 +44,22 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^5.15.0",
+    "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.0.3",
+    "@types/jest": "^27.4.0",
     "@types/node": "^16.11.9",
-    "@types/react": "^17.0.35",
+    "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
-    "@types/react-router-dom": "^5.3.2",
-    "@types/styled-components": "^5.1.14",
-    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@types/react-router-dom": "^5.3.3",
+    "@types/styled-components": "^5.1.21",
+    "@typescript-eslint/eslint-plugin": "^5.10.1",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-react": "^7.23.2",
+    "eslint-plugin-react": "^7.28.0",
     "msw": "^0.35.0",
-    "prettier": "^2.4.1",
+    "prettier": "^2.5.1",
     "ts-jest": "^26.5.6",
-    "typescript": "^4.5.2"
+    "typescript": "^4.5.5"
   }
 }
