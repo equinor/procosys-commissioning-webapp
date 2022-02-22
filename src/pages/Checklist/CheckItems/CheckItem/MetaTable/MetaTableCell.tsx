@@ -24,7 +24,7 @@ const MetaTableDateCellWrapper = styled.div`
         background-color: ${COLORS.greyBackground};
         height: 40px;
         border: none;
-        box-shadow: inset 0 -1px 0 0 var(--eds_text__static_ic, rgba(111, 111, 111, 1)); // TODO: fix(?)
+        box-shadow: inset 0 -1px 0 0 var(--eds_text__static_ic, #6f6f6f);
         font-family: Equinor;
         padding: 0 8px;
     }
@@ -68,7 +68,6 @@ const MetaTableCell = ({
     const [submitStatus, setSubmitStatus] = useState<AsyncStatus>(
         AsyncStatus.INACTIVE
     );
-    const [errorMessage, setErrorMessage] = useState('');
 
     const putStringCellApiCall = (): Promise<void> =>
         api.putMetaTableStringCell(
@@ -102,7 +101,6 @@ const MetaTableCell = ({
             setSubmitStatus(AsyncStatus.SUCCESS);
         } catch (error) {
             if (!(error instanceof Error)) return;
-            setErrorMessage(error.toString());
             setSubmitStatus(AsyncStatus.ERROR);
         }
     };
