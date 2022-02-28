@@ -212,16 +212,36 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         );
     };
 
-    const putMetaTableCell = async (
+    const putMetaTableStringCell = async (
         plantId: string,
-        checkItemId: number,
         checklistId: string,
+        checkItemId: number,
         columnId: number,
         rowId: number,
         value: string
     ): Promise<void> => {
         await axios.put(
             `CheckList/Item/MetaTableCell?plantId=PCS$${plantId}${apiVersion}`,
+            {
+                CheckListId: checklistId,
+                CheckItemId: checkItemId,
+                ColumnId: columnId,
+                RowId: rowId,
+                Value: value,
+            }
+        );
+    };
+
+    const putMetaTableDateCell = async (
+        plantId: string,
+        checklistId: string,
+        checkItemId: number,
+        columnId: number,
+        rowId: number,
+        value: string
+    ): Promise<void> => {
+        await axios.put(
+            `CheckList/Item/MetaTableCellDate?plantId=PCS$${plantId}${apiVersion}`,
             {
                 CheckListId: checklistId,
                 CheckItemId: checkItemId,
@@ -664,7 +684,8 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         postTempPunchAttachment,
         postChecklistAttachment,
         putChecklistComment,
-        putMetaTableCell,
+        putMetaTableStringCell,
+        putMetaTableDateCell,
         putTaskComment,
         putTaskParameter,
         putUpdatePunch,

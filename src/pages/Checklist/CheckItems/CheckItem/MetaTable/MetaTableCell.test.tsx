@@ -11,9 +11,13 @@ jest.mock('../../../../../services/authService');
 const metaTableCellTestProps: MetaTableCellProps = {
     checkItemId: 0,
     rowId: 0,
-    columnId: 0,
-    value: 'Test value',
-    unit: 'Test unit',
+    cell: {
+        columnId: 0,
+        value: 'Test value',
+        unit: 'Test unit',
+        valueDate: '',
+        isValueDate: false,
+    },
     disabled: false,
     label: 'Test label',
 };
@@ -32,7 +36,9 @@ const metaTableCellForTesting = withCommAppContext({
 
 async function setupWithInputTypedIn(): Promise<void> {
     render(metaTableCellForTesting);
-    const input = await screen.findByDisplayValue(metaTableCellTestProps.value);
+    const input = await screen.findByDisplayValue(
+        metaTableCellTestProps.cell.value
+    );
     userEvent.type(input, 's');
 }
 

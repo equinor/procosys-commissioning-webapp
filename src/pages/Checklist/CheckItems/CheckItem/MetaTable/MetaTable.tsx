@@ -91,9 +91,7 @@ const MetaTable = ({
                     disabled={disabled}
                     checkItemId={checkItemId}
                     rowId={row.id}
-                    columnId={cell.columnId}
-                    unit={cell.unit}
-                    value={cell.value}
+                    cell={cell}
                     label={row.cells.length < 2 ? row.label : ''}
                 />
             );

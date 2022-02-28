@@ -13,6 +13,7 @@ export const COLORS = {
     white: '#fff',
     darkGrey: '#777',
     lightGrey: '#fafafa',
+    greyBackground: tokens.colors.ui.background__light.hex,
     black: '#000',
     pineGreen: '#007079',
 };
