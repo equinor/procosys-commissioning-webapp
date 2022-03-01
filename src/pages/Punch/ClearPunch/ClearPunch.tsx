@@ -47,6 +47,7 @@ const ClearPunch = (): JSX.Element => {
         handleTypeChange,
         handleRaisedByChange,
         handleClearingByChange,
+        handleDefaultValue,
         defaultTypeId,
     } = useClearPunchFacade();
     const { api, params, url } = useCommonHooks();
@@ -141,16 +142,11 @@ const ClearPunch = (): JSX.Element => {
                             label="Raised by"
                             id="RaisedBySelect"
                             disabled={clearPunchStatus === AsyncStatus.LOADING}
-                            defaultValue={
-                                ensure(
-                                    organizations.find(
-                                        (org) =>
-                                            org.code === punchItem.raisedByCode
-                                    )
-                                ).id
-                            }
+                            defaultValue={handleDefaultValue()}
                             onChange={handleRaisedByChange}
                         >
+                            <option value={undefined}> </option>
+
                             {organizations.map((organization) => (
                                 <option
                                     key={organization.id}
@@ -165,17 +161,11 @@ const ClearPunch = (): JSX.Element => {
                             id="ClearingBySelect"
                             label="Clearing by"
                             disabled={clearPunchStatus === AsyncStatus.LOADING}
-                            defaultValue={
-                                ensure(
-                                    organizations.find(
-                                        (org) =>
-                                            org.code ===
-                                            punchItem.clearingByCode
-                                    )
-                                ).id
-                            }
+                            defaultValue={handleDefaultValue()}
                             onChange={handleClearingByChange}
                         >
+                            <option value={undefined}> </option>
+
                             {organizations.map((organization) => (
                                 <option
                                     key={organization.id}

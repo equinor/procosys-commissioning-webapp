@@ -126,6 +126,13 @@ const useClearPunchFacade = () => {
         });
     };
 
+    const handleDefaultValue = (): number | undefined => {
+        const defaultId = organizations?.find(
+            (org) => org.code === punchItem.raisedByCode
+        )?.id;
+        return defaultId ? defaultId : undefined;
+    };
+
     const handleClearingByChange = (
         e: React.ChangeEvent<HTMLSelectElement>
     ): void => {
@@ -212,6 +219,7 @@ const useClearPunchFacade = () => {
         handleRaisedByChange,
         handleClearingByChange,
         handleDescriptionChange,
+        handleDefaultValue,
     };
 };
 
