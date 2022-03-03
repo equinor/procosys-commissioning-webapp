@@ -135,15 +135,13 @@ const useClearPunchFacade = () => {
                 organizations.find((org) => org.id === parseInt(e.target.value))
             ).code,
         }));
-        updateDatabase(UpdatePunchEndpoint.RaisedBy, {
+        updateDatabase(UpdatePunchEndpoint.ClearingBy, {
             ClearingByOrganizationId: parseInt(e.target.value),
         });
     };
 
-    const getDefaultOrganization = (): number => {
-        const defaultId = organizations?.find(
-            (org) => org.code === punchItem.raisedByCode
-        )?.id;
+    const getDefaultOrganization = (code: string): number => {
+        const defaultId = organizations?.find((org) => org.code === code)?.id;
         return defaultId ? defaultId : -1;
     };
 

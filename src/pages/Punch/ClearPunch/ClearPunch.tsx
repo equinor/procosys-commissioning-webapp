@@ -142,10 +142,12 @@ const ClearPunch = (): JSX.Element => {
                             label="Raised by"
                             id="RaisedBySelect"
                             disabled={clearPunchStatus === AsyncStatus.LOADING}
-                            defaultValue={getDefaultOrganization()}
+                            defaultValue={getDefaultOrganization(
+                                punchItem.raisedByCode
+                            )}
                             onChange={handleRaisedByChange}
                         >
-                            <option hidden disabled value={-1}></option>
+                            <option hidden disabled value={-1} />
 
                             {organizations.map((organization) => (
                                 <option
@@ -161,7 +163,9 @@ const ClearPunch = (): JSX.Element => {
                             id="ClearingBySelect"
                             label="Clearing by"
                             disabled={clearPunchStatus === AsyncStatus.LOADING}
-                            defaultValue={getDefaultOrganization()}
+                            defaultValue={getDefaultOrganization(
+                                punchItem.clearingByCode
+                            )}
                             onChange={handleClearingByChange}
                         >
                             <option hidden disabled value={-1}></option>
