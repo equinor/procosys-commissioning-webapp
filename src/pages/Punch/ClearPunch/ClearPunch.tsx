@@ -47,7 +47,7 @@ const ClearPunch = (): JSX.Element => {
         handleTypeChange,
         handleRaisedByChange,
         handleClearingByChange,
-        handleDefaultValue,
+        getDefaultOrganization,
         defaultTypeId,
     } = useClearPunchFacade();
     const { api, params, url } = useCommonHooks();
@@ -142,10 +142,10 @@ const ClearPunch = (): JSX.Element => {
                             label="Raised by"
                             id="RaisedBySelect"
                             disabled={clearPunchStatus === AsyncStatus.LOADING}
-                            defaultValue={handleDefaultValue()}
+                            defaultValue={getDefaultOrganization()}
                             onChange={handleRaisedByChange}
                         >
-                            <option value={undefined}> </option>
+                            <option hidden disabled value={-1}></option>
 
                             {organizations.map((organization) => (
                                 <option
@@ -161,10 +161,10 @@ const ClearPunch = (): JSX.Element => {
                             id="ClearingBySelect"
                             label="Clearing by"
                             disabled={clearPunchStatus === AsyncStatus.LOADING}
-                            defaultValue={handleDefaultValue()}
+                            defaultValue={getDefaultOrganization()}
                             onChange={handleClearingByChange}
                         >
-                            <option value={undefined}> </option>
+                            <option hidden disabled value={-1}></option>
 
                             {organizations.map((organization) => (
                                 <option

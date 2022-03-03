@@ -126,13 +126,6 @@ const useClearPunchFacade = () => {
         });
     };
 
-    const handleDefaultValue = (): number | undefined => {
-        const defaultId = organizations?.find(
-            (org) => org.code === punchItem.raisedByCode
-        )?.id;
-        return defaultId ? defaultId : undefined;
-    };
-
     const handleClearingByChange = (
         e: React.ChangeEvent<HTMLSelectElement>
     ): void => {
@@ -145,6 +138,13 @@ const useClearPunchFacade = () => {
         updateDatabase(UpdatePunchEndpoint.RaisedBy, {
             ClearingByOrganizationId: parseInt(e.target.value),
         });
+    };
+
+    const getDefaultOrganization = (): number => {
+        const defaultId = organizations?.find(
+            (org) => org.code === punchItem.raisedByCode
+        )?.id;
+        return defaultId ? defaultId : -1;
     };
 
     const clearPunchItem = async (e: React.FormEvent): Promise<void> => {
@@ -219,7 +219,7 @@ const useClearPunchFacade = () => {
         handleRaisedByChange,
         handleClearingByChange,
         handleDescriptionChange,
-        handleDefaultValue,
+        getDefaultOrganization,
     };
 };
 
