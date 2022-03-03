@@ -135,9 +135,14 @@ const useClearPunchFacade = () => {
                 organizations.find((org) => org.id === parseInt(e.target.value))
             ).code,
         }));
-        updateDatabase(UpdatePunchEndpoint.RaisedBy, {
+        updateDatabase(UpdatePunchEndpoint.ClearingBy, {
             ClearingByOrganizationId: parseInt(e.target.value),
         });
+    };
+
+    const getDefaultOrganization = (code: string): number => {
+        const defaultId = organizations?.find((org) => org.code === code)?.id;
+        return defaultId ? defaultId : -1;
     };
 
     const clearPunchItem = async (e: React.FormEvent): Promise<void> => {
@@ -212,6 +217,7 @@ const useClearPunchFacade = () => {
         handleRaisedByChange,
         handleClearingByChange,
         handleDescriptionChange,
+        getDefaultOrganization,
     };
 };
 
