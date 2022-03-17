@@ -2,14 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { COLORS } from '../../../style/GlobalStyles';
 
-const CheckHeaderWrapper = styled.div<{ noBorder?: boolean }>`
+const CheckHeaderWrapper = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     margin-top: 48px;
     padding-bottom: 12px;
-    border-bottom: ${(props): string =>
-        props.noBorder ? 'none' : `2px solid ${COLORS.fadedBlue}`};
+
     & div {
         flex: 0 0 95px;
         padding-right: 6px;
@@ -33,7 +32,7 @@ type CheckHeaderProps = {
 
 const CheckHeader = ({ text, removeLabels }: CheckHeaderProps): JSX.Element => {
     return (
-        <CheckHeaderWrapper noBorder={removeLabels}>
+        <CheckHeaderWrapper>
             <h4>{text}</h4>
             <div>
                 <GreyText>{!removeLabels && 'Check'}</GreyText>
