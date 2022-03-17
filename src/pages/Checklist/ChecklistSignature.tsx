@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ChecklistDetails } from '../../services/apiTypes';
-import { Button, Divider, TextField } from '@equinor/eds-core-react';
+import { Button, TextField } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import {
@@ -119,19 +119,6 @@ const ChecklistSignature = ({
         <ChecklistSignatureWrapper
             helperTextVisible={putCommentStatus !== AsyncStatus.INACTIVE}
         >
-            <p>
-                {details.signedAt ? (
-                    <>
-                        Signed by {details.signedByFirstName}{' '}
-                        {details.signedByLastName} at{' '}
-                        {new Date(details.signedAt).toLocaleDateString('en-GB')}
-                    </>
-                ) : (
-                    'This checklist is unsigned.'
-                )}
-            </p>
-            <Divider />
-
             <TextField
                 id={'comment-field'}
                 maxLength={500}
@@ -139,7 +126,7 @@ const ChecklistSignature = ({
                 disabled={isSigned || putCommentStatus === AsyncStatus.LOADING}
                 multiline
                 rows={5}
-                label="Comment"
+                label="Comment and sign"
                 helperText={
                     putCommentStatus === AsyncStatus.INACTIVE &&
                     details.updatedAt
@@ -153,6 +140,18 @@ const ChecklistSignature = ({
                 onFocus={(): string => (commentBeforeFocus = comment)}
                 onBlur={putComment}
             />
+
+            <p>
+                {details.signedAt ? (
+                    <>
+                        Signed by {details.signedByFirstName}{' '}
+                        {details.signedByLastName} at{' '}
+                        {new Date(details.signedAt).toLocaleDateString('en-GB')}
+                    </>
+                ) : (
+                    'This checklist is unsigned.'
+                )}
+            </p>
 
             <Button
                 onClick={handleSignClick}
