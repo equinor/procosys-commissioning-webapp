@@ -1,64 +1,47 @@
+import { DotProgress } from '@equinor/eds-core-react';
+import { InfoItem, AsyncStatus } from '@equinor/procosys-webapp-components';
 import React from 'react';
-import styled from 'styled-components';
-import CompletionStatusIcon from '../../components/icons/CompletionStatusIcon';
-import { ChecklistDetails } from '../../services/apiTypes';
-import { COLORS, SHADOW } from '../../style/GlobalStyles';
-
-const FormularTypeText = styled.p`
-    flex: 1;
-`;
-
-const TextWrapper = styled.div`
-    flex: 3;
-    padding-right: 15px;
-    & p,
-    h6 {
-        margin: 0;
-    }
-`;
-
-const ChecklistDetailsCardWrapper = styled.div<{ isSigned?: boolean }>`
-    padding: 16px 4%;
-    box-sizing: border-box;
-    width: 100%;
-    background-color: ${(props): string =>
-        props.isSigned ? COLORS.fadedBlue : COLORS.lightGrey};
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: ${SHADOW};
-    & img {
-        max-width: 20px;
-        margin: 10px 16px 10px 0px;
-        flex: 1;
-    }
-    & ${FormularTypeText} {
-        flex: 1;
-        text-align: right;
-        padding-right: 24px;
-    }
-`;
+import { ChecklistResponse } from '../../services/apiTypes';
+import { DetailsWrapper } from '../EntityPage/EntityPageDetailsCard';
 
 type ChecklistDetailsCardProps = {
-    details: ChecklistDetails;
-    descriptionLabel: string;
-    isSigned?: boolean;
+    fetchDetailsStatus: AsyncStatus;
+    details: ChecklistResponse | undefined;
 };
 
 const ChecklistDetailsCard = ({
+    fetchDetailsStatus,
     details,
-    isSigned,
-    descriptionLabel,
 }: ChecklistDetailsCardProps): JSX.Element => {
+    if (fetchDetailsStatus === AsyncStatus.SUCCESS && details != undefined) {
+        return (
+            <InfoItem
+                isDetailsCard
+                isScope
+                status={details.checkList.status}
+                statusLetters={[
+                    details.checkList.signedByUser ? 'S' : null,
+                    null,
+                ]}
+                headerText={details.checkList.tagNo}
+                description={details.checkList.tagDescription}
+                chips={[details.checkList.formularType].filter(
+                    (x) => x != null
+                )}
+                attachments={details.checkList.attachmentCount}
+            />
+        );
+    } else if (fetchDetailsStatus === AsyncStatus.ERROR) {
+        return (
+            <DetailsWrapper>
+                Unable to load details. Please reload
+            </DetailsWrapper>
+        );
+    }
     return (
-        <ChecklistDetailsCardWrapper isSigned={isSigned}>
-            <CompletionStatusIcon status={details.status} />
-            <TextWrapper>
-                <label>{details.tagNo}</label>
-                <p>{details.tagDescription}</p>
-            </TextWrapper>
-            <FormularTypeText>{details.formularType}</FormularTypeText>
-        </ChecklistDetailsCardWrapper>
+        <DetailsWrapper>
+            <DotProgress color="primary" />
+        </DetailsWrapper>
     );
 };
 

@@ -39,6 +39,7 @@ import {
     check,
     assignment_turned_in,
     external_link,
+    playlist_added,
 } from '@equinor/eds-icons';
 import { Icon } from '@equinor/eds-core-react';
 import React from 'react';
@@ -47,6 +48,7 @@ Icon.add({
     camera_add_photo,
     menu,
     stop,
+    playlist_added,
     tune,
     file,
     link,

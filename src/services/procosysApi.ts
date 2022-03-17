@@ -49,9 +49,25 @@ type ProcosysApiServiceProps = {
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     // General
+    const getTag = async (
+        plantId: string,
+        tagId: number,
+        cancelToken: CancelToken
+    ): Promise<Tag> => {
+        const { data } = await axios.get(
+            `Tag?plantId=PCS$${plantId}&tagId=${tagId}${apiVersion}`,
+            { cancelToken }
+        );
+        if (!isOfType<Tag>(data, 'tag')) {
+            throw Error(typeGuardErrorMessage('tag'));
+        }
+        return data;
+    };
+
     const getVersion = (): string => {
         return apiVersion;
     };
+
     const getPlants = async (): Promise<Plant[]> => {
         const { data } = await axios.get(
             `Plants?includePlantsWithoutAccess=false${apiVersion}`
@@ -162,12 +178,29 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
 
     const getChecklist = async (
         plantId: string,
-        checklistId: string
+        checklistId: string,
+        cancelToken: CancelToken
     ): Promise<ChecklistResponse> => {
         const { data } = await axios.get(
-            `Checklist/Comm?plantId=PCS$${plantId}&checklistId=${checklistId}${apiVersion}`
+            `Checklist/Comm?plantId=PCS$${plantId}&checklistId=${checklistId}${apiVersion}`,
+            { cancelToken }
         );
         return data as ChecklistResponse;
+    };
+
+    const getChecklistPunchList = async (
+        plantId: string,
+        checklistId: string,
+        cancelToken: CancelToken
+    ): Promise<PunchPreview[]> => {
+        const { data } = await axios.get(
+            `CheckList/PunchList?plantId=PCS$${plantId}&checklistId=${checklistId}${apiVersion}`,
+            { cancelToken }
+        );
+        if (!isArrayOfType<PunchPreview>(data, 'cleared')) {
+            throw new Error('An error occurred, please try again.');
+        }
+        return data;
     };
 
     const postSetOk = async (
@@ -662,6 +695,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         getProjectsForPlant,
         getPermissionsForPlant,
         getChecklist,
+        getChecklistPunchList,
         getEntityDetails,
         getPunchOrganizations,
         getPunchList,
@@ -670,6 +704,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         getTask,
         getTasks,
         getScope,
+        getTag,
         getTaskParameters,
         postClear,
         postSetOk,

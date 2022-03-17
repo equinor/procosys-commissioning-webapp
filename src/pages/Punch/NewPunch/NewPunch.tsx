@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
     ChecklistDetails,
+    ChecklistResponse,
     PunchCategory,
     PunchOrganization,
     PunchType,
@@ -29,6 +30,7 @@ import {
     Navbar,
     removeSubdirectories,
 } from '@equinor/procosys-webapp-components';
+import Axios from 'axios';
 
 export type PunchFormData = {
     category: string;
@@ -63,7 +65,7 @@ const NewPunch = (): JSX.Element => {
         AsyncStatus.INACTIVE
     );
     const [checklistDetails, setChecklistDetails] =
-        useState<ChecklistDetails>();
+        useState<ChecklistResponse>();
     const [tempAttachments, setTempAttachments] = useState<TempAttachment[]>(
         []
     );
@@ -71,6 +73,7 @@ const NewPunch = (): JSX.Element => {
     const { snackbar, setSnackbarText } = useSnackbar();
     const [showFullImageModal, setShowFullImageModal] = useState(false);
     const [attachmentToShow, setAttachmentToShow] = useState<TempAttachment>();
+    const source = Axios.CancelToken.source();
 
     const handleSubmit = async (e: React.FormEvent): Promise<void> => {
         e.preventDefault();
@@ -113,12 +116,16 @@ const NewPunch = (): JSX.Element => {
                     api.getPunchCategories(params.plant),
                     api.getPunchTypes(params.plant),
                     api.getPunchOrganizations(params.plant),
-                    api.getChecklist(params.plant, params.checklistId),
+                    api.getChecklist(
+                        params.plant,
+                        params.checklistId,
+                        source.token
+                    ),
                 ]);
                 setCategories(categoriesFromApi);
                 setTypes(typesFromApi);
                 setOrganizations(organizationsFromApi);
-                setChecklistDetails(checklistFromApi.checkList);
+                setChecklistDetails(checklistFromApi);
                 setFetchNewPunchStatus(AsyncStatus.SUCCESS);
             } catch (error) {
                 setFetchNewPunchStatus(AsyncStatus.ERROR);
@@ -135,8 +142,8 @@ const NewPunch = (): JSX.Element => {
             return (
                 <>
                     <ChecklistDetailsCard
+                        fetchDetailsStatus={fetchNewPunchStatus}
                         details={checklistDetails}
-                        descriptionLabel={'New punch for:'}
                     />
                     <NewPunchForm
                         categories={categories}

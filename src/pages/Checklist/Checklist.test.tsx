@@ -9,7 +9,7 @@ import React from 'react';
 import { withPlantContext } from '../../test/contexts';
 import { dummySignedChecklistResponse } from '../../test/dummyData';
 import { causeApiError, ENDPOINTS, rest, server } from '../../test/setupServer';
-import Checklist from './Checklist';
+import Checklist from './ChecklistPage';
 
 // Note: Metatable tests are located at component level
 

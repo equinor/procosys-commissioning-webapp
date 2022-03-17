@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import Checklist from './pages/Checklist/Checklist';
+import Checklist from './pages/Checklist/ChecklistPage';
 import NewPunch from './pages/Punch/NewPunch/NewPunch';
 import ClearPunch from './pages/Punch/ClearPunch/ClearPunch';
 import VerifyPunch from './pages/Punch/VerifyPunch/VerifyPunch';
