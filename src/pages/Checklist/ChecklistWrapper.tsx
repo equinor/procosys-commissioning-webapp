@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { AsyncStatus } from '../../contexts/CommAppContext';
-import {
-    CheckItem,
-    ChecklistDetails,
-    PunchPreview,
-} from '../../services/apiTypes';
+import { CheckItem, ChecklistDetails } from '../../services/apiTypes';
 import CheckItems from './CheckItems/CheckItems';
 import ChecklistSignature from './ChecklistSignature';
-import ChecklistDetailsCard from './ChecklistDetailsCard';
 import styled from 'styled-components';
 import EdsIcon from '../../components/icons/EdsIcon';
 import axios, { CancelToken } from 'axios';
@@ -23,15 +18,7 @@ import useAttachments from '../../utils/useAttachments';
 import buildEndpoint from '../../utils/buildEndpoint';
 import useSnackbar from '../../utils/useSnackbar';
 import AsyncPage from '../../components/AsyncPage';
-import { Banner, Button } from '@equinor/eds-core-react';
-import {
-    BackButton,
-    FooterButton,
-    Navbar,
-    NavigationFooter,
-    PunchList,
-    removeSubdirectories,
-} from '@equinor/procosys-webapp-components';
+import { Banner } from '@equinor/eds-core-react';
 
 const ChecklistWrapper = styled.div`
     padding: 0 4%;
@@ -44,12 +31,11 @@ const ChecklistWrapper = styled.div`
 `;
 
 const ChecklistPage = (): JSX.Element => {
-    const { params, api, history, url } = useCommonHooks();
+    const { params, api } = useCommonHooks();
     const getAttachmentsEndpoint = buildEndpoint().getChecklistAttachments(
         params.plant,
         params.checklistId
     );
-    const [punchList, setPunchList] = useState<PunchPreview[]>();
     const {
         refreshAttachments: setRefreshAttachments,
         attachments,
@@ -57,9 +43,6 @@ const ChecklistPage = (): JSX.Element => {
     } = useAttachments(getAttachmentsEndpoint);
     const { snackbar, setSnackbarText } = useSnackbar();
     const [fetchChecklistStatus, setFetchChecklistStatus] = useState(
-        AsyncStatus.LOADING
-    );
-    const [fetchPunchListStatus, setFetchPunchListStatus] = useState(
         AsyncStatus.LOADING
     );
     const [checkItems, setCheckItems] = useState<CheckItem[]>([]);
@@ -70,10 +53,6 @@ const ChecklistPage = (): JSX.Element => {
     const [reloadChecklist, setReloadChecklist] = useState(false);
     const [showUploadModal, setShowUploadModal] = useState(false);
     const source = axios.CancelToken.source();
-
-    const isOnNewPunchPage = history.location.pathname.includes('/new-punch');
-    const isOnPunchListPage = history.location.pathname.includes('/punch-list');
-    const isOnTagInfoPage = history.location.pathname.includes('/tag-info');
 
     useEffect(() => {
         (async (): Promise<void> => {

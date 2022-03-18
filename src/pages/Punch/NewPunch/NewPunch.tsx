@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-    ChecklistDetails,
     ChecklistResponse,
     PunchCategory,
     PunchOrganization,
@@ -25,11 +24,7 @@ import UploadAttachment from '../../../components/UploadAttachment';
 import EdsCard from '../../../components/EdsCard';
 import useSnackbar from '../../../utils/useSnackbar';
 import AsyncPage from '../../../components/AsyncPage';
-import {
-    BackButton,
-    Navbar,
-    removeSubdirectories,
-} from '@equinor/procosys-webapp-components';
+import { BackButton, Navbar } from '@equinor/procosys-webapp-components';
 import Axios from 'axios';
 
 export type PunchFormData = {
