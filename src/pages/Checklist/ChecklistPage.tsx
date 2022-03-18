@@ -94,7 +94,7 @@ const ChecklistPage = (): JSX.Element => {
                         }
                     />
                 }
-                midContent={'MCCR'}
+                midContent={'CPCL'}
                 rightContent={
                     history.location.pathname.includes(
                         '/new-punch'

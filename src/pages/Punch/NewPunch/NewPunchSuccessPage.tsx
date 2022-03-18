@@ -30,16 +30,16 @@ const NewPunchSuccessPage = (): JSX.Element => {
             <ButtonGroup>
                 <Button
                     onClick={(): void =>
-                        history.push(removeSubdirectories(url, 1))
+                        history.push(
+                            `/${params.plant}/${params.project}/${params.searchType}/${params.entityId}/checklist/${params.checklistId}`
+                        )
                     }
                 >
                     Back to checklist
                 </Button>
                 <Button
                     onClick={(): void =>
-                        history.push(
-                            `/${params.plant}/${params.project}/${params.entityId}/punch-list`
-                        )
+                        history.push(removeSubdirectories(url, 1))
                     }
                 >
                     Go to punch list

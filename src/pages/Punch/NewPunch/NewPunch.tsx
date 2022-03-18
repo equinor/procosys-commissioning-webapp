@@ -136,10 +136,6 @@ const NewPunch = (): JSX.Element => {
         if (checklistDetails) {
             return (
                 <>
-                    <ChecklistDetailsCard
-                        fetchDetailsStatus={fetchNewPunchStatus}
-                        details={checklistDetails}
-                    />
                     <NewPunchForm
                         categories={categories}
                         types={types}
