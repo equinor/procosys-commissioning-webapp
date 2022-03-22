@@ -16,6 +16,7 @@ import {
     dummyPunchItemUncleared,
     testCommSearch,
     testTagSearch,
+    dummyPermissions,
 } from './dummyData';
 import objectToCamelCase from '../utils/objectToCamelCase';
 
@@ -89,7 +90,7 @@ export const server = setupServer(
         return response(context.json(testProjects), context.status(200));
     }),
     rest.get(ENDPOINTS.getPermissions, (_, response, context) => {
-        return response(context.json(['COMMPKG/READ']), context.status(200));
+        return response(context.json(dummyPermissions), context.status(200));
     }),
 
     // Search
