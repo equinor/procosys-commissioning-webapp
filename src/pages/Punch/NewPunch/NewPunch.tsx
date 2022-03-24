@@ -11,6 +11,7 @@ import useFormFields from '../../../utils/useFormFields';
 import { NewPunch as NewPunchType } from '../../../services/apiTypes';
 import NewPunchSuccessPage from './NewPunchSuccessPage';
 import useCommonHooks from '../../../utils/useCommonHooks';
+import styled from 'styled-components';
 import { PunchWrapper } from '../ClearPunch/ClearPunch';
 import { Button, Scrim } from '@equinor/eds-core-react';
 import {
@@ -25,6 +26,10 @@ import useSnackbar from '../../../utils/useSnackbar';
 import AsyncPage from '../../../components/AsyncPage';
 import { BackButton, Navbar } from '@equinor/procosys-webapp-components';
 import Axios from 'axios';
+
+export const BottomSpacer = styled.div`
+    height: 70px;
+`;
 
 export type PunchFormData = {
     category: string;
@@ -234,6 +239,7 @@ const NewPunch = (): JSX.Element => {
                 <PunchWrapper>{content()}</PunchWrapper>
             </AsyncPage>
             {snackbar}
+            <BottomSpacer />
         </>
     );
 };

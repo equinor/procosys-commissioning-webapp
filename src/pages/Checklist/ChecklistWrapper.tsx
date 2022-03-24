@@ -30,6 +30,10 @@ const ChecklistWrapper = styled.div`
     }
 `;
 
+export const BottomSpacer = styled.div`
+    height: 70px;
+`;
+
 const ChecklistPage = (): JSX.Element => {
     const { params, api } = useCommonHooks();
     const getAttachmentsEndpoint = buildEndpoint().getChecklistAttachments(
@@ -195,6 +199,7 @@ const ChecklistPage = (): JSX.Element => {
                     </ChecklistWrapper>
                 )}
                 {snackbar}
+                <BottomSpacer />
             </>
         </AsyncPage>
     );
