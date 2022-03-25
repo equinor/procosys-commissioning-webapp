@@ -25,7 +25,7 @@ const CommRouter = (): JSX.Element => {
                 />
                 <Route
                     exact
-                    path={`/:plant/:project/:searchType/:entityId/checklist/:checklistId/punch-item/:punchitemId/clear`}
+                    path={`/:plant/:project/:searchType/:entityId/checklist/:checklistId/punch-item/:punchItemId/clear`}
                     component={ClearPunch}
                 />
                 <Route
