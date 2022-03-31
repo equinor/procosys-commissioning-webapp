@@ -8,7 +8,6 @@ import {
     determineVariant,
 } from '../../utils/textFieldHelpers';
 import useCommonHooks from '../../utils/useCommonHooks';
-
 const ChecklistSignatureWrapper = styled.div<{ helperTextVisible: boolean }>`
     display: flex;
     flex-direction: column;
@@ -21,7 +20,6 @@ const ChecklistSignatureWrapper = styled.div<{ helperTextVisible: boolean }>`
             props.helperTextVisible ? '0' : '24px'};
     }
 `;
-
 const determineSignButtonText = (
     isSigned: boolean,
     status: AsyncStatus
@@ -34,7 +32,6 @@ const determineSignButtonText = (
         return 'Sign';
     }
 };
-
 type ChecklistSignatureProps = {
     details: ChecklistDetails;
     setIsSigned: React.Dispatch<React.SetStateAction<boolean>>;
@@ -43,7 +40,6 @@ type ChecklistSignatureProps = {
     reloadChecklist: React.Dispatch<React.SetStateAction<boolean>>;
     setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
 };
-
 const ChecklistSignature = ({
     details,
     setIsSigned,
@@ -59,7 +55,6 @@ const ChecklistSignature = ({
     );
     const [signStatus, setSignStatus] = useState(AsyncStatus.INACTIVE);
     let commentBeforeFocus = '';
-
     const putComment = async (): Promise<void> => {
         if (comment === commentBeforeFocus) return;
         setPutCommentStatus(AsyncStatus.LOADING);
@@ -75,7 +70,6 @@ const ChecklistSignature = ({
             setPutCommentStatus(AsyncStatus.ERROR);
         }
     };
-
     const handleSignClick = async (): Promise<void> => {
         setSignStatus(AsyncStatus.LOADING);
         try {
@@ -97,13 +91,11 @@ const ChecklistSignature = ({
             setSnackbarText(error.toString());
         }
     };
-
     const updatedByText = (): string => {
         return `Updated by ${details.updatedByFirstName} ${
             details.updatedByLastName
         } at ${new Date(details.updatedAt).toLocaleDateString('en-GB')}`;
     };
-
     useEffect(() => {
         if (
             putCommentStatus === AsyncStatus.INACTIVE ||
@@ -114,11 +106,22 @@ const ChecklistSignature = ({
             setPutCommentStatus(AsyncStatus.INACTIVE);
         }, 2000);
     }, [putCommentStatus]);
-
     return (
         <ChecklistSignatureWrapper
             helperTextVisible={putCommentStatus !== AsyncStatus.INACTIVE}
         >
+            <p>
+                {details.signedAt ? (
+                    <>
+                        Signed by {details.signedByFirstName}{' '}
+                        {details.signedByLastName} at{' '}
+                        {new Date(details.signedAt).toLocaleDateString('en-GB')}
+                    </>
+                ) : (
+                    'This checklist is unsigned.'
+                )}
+            </p>
+
             <TextField
                 id={'comment-field'}
                 maxLength={500}
@@ -126,7 +129,7 @@ const ChecklistSignature = ({
                 disabled={isSigned || putCommentStatus === AsyncStatus.LOADING}
                 multiline
                 rows={5}
-                label="Comment and sign"
+                label="Comment"
                 helperText={
                     putCommentStatus === AsyncStatus.INACTIVE &&
                     details.updatedAt
@@ -141,18 +144,6 @@ const ChecklistSignature = ({
                 onBlur={putComment}
             />
 
-            <p>
-                {details.signedAt ? (
-                    <>
-                        Signed by {details.signedByFirstName}{' '}
-                        {details.signedByLastName} at{' '}
-                        {new Date(details.signedAt).toLocaleDateString('en-GB')}
-                    </>
-                ) : (
-                    'This checklist is unsigned.'
-                )}
-            </p>
-
             <Button
                 onClick={handleSignClick}
                 disabled={
@@ -164,5 +155,4 @@ const ChecklistSignature = ({
         </ChecklistSignatureWrapper>
     );
 };
-
 export default ChecklistSignature;
