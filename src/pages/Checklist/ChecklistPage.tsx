@@ -5,7 +5,7 @@ import withAccessControl from '../../services/withAccessControl';
 import useCommonHooks from '../../utils/useCommonHooks';
 import { Route, Switch } from 'react-router-dom';
 import ChecklistWrapper from './ChecklistWrapper';
-import NewPunch from '../Punch/NewPunch/NewPunch';
+import NewPunch, { BottomSpacer } from '../Punch/NewPunch/NewPunch';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import { ChecklistResponse, PunchPreview } from '../../services/apiTypes';
 import { Button } from '@equinor/eds-core-react';
@@ -131,20 +131,23 @@ const ChecklistPage = (): JSX.Element => {
                     exact
                     path={`${path}/punch-list`}
                     render={(): JSX.Element => (
-                        <PunchList
-                            fetchPunchListStatus={fetchPunchListStatus}
-                            onPunchClick={(punch: PunchPreview): void =>
-                                history.push(
-                                    `${removeSubdirectories(
-                                        history.location.pathname
-                                    )}/punch-item/${punch.id}/${
-                                        punch.cleared ? 'verify' : 'clear'
-                                    }`
-                                )
-                            }
-                            punchList={punchList}
-                            isChecklistPunchList
-                        />
+                        <>
+                            <PunchList
+                                fetchPunchListStatus={fetchPunchListStatus}
+                                onPunchClick={(punch: PunchPreview): void =>
+                                    history.push(
+                                        `${removeSubdirectories(
+                                            history.location.pathname
+                                        )}/punch-item/${punch.id}/${
+                                            punch.cleared ? 'verify' : 'clear'
+                                        }`
+                                    )
+                                }
+                                punchList={punchList}
+                                isChecklistPunchList
+                            />
+                            <BottomSpacer />
+                        </>
                     )}
                 />
                 <Route
