@@ -49,21 +49,6 @@ type ProcosysApiServiceProps = {
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     // General
-    const getTag = async (
-        plantId: string,
-        tagId: number,
-        cancelToken: CancelToken
-    ): Promise<Tag> => {
-        const { data } = await axios.get(
-            `Tag?plantId=PCS$${plantId}&tagId=${tagId}${apiVersion}`,
-            { cancelToken }
-        );
-        if (!isOfType<Tag>(data, 'tag')) {
-            throw Error(typeGuardErrorMessage('tag'));
-        }
-        return data;
-    };
-
     const getVersion = (): string => {
         return apiVersion;
     };
@@ -704,7 +689,6 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         getTask,
         getTasks,
         getScope,
-        getTag,
         getTaskParameters,
         postClear,
         postSetOk,
