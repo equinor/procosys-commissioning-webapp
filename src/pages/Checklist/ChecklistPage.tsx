@@ -9,7 +9,7 @@ import NewPunch, { BottomSpacer } from '../Punch/NewPunch/NewPunch';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import { ChecklistResponse, PunchPreview } from '../../services/apiTypes';
 import { Button } from '@equinor/eds-core-react';
-import TagInfoWrapper from '../../components/TagInfoWrapper';
+import TagInfoWrapper from '../TagInfo/TagInfoWrapper';
 import {
     BackButton,
     FooterButton,
