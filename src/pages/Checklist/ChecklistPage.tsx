@@ -30,7 +30,7 @@ const ChecklistPage = (): JSX.Element => {
     const [fetchDetailsStatus, setFetchDetailsStatus] = useState(
         AsyncStatus.LOADING
     );
-    const [refreshChecklistStatus, setRefreshChecklistStatus] = useState(false);
+
     const source = Axios.CancelToken.source();
     const isOnNewPunchPage = history.location.pathname.includes('/new-punch');
     const isOnPunchListPage = history.location.pathname.includes('/punch-list');
@@ -60,7 +60,7 @@ const ChecklistPage = (): JSX.Element => {
                 setFetchDetailsStatus(AsyncStatus.ERROR);
             }
         })();
-    }, [api, params, refreshChecklistStatus]);
+    }, [api, params]);
 
     useEffect(() => {
         (async (): Promise<void> => {
