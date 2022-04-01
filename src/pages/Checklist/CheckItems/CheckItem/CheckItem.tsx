@@ -138,7 +138,12 @@ const CheckItem = ({
             <CheckItemWrapper disabled={item.isNotApplicable}>
                 <DescriptionAndCheckWrapper>
                     <LeftWrapper>
-                        <p>{item.text}</p>
+                        <p>
+                            <span style={{ fontWeight: 500 }}>
+                                {item.sequenceNumber}
+                            </span>
+                            . {item.text}
+                        </p>
                         {item.detailText && (
                             <button
                                 onClick={(): void =>

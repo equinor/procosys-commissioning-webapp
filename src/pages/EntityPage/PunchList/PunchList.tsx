@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import EdsIcon from '../../../components/icons/EdsIcon';
 import { Typography } from '@equinor/eds-core-react';
 import CompletionStatusIcon from '../../../components/icons/CompletionStatusIcon';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
@@ -10,7 +9,6 @@ import AsyncPage from '../../../components/AsyncPage';
 import { SearchType } from '../../Search/Search';
 import {
     ensure,
-    InfoItem,
     PunchList as TagPunchList,
 } from '@equinor/procosys-webapp-components';
 import { Link } from 'react-router-dom';
@@ -61,8 +59,7 @@ const PunchList = ({
 }: PunchListProps): JSX.Element => {
     const { url, params, history } = useCommonHooks();
 
-    const handleTagPunchClicked = (punchId: number): void => {
-        const punch = ensure(punchList?.find((punch) => punch.id === punchId));
+    const handleTagPunchClicked = (punch: PunchPreview): void => {
         if (punch.cleared === true) {
             history.push(`${url}/${punch.id}/verify`);
         } else {

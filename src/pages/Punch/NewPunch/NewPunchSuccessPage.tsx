@@ -1,6 +1,6 @@
+import React from 'react';
 import { Button } from '@equinor/eds-core-react';
 import { removeSubdirectories } from '@equinor/procosys-webapp-components';
-import React from 'react';
 import styled from 'styled-components';
 import EdsIcon from '../../../components/icons/EdsIcon';
 import useCommonHooks from '../../../utils/useCommonHooks';
@@ -22,7 +22,7 @@ const NewPunchSuccess = styled.div`
 `;
 
 const NewPunchSuccessPage = (): JSX.Element => {
-    const { history, params, url } = useCommonHooks();
+    const { history, url } = useCommonHooks();
     return (
         <NewPunchSuccess>
             <EdsIcon name="check" size={40} />
@@ -30,16 +30,14 @@ const NewPunchSuccessPage = (): JSX.Element => {
             <ButtonGroup>
                 <Button
                     onClick={(): void =>
-                        history.push(removeSubdirectories(url, 1))
+                        history.push(removeSubdirectories(url, 2))
                     }
                 >
                     Back to checklist
                 </Button>
                 <Button
                     onClick={(): void =>
-                        history.push(
-                            `/${params.plant}/${params.project}/${params.entityId}/punch-list`
-                        )
+                        history.push(removeSubdirectories(url, 1))
                     }
                 >
                     Go to punch list

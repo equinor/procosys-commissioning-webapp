@@ -261,7 +261,9 @@ const ClearPunch = (): JSX.Element => {
             <Navbar
                 noBorder
                 leftContent={
-                    <BackButton to={`${removeSubdirectories(url, 2)}`} />
+                    <BackButton
+                        to={`${removeSubdirectories(url, 3)}/punch-list`}
+                    />
                 }
             />
             <PunchWrapper>{content()}</PunchWrapper>

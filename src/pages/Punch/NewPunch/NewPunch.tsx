@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import {
-    ChecklistDetails,
+    ChecklistResponse,
     PunchCategory,
     PunchOrganization,
     PunchType,
 } from '../../../services/apiTypes';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
-import ChecklistDetailsCard from '../../Checklist/ChecklistDetailsCard';
 import NewPunchForm from './NewPunchForm';
 import useFormFields from '../../../utils/useFormFields';
 import { NewPunch as NewPunchType } from '../../../services/apiTypes';
 import NewPunchSuccessPage from './NewPunchSuccessPage';
 import useCommonHooks from '../../../utils/useCommonHooks';
+import styled from 'styled-components';
 import { PunchWrapper } from '../ClearPunch/ClearPunch';
 import { Button, Scrim } from '@equinor/eds-core-react';
 import {
@@ -24,11 +24,12 @@ import UploadAttachment from '../../../components/UploadAttachment';
 import EdsCard from '../../../components/EdsCard';
 import useSnackbar from '../../../utils/useSnackbar';
 import AsyncPage from '../../../components/AsyncPage';
-import {
-    BackButton,
-    Navbar,
-    removeSubdirectories,
-} from '@equinor/procosys-webapp-components';
+import { BackButton, Navbar } from '@equinor/procosys-webapp-components';
+import Axios from 'axios';
+
+export const BottomSpacer = styled.div`
+    height: 70px;
+`;
 
 export type PunchFormData = {
     category: string;
@@ -63,7 +64,7 @@ const NewPunch = (): JSX.Element => {
         AsyncStatus.INACTIVE
     );
     const [checklistDetails, setChecklistDetails] =
-        useState<ChecklistDetails>();
+        useState<ChecklistResponse>();
     const [tempAttachments, setTempAttachments] = useState<TempAttachment[]>(
         []
     );
@@ -71,6 +72,7 @@ const NewPunch = (): JSX.Element => {
     const { snackbar, setSnackbarText } = useSnackbar();
     const [showFullImageModal, setShowFullImageModal] = useState(false);
     const [attachmentToShow, setAttachmentToShow] = useState<TempAttachment>();
+    const source = Axios.CancelToken.source();
 
     const handleSubmit = async (e: React.FormEvent): Promise<void> => {
         e.preventDefault();
@@ -113,12 +115,16 @@ const NewPunch = (): JSX.Element => {
                     api.getPunchCategories(params.plant),
                     api.getPunchTypes(params.plant),
                     api.getPunchOrganizations(params.plant),
-                    api.getChecklist(params.plant, params.checklistId),
+                    api.getChecklist(
+                        params.plant,
+                        params.checklistId,
+                        source.token
+                    ),
                 ]);
                 setCategories(categoriesFromApi);
                 setTypes(typesFromApi);
                 setOrganizations(organizationsFromApi);
-                setChecklistDetails(checklistFromApi.checkList);
+                setChecklistDetails(checklistFromApi);
                 setFetchNewPunchStatus(AsyncStatus.SUCCESS);
             } catch (error) {
                 setFetchNewPunchStatus(AsyncStatus.ERROR);
@@ -134,10 +140,6 @@ const NewPunch = (): JSX.Element => {
         if (checklistDetails) {
             return (
                 <>
-                    <ChecklistDetailsCard
-                        details={checklistDetails}
-                        descriptionLabel={'New punch for:'}
-                    />
                     <NewPunchForm
                         categories={categories}
                         types={types}
@@ -237,6 +239,7 @@ const NewPunch = (): JSX.Element => {
                 <PunchWrapper>{content()}</PunchWrapper>
             </AsyncPage>
             {snackbar}
+            <BottomSpacer />
         </>
     );
 };

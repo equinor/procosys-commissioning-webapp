@@ -111,6 +111,7 @@ export interface ChecklistDetails {
     id: number;
     tagNo: string;
     tagDescription: string;
+    tagId: number;
     responsibleCode: string;
     responsibleDescription: string;
     status: CompletionStatus;
@@ -128,6 +129,7 @@ export interface ChecklistDetails {
     updatedByLastName: string;
     isRestrictedForUser: boolean;
     hasElectronicForm: boolean;
+    attachmentCount: number;
 }
 
 export interface ColumnLabel {

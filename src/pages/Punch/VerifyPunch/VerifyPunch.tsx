@@ -226,7 +226,11 @@ const VerifyPunch = (): JSX.Element => {
         <>
             <Navbar
                 noBorder
-                leftContent={<BackButton to={removeSubdirectories(url, 2)} />}
+                leftContent={
+                    <BackButton
+                        to={`${removeSubdirectories(url, 3)}/punch-list`}
+                    />
+                }
             />
             <PunchWrapper>{content()}</PunchWrapper>
             {snackbar}

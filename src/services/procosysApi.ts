@@ -52,6 +52,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     const getVersion = (): string => {
         return apiVersion;
     };
+
     const getPlants = async (): Promise<Plant[]> => {
         const { data } = await axios.get(
             `Plants?includePlantsWithoutAccess=false${apiVersion}`
@@ -162,12 +163,29 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
 
     const getChecklist = async (
         plantId: string,
-        checklistId: string
+        checklistId: string,
+        cancelToken: CancelToken
     ): Promise<ChecklistResponse> => {
         const { data } = await axios.get(
-            `Checklist/Comm?plantId=PCS$${plantId}&checklistId=${checklistId}${apiVersion}`
+            `Checklist/Comm?plantId=PCS$${plantId}&checklistId=${checklistId}${apiVersion}`,
+            { cancelToken }
         );
         return data as ChecklistResponse;
+    };
+
+    const getChecklistPunchList = async (
+        plantId: string,
+        checklistId: string,
+        cancelToken: CancelToken
+    ): Promise<PunchPreview[]> => {
+        const { data } = await axios.get(
+            `CheckList/PunchList?plantId=PCS$${plantId}&checklistId=${checklistId}${apiVersion}`,
+            { cancelToken }
+        );
+        if (!isArrayOfType<PunchPreview>(data, 'cleared')) {
+            throw new Error('An error occurred, please try again.');
+        }
+        return data;
     };
 
     const postSetOk = async (
@@ -662,6 +680,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         getProjectsForPlant,
         getPermissionsForPlant,
         getChecklist,
+        getChecklistPunchList,
         getEntityDetails,
         getPunchOrganizations,
         getPunchList,
