@@ -4,12 +4,13 @@ import { PlantContextProvider } from './contexts/PlantContext';
 import SelectProject from './pages/SelectProject/SelectProject';
 import Search from './pages/Search/Search';
 import SelectPlant from './pages/SelectPlant/SelectPlant';
-import NewPunch from './pages/Punch/NewPunch/NewPunch';
+import NewPunch from './pages/Checklist/NewPunch/NewPunch';
 import ClearPunch from './pages/Punch/ClearPunch/ClearPunch';
 import VerifyPunch from './pages/Punch/VerifyPunch/VerifyPunch';
 import Checklist from './pages/Checklist/ChecklistPage';
 import Task from './pages/Task/Task';
 import EntityPage from './pages/EntityPage/EntityPage';
+import ChecklistPage from './pages/Checklist/ChecklistPage';
 
 const CommRouter = (): JSX.Element => {
     return (
@@ -19,33 +20,22 @@ const CommRouter = (): JSX.Element => {
                 <Route exact path={'/:plant'} component={SelectProject} />
                 <Route exact path={'/:plant/:project'} component={Search} />
                 <Route
-                    exact
-                    path={`/:plant/:project/:searchType/:entityId/punch-list/:punchItemId/clear`}
-                    component={ClearPunch}
+                    path={
+                        '/:plant/:project/:searchType/:entityId/punch-item/:punchItemId'
+                    }
+                    component={PunchPage}
                 />
                 <Route
-                    exact
-                    path={`/:plant/:project/:searchType/:entityId/checklist/:checklistId/punch-item/:punchItemId/clear`}
-                    component={ClearPunch}
+                    path={
+                        '/:plant/:project/:searchType/:entityId/checklist/:checklistId/punch-item/:punchItemId'
+                    }
+                    component={PunchPage}
                 />
                 <Route
-                    exact
-                    path={`/:plant/:project/:searchType/:entityId/punch-list/:punchItemId/verify`}
-                    component={VerifyPunch}
-                />
-                <Route
-                    exact
-                    path={`/:plant/:project/:searchType/:entityId/checklist/:checklistId/punch-item/:punchItemId/verify`}
-                    component={VerifyPunch}
-                />
-                <Route
-                    exact
-                    path={`/:plant/:project/:searchType/:entityId/checklist/:checklistId/new-punch`}
-                    component={NewPunch}
-                />
-                <Route
-                    path={`/:plant/:project/:searchType/:entityId/checklist/:checklistId`}
-                    component={Checklist}
+                    path={
+                        '/:plant/:project/:searchType/:entityId/checklist/:checklistId'
+                    }
+                    component={ChecklistPage}
                 />
                 <Route
                     exact
