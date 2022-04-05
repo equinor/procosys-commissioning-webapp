@@ -4,7 +4,7 @@ import ErrorPage from '../../../components/error/ErrorPage';
 import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
 import PunchDetailsCard from './PunchDetailsCard';
-import { NewPunchFormWrapper } from '../NewPunch/NewPunchForm';
+import { NewPunchFormWrapper } from '../../Checklist/NewPunch/NewPunchForm';
 import useClearPunchFacade, {
     UpdatePunchEndpoint,
 } from './useClearPunchFacade';
