@@ -4,11 +4,11 @@ import {
     PunchCategory,
     PunchOrganization,
     PunchType,
-} from '../../../services/apiTypes';
+} from '../../../typings/apiTypes';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
 import NewPunchForm from './NewPunchForm';
 import useFormFields from '../../../utils/useFormFields';
-import { NewPunch as NewPunchType } from '../../../services/apiTypes';
+import { NewPunch as NewPunchType } from '../../../typings/apiTypes';
 import NewPunchSuccessPage from './NewPunchSuccessPage';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import styled from 'styled-components';

@@ -6,7 +6,7 @@ import {
     PunchType,
     PunchOrganization,
     PunchItem,
-} from '../../../services/apiTypes';
+} from '../../../typings/apiTypes';
 import ensure from '../../../utils/ensure';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import useSnackbar from '../../../utils/useSnackbar';

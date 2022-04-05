@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Typography } from '@equinor/eds-core-react';
 import CompletionStatusIcon from '../../../components/icons/CompletionStatusIcon';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
-import { PunchPreview } from '../../../services/apiTypes';
+import { PunchPreview } from '../../../typings/apiTypes';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import AsyncPage from '../../../components/AsyncPage';
 import { SearchType } from '../../Search/Search';

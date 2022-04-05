@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useReducer, useState } from 'react';
 import axios, { CancelToken } from 'axios';
 import PlantContext from '../../contexts/PlantContext';
-import { SearchResults } from '../../services/apiTypes';
+import { SearchResults } from '../../typings/apiTypes';
 import { ProcosysApiService } from '../../services/procosysApi';
 import useCommonHooks from '../../utils/useCommonHooks';
 

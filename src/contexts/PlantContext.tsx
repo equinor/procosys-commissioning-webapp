@@ -1,6 +1,6 @@
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import LoadingPage from '../components/loading/LoadingPage';
-import { Plant, Project } from '../services/apiTypes';
+import { Plant, Project } from '../typings/apiTypes';
 import matchPlantInURL from '../utils/matchPlantInURL';
 import matchProjectInURL from '../utils/matchProjectInURL';
 import CommAppContext, { AsyncStatus } from './CommAppContext';

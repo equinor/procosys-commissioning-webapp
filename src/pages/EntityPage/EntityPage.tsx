@@ -8,7 +8,7 @@ import {
     ChecklistPreview,
     TaskPreview,
     PunchPreview,
-} from '../../services/apiTypes';
+} from '../../typings/apiTypes';
 import withAccessControl from '../../services/withAccessControl';
 import Axios from 'axios';
 import {

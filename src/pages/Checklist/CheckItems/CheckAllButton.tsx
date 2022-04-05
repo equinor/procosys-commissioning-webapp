@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CheckItem } from '../../../services/apiTypes';
+import { CheckItem } from '../../../typings/apiTypes';
 import { Button } from '@equinor/eds-core-react';
 import EdsIcon from '../../../components/icons/EdsIcon';
 import styled from 'styled-components';

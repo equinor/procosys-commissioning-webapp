@@ -2,7 +2,7 @@ import { Button } from '@equinor/eds-core-react';
 import React, { ReactNode, useEffect, useState } from 'react';
 import ErrorPage from '../components/error/ErrorPage';
 import LoadingPage from '../components/loading/LoadingPage';
-import { Plant } from '../services/apiTypes';
+import { Plant } from '../typings/apiTypes';
 import { AppConfig, FeatureFlags } from '../services/appConfiguration';
 import { IAuthService } from '../services/authService';
 import { ProcosysApiService } from '../services/procosysApi';

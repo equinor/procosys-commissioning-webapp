@@ -1,4 +1,4 @@
-import { CompletionStatus, PunchPreview } from '../services/apiTypes';
+import { CompletionStatus, PunchPreview } from '../typings/apiTypes';
 
 const calculateHighestStatus = (
     punchList: PunchPreview[]

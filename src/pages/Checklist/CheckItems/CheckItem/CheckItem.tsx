@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { CheckItem as CheckItemType } from '../../../../services/apiTypes';
+import { CheckItem as CheckItemType } from '../../../../typings/apiTypes';
 import { Checkbox } from '@equinor/eds-core-react';
 import MetaTable from './MetaTable/MetaTable';
 import { AsyncStatus } from '../../../../contexts/CommAppContext';

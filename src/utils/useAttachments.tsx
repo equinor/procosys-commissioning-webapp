@@ -1,7 +1,7 @@
 import Axios from 'axios';
 import { useEffect, useState } from 'react';
 import { AsyncStatus } from '../contexts/CommAppContext';
-import { Attachment } from '../services/apiTypes';
+import { Attachment } from '../typings/apiTypes';
 import useCommonHooks from './useCommonHooks';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

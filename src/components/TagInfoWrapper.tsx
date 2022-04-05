@@ -5,9 +5,9 @@ import {
     isOfType,
 } from '@equinor/procosys-webapp-components';
 import axios from 'axios';
-import { AdditionalTagField, Tag, TagDetails } from '../../typings/apiTypes';
-import useCommonHooks from '../../utils/useCommonHooks';
-import { SearchType } from '../Search/Search';
+import { AdditionalTagField, Tag, TagDetails } from '../typings/apiTypes';
+import useCommonHooks from '../utils/useCommonHooks';
+import { SearchType } from '../pages/Search/Search';
 
 type TagInfoWrapperProps = {
     tagId?: number;

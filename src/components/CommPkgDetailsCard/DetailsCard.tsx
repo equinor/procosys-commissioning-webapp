@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { CommPkg } from '../../services/apiTypes';
+import { CommPkg } from '../../typings/apiTypes';
 import EdsIcon from '../../components/icons/EdsIcon';
 import { Button, DotProgress } from '@equinor/eds-core-react';
 import useBookmarks from '../../utils/useBookmarks';

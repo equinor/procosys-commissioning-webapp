@@ -8,7 +8,7 @@ import {
 import { SearchType } from '../pages/Search/Search';
 import { TaskCommentDto } from '../pages/Task/TaskDescription';
 import { TaskParameterDto } from '../pages/Task/TaskParameters/TaskParameters';
-import { isCorrectDetails } from './apiTypeGuards';
+import { isCorrectDetails } from '../typings/apiTypeGuards';
 import {
     Plant,
     Project,
@@ -28,7 +28,7 @@ import {
     Attachment,
     Tag,
     TagPreview,
-} from './apiTypes';
+} from '../typings/apiTypes';
 
 type PostAttachmentProps = {
     plantId: string;

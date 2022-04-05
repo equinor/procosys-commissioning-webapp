@@ -7,7 +7,7 @@ import ErrorPage from '../../../components/error/ErrorPage';
 import SkeletonLoadingPage from '../../../components/loading/SkeletonLoader';
 import AsyncCard from '../../../components/AsyncCard';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
-import { PunchItem } from '../../../services/apiTypes';
+import { PunchItem } from '../../../typings/apiTypes';
 import buildEndpoint from '../../../utils/buildEndpoint';
 import useAttachments from '../../../utils/useAttachments';
 import useCommonHooks from '../../../utils/useCommonHooks';

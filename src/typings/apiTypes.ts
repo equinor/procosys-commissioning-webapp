@@ -1,9 +1,4 @@
-export enum CompletionStatus {
-    OS = 'OS',
-    PA = 'PA',
-    PB = 'PB',
-    OK = 'OK',
-}
+import { CompletionStatus } from '@equinor/procosys-webapp-components';
 
 export type Project = {
     description: string;
@@ -210,7 +205,7 @@ export interface PunchItem {
     id: number;
     checklistId: number;
     formularType: string;
-    status: string;
+    status: CompletionStatus;
     description: string;
     typeCode: string;
     typeDescription: string;

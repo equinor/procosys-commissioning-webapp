@@ -9,7 +9,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import DetailsCard from '../../components/CommPkgDetailsCard/DetailsCard';
-import { Tag } from '../../services/apiTypes';
+import { Tag } from '../../typings/apiTypes';
 import { COLORS } from '../../style/GlobalStyles';
 import useCommonHooks from '../../utils/useCommonHooks';
 import { SearchType } from '../Search/Search';

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { AsyncStatus } from '../../contexts/CommAppContext';
-import { CheckItem, ChecklistDetails } from '../../services/apiTypes';
+import { CheckItem, ChecklistDetails } from '../../typings/apiTypes';
 import CheckItems from './CheckItems/CheckItems';
 import ChecklistSignature from './ChecklistSignature';
 import styled from 'styled-components';

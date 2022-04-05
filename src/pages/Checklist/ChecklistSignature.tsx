@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ChecklistDetails } from '../../services/apiTypes';
+import { ChecklistDetails } from '../../typings/apiTypes';
 import { Button, TextField } from '@equinor/eds-core-react';
 import styled from 'styled-components';
 import { AsyncStatus } from '../../contexts/CommAppContext';

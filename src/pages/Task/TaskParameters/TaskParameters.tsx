@@ -1,7 +1,7 @@
 import { Divider, TextField } from '@equinor/eds-core-react';
 import React from 'react';
 import styled from 'styled-components';
-import { TaskParameter } from '../../../services/apiTypes';
+import { TaskParameter } from '../../../typings/apiTypes';
 import { BREAKPOINT } from '../../../style/GlobalStyles';
 import MeasuredValueInput from './MeasuredValueInput';
 

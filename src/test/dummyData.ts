@@ -10,7 +10,7 @@ import {
     TaskPreview,
     CommPkgPreview,
     SearchResults,
-} from '../services/apiTypes';
+} from '../typings/apiTypes';
 
 type DummyMetatableData = {
     rows: Row[];

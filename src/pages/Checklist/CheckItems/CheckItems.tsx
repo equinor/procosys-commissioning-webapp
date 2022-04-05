@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {
     CheckItem as CheckItemType,
     ChecklistDetails,
-} from '../../../services/apiTypes';
+} from '../../../typings/apiTypes';
 import CheckItem from './CheckItem/CheckItem';
 import CheckHeader from './CheckHeader';
 import CheckAllButton from './CheckAllButton';

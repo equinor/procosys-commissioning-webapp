@@ -7,7 +7,7 @@ import {
     PunchCategory,
     PunchOrganization,
     PunchType,
-} from '../../../services/apiTypes';
+} from '../../../typings/apiTypes';
 import { COLORS } from '../../../style/GlobalStyles';
 import { PunchFormData } from './NewPunch';
 

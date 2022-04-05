@@ -7,7 +7,7 @@ import { Route, Switch } from 'react-router-dom';
 import ChecklistWrapper from './ChecklistWrapper';
 import NewPunch, { BottomSpacer } from './NewPunch/NewPunch';
 import { AsyncStatus } from '../../contexts/CommAppContext';
-import { ChecklistResponse, PunchPreview } from '../../services/apiTypes';
+import { ChecklistResponse, PunchPreview } from '../../typings/apiTypes';
 import { Button } from '@equinor/eds-core-react';
 import TagInfoWrapper from '../TagInfo/TagInfoWrapper';
 import {

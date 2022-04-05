@@ -3,7 +3,7 @@ import greenStatus from '../../assets/img/status/ok.svg';
 import paStatus from '../../assets/img/scopeStatusPa.png';
 import pbStatus from '../../assets/img/scopeStatusPb.png';
 import React from 'react';
-import { CompletionStatus } from '../../services/apiTypes';
+import { CompletionStatus } from '@equinor/procosys-webapp-components';
 
 type CompletionStatusIconProps = {
     status: CompletionStatus;

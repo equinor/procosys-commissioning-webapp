@@ -3,7 +3,7 @@ import Axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { AsyncStatus } from '../../contexts/CommAppContext';
-import { Task } from '../../services/apiTypes';
+import { Task } from '../../typings/apiTypes';
 import useCommonHooks from '../../utils/useCommonHooks';
 
 const TaskSignatureWrapper = styled.div`
