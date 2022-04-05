@@ -586,10 +586,24 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         return data as Blob;
     };
 
+    const getPunchAttachments = async (
+        plantId: string,
+        punchItemId: number,
+        cancelToken: CancelToken
+    ): Promise<Attachment[]> => {
+        const { data } = await axios.get(
+            `PunchListItem/Attachments?plantId=PCS$${plantId}&punchItemId=${punchItemId}&thumbnailSize=128${apiVersion}`,
+            {
+                cancelToken: cancelToken,
+            }
+        );
+        return data as Attachment[];
+    };
+
     const getPunchAttachment = async (
         cancelToken: CancelToken,
         plantId: string,
-        punchItemId: string,
+        punchItemId: number,
         attachmentId: number
     ): Promise<Blob> => {
         const { data } = await axios.get(
@@ -671,6 +685,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         getVersion,
         getAttachments,
         getPunchAttachment,
+        getPunchAttachments,
         getChecklistAttachments,
         getChecklistAttachment,
         getTaskAttachments,

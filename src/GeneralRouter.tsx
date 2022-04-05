@@ -4,13 +4,10 @@ import { PlantContextProvider } from './contexts/PlantContext';
 import SelectProject from './pages/SelectProject/SelectProject';
 import Search from './pages/Search/Search';
 import SelectPlant from './pages/SelectPlant/SelectPlant';
-import NewPunch from './pages/Checklist/NewPunch/NewPunch';
-import ClearPunch from './pages/Punch/ClearPunch/ClearPunch';
-import VerifyPunch from './pages/Punch/VerifyPunch/VerifyPunch';
-import Checklist from './pages/Checklist/ChecklistPage';
 import Task from './pages/Task/Task';
 import EntityPage from './pages/EntityPage/EntityPage';
 import ChecklistPage from './pages/Checklist/ChecklistPage';
+import PunchPage from './pages/Punch/PunchPage';
 
 const CommRouter = (): JSX.Element => {
     return (
