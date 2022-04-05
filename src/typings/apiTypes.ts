@@ -191,6 +191,28 @@ export interface PunchOrganization {
     description: string;
 }
 
+export interface PunchSort {
+    id: number;
+    parentId: number;
+    code: string;
+    description: string;
+}
+
+export interface PunchPriority {
+    id: number;
+    code: string;
+    description: string;
+}
+
+export interface Person {
+    id: number;
+    azureOid: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+}
+
 export interface NewPunch {
     CheckListId: number;
     CategoryId: number;
