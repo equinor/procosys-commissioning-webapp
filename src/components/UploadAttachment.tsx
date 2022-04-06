@@ -76,12 +76,12 @@ const UploadAttachment = ({
         const formData = new FormData();
         formData.append(selectedFile.name, selectedFile);
         try {
-            const response = await postAttachment({
-                plantId: params.plant,
-                parentId: parentId,
-                data: formData,
-                title: selectedFile.name,
-            });
+            const response = await postAttachment(
+                params.plant,
+                parseInt(parentId),
+                formData,
+                selectedFile.name
+            );
             if (updateTempAttachments) {
                 //For new punch, this adds the new attachment to the list of attachments
                 if (typeof response === 'string') {

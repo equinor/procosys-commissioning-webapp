@@ -2,12 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { Typography } from '@equinor/eds-core-react';
 import CompletionStatusIcon from '../../../components/icons/CompletionStatusIcon';
-import { CompletionStatus } from '../../../typings/apiTypes';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import AsyncPage from '../../../components/AsyncPage';
 import useAsyncGet from '../../../utils/useAsyncGet';
 import { CancelToken } from 'axios';
 import { Link } from 'react-router-dom';
+import { CompletionStatus } from '@equinor/procosys-webapp-components';
 
 export const TaskPreviewButton = styled(Link)`
     display: flex;

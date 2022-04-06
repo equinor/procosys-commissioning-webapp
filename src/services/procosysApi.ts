@@ -347,13 +347,13 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
 
     const postChecklistAttachment = async (
         plantId: string,
-        parentId: string,
-        data: FormData,
+        parentId: number,
+        formData: FormData,
         title: string
     ): Promise<void> => {
         await axios.post(
             `CheckList/Attachment?plantId=PCS$${plantId}&checkListId=${parentId}&title=${title}${apiVersion}`,
-            data,
+            formData,
             {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -676,7 +676,9 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
 
     const postTempPunchAttachment = async (
         plantId: string,
-        formData: FormData
+        parentId: number,
+        formData: FormData,
+        title: string
     ): Promise<string> => {
         const { data } = await axios.post(
             `PunchListItem/TempAttachment?plantId=PCS$${plantId}${apiVersion}`,
@@ -700,13 +702,13 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
 
     const postPunchAttachment = async (
         plantId: string,
-        punchItemId: number,
-        data: FormData,
+        parentId: number,
+        formData: FormData,
         title: string
     ): Promise<void> => {
         await axios.post(
-            `PunchListItem/Attachment?plantId=PCS$${plantId}&punchItemId=${punchItemId}&title=${title}${apiVersion}`,
-            data,
+            `PunchListItem/Attachment?plantId=PCS$${plantId}&punchItemId=${parentId}&title=${title}${apiVersion}`,
+            formData,
             {
                 headers: {
                     'Content-Type': 'multipart/form-data',

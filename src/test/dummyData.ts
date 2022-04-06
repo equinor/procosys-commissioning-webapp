@@ -1,9 +1,9 @@
+import { CompletionStatus } from '@equinor/procosys-webapp-components';
 import {
     Row,
     ColumnLabel,
     ChecklistPreview,
     CommPkg,
-    CompletionStatus,
     Plant,
     Project,
     PunchPreview,

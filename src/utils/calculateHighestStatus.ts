@@ -1,4 +1,5 @@
-import { CompletionStatus, PunchPreview } from '../typings/apiTypes';
+import { CompletionStatus } from '@equinor/procosys-webapp-components';
+import { PunchPreview } from '../typings/apiTypes';
 
 const calculateHighestStatus = (
     punchList: PunchPreview[]

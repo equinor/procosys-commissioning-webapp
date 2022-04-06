@@ -12,7 +12,6 @@ import { NewPunch as NewPunchType } from '../../../typings/apiTypes';
 import NewPunchSuccessPage from './NewPunchSuccessPage';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import styled from 'styled-components';
-import { PunchWrapper } from '../../Punch/ClearPunch/ClearPunch';
 import { Button, Scrim } from '@equinor/eds-core-react';
 import {
     AttachmentsWrapper,
@@ -236,7 +235,7 @@ const NewPunch = (): JSX.Element => {
                 }
                 loadingMessage={'Loading new punch.'}
             >
-                <PunchWrapper>{content()}</PunchWrapper>
+                <main>{content()}</main>
             </AsyncPage>
             {snackbar}
             <BottomSpacer />
