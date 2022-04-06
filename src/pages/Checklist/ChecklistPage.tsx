@@ -138,9 +138,7 @@ const ChecklistPage = (): JSX.Element => {
                                     history.push(
                                         `${removeSubdirectories(
                                             history.location.pathname
-                                        )}/punch-item/${punch.id}/${
-                                            punch.cleared ? 'verify' : 'clear'
-                                        }`
+                                        )}/punch-item/${punch.id}`
                                     )
                                 }
                                 punchList={punchList}
