@@ -388,26 +388,34 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     };
 
     const getPunchCategories = async (
-        plantId: string
+        plantId: string,
+        cancelToken: CancelToken
     ): Promise<PunchCategory[]> => {
         const { data } = await axios.get(
-            `PunchListItem/Categories?plantId=PCS$${plantId}${apiVersion}`
+            `PunchListItem/Categories?plantId=PCS$${plantId}${apiVersion}`,
+            { cancelToken }
         );
         return data as PunchCategory[];
     };
 
-    const getPunchTypes = async (plantId: string): Promise<PunchType[]> => {
+    const getPunchTypes = async (
+        plantId: string,
+        cancelToken: CancelToken
+    ): Promise<PunchType[]> => {
         const { data } = await axios.get(
-            `PunchListItem/Types?plantId=PCS$${plantId}${apiVersion}`
+            `PunchListItem/Types?plantId=PCS$${plantId}${apiVersion}`,
+            { cancelToken }
         );
         return data as PunchType[];
     };
 
     const getPunchOrganizations = async (
-        plantId: string
+        plantId: string,
+        cancelToken: CancelToken
     ): Promise<PunchOrganization[]> => {
         const { data } = await axios.get(
-            `PunchListItem/Organizations?plantId=PCS$${plantId}${apiVersion}`
+            `PunchListItem/Organizations?plantId=PCS$${plantId}${apiVersion}`,
+            { cancelToken }
         );
         return data as PunchOrganization[];
     };
@@ -676,7 +684,6 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
 
     const postTempPunchAttachment = async (
         plantId: string,
-        parentId: number,
         formData: FormData,
         title: string
     ): Promise<string> => {

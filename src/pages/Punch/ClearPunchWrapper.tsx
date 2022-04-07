@@ -74,9 +74,9 @@ const ClearPunchWrapper = ({
                     sortsFromApi,
                     prioritiesFromApi,
                 ] = await Promise.all([
-                    api.getPunchCategories(params.plant),
-                    api.getPunchTypes(params.plant),
-                    api.getPunchOrganizations(params.plant),
+                    api.getPunchCategories(params.plant, source.token),
+                    api.getPunchTypes(params.plant, source.token),
+                    api.getPunchOrganizations(params.plant, source.token),
                     api.getPunchSorts(params.plant, source.token),
                     api.getPunchPriorities(params.plant, source.token),
                 ]);

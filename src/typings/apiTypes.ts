@@ -220,6 +220,11 @@ export interface NewPunch {
     TypeId: number;
     RaisedByOrganizationId: number;
     ClearingByOrganizationId: number;
+    SortingId?: number;
+    PriorityId?: number;
+    ActionByPerson?: number | null;
+    DueDate?: string;
+    Estimate?: number;
     TemporaryFileIds: string[];
 }
 

@@ -4,8 +4,7 @@ import EdsIcon from '../../components/icons/EdsIcon';
 import withAccessControl from '../../services/withAccessControl';
 import useCommonHooks from '../../utils/useCommonHooks';
 import { Route, Switch } from 'react-router-dom';
-import ChecklistWrapper from './ChecklistWrapper';
-import NewPunch, { BottomSpacer } from './NewPunch/NewPunch';
+import ChecklistWrapper, { BottomSpacer } from './Checklist';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import { ChecklistResponse, PunchPreview } from '../../typings/apiTypes';
 import { Button } from '@equinor/eds-core-react';
@@ -15,10 +14,12 @@ import {
     FooterButton,
     Navbar,
     NavigationFooter,
+    NewPunch,
     PunchList,
     removeSubdirectories,
 } from '@equinor/procosys-webapp-components';
 import ChecklistDetailsCard from './ChecklistDetailsCard';
+import NewPunchWrapper from './NewPunchWrapper';
 
 const ChecklistPage = (): JSX.Element => {
     const { history, url, path, api, params } = useCommonHooks();
@@ -151,7 +152,7 @@ const ChecklistPage = (): JSX.Element => {
                 <Route
                     exact
                     path={`${path}/punch-list/new-punch`}
-                    component={NewPunch}
+                    component={NewPunchWrapper}
                 />
             </Switch>
             <NavigationFooter footerStatus={fetchPunchListStatus}>
