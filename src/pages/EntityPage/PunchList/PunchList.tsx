@@ -59,14 +59,6 @@ const PunchList = ({
 }: PunchListProps): JSX.Element => {
     const { url, params, history } = useCommonHooks();
 
-    const handleTagPunchClicked = (punch: PunchPreview): void => {
-        if (punch.cleared === true) {
-            history.push(`${url}/${punch.id}/verify`);
-        } else {
-            history.push(`${url}/${punch.id}/clear`);
-        }
-    };
-
     if (params.searchType === SearchType.Tag) {
         return (
             <TagPunchList

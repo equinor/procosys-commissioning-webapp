@@ -8,18 +8,17 @@ import ChecklistWrapper, { BottomSpacer } from './Checklist';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import { ChecklistResponse, PunchPreview } from '../../typings/apiTypes';
 import { Button } from '@equinor/eds-core-react';
-import TagInfoWrapper from '../TagInfo/TagInfoWrapper';
 import {
     BackButton,
     FooterButton,
     Navbar,
     NavigationFooter,
-    NewPunch,
     PunchList,
     removeSubdirectories,
 } from '@equinor/procosys-webapp-components';
 import ChecklistDetailsCard from './ChecklistDetailsCard';
 import NewPunchWrapper from './NewPunchWrapper';
+import TagInfoWrapper from '../../components/TagInfoWrapper';
 
 const ChecklistPage = (): JSX.Element => {
     const { history, url, path, api, params } = useCommonHooks();

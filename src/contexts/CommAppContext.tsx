@@ -1,5 +1,5 @@
-import { Button } from '@equinor/eds-core-react';
 import React, { ReactNode, useEffect, useState } from 'react';
+import { Button } from '@equinor/eds-core-react';
 import ErrorPage from '../components/error/ErrorPage';
 import LoadingPage from '../components/loading/LoadingPage';
 import { Plant } from '../typings/apiTypes';

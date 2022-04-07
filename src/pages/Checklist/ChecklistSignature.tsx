@@ -8,6 +8,7 @@ import {
     determineVariant,
 } from '../../utils/textFieldHelpers';
 import useCommonHooks from '../../utils/useCommonHooks';
+
 const ChecklistSignatureWrapper = styled.div<{ helperTextVisible: boolean }>`
     display: flex;
     flex-direction: column;
@@ -20,6 +21,7 @@ const ChecklistSignatureWrapper = styled.div<{ helperTextVisible: boolean }>`
             props.helperTextVisible ? '0' : '24px'};
     }
 `;
+
 const determineSignButtonText = (
     isSigned: boolean,
     status: AsyncStatus
@@ -32,6 +34,7 @@ const determineSignButtonText = (
         return 'Sign';
     }
 };
+
 type ChecklistSignatureProps = {
     details: ChecklistDetails;
     setIsSigned: React.Dispatch<React.SetStateAction<boolean>>;
@@ -40,6 +43,7 @@ type ChecklistSignatureProps = {
     reloadChecklist: React.Dispatch<React.SetStateAction<boolean>>;
     setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
 };
+
 const ChecklistSignature = ({
     details,
     setIsSigned,
