@@ -1,24 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { AsyncStatus } from '../../contexts/CommAppContext';
-import { CheckItem, ChecklistDetails } from '../../services/apiTypes';
+import { CheckItem, ChecklistDetails } from '../../typings/apiTypes';
 import CheckItems from './CheckItems/CheckItems';
 import ChecklistSignature from './ChecklistSignature';
 import styled from 'styled-components';
 import EdsIcon from '../../components/icons/EdsIcon';
-import axios, { CancelToken } from 'axios';
+import axios from 'axios';
 import useCommonHooks from '../../utils/useCommonHooks';
 import AsyncCard from '../../components/AsyncCard';
-import Attachment, {
-    AttachmentsWrapper,
-    UploadImageButton,
-} from '../../components/Attachment';
-import UploadAttachment from '../../components/UploadAttachment';
 import { CardWrapper } from '../../components/EdsCard';
-import useAttachments from '../../utils/useAttachments';
-import buildEndpoint from '../../utils/buildEndpoint';
 import useSnackbar from '../../utils/useSnackbar';
 import AsyncPage from '../../components/AsyncPage';
 import { Banner } from '@equinor/eds-core-react';
+import { Attachment, Attachments } from '@equinor/procosys-webapp-components';
 
 const ChecklistWrapper = styled.div`
     padding: 0 4%;
@@ -30,21 +24,21 @@ const ChecklistWrapper = styled.div`
     }
 `;
 
+const AttachmentsHeader = styled.h5`
+    margin-top: 54px;
+    margin-bottom: 0px;
+`;
+
+const AttachmentsWrapper = styled.div`
+    padding: 16px 0;
+`;
+
 export const BottomSpacer = styled.div`
     height: 70px;
 `;
 
 const ChecklistPage = (): JSX.Element => {
     const { params, api } = useCommonHooks();
-    const getAttachmentsEndpoint = buildEndpoint().getChecklistAttachments(
-        params.plant,
-        params.checklistId
-    );
-    const {
-        refreshAttachments: setRefreshAttachments,
-        attachments,
-        fetchAttachmentsStatus,
-    } = useAttachments(getAttachmentsEndpoint);
     const { snackbar, setSnackbarText } = useSnackbar();
     const [fetchChecklistStatus, setFetchChecklistStatus] = useState(
         AsyncStatus.LOADING
@@ -55,7 +49,6 @@ const ChecklistPage = (): JSX.Element => {
     const [isSigned, setIsSigned] = useState(false);
     const [allItemsCheckedOrNA, setAllItemsCheckedOrNA] = useState(true);
     const [reloadChecklist, setReloadChecklist] = useState(false);
-    const [showUploadModal, setShowUploadModal] = useState(false);
     const source = axios.CancelToken.source();
 
     useEffect(() => {
@@ -108,68 +101,51 @@ const ChecklistPage = (): JSX.Element => {
                             isSigned={isSigned}
                             setSnackbarText={setSnackbarText}
                         />
-                        <AsyncCard
-                            errorMessage={
-                                'Unable to load attachments for this checklist.'
-                            }
-                            cardTitle={'Attachments'}
-                            fetchStatus={fetchAttachmentsStatus}
-                        >
-                            <AttachmentsWrapper>
-                                <UploadImageButton
-                                    disabled={isSigned}
-                                    onClick={(): void =>
-                                        setShowUploadModal(true)
-                                    }
-                                >
-                                    <EdsIcon name="camera_add_photo" />
-                                </UploadImageButton>
-                                {showUploadModal ? (
-                                    <UploadAttachment
-                                        setShowModal={setShowUploadModal}
-                                        setSnackbarText={setSnackbarText}
-                                        updateAttachments={
-                                            setRefreshAttachments
-                                        }
-                                        postAttachment={
-                                            api.postChecklistAttachment
-                                        }
-                                        parentId={params.checklistId}
-                                    />
-                                ) : null}
-                                {attachments.map((attachment) => (
-                                    <Attachment
-                                        key={attachment.id}
-                                        isSigned={isSigned}
-                                        getAttachment={(
-                                            cancelToken: CancelToken
-                                        ): Promise<Blob> =>
-                                            api.getChecklistAttachment(
-                                                cancelToken,
-                                                params.plant,
-                                                params.checklistId,
-                                                attachment.id
-                                            )
-                                        }
-                                        setSnackbarText={setSnackbarText}
-                                        attachment={attachment}
-                                        refreshAttachments={
-                                            setRefreshAttachments
-                                        }
-                                        deleteAttachment={(
-                                            cancelToken: CancelToken
-                                        ): Promise<void> =>
-                                            api.deleteChecklistAttachment(
-                                                cancelToken,
-                                                params.plant,
-                                                params.checklistId,
-                                                attachment.id
-                                            )
-                                        }
-                                    />
-                                ))}
-                            </AttachmentsWrapper>
-                        </AsyncCard>
+                        <AttachmentsHeader>Attachments</AttachmentsHeader>
+                        <AttachmentsWrapper>
+                            <Attachments
+                                getAttachments={(): Promise<Attachment[]> =>
+                                    api.getChecklistAttachments(
+                                        params.plant,
+                                        params.checklistId
+                                    )
+                                }
+                                getAttachment={(
+                                    attachmentId: number
+                                ): Promise<Blob> =>
+                                    api.getChecklistAttachment(
+                                        source.token,
+                                        params.plant,
+                                        params.checklistId,
+                                        attachmentId
+                                    )
+                                }
+                                postAttachment={(
+                                    file: FormData,
+                                    title: string
+                                ): Promise<void> =>
+                                    api.postChecklistAttachment(
+                                        params.plant,
+                                        parseInt(params.checklistId),
+                                        file,
+                                        title
+                                    )
+                                }
+                                deleteAttachment={(
+                                    attachmentId: number
+                                ): Promise<void> =>
+                                    api.deleteChecklistAttachment(
+                                        source.token,
+                                        params.plant,
+                                        params.checklistId,
+                                        attachmentId
+                                    )
+                                }
+                                setSnackbarText={setSnackbarText}
+                                readOnly={isSigned}
+                                source={source}
+                            />
+                        </AttachmentsWrapper>
 
                         <AsyncCard
                             fetchStatus={fetchChecklistStatus}

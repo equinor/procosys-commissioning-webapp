@@ -1,14 +1,14 @@
-import { isArrayOfType, isOfType } from '@equinor/procosys-webapp-components';
-import { AxiosInstance, CancelToken } from 'axios';
 import {
+    isArrayOfType,
+    isOfType,
     PunchAction,
     UpdatePunchData,
-    UpdatePunchEndpoint,
-} from '../pages/Punch/ClearPunch/useClearPunchFacade';
+} from '@equinor/procosys-webapp-components';
+import { AxiosInstance, CancelToken } from 'axios';
 import { SearchType } from '../pages/Search/Search';
 import { TaskCommentDto } from '../pages/Task/TaskDescription';
 import { TaskParameterDto } from '../pages/Task/TaskParameters/TaskParameters';
-import { isCorrectDetails } from './apiTypeGuards';
+import { isCorrectDetails } from '../typings/apiTypeGuards';
 import {
     Plant,
     Project,
@@ -28,14 +28,10 @@ import {
     Attachment,
     Tag,
     TagPreview,
-} from './apiTypes';
-
-type PostAttachmentProps = {
-    plantId: string;
-    parentId?: string;
-    data: FormData;
-    title?: string;
-};
+    PunchPriority,
+    PunchSort,
+    Person,
+} from '../typings/apiTypes';
 
 const typeGuardErrorMessage = (expectedType: string): string => {
     return `Unable to retrieve ${expectedType}. Please try again.`;
@@ -349,15 +345,15 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         );
     };
 
-    const postChecklistAttachment = async ({
-        plantId,
-        parentId,
-        data,
-        title,
-    }: PostAttachmentProps): Promise<void> => {
+    const postChecklistAttachment = async (
+        plantId: string,
+        parentId: number,
+        formData: FormData,
+        title: string
+    ): Promise<void> => {
         await axios.post(
             `CheckList/Attachment?plantId=PCS$${plantId}&checkListId=${parentId}&title=${title}${apiVersion}`,
-            data,
+            formData,
             {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -392,28 +388,79 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     };
 
     const getPunchCategories = async (
-        plantId: string
+        plantId: string,
+        cancelToken: CancelToken
     ): Promise<PunchCategory[]> => {
         const { data } = await axios.get(
-            `PunchListItem/Categories?plantId=PCS$${plantId}${apiVersion}`
+            `PunchListItem/Categories?plantId=PCS$${plantId}${apiVersion}`,
+            { cancelToken }
         );
         return data as PunchCategory[];
     };
 
-    const getPunchTypes = async (plantId: string): Promise<PunchType[]> => {
+    const getPunchTypes = async (
+        plantId: string,
+        cancelToken: CancelToken
+    ): Promise<PunchType[]> => {
         const { data } = await axios.get(
-            `PunchListItem/Types?plantId=PCS$${plantId}${apiVersion}`
+            `PunchListItem/Types?plantId=PCS$${plantId}${apiVersion}`,
+            { cancelToken }
         );
         return data as PunchType[];
     };
 
     const getPunchOrganizations = async (
-        plantId: string
+        plantId: string,
+        cancelToken: CancelToken
     ): Promise<PunchOrganization[]> => {
         const { data } = await axios.get(
-            `PunchListItem/Organizations?plantId=PCS$${plantId}${apiVersion}`
+            `PunchListItem/Organizations?plantId=PCS$${plantId}${apiVersion}`,
+            { cancelToken }
         );
         return data as PunchOrganization[];
+    };
+
+    const getPunchSorts = async (
+        plantId: string,
+        cancelToken: CancelToken
+    ): Promise<PunchSort[]> => {
+        const { data } = await axios.get(
+            `PunchListItem/Sorts?plantId=PCS$${plantId}${apiVersion}`,
+            { cancelToken }
+        );
+        if (!isArrayOfType<PunchSort>(data, 'code')) {
+            throw new Error(typeGuardErrorMessage('punch sorts'));
+        }
+        return data;
+    };
+
+    const getPunchPriorities = async (
+        plantId: string,
+        cancelToken: CancelToken
+    ): Promise<PunchPriority[]> => {
+        const { data } = await axios.get(
+            `PunchListItem/Priorities?plantId=PCS$${plantId}${apiVersion}`,
+            { cancelToken }
+        );
+        if (!isArrayOfType<PunchPriority>(data, 'code')) {
+            throw new Error(typeGuardErrorMessage('punch priorities'));
+        }
+        return data;
+    };
+
+    const getPersonsByName = async (
+        plantId: string,
+        searchString: string,
+        cancelToken: CancelToken
+    ): Promise<Person[]> => {
+        const { data } = await axios.get(
+            `Person/PersonSearch?plantId=${plantId}&searchString=${searchString}${apiVersion}`,
+            { cancelToken }
+        );
+        if (!isArrayOfType<Person>(data, 'username')) {
+            throw new Error('An error occurred, please try again.');
+        }
+        return data;
     };
 
     const postNewPunch = async (
@@ -440,7 +487,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         punchItemId: string,
         updateData: UpdatePunchData,
-        endpoint: UpdatePunchEndpoint
+        endpoint: string
     ): Promise<void> => {
         const dto = { PunchItemId: punchItemId, ...updateData };
         await axios.put(
@@ -586,10 +633,24 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         return data as Blob;
     };
 
+    const getPunchAttachments = async (
+        plantId: string,
+        punchItemId: number,
+        cancelToken: CancelToken
+    ): Promise<Attachment[]> => {
+        const { data } = await axios.get(
+            `PunchListItem/Attachments?plantId=PCS$${plantId}&punchItemId=${punchItemId}&thumbnailSize=128${apiVersion}`,
+            {
+                cancelToken: cancelToken,
+            }
+        );
+        return data as Attachment[];
+    };
+
     const getPunchAttachment = async (
         cancelToken: CancelToken,
         plantId: string,
-        punchItemId: string,
+        punchItemId: number,
         attachmentId: number
     ): Promise<Blob> => {
         const { data } = await axios.get(
@@ -607,27 +668,25 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     };
 
     const deletePunchAttachment = async (
-        cancelToken: CancelToken,
         plantId: string,
-        punchItemId: string,
+        punchItemId: number,
         attachmentId: number
     ): Promise<void> => {
         const dto = {
-            PunchItemId: parseInt(punchItemId),
+            PunchItemId: punchItemId,
             AttachmentId: attachmentId,
         };
         await axios.delete(
             `PunchListItem/Attachment?plantId=PCS$${plantId}${apiVersion}`,
-            { data: dto, cancelToken: cancelToken }
+            { data: dto }
         );
     };
 
-    const postTempPunchAttachment = async ({
-        plantId,
-        parentId,
-        data: formData,
-        title,
-    }: PostAttachmentProps): Promise<string> => {
+    const postTempPunchAttachment = async (
+        plantId: string,
+        formData: FormData,
+        title: string
+    ): Promise<string> => {
         const { data } = await axios.post(
             `PunchListItem/TempAttachment?plantId=PCS$${plantId}${apiVersion}`,
             formData,
@@ -648,15 +707,15 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         }
     };
 
-    const postPunchAttachment = async ({
-        plantId,
-        parentId,
-        data,
-        title,
-    }: PostAttachmentProps): Promise<void> => {
+    const postPunchAttachment = async (
+        plantId: string,
+        parentId: number,
+        formData: FormData,
+        title: string
+    ): Promise<void> => {
         await axios.post(
             `PunchListItem/Attachment?plantId=PCS$${plantId}&punchItemId=${parentId}&title=${title}${apiVersion}`,
-            data,
+            formData,
             {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -671,6 +730,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         getVersion,
         getAttachments,
         getPunchAttachment,
+        getPunchAttachments,
         getChecklistAttachments,
         getChecklistAttachment,
         getTaskAttachments,
@@ -683,6 +743,9 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         getChecklistPunchList,
         getEntityDetails,
         getPunchOrganizations,
+        getPunchSorts,
+        getPunchPriorities,
+        getPersonsByName,
         getPunchList,
         getPunchTypes,
         getPunchCategories,

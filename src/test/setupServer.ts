@@ -42,6 +42,7 @@ export const ENDPOINTS = {
     postSign: `${baseURL}/CheckList/Comm/Sign`,
     postUnsign: `${baseURL}/CheckList/Comm/Unsign`,
     getScope: `${baseURL}/CommPkg/CheckLists`,
+    getChecklistPunchList: `${baseURL}/CheckList/PunchList`,
 
     //Task
     getTasks: `${baseURL}/CommPkg/Tasks`,
@@ -139,6 +140,12 @@ export const server = setupServer(
     rest.get(ENDPOINTS.getScope, (_, response, context) => {
         return response(
             context.json(objectToCamelCase(dummyScopeResponse)),
+            context.status(200)
+        );
+    }),
+    rest.get(ENDPOINTS.getChecklistPunchList, (_, response, context) => {
+        return response(
+            context.json(objectToCamelCase(dummyPunchListResponse)),
             context.status(200)
         );
     }),

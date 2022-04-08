@@ -1,16 +1,16 @@
+import { CompletionStatus } from '@equinor/procosys-webapp-components';
 import {
     Row,
     ColumnLabel,
     ChecklistPreview,
     CommPkg,
-    CompletionStatus,
     Plant,
     Project,
     PunchPreview,
     TaskPreview,
     CommPkgPreview,
     SearchResults,
-} from '../services/apiTypes';
+} from '../typings/apiTypes';
 
 type DummyMetatableData = {
     rows: Row[];

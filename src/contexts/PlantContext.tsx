@@ -1,12 +1,12 @@
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
+import { Navbar, StorageKey } from '@equinor/procosys-webapp-components';
 import LoadingPage from '../components/loading/LoadingPage';
-import { Plant, Project } from '../services/apiTypes';
+import { Plant, Project } from '../typings/apiTypes';
 import matchPlantInURL from '../utils/matchPlantInURL';
 import matchProjectInURL from '../utils/matchProjectInURL';
 import CommAppContext, { AsyncStatus } from './CommAppContext';
 import useCommonHooks from '../utils/useCommonHooks';
 import ErrorPage from '../components/error/ErrorPage';
-import { Navbar, StorageKey } from '@equinor/procosys-webapp-components';
 
 export type PlantContextProps = {
     fetchProjectsAndPermissionsStatus: AsyncStatus;

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { SearchStatus } from '../../useSearchPageFacade';
-import { SearchResults as SearchResultsType } from '../../../../services/apiTypes';
+import { SearchResults as SearchResultsType } from '../../../../typings/apiTypes';
 import SkeletonLoadingPage from '../../../../components/loading/SkeletonLoader';
 import ResultsList from './ResultsList';
 import { SearchType } from '../../Search';

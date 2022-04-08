@@ -1,6 +1,6 @@
 import { isOfType } from '@equinor/procosys-webapp-components';
 import { SearchType } from '../pages/Search/Search';
-import { CommPkg, Tag } from './apiTypes';
+import { CommPkg, Tag } from '../typings/apiTypes';
 
 export const isCorrectDetails = (
     data: unknown,

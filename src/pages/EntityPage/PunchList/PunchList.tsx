@@ -3,13 +3,13 @@ import styled from 'styled-components';
 import { Typography } from '@equinor/eds-core-react';
 import CompletionStatusIcon from '../../../components/icons/CompletionStatusIcon';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
-import { PunchPreview } from '../../../services/apiTypes';
+import { PunchPreview } from '../../../typings/apiTypes';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import AsyncPage from '../../../components/AsyncPage';
 import { SearchType } from '../../Search/Search';
 import {
-    ensure,
     PunchList as TagPunchList,
+    removeSubdirectories,
 } from '@equinor/procosys-webapp-components';
 import { Link } from 'react-router-dom';
 
@@ -59,19 +59,15 @@ const PunchList = ({
 }: PunchListProps): JSX.Element => {
     const { url, params, history } = useCommonHooks();
 
-    const handleTagPunchClicked = (punch: PunchPreview): void => {
-        if (punch.cleared === true) {
-            history.push(`${url}/${punch.id}/verify`);
-        } else {
-            history.push(`${url}/${punch.id}/clear`);
-        }
-    };
-
     if (params.searchType === SearchType.Tag) {
         return (
             <TagPunchList
                 fetchPunchListStatus={fetchPunchListStatus}
-                onPunchClick={handleTagPunchClicked}
+                onPunchClick={(punch: PunchPreview): void =>
+                    history.push(
+                        `${removeSubdirectories(url)}/punch-item/${punch.id}`
+                    )
+                }
                 punchList={punchList}
             />
         );
@@ -87,11 +83,9 @@ const PunchList = ({
                 <>
                     {punchList?.map((punch) => (
                         <PreviewButton
-                            to={
-                                punch.cleared
-                                    ? `${url}/${punch.id}/verify`
-                                    : `${url}/${punch.id}/clear`
-                            }
+                            to={`${removeSubdirectories(url)}/punch-item/${
+                                punch.id
+                            }`}
                             key={punch.id}
                         >
                             <CompletionStatusIcon status={punch.status} />

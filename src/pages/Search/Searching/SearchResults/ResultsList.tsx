@@ -5,7 +5,7 @@ import {
     CommPkgPreview,
     SearchResults,
     TagPreview,
-} from '../../../../services/apiTypes';
+} from '../../../../typings/apiTypes';
 import { COLORS } from '../../../../style/GlobalStyles';
 import useCommonHooks from '../../../../utils/useCommonHooks';
 import { SearchType } from '../../Search';

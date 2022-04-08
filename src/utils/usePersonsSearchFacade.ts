@@ -1,25 +1,17 @@
 import React, { useContext, useEffect, useReducer, useState } from 'react';
 import axios, { CancelToken } from 'axios';
-import PlantContext from '../../contexts/PlantContext';
-import { SearchResults } from '../../typings/apiTypes';
-import { ProcosysApiService } from '../../services/procosysApi';
-import useCommonHooks from '../../utils/useCommonHooks';
-
-export enum SearchStatus {
-    INACTIVE,
-    LOADING,
-    SUCCESS,
-    ERROR,
-}
-
-type SearchState = {
-    searchStatus: SearchStatus;
-    hits: SearchResults;
-};
+import {
+    SearchResult,
+    SearchState,
+    SearchStatus,
+} from '@equinor/procosys-webapp-components';
+import { ProcosysApiService } from '../services/procosysApi';
+import useCommonHooks from './useCommonHooks';
+import PlantContext from '../contexts/PlantContext';
 
 type Action =
     | { type: 'FETCH_START' }
-    | { type: 'FETCH_SUCCESS'; payload: SearchResults }
+    | { type: 'FETCH_SUCCESS'; payload: SearchResult }
     | { type: 'FETCH_ERROR'; error: string }
     | { type: 'FETCH_INACTIVE' };
 
@@ -29,7 +21,7 @@ const fetchReducer = (state: SearchState, action: Action): SearchState => {
             return {
                 ...state,
                 searchStatus: SearchStatus.LOADING,
-                hits: { ...state.hits, items: [] },
+                hits: { ...state.hits, persons: [] },
             };
         case 'FETCH_SUCCESS':
             return {
@@ -46,7 +38,7 @@ const fetchReducer = (state: SearchState, action: Action): SearchState => {
             return {
                 ...state,
                 searchStatus: SearchStatus.INACTIVE,
-                hits: { ...state.hits, items: [] },
+                hits: { ...state.hits, persons: [] },
             };
     }
 };
@@ -55,23 +47,15 @@ const fetchHits = async (
     query: string,
     dispatch: React.Dispatch<Action>,
     plantId: string,
-    projectId: number,
     cancelToken: CancelToken,
-    api: ProcosysApiService,
-    searchType: string
+    api: ProcosysApiService
 ): Promise<void> => {
     dispatch({ type: 'FETCH_START' });
     try {
-        const results = await api.getSearchResults(
-            query,
-            projectId,
-            plantId,
-            searchType,
-            cancelToken
-        );
+        const persons = await api.getPersonsByName(plantId, query, cancelToken);
         dispatch({
             type: 'FETCH_SUCCESS',
-            payload: results,
+            payload: { persons },
         });
     } catch (err) {
         dispatch({ type: 'FETCH_ERROR', error: 'err' });
@@ -79,44 +63,31 @@ const fetchHits = async (
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const useSearchPageFacade = (searchType: string) => {
+const usePersonsSearchFacade = () => {
     const { api } = useCommonHooks();
     const [{ hits, searchStatus }, dispatch] = useReducer(fetchReducer, {
-        hits: { maxAvailable: 0, items: [] },
+        hits: { persons: [] },
         searchStatus: SearchStatus.INACTIVE,
     });
     const [query, setQuery] = useState('');
-    const { currentProject, currentPlant } = useContext(PlantContext);
+    const { currentPlant } = useContext(PlantContext);
 
     useEffect(() => {
-        setQuery('');
-    }, [searchType]);
-
-    useEffect(() => {
-        if (!currentPlant || !currentProject) return;
+        if (!currentPlant) return;
         if (query.length < 2) {
             dispatch({ type: 'FETCH_INACTIVE' });
             return;
         }
         const { cancel, token } = axios.CancelToken.source();
         const timeOutId = setTimeout(
-            () =>
-                fetchHits(
-                    query,
-                    dispatch,
-                    currentPlant.id,
-                    currentProject.id,
-                    token,
-                    api,
-                    searchType
-                ),
+            () => fetchHits(query, dispatch, currentPlant.id, token, api),
             300
         );
         return (): void => {
             cancel('A new search has taken place instead');
             clearTimeout(timeOutId);
         };
-    }, [query, currentProject, currentPlant, api, searchType]);
+    }, [query, currentPlant, api]);
 
     return {
         hits,
@@ -126,4 +97,4 @@ const useSearchPageFacade = (searchType: string) => {
     };
 };
 
-export default useSearchPageFacade;
+export default usePersonsSearchFacade;

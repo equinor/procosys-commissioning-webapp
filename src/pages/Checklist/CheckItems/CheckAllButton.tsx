@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { CheckItem } from '../../../services/apiTypes';
 import { Button } from '@equinor/eds-core-react';
-import EdsIcon from '../../../components/icons/EdsIcon';
 import styled from 'styled-components';
+import { CheckItem } from '../../../typings/apiTypes';
+import EdsIcon from '../../../components/icons/EdsIcon';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
 import useCommonHooks from '../../../utils/useCommonHooks';
 

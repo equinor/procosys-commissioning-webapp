@@ -1,4 +1,4 @@
-import { Project } from '../services/apiTypes';
+import { Project } from '../typings/apiTypes';
 
 class URLError extends Error {
     constructor(message: string) {

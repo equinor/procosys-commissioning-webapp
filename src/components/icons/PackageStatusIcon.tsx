@@ -1,5 +1,6 @@
 import React from 'react';
-import { CompletionStatus } from '../../services/apiTypes';
+import styled from 'styled-components';
+import { CompletionStatus } from '@equinor/procosys-webapp-components';
 import leftGrey from '../../assets/img/status/left_grey.png';
 import leftYellow from '../../assets/img/status/left_yellow.png';
 import leftGreen from '../../assets/img/status/left_green.png';
@@ -8,7 +9,6 @@ import rightYellow from '../../assets/img/status/right_yellow.png';
 import rightGrey from '../../assets/img/status/right_grey.png';
 import rightGreen from '../../assets/img/status/right_green.png';
 import rightRed from '../../assets/img/status/right_red.png';
-import styled from 'styled-components';
 
 const PackageStatusIconWrapper = styled.div`
     display: flex;

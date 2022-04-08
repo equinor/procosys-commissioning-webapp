@@ -5,7 +5,7 @@ import TaskDescription from './TaskDescription';
 import TaskParameters from './TaskParameters/TaskParameters';
 import TaskSignature from './TaskSignature';
 import Attachment, { AttachmentsWrapper } from '../../components/Attachment';
-import { Task as TaskType, TaskPreview } from '../../services/apiTypes';
+import { Task as TaskType, TaskPreview } from '../../typings/apiTypes';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import EdsIcon from '../../components/icons/EdsIcon';
 import AsyncCard from '../../components/AsyncCard';

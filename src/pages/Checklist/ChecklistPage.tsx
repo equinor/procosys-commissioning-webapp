@@ -4,12 +4,10 @@ import EdsIcon from '../../components/icons/EdsIcon';
 import withAccessControl from '../../services/withAccessControl';
 import useCommonHooks from '../../utils/useCommonHooks';
 import { Route, Switch } from 'react-router-dom';
-import ChecklistWrapper from './ChecklistWrapper';
-import NewPunch, { BottomSpacer } from '../Punch/NewPunch/NewPunch';
+import ChecklistWrapper, { BottomSpacer } from './Checklist';
 import { AsyncStatus } from '../../contexts/CommAppContext';
-import { ChecklistResponse, PunchPreview } from '../../services/apiTypes';
+import { ChecklistResponse, PunchPreview } from '../../typings/apiTypes';
 import { Button } from '@equinor/eds-core-react';
-import TagInfoWrapper from '../TagInfo/TagInfoWrapper';
 import {
     BackButton,
     FooterButton,
@@ -19,6 +17,8 @@ import {
     removeSubdirectories,
 } from '@equinor/procosys-webapp-components';
 import ChecklistDetailsCard from './ChecklistDetailsCard';
+import NewPunchWrapper from './NewPunchWrapper';
+import TagInfoWrapper from '../../components/TagInfoWrapper';
 
 const ChecklistPage = (): JSX.Element => {
     const { history, url, path, api, params } = useCommonHooks();
@@ -138,9 +138,7 @@ const ChecklistPage = (): JSX.Element => {
                                     history.push(
                                         `${removeSubdirectories(
                                             history.location.pathname
-                                        )}/punch-item/${punch.id}/${
-                                            punch.cleared ? 'verify' : 'clear'
-                                        }`
+                                        )}/punch-item/${punch.id}`
                                     )
                                 }
                                 punchList={punchList}
@@ -153,7 +151,7 @@ const ChecklistPage = (): JSX.Element => {
                 <Route
                     exact
                     path={`${path}/punch-list/new-punch`}
-                    component={NewPunch}
+                    component={NewPunchWrapper}
                 />
             </Switch>
             <NavigationFooter footerStatus={fetchPunchListStatus}>
