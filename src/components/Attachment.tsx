@@ -190,6 +190,7 @@ const Attachment = ({
                     <Scrim
                         isDismissable
                         onClose={(): void => setShowFullScreenImage(false)}
+                        open={true}
                     >
                         <ImageModal>
                             <img
