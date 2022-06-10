@@ -85,9 +85,13 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     ): Promise<SearchResults> => {
         let url = '';
         if (searchType === SearchType.Comm) {
-            url = `CommPkg/Search?plantId=${plantId}&startsWithCommPkgNo=${query}&includeDecommissioningPkgs=true&projectId=${projectId}${apiVersion}`;
+            url = `CommPkg/Search?plantId=${plantId}&startsWithCommPkgNo=${encodeURIComponent(
+                query
+            )}&includeDecommissioningPkgs=true&projectId=${projectId}${apiVersion}`;
         } else if (searchType === SearchType.Tag) {
-            url = `Tag/Search?plantId=${plantId}&startsWithTagNo=${query}&projectId=${projectId}${apiVersion}`;
+            url = `Tag/Search?plantId=${plantId}&startsWithTagNo=${encodeURIComponent(
+                query
+            )}&projectId=${projectId}${apiVersion}`;
         } else {
             throw new Error('An error occurred, please try again.');
         }
