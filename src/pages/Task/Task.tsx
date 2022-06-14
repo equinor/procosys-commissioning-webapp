@@ -5,14 +5,18 @@ import TaskDescription from './TaskDescription';
 import TaskParameters from './TaskParameters/TaskParameters';
 import TaskSignature from './TaskSignature';
 import Attachment, { AttachmentsWrapper } from '../../components/Attachment';
-import { Task as TaskType, TaskPreview } from '../../typings/apiTypes';
+import {
+    Task as TaskType,
+    TaskParameter,
+    TaskPreview,
+    Attachment as IAttachment,
+} from '../../typings/apiTypes';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import EdsIcon from '../../components/icons/EdsIcon';
 import AsyncCard from '../../components/AsyncCard';
 import useSnackbar from '../../utils/useSnackbar';
 import { Banner, Typography } from '@equinor/eds-core-react';
 import Axios, { CancelToken } from 'axios';
-import useAsyncGet from '../../utils/useAsyncGet';
 import {
     BackButton,
     Navbar,
@@ -47,20 +51,18 @@ const findNextTask = (
 
 const Task = (): JSX.Element => {
     const { url, api, params } = useCommonHooks();
-    const { response: attachments, fetchStatus: fetchAttachmentsStatus } =
-        useAsyncGet((cancelToken: CancelToken) =>
-            api.getTaskAttachments(cancelToken, params.plant, params.taskId)
-        );
-    const { response: parameters, fetchStatus: fetchParametersStatus } =
-        useAsyncGet((token) =>
-            api.getTaskParameters(token, params.plant, params.taskId)
-        );
+    const [attachments, setAttachments] = useState<IAttachment[]>();
+    const [parameters, setParameters] = useState<TaskParameter[]>();
     const [task, setTask] = useState<TaskType>();
     const [nextTask, setNextTask] = useState<TaskPreview | null>(null);
     const [fetchNextTaskStatus, setFetchNextTaskStatus] = useState(
         AsyncStatus.LOADING
     );
     const [fetchTaskStatus, setFetchTaskStatus] = useState(AsyncStatus.LOADING);
+    const [fetchAttachmentsStatus, setFetchAttachmentsStatus] =
+        useState<AsyncStatus>(AsyncStatus.LOADING);
+    const [fetchParametersStatus, setFetchParametersStatus] =
+        useState<AsyncStatus>(AsyncStatus.LOADING);
     const [isSigned, setIsSigned] = useState(false);
     const [refreshTask, setRefreshTask] = useState(false);
     const { snackbar, setSnackbarText } = useSnackbar();
@@ -69,17 +71,36 @@ const Task = (): JSX.Element => {
     useEffect(() => {
         (async (): Promise<void> => {
             try {
-                const taskFromApi = await api.getTask(
-                    source.token,
-                    params.plant,
-                    params.taskId
-                );
+                const [taskFromApi, attachmentsFromApi, parametersFromApi] =
+                    await Promise.all([
+                        api.getTask(source.token, params.plant, params.taskId),
+                        api.getTaskAttachments(
+                            source.token,
+                            params.plant,
+                            params.taskId
+                        ),
+                        api.getTaskParameters(
+                            source.token,
+                            params.plant,
+                            params.taskId
+                        ),
+                    ]);
                 setTask(taskFromApi);
                 setFetchTaskStatus(AsyncStatus.SUCCESS);
+                setAttachments(attachmentsFromApi);
+                attachmentsFromApi.length > 0
+                    ? setFetchAttachmentsStatus(AsyncStatus.SUCCESS)
+                    : setFetchAttachmentsStatus(AsyncStatus.EMPTY_RESPONSE);
+                setParameters(parametersFromApi);
+                parametersFromApi.length > 0
+                    ? setFetchParametersStatus(AsyncStatus.SUCCESS)
+                    : setFetchParametersStatus(AsyncStatus.EMPTY_RESPONSE);
                 setIsSigned(!!taskFromApi.signedByUser);
             } catch (error) {
                 if (!Axios.isCancel(error)) {
                     setFetchTaskStatus(AsyncStatus.ERROR);
+                    setFetchAttachmentsStatus(AsyncStatus.ERROR);
+                    setFetchParametersStatus(AsyncStatus.ERROR);
                     setSnackbarText('Unable to load task');
                 }
             }
