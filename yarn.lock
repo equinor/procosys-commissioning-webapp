@@ -7,19 +7,17 @@
   resolved "https://registry.yarnpkg.com/@adobe/css-tools/-/css-tools-4.0.1.tgz#b38b444ad3aa5fedbb15f2f746dcd934226a12dd"
   integrity sha512-+u76oB43nOHrF4DDWRLWDCtci7f3QJoEBigemIdIeTi1ODqjx6Tad9NCVnPRwewWlKkVab5PlK8DCtPTyX7S8g==
 
-"@azure/msal-browser@^2.21.0":
-  version "2.21.0"
-  resolved "https://registry.yarnpkg.com/@azure/msal-browser/-/msal-browser-2.21.0.tgz#2ebe4b0874a61d64009419d4cfef1f6bb5e226b3"
-  integrity sha512-y+oAUJJ0m7gRUT505iGT4SDXktrRzOE3HZC0+nQyHDI+3O7BKK5NjQUwD/4V8FNNyrhxEtLk99iwJEo61epinQ==
+"@azure/msal-browser@^2.28.3":
+  version "2.28.3"
+  resolved "https://registry.yarnpkg.com/@azure/msal-browser/-/msal-browser-2.28.3.tgz#7cd35e632ea74a2ef5f9939fdce8757ffb93487f"
+  integrity sha512-2SdyH2el3s8BzPURf9RK17BvvXvaMEGpLc3D9WilZcmjJqP4nStVH7Ogwr/SNTuGV48FUhqEkP0RxDvzuFJSIw==
   dependencies:
-    "@azure/msal-common" "^6.0.0"
+    "@azure/msal-common" "^7.4.1"
 
-"@azure/msal-common@^6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@azure/msal-common/-/msal-common-6.0.0.tgz#9a60c27967ae6f6678015eb6dfb0ea7cc999eb3b"
-  integrity sha512-Vva3snqmWPHJNDCBb4lz3D0rvZsi/0QikAxHvVFNwtNg5pP4NZE4U34tNiXN+m9KhlQFrZBPkE5rk7dIEOGcWw==
-  dependencies:
-    debug "^4.1.1"
+"@azure/msal-common@^7.4.1":
+  version "7.4.1"
+  resolved "https://registry.yarnpkg.com/@azure/msal-common/-/msal-common-7.4.1.tgz#204c32d247336d7e334984e599bfd63156554f83"
+  integrity sha512-zxcxg9pRdgGTS5mrRJeQvwA8aIjD8qSGzaAiz5SeTVkyhtjB0AeFnAcvBOKHv/TkswWNfYKpERxsXOAKXkXk0w==
 
 "@babel/code-frame@7.10.4":
   version "7.10.4"
