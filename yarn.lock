@@ -1281,9 +1281,9 @@
   integrity sha512-QdlX1Ndz6CmgdLMVHAZi+4GBEfU5OOnNGtXX1m7aTQbzWDTdxB6e7c5XxT/UnJHue1i5vT3RKMBDAhE2YjiXYA==
 
 "@equinor/procosys-webapp-components@^1.14.6":
-  version "1.14.6"
-  resolved "https://registry.yarnpkg.com/@equinor/procosys-webapp-components/-/procosys-webapp-components-1.14.6.tgz#6a745e9f355ced7845a3f3816ee8927da0b92e1a"
-  integrity sha512-ZXBa6VmcHyvgFlHoiwnlAz5KR1+xHbSB4a31xnTRJRSwkYF9y+wBxAZ0F2j/QmUzLN87p7WZRcM6u5mYGx75Og==
+  version "1.14.9"
+  resolved "https://registry.yarnpkg.com/@equinor/procosys-webapp-components/-/procosys-webapp-components-1.14.9.tgz#b0d31595d73b90c8792c79b72f9ecd6ce4cc0541"
+  integrity sha512-SQlk1ILoCck0nj69ZnXKadFypYF0nq9hfQPYweqfhDN2mI9xgLL0z/U2rGl3Rk+W5CHOevpjvupwxOpyklBQoQ==
 
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"
