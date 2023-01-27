@@ -197,7 +197,7 @@ const CommPkg = (): JSX.Element => {
         </main>
     );
 };
-
+// TODO: does something need to be added here?
 export default withAccessControl(CommPkg, [
     'COMMPKG/READ',
     'CPCL/READ',
