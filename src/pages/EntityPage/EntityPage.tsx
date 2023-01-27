@@ -46,6 +46,7 @@ const CommPkg = (): JSX.Element => {
     const source = Axios.CancelToken.source();
     const isOnScopePage =
         !history.location.pathname.includes('/punch-list') &&
+        !history.location.pathname.includes('/documents') &&
         !history.location.pathname.includes('/tasks');
 
     useEffect(() => {
@@ -159,13 +160,29 @@ const CommPkg = (): JSX.Element => {
                     numberOfItems={scope?.length}
                 />
                 {history.location.pathname.includes('/Comm') ? (
-                    <FooterButton
-                        active={history.location.pathname.includes('/tasks')}
-                        goTo={(): void => history.push(`${url}/tasks`)}
-                        icon={<EdsIcon name="list" color={COLORS.mossGreen} />}
-                        label="Tasks"
-                        numberOfItems={tasks?.length}
-                    />
+                    <>
+                        <FooterButton
+                            active={history.location.pathname.includes(
+                                '/documents'
+                            )}
+                            goTo={(): void => history.push(`${url}/documents`)}
+                            icon={
+                                <EdsIcon name="list" color={COLORS.mossGreen} />
+                            }
+                            label="Documents"
+                        />
+                        <FooterButton
+                            active={history.location.pathname.includes(
+                                '/tasks'
+                            )}
+                            goTo={(): void => history.push(`${url}/tasks`)}
+                            icon={
+                                <EdsIcon name="list" color={COLORS.mossGreen} />
+                            }
+                            label="Tasks"
+                            numberOfItems={tasks?.length}
+                        />
+                    </>
                 ) : (
                     <></>
                 )}
