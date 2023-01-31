@@ -64,7 +64,7 @@ const MetaTableCell = ({
     const [inputValueString, setInputValueString] =
         useState(formattedValueString);
     const [inputValueDate, setInputValueDate] = useState(formattedValueDate);
-
+    const [valueBeforeFocus, setValueBeforeFocus] = useState<string>('');
     const [submitStatus, setSubmitStatus] = useState<AsyncStatus>(
         AsyncStatus.INACTIVE
     );
@@ -76,7 +76,7 @@ const MetaTableCell = ({
             checkItemId,
             cell.columnId,
             rowId,
-            inputValueDate
+            inputValueString
         );
 
     const putDateCellApiCall = (): Promise<void> =>
@@ -90,7 +90,6 @@ const MetaTableCell = ({
         );
 
     const dateId = `${cell.columnId}-date`;
-    let valueBeforeFocus = '';
 
     const submitData = async (
         updateDataApiCall: () => Promise<void>
@@ -124,7 +123,11 @@ const MetaTableCell = ({
                         id={dateId}
                         role="datepicker"
                         value={inputValueDate}
-                        onFocus={(): string => (valueBeforeFocus = cell.value)}
+                        onFocus={(
+                            e: React.FocusEvent<
+                                HTMLTextAreaElement | HTMLInputElement
+                            >
+                        ): void => setValueBeforeFocus(e.target.value)}
                         onBlur={(): void => {
                             cell.value !== valueBeforeFocus &&
                                 submitData(putDateCellApiCall);
@@ -152,9 +155,17 @@ const MetaTableCell = ({
                         (submitStatus === AsyncStatus.SUCCESS && 'success') ||
                         'default'
                     }
-                    onFocus={(): string => (valueBeforeFocus = cell.value)}
-                    onBlur={(): void => {
-                        cell.value !== valueBeforeFocus &&
+                    onFocus={(
+                        e: React.FocusEvent<
+                            HTMLTextAreaElement | HTMLInputElement
+                        >
+                    ): void => setValueBeforeFocus(e.target.value)}
+                    onBlur={(
+                        e: React.FocusEvent<
+                            HTMLTextAreaElement | HTMLInputElement
+                        >
+                    ): void => {
+                        e.target.value !== valueBeforeFocus &&
                             submitData(putStringCellApiCall);
                     }}
                     onChange={(
