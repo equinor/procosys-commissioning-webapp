@@ -357,3 +357,24 @@ export interface Tag {
     tag: TagDetails;
     additionalFields: AdditionalTagField[];
 }
+
+// Documents
+
+export interface Document {
+    documentId: number;
+    documentNo: string;
+    title: string;
+    revisionNo: string;
+    relationType: string;
+    attachments: DocumentAttachment[];
+}
+
+export interface DocumentAttachment {
+    id: number;
+    fileName: string;
+    title: string;
+    mimeType: string;
+    fileId: number;
+    sortKey: number;
+    uri?: string;
+}

@@ -31,6 +31,7 @@ import {
     PunchPriority,
     PunchSort,
     Person,
+    Document,
 } from '../typings/apiTypes';
 
 const typeGuardErrorMessage = (expectedType: string): string => {
@@ -728,6 +729,22 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         );
     };
 
+    //---------
+    // Documents
+    //---------
+
+    const getDocuments = async (
+        plantId: string,
+        commPkgId: string,
+        cancelToken: CancelToken
+    ): Promise<Document[]> => {
+        const { data } = await axios.get(
+            `CommPkg/DocumentsWithAttachments?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}`,
+            { cancelToken: cancelToken }
+        );
+        return data as Document[];
+    };
+
     return {
         deleteChecklistAttachment,
         deletePunchAttachment,
@@ -757,6 +774,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         getTasks,
         getScope,
         getTaskParameters,
+        getDocuments,
         postClear,
         postSetOk,
         postSetNA,
