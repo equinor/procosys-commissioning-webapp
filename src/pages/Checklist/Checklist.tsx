@@ -143,7 +143,6 @@ const ChecklistPage = (): JSX.Element => {
                                 }
                                 setSnackbarText={setSnackbarText}
                                 readOnly={isSigned}
-                                source={source}
                             />
                         </AttachmentsWrapper>
 
