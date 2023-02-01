@@ -7,6 +7,7 @@ import {
     useSnackbar,
     PunchAction,
     AsyncStatus,
+    Attachment,
 } from '@equinor/procosys-webapp-components';
 import Axios from 'axios';
 import usePersonsSearchFacade from '../../utils/usePersonsSearchFacade';
@@ -153,8 +154,28 @@ const ClearPunchWrapper = ({
             }}
             fetchOptionsStatus={fetchOptionsStatus}
             updatePunchStatus={updatePunchStatus}
-            getPunchAttachments={api.getPunchAttachments}
-            getPunchAttachment={api.getPunchAttachment}
+            getPunchAttachments={(
+                plantId: string,
+                punchItemId: number
+            ): Promise<Attachment[]> => {
+                return api.getPunchAttachments(
+                    plantId,
+                    punchItemId,
+                    source.token
+                );
+            }}
+            getPunchAttachment={(
+                plantId: string,
+                punchItemId: number,
+                attachmentId: number
+            ): Promise<Blob> => {
+                return api.getPunchAttachment(
+                    source.token,
+                    plantId,
+                    punchItemId,
+                    attachmentId
+                );
+            }}
             postPunchAttachment={api.postPunchAttachment}
             deletePunchAttachment={api.deletePunchAttachment}
             snackbar={snackbar}
@@ -163,7 +184,6 @@ const ClearPunchWrapper = ({
             searchStatus={searchStatus}
             query={query}
             setQuery={setQuery}
-            source={source}
         />
     );
 };

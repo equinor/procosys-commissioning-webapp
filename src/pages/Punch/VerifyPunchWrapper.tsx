@@ -7,6 +7,7 @@ import {
     VerifyPunch,
     PunchAction,
     AsyncStatus,
+    Attachment,
 } from '@equinor/procosys-webapp-components';
 import { PunchItem } from '../../typings/apiTypes';
 
@@ -72,11 +73,30 @@ const VerifyPunchWrapper = ({
                 )
             }
             punchActionStatus={punchActionStatus}
-            getPunchAttachments={api.getPunchAttachments}
-            getPunchAttachment={api.getPunchAttachment}
+            getPunchAttachments={(
+                plantId: string,
+                punchItemId: number
+            ): Promise<Attachment[]> => {
+                return api.getPunchAttachments(
+                    plantId,
+                    punchItemId,
+                    source.token
+                );
+            }}
+            getPunchAttachment={(
+                plantId: string,
+                punchItemId: number,
+                attachmentId: number
+            ): Promise<Blob> => {
+                return api.getPunchAttachment(
+                    source.token,
+                    plantId,
+                    punchItemId,
+                    attachmentId
+                );
+            }}
             snackbar={snackbar}
             setSnackbarText={setSnackbarText}
-            source={source}
         />
     );
 };
