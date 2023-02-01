@@ -8,9 +8,10 @@ import {
     ChecklistPreview,
     TaskPreview,
     PunchPreview,
+    Document,
 } from '../../typings/apiTypes';
 import withAccessControl from '../../services/withAccessControl';
-import Axios from 'axios';
+import Axios, { CancelToken } from 'axios';
 import {
     BackButton,
     FooterButton,
@@ -24,6 +25,8 @@ import { COLORS } from '../../style/GlobalStyles';
 import { SearchType } from '../Search/Search';
 import EntityPageDetailsCard from './EntityPageDetailsCard';
 import PunchList from './PunchList/PunchList';
+import useAsyncGet from '../../utils/useAsyncGet';
+import Documents from './Documents/Documents';
 
 const ContentWrapper = styled.div`
     padding-bottom: 66px;
@@ -34,6 +37,7 @@ const CommPkg = (): JSX.Element => {
     const [scope, setScope] = useState<ChecklistPreview[]>();
     const [tasks, setTasks] = useState<TaskPreview[]>();
     const [punchList, setPunchList] = useState<PunchPreview[]>();
+    const [documents, setDocuments] = useState<Document[]>();
     const [fetchFooterDataStatus, setFetchFooterDataStatus] = useState(
         AsyncStatus.LOADING
     );
@@ -43,6 +47,8 @@ const CommPkg = (): JSX.Element => {
     const [fetchPunchListStatus, setFetchPunchListStatus] = useState(
         AsyncStatus.LOADING
     );
+    const [fetchDocumentsStatus, setFetchDocumentsStatus] =
+        useState<AsyncStatus>(AsyncStatus.LOADING);
     const source = Axios.CancelToken.source();
     const isOnScopePage =
         !history.location.pathname.includes('/punch-list') &&
@@ -50,18 +56,31 @@ const CommPkg = (): JSX.Element => {
         !history.location.pathname.includes('/tasks');
 
     useEffect(() => {
-        if (params.searchType != SearchType.Comm) return;
-        async (): Promise<void> => {
+        (async (): Promise<void> => {
             try {
+                if (params.searchType != SearchType.Comm) return;
                 const tasksFromApi = await api.getTasks(
                     params.plant,
                     params.entityId,
                     source.token
                 );
                 setTasks(tasksFromApi);
+                const documents = await api.getDocuments(
+                    params.plant,
+                    params.entityId,
+                    source.token
+                );
+                setDocuments(documents);
+                if (documents.length < 1)
+                    setFetchDocumentsStatus(AsyncStatus.EMPTY_RESPONSE);
+                else setFetchDocumentsStatus(AsyncStatus.SUCCESS);
             } catch {
                 setFetchFooterDataStatus(AsyncStatus.ERROR);
+                setFetchDocumentsStatus(AsyncStatus.ERROR);
             }
+        })();
+        return (): void => {
+            source.cancel();
         };
     }, [api, params.entityId]);
 
@@ -149,6 +168,16 @@ const CommPkg = (): JSX.Element => {
                             />
                         )}
                     />
+                    <Route
+                        exact
+                        path={`${path}/documents`}
+                        render={(): JSX.Element => (
+                            <Documents
+                                fetchDocumentsStatus={fetchDocumentsStatus}
+                                documents={documents}
+                            />
+                        )}
+                    />
                 </Switch>
             </ContentWrapper>
             <NavigationFooter footerStatus={fetchFooterDataStatus}>
@@ -197,7 +226,7 @@ const CommPkg = (): JSX.Element => {
         </main>
     );
 };
-// TODO: does something need to be added here?
+
 export default withAccessControl(CommPkg, [
     'COMMPKG/READ',
     'CPCL/READ',
