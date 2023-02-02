@@ -360,12 +360,17 @@ export interface Tag {
 
 // Documents
 
+export enum DocumentRelationType {
+    BOUNDARY = 'Boundary',
+    OTHER = 'Other',
+}
+
 export interface Document {
     documentId: number;
     documentNo: string;
     title: string;
     revisionNo: string;
-    relationType: string;
+    relationType: DocumentRelationType;
     attachments: DocumentAttachment[];
 }
 

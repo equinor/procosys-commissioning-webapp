@@ -7,41 +7,35 @@ import {
 import Axios from 'axios';
 import React from 'react';
 import useCommonHooks from '../../../utils/useCommonHooks';
+import {
+    Document as DocumentType,
+    DocumentRelationType,
+} from '../../../typings/apiTypes';
+import { COLORS } from '../../../style/GlobalStyles';
 
-const Document = (): JSX.Element => {
+interface DocumentProps {
+    document: DocumentType;
+}
+
+const Document = ({ document }: DocumentProps): JSX.Element => {
     const { api, params } = useCommonHooks();
     const source = Axios.CancelToken.source();
+
+    const getIcon = (): JSX.Element => {
+        if (document.relationType == DocumentRelationType.BOUNDARY)
+            return <TextIcon color={COLORS.darkGrey} text={'Bou.'} />;
+        else if (document.relationType == DocumentRelationType.OTHER)
+            return <TextIcon color={COLORS.pineGreen} text={'Oth.'} />;
+        return <></>;
+    };
 
     return (
         <div>
             <EntityDetails
-                icon={<TextIcon color={''} text={''} />} // TODO: replace? at least need different ones for each type
-                headerText={''}
-                description={''}
-                isDetailsCard={true}
-            />
-            <Attachments
-                getAttachments={(): Promise<Attachment[]> =>
-                    // TODO: replace
-                    api.getChecklistAttachments(
-                        params.plant,
-                        params.checklistId
-                    )
-                }
-                getAttachment={(attachmentId: number): Promise<Blob> =>
-                    // TODO: replace
-                    api.getChecklistAttachment(
-                        source.token,
-                        params.plant,
-                        params.checklistId,
-                        attachmentId
-                    )
-                }
-                setSnackbarText={function (message: string): void {
-                    throw new Error('Function not implemented.');
-                }}
-                readOnly={true}
-                source={source}
+                icon={getIcon()}
+                headerText={document.documentNo}
+                description={document.title}
+                details={[document.revisionNo]}
             />
         </div>
     );

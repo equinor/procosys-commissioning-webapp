@@ -1,25 +1,27 @@
 import { AsyncStatus } from '@equinor/procosys-webapp-components';
 import React from 'react';
 import AsyncPage from '../../../components/AsyncPage';
+import { Document as DocumentType } from '../../../typings/apiTypes';
 import Document from './Document';
 
 interface DocumentsProps {
     fetchDocumentsStatus: AsyncStatus;
-    documents: any[];
+    documents?: DocumentType[];
 }
 
 const Documents = ({
     fetchDocumentsStatus,
     documents,
 }: DocumentsProps): JSX.Element => {
+    // TODO: add a filter for documents
     return (
         <AsyncPage
             fetchStatus={fetchDocumentsStatus}
             errorMessage={"Couldn't get the documents"}
         >
             <>
-                {documents.map((document) => (
-                    <Document key={document.id} />
+                {documents?.map((document) => (
+                    <Document key={document.documentId} document={document} />
                 ))}
             </>
         </AsyncPage>
