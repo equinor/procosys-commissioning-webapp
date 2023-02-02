@@ -8,7 +8,6 @@ import {
     ChecklistPreview,
     TaskPreview,
     PunchPreview,
-    Document,
 } from '../../typings/apiTypes';
 import withAccessControl from '../../services/withAccessControl';
 import Axios, { CancelToken } from 'axios';
@@ -19,6 +18,7 @@ import {
     NavigationFooter,
     removeSubdirectories,
     Scope,
+    Document,
 } from '@equinor/procosys-webapp-components';
 import EdsIcon from '../../components/icons/EdsIcon';
 import { COLORS } from '../../style/GlobalStyles';

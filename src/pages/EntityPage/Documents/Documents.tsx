@@ -1,7 +1,9 @@
-import { AsyncStatus } from '@equinor/procosys-webapp-components';
+import {
+    AsyncStatus,
+    Document as DocumentType,
+} from '@equinor/procosys-webapp-components';
 import React from 'react';
 import AsyncPage from '../../../components/AsyncPage';
-import { Document as DocumentType } from '../../../typings/apiTypes';
 import Document from './Document';
 
 interface DocumentsProps {

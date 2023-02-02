@@ -2,6 +2,7 @@ import {
     isArrayOfType,
     isOfType,
     PunchAction,
+    Document,
     UpdatePunchData,
 } from '@equinor/procosys-webapp-components';
 import { AxiosInstance, CancelToken } from 'axios';
@@ -31,7 +32,6 @@ import {
     PunchPriority,
     PunchSort,
     Person,
-    Document,
 } from '../typings/apiTypes';
 
 const typeGuardErrorMessage = (expectedType: string): string => {

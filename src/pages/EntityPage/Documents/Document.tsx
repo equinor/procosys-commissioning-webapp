@@ -1,16 +1,15 @@
 import {
     Attachment,
     Attachments,
+    AttachmentsFromList,
     EntityDetails,
     TextIcon,
+    Document as DocumentType,
+    DocumentRelationType,
 } from '@equinor/procosys-webapp-components';
 import Axios from 'axios';
 import React from 'react';
 import useCommonHooks from '../../../utils/useCommonHooks';
-import {
-    Document as DocumentType,
-    DocumentRelationType,
-} from '../../../typings/apiTypes';
 import { COLORS } from '../../../style/GlobalStyles';
 
 interface DocumentProps {
@@ -37,6 +36,18 @@ const Document = ({ document }: DocumentProps): JSX.Element => {
                 description={document.title}
                 details={[document.revisionNo]}
             />
+            {/* <AttachmentsFromList
+                attachments={document.attachments}
+                getAttachment={function (
+                    attachmentId: number,
+                    abortSignal?: AbortSignal | undefined
+                ): Promise<any> {
+                    throw new Error('Function not implemented.');
+                }}
+                setSnackbarText={function (message: string): void {
+                    throw new Error('Function not implemented.');
+                }}
+            /> */}
         </div>
     );
 };
