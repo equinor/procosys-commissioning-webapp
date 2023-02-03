@@ -326,10 +326,7 @@ const procosysApiService = (
         abortSignal: AbortSignal,
         endpoint: string
     ): Promise<Attachment[]> => {
-        const { data } = await getByFetch(
-            `${endpoint}${apiVersion}`,
-            abortSignal
-        );
+        const data = await getByFetch(`${endpoint}${apiVersion}`, abortSignal);
         return data as Attachment[];
     };
 
@@ -367,7 +364,7 @@ const procosysApiService = (
         abortSignal?: AbortSignal
     ): Promise<ChecklistResponse> => {
         const data = await getByFetch(
-            `CheckList/MC?plantId=PCS$${plantId}&checklistId=${checklistId}${apiVersion}`,
+            `CheckList/Comm?plantId=PCS$${plantId}&checklistId=${checklistId}${apiVersion}`,
             abortSignal
         );
         return data;
@@ -378,7 +375,7 @@ const procosysApiService = (
         checklistId: string,
         abortSignal?: AbortSignal
     ): Promise<PunchPreview[]> => {
-        const { data } = await getByFetch(
+        const data = await getByFetch(
             `CheckList/PunchList?plantId=PCS$${plantId}&checklistId=${checklistId}${apiVersion}`,
             abortSignal
         );
@@ -505,7 +502,7 @@ const procosysApiService = (
         plantId: string,
         checklistId: string
     ): Promise<Attachment[]> => {
-        const { data } = await getByFetch(
+        const data = await getByFetch(
             `CheckList/Attachments?plantId=PCS$${plantId}&checkListId=${checklistId}&thumbnailSize=32${apiVersion}`
         );
         return data as Attachment[];
@@ -570,7 +567,7 @@ const procosysApiService = (
         } else {
             throw new Error('The chosen scope type is not supported.');
         }
-        const { data } = await getByFetch(url, abortSignal);
+        const data = await getByFetch(url, abortSignal);
         if (!isArrayOfType<PunchPreview>(data, 'isRestrictedForUser')) {
             throw new Error(typeGuardErrorMessage('punch preview'));
         }
@@ -723,7 +720,7 @@ const procosysApiService = (
         commPkgId: string,
         abortSignal?: AbortSignal
     ): Promise<TaskPreview[]> => {
-        const { data } = await getByFetch(
+        const data = await getByFetch(
             `CommPkg/Tasks?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}`,
             abortSignal
         );
@@ -735,7 +732,7 @@ const procosysApiService = (
         taskId: string,
         abortSignal?: AbortSignal
     ): Promise<Task> => {
-        const { data } = await getByFetch(
+        const data = await getByFetch(
             `CommPkg/Task?plantId=PCS$${plantId}&taskId=${taskId}${apiVersion}`,
             abortSignal
         );
@@ -777,7 +774,7 @@ const procosysApiService = (
         taskId: string,
         abortSignal?: AbortSignal
     ): Promise<TaskParameter[]> => {
-        const { data } = await getByFetch(
+        const data = await getByFetch(
             `CommPkg/Task/Parameters?plantId=PCS$${plantId}&taskId=${taskId}${apiVersion}`,
             abortSignal
         );
@@ -799,7 +796,7 @@ const procosysApiService = (
         taskId: string,
         abortSignal?: AbortSignal
     ): Promise<Attachment[]> => {
-        const { data } = await getByFetch(
+        const data = await getByFetch(
             `CommPkg/Task/Attachments?plantId=PCS$${plantId}&taskId=${taskId}&thumbnailSize=32${apiVersion}`,
             abortSignal
         );
@@ -812,7 +809,7 @@ const procosysApiService = (
         attachmentId: number,
         abortSignal?: AbortSignal
     ): Promise<Blob> => {
-        const { data } = await getByFetch(
+        const data = await getByFetch(
             `CommPkg/Task/Attachment?plantId=PCS$${plantId}&taskId=${taskId}&attachmentId=${attachmentId}${apiVersion}`,
             abortSignal
         );
@@ -837,7 +834,7 @@ const procosysApiService = (
         attachmentId: number,
         abortSignal?: AbortSignal
     ): Promise<Blob> => {
-        const { data } = await getByFetch(
+        const data = await getByFetch(
             `PunchListItem/Attachment?plantId=PCS$${plantId}&punchItemId=${punchItemId}&attachmentId=${attachmentId}${apiVersion}`,
             abortSignal
         );

@@ -43,7 +43,9 @@ const CommPkg = (): JSX.Element => {
     const [fetchPunchListStatus, setFetchPunchListStatus] = useState(
         AsyncStatus.LOADING
     );
-    const source = Axios.CancelToken.source();
+    const [fetchFooterStatus, setFetchFooterStatus] = useState(
+        AsyncStatus.LOADING
+    );
     const controller = new AbortController();
     const abortSignal = controller.signal;
     const isOnScopePage =
@@ -69,43 +71,41 @@ const CommPkg = (): JSX.Element => {
     useEffect(() => {
         (async (): Promise<void> => {
             try {
-                const [scopeFromApi, punchListFromApi] = await Promise.all([
-                    api.getScope(
-                        params.plant,
-                        params.searchType,
-                        params.entityId,
-                        abortSignal
-                    ),
+                const [punchListFromApi, scopeFromApi] = await Promise.all([
                     api.getPunchList(
                         params.plant,
                         params.searchType,
                         params.entityId,
                         abortSignal
                     ),
+                    api.getScope(
+                        params.plant,
+                        params.searchType,
+                        params.entityId,
+                        abortSignal
+                    ),
                 ]);
-                setScope(scopeFromApi);
-                if (scopeFromApi.length > 0) {
-                    setFetchScopeStatus(AsyncStatus.SUCCESS);
-                } else {
-                    setFetchScopeStatus(AsyncStatus.EMPTY_RESPONSE);
-                }
+
                 setPunchList(punchListFromApi);
                 if (punchListFromApi.length > 0) {
                     setFetchPunchListStatus(AsyncStatus.SUCCESS);
                 } else {
                     setFetchPunchListStatus(AsyncStatus.EMPTY_RESPONSE);
                 }
-                if (fetchFooterDataStatus != AsyncStatus.ERROR) {
-                    setFetchFooterDataStatus(AsyncStatus.SUCCESS);
+                setScope(scopeFromApi);
+                if (scopeFromApi.length > 0) {
+                    setFetchScopeStatus(AsyncStatus.SUCCESS);
+                } else {
+                    setFetchScopeStatus(AsyncStatus.EMPTY_RESPONSE);
                 }
+                setFetchFooterStatus(AsyncStatus.SUCCESS);
             } catch {
-                setFetchFooterDataStatus(AsyncStatus.ERROR);
+                setFetchPunchListStatus(AsyncStatus.ERROR);
+                setFetchScopeStatus(AsyncStatus.ERROR);
+                setFetchFooterStatus(AsyncStatus.ERROR);
             }
         })();
-        return (): void => {
-            source.cancel();
-        };
-    }, [api, params.entityId]);
+    }, [api, params]);
 
     return (
         <main>
