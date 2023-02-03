@@ -35,6 +35,10 @@ import {
     EntityId,
 } from '../typings/apiTypes';
 import { HTTPError } from './HTTPError';
+import {
+    APIComment,
+    PunchComment,
+} from '@equinor/procosys-webapp-components/dist/typings/apiTypes';
 
 const typeGuardErrorMessage = (expectedType: string): string => {
     return `Unable to retrieve ${expectedType}. Please try again.`;
@@ -883,6 +887,28 @@ const procosysApiService = (
         );
     };
 
+    const getPunchComments = async (
+        plantId: string,
+        punchItemId: number,
+        abortSignal?: AbortSignal
+    ): Promise<APIComment[]> => {
+        const data = await getByFetch(
+            `PunchListItem/Comments?plantId=PCS$${plantId}&punchItemId=${punchItemId}&${apiVersion}`,
+            abortSignal
+        );
+        return data;
+    };
+
+    const postPunchComment = async (
+        plantId: string,
+        comment: PunchComment
+    ): Promise<void> => {
+        await postByFetch(
+            `PunchListItem/AddComment?plantId=PCS$${plantId}${apiVersion}`,
+            comment
+        );
+    };
+
     return {
         deleteChecklistAttachment,
         deletePunchAttachment,
@@ -931,6 +957,8 @@ const procosysApiService = (
         putTaskParameter,
         putUpdatePunch,
         getSearchResults,
+        postPunchComment,
+        getPunchComments,
     };
 };
 
