@@ -28,6 +28,8 @@ const EntityPageDetailsCard = (): JSX.Element => {
         AsyncStatus.LOADING
     );
     const [details, setDetails] = useState<Tag>();
+    const controller = new AbortController();
+    const abortSignal = controller.signal;
 
     useEffect(() => {
         const source = axios.CancelToken.source();
@@ -37,7 +39,7 @@ const EntityPageDetailsCard = (): JSX.Element => {
                     params.plant,
                     params.searchType,
                     params.entityId,
-                    source.token
+                    abortSignal
                 );
                 if (isOfType<Tag>(detailsFromApi, 'tag')) {
                     setDetails(detailsFromApi);

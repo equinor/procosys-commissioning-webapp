@@ -61,11 +61,7 @@ const TaskDescription = ({
                 : '',
         };
         try {
-            await api.putTaskComment(
-                cancelTokenSource.token,
-                params.plant,
-                dto
-            );
+            await api.putTaskComment(params.plant, dto);
             setPutCommentStatus(AsyncStatus.SUCCESS);
             setSnackbarText('Comment successfully saved.');
         } catch (error) {

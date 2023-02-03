@@ -61,13 +61,15 @@ const fetchHits = async (
     searchType: string
 ): Promise<void> => {
     dispatch({ type: 'FETCH_START' });
+    const controller = new AbortController();
+    const abortSignal = controller.signal;
     try {
         const results = await api.getSearchResults(
             query,
             projectId,
             plantId,
             searchType,
-            cancelToken
+            abortSignal
         );
         dispatch({
             type: 'FETCH_SUCCESS',

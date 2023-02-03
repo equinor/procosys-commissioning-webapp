@@ -50,9 +50,11 @@ const fetchHits = async (
     cancelToken: CancelToken,
     api: ProcosysApiService
 ): Promise<void> => {
+    const controller = new AbortController();
+    const abortSignal = controller.signal;
     dispatch({ type: 'FETCH_START' });
     try {
-        const persons = await api.getPersonsByName(plantId, query, cancelToken);
+        const persons = await api.getPersonsByName(plantId, query, abortSignal);
         dispatch({
             type: 'FETCH_SUCCESS',
             payload: { persons },

@@ -49,7 +49,10 @@ const ChecklistPage = (): JSX.Element => {
     const [isSigned, setIsSigned] = useState(false);
     const [allItemsCheckedOrNA, setAllItemsCheckedOrNA] = useState(true);
     const [reloadChecklist, setReloadChecklist] = useState(false);
+    const controller = new AbortController();
+    const abortSignal = controller.signal;
     const source = axios.CancelToken.source();
+    const abortController = new AbortController();
 
     useEffect(() => {
         (async (): Promise<void> => {
@@ -57,7 +60,7 @@ const ChecklistPage = (): JSX.Element => {
                 const checklistResponse = await api.getChecklist(
                     params.plant,
                     params.checklistId,
-                    source.token
+                    abortSignal
                 );
                 setIsSigned(!!checklistResponse.checkList.signedByFirstName);
                 setCheckItems(checklistResponse.checkItems);
@@ -114,10 +117,10 @@ const ChecklistPage = (): JSX.Element => {
                                     attachmentId: number
                                 ): Promise<Blob> =>
                                     api.getChecklistAttachment(
-                                        source.token,
                                         params.plant,
                                         params.checklistId,
-                                        attachmentId
+                                        attachmentId,
+                                        abortSignal
                                     )
                                 }
                                 postAttachment={(
@@ -126,7 +129,7 @@ const ChecklistPage = (): JSX.Element => {
                                 ): Promise<void> =>
                                     api.postChecklistAttachment(
                                         params.plant,
-                                        parseInt(params.checklistId),
+                                        params.checklistId,
                                         file,
                                         title
                                     )
@@ -135,7 +138,6 @@ const ChecklistPage = (): JSX.Element => {
                                     attachmentId: number
                                 ): Promise<void> =>
                                     api.deleteChecklistAttachment(
-                                        source.token,
                                         params.plant,
                                         params.checklistId,
                                         attachmentId
@@ -143,7 +145,7 @@ const ChecklistPage = (): JSX.Element => {
                                 }
                                 setSnackbarText={setSnackbarText}
                                 readOnly={isSigned}
-                                source={source}
+                                abortController={abortController}
                             />
                         </AttachmentsWrapper>
 

@@ -36,9 +36,10 @@ export const TaskPreviewButton = styled(Link)`
 
 const Tasks = (): JSX.Element => {
     const { params, api, url } = useCommonHooks();
-    const { response: tasks, fetchStatus } = useAsyncGet(
-        (cancelToken: CancelToken) =>
-            api.getTasks(params.plant, params.entityId, cancelToken)
+    const controller = new AbortController();
+    const abortSignal = controller.signal;
+    const { response: tasks, fetchStatus } = useAsyncGet(() =>
+        api.getTasks(params.plant, params.entityId, abortSignal)
     );
 
     return (

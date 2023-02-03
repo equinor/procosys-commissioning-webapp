@@ -72,6 +72,8 @@ const DetailsCard = ({
     const [fetchDetailsStatus, setFetchDetailsStatus] = useState(
         AsyncStatus.LOADING
     );
+    const controller = new AbortController();
+    const abortSignal = controller.signal;
 
     useEffect(() => {
         const source = axios.CancelToken.source();
@@ -81,7 +83,7 @@ const DetailsCard = ({
                     params.plant,
                     SearchType.Comm,
                     commPkgId,
-                    source.token
+                    abortSignal
                 );
                 if (isOfType<CommPkg>(detailsFromApi, 'commStatus')) {
                     setDetails(detailsFromApi);

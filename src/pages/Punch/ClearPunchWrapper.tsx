@@ -61,6 +61,8 @@ const ClearPunchWrapper = ({
     const [clearPunchStatus, setClearPunchStatus] = useState(
         AsyncStatus.INACTIVE
     );
+    const controller = new AbortController();
+    const abortSignal = controller.signal;
     const source = Axios.CancelToken.source();
     const { hits, searchStatus, query, setQuery } = usePersonsSearchFacade();
 
@@ -74,11 +76,11 @@ const ClearPunchWrapper = ({
                     sortsFromApi,
                     prioritiesFromApi,
                 ] = await Promise.all([
-                    api.getPunchCategories(params.plant, source.token),
-                    api.getPunchTypes(params.plant, source.token),
-                    api.getPunchOrganizations(params.plant, source.token),
-                    api.getPunchSorts(params.plant, source.token),
-                    api.getPunchPriorities(params.plant, source.token),
+                    api.getPunchCategories(params.plant, abortSignal),
+                    api.getPunchTypes(params.plant, abortSignal),
+                    api.getPunchOrganizations(params.plant, abortSignal),
+                    api.getPunchSorts(params.plant, abortSignal),
+                    api.getPunchPriorities(params.plant, abortSignal),
                 ]);
                 setCategories(categoriesFromApi);
                 setTypes(typesFromApi);
@@ -163,7 +165,6 @@ const ClearPunchWrapper = ({
             searchStatus={searchStatus}
             query={query}
             setQuery={setQuery}
-            source={source}
         />
     );
 };

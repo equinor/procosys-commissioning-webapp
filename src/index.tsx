@@ -55,10 +55,16 @@ const initialize = async () => {
         scope: appConfig.procosysWebApi.scope,
     });
 
-    const procosysApiInstance = procosysApiService({
-        axios: baseApiInstance,
-        apiVersion: appConfig.procosysWebApi.apiVersion,
-    });
+    const accessToken = await authInstance.getAccessToken(
+        appConfig.procosysWebApi.scope
+    );
+    const procosysApiInstance = procosysApiService(
+        {
+            baseURL: appConfig.procosysWebApi.baseUrl,
+            apiVersion: appConfig.procosysWebApi.apiVersion,
+        },
+        accessToken
+    );
     const { appInsightsInstance, appInsightsReactPlugin } =
         initializeAppInsights(appConfig.appInsights.instrumentationKey);
     return {

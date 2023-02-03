@@ -24,10 +24,14 @@ const baseApiInstance = baseApiService({
     baseURL: baseURL,
     scope: ['testscope'],
 });
-const procosysApiInstance = procosysApiService({
-    axios: baseApiInstance,
-    apiVersion: 'dummy-version',
-});
+const procosysApiInstance = procosysApiService(
+    {
+        baseURL: baseURL,
+        apiVersion: '&dummy-version',
+    },
+    'dummy-bearer-token'
+);
+
 const dummyAppConfig: AppConfig = {
     procosysWebApi: {
         baseUrl: 'testUrl',

@@ -26,7 +26,8 @@ const VerifyPunchWrapper = ({
         AsyncStatus.INACTIVE
     );
     const { snackbar, setSnackbarText } = useSnackbar();
-    const source = axios.CancelToken.source();
+    const controller = new AbortController();
+    const abortSignal = controller.signal;
 
     const handlePunchAction = async (
         punchAction: PunchAction,
@@ -76,7 +77,7 @@ const VerifyPunchWrapper = ({
             getPunchAttachment={api.getPunchAttachment}
             snackbar={snackbar}
             setSnackbarText={setSnackbarText}
-            source={source}
+            abortController={controller}
         />
     );
 };

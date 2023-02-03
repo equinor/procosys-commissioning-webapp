@@ -21,6 +21,8 @@ const TagInfoWrapper = ({ tagId }: TagInfoWrapperProps): JSX.Element => {
         AdditionalTagField[]
     >([]);
     const { token, cancel } = axios.CancelToken.source();
+    const controller = new AbortController();
+    const abortSignal = controller.signal;
 
     useEffect(() => {
         if (!tagId) return;
@@ -30,7 +32,7 @@ const TagInfoWrapper = ({ tagId }: TagInfoWrapperProps): JSX.Element => {
                     params.plant,
                     SearchType.Tag,
                     tagId.toString(),
-                    token
+                    abortSignal
                 );
                 if (isOfType<Tag>(tagResponse, 'tag')) {
                     setTagInfo(tagResponse.tag);

@@ -67,22 +67,24 @@ const Task = (): JSX.Element => {
     const [refreshTask, setRefreshTask] = useState(false);
     const { snackbar, setSnackbarText } = useSnackbar();
     const source = Axios.CancelToken.source();
+    const controller = new AbortController();
+    const abortSignal = controller.signal;
 
     useEffect(() => {
         (async (): Promise<void> => {
             try {
                 const [taskFromApi, attachmentsFromApi, parametersFromApi] =
                     await Promise.all([
-                        api.getTask(source.token, params.plant, params.taskId),
+                        api.getTask(params.plant, params.taskId, abortSignal),
                         api.getTaskAttachments(
-                            source.token,
                             params.plant,
-                            params.taskId
+                            params.taskId,
+                            abortSignal
                         ),
                         api.getTaskParameters(
-                            source.token,
                             params.plant,
-                            params.taskId
+                            params.taskId,
+                            abortSignal
                         ),
                     ]);
                 setTask(taskFromApi);
@@ -116,7 +118,7 @@ const Task = (): JSX.Element => {
                 const tasksFromApi = await api.getTasks(
                     params.plant,
                     params.entityId,
-                    source.token
+                    abortSignal
                 );
                 if (tasksFromApi.length < 1) {
                     setNextTask(null);
@@ -199,10 +201,10 @@ const Task = (): JSX.Element => {
                                         cancelToken: CancelToken
                                     ): Promise<Blob> =>
                                         api.getTaskAttachment(
-                                            cancelToken,
                                             params.plant,
                                             params.taskId,
-                                            attachment.id
+                                            attachment.id,
+                                            abortSignal
                                         )
                                     }
                                 />

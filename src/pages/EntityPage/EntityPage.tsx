@@ -44,6 +44,8 @@ const CommPkg = (): JSX.Element => {
         AsyncStatus.LOADING
     );
     const source = Axios.CancelToken.source();
+    const controller = new AbortController();
+    const abortSignal = controller.signal;
     const isOnScopePage =
         !history.location.pathname.includes('/punch-list') &&
         !history.location.pathname.includes('/tasks');
@@ -55,7 +57,7 @@ const CommPkg = (): JSX.Element => {
                 const tasksFromApi = await api.getTasks(
                     params.plant,
                     params.entityId,
-                    source.token
+                    abortSignal
                 );
                 setTasks(tasksFromApi);
             } catch {
@@ -72,13 +74,13 @@ const CommPkg = (): JSX.Element => {
                         params.plant,
                         params.searchType,
                         params.entityId,
-                        source.token
+                        abortSignal
                     ),
                     api.getPunchList(
                         params.plant,
                         params.searchType,
                         params.entityId,
-                        source.token
+                        abortSignal
                     ),
                 ]);
                 setScope(scopeFromApi);

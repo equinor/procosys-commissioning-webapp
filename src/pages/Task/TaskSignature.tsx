@@ -39,19 +39,11 @@ const TaskSignature = ({
         setTaskSignStatus(AsyncStatus.LOADING);
         try {
             if (isSigned) {
-                await api.postTaskUnsign(
-                    cancelTokenSource.token,
-                    params.plant,
-                    params.taskId
-                );
+                await api.postTaskUnsign(params.plant, params.taskId);
                 setIsSigned(false);
                 setSnackbarText('Task successfully unsigned');
             } else {
-                await api.postTaskSign(
-                    cancelTokenSource.token,
-                    params.plant,
-                    params.taskId
-                );
+                await api.postTaskSign(params.plant, params.taskId);
                 setIsSigned(true);
                 setSnackbarText('Task successfully signed');
             }

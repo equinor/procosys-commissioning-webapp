@@ -184,6 +184,10 @@ export interface PunchType {
     description: string;
 }
 
+export interface EntityId {
+    Id: number;
+}
+
 export interface PunchOrganization {
     id: number;
     parentId: number;

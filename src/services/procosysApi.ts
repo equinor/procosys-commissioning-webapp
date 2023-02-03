@@ -4,11 +4,12 @@ import {
     PunchAction,
     UpdatePunchData,
 } from '@equinor/procosys-webapp-components';
+import objectToCamelCase from '../utils/objectToCamelCase';
 import { AxiosInstance, CancelToken } from 'axios';
 import { SearchType } from '../pages/Search/Search';
 import { TaskCommentDto } from '../pages/Task/TaskDescription';
 import { TaskParameterDto } from '../pages/Task/TaskParameters/TaskParameters';
-import { isCorrectDetails } from '../typings/apiTypeGuards';
+import { isCorrectDetails, isArrayofPerson } from '../typings/apiTypeGuards';
 import {
     Plant,
     Project,
@@ -31,46 +32,244 @@ import {
     PunchPriority,
     PunchSort,
     Person,
+    EntityId,
 } from '../typings/apiTypes';
+import { HTTPError } from './HTTPError';
 
 const typeGuardErrorMessage = (expectedType: string): string => {
     return `Unable to retrieve ${expectedType}. Please try again.`;
 };
 
 type ProcosysApiServiceProps = {
-    axios: AxiosInstance;
+    baseURL: string;
     apiVersion: string;
 };
 
+type GetOperationProps = {
+    abortSignal?: AbortSignal;
+    method: string;
+    headers: any;
+    responseType?: string;
+};
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
+const procosysApiService = (
+    { baseURL, apiVersion }: ProcosysApiServiceProps,
+    token: string
+) => {
     // General
+    const callback = (resultObj: any, apiPath: string): string => resultObj;
+
     const getVersion = (): string => {
         return apiVersion;
     };
 
+    const getByFetch = async (
+        url: string,
+        abortSignal?: AbortSignal
+    ): Promise<any> => {
+        const GetOperation: GetOperationProps = {
+            abortSignal: abortSignal,
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+        const res = await fetch(`${baseURL}/${url}`, GetOperation);
+        if (res.ok) {
+            const jsonResult = await res.json();
+            const resultObj = objectToCamelCase(jsonResult);
+            callback(resultObj, res.url);
+            return resultObj;
+        } else {
+            console.error('Get by fetch failed. Url=' + url, res);
+            throw new HTTPError(res.status, res.statusText);
+        }
+    };
+
+    /**
+     * Generic method for doing a GET call with attachment blob as response.
+     */
+    const getAttachmentByFetch = async (
+        url: string,
+        abortSignal?: AbortSignal
+    ): Promise<Blob> => {
+        const GetOperation: GetOperationProps = {
+            abortSignal: abortSignal,
+            method: 'GET',
+            responseType: 'blob',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Disposition': 'attachment; filename="filename.jpg"',
+            },
+        };
+
+        const res = await fetch(`${baseURL}/${url}`, GetOperation);
+
+        if (res.ok) {
+            const blob = await res.blob();
+
+            //ArrayBuffer must be used for storing in indexeddb (blob not supported by all browser, and not supported by Dexie-encrypted)
+            const arrayBuffer = await blob.arrayBuffer();
+            callback(arrayBuffer, res.url);
+            return blob;
+        } else {
+            console.error('Get attachment by fetch failed. Url=' + url, res);
+            throw new HTTPError(res.status, res.statusText);
+        }
+    };
+
+    /**
+     * Generic method for doing a DELETE call. Should be used by all DELETE calls.
+     */
+    const deleteByFetch = async (url: string, data?: any): Promise<any> => {
+        const DeleteOperation = {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: data ? JSON.stringify(data) : null,
+        };
+        const response = await fetch(`${baseURL}/${url}`, DeleteOperation);
+
+        if (!response.ok) {
+            const errorMessage = await getErrorMessage(response);
+            throw new HTTPError(response.status, errorMessage);
+        }
+    };
+
+    /**
+     * Generic method for doing a POST call with json as body data.
+     * If the request fails because of http error code from server, HTTPError will be thrown.
+     * If the request fails because of network issues etc, Error will be thrown.
+     */
+    const postByFetch = async (url: string, bodyData?: any): Promise<any> => {
+        const PostOperation = {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(bodyData),
+        };
+
+        let response = new Response();
+        try {
+            response = await fetch(`${baseURL}/${url}`, PostOperation);
+        } catch (error) {
+            console.error(
+                'Something went wrong when accessing the server.',
+                error
+            );
+            throw new Error('Something went wrong when accessing the server.');
+        }
+
+        if (response.ok) {
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.indexOf('application/json') !== -1) {
+                return await response.json();
+            } else {
+                return;
+            }
+        } else {
+            const errorMessage = await getErrorMessage(response);
+            console.error('Error occured on postByFetch', errorMessage);
+            throw new HTTPError(response.status, errorMessage);
+        }
+    };
+
+    /**
+     * Generic method for posting attachment with form data as body data.
+     */
+    const postAttachmentByFetch = async (
+        url: string,
+        file: FormData,
+        returnId: boolean
+    ): Promise<any> => {
+        const PostOperation = {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            body: file,
+        };
+        const response = await fetch(`${baseURL}/${url}`, PostOperation);
+        if (!response.ok) {
+            const errorMessage = await getErrorMessage(response);
+            throw new HTTPError(response.status, errorMessage);
+        }
+        if (returnId == true) {
+            const jsonResult = await response.json();
+            const resultObj = objectToCamelCase(jsonResult);
+            callback(resultObj, response.url);
+            return resultObj;
+        }
+    };
+
+    /**
+     * Generic method for doing a PUT call.
+     */
+    const putByFetch = async (
+        url: string,
+        bodyData: any,
+        additionalHeaders?: any
+    ): Promise<any> => {
+        const PutOperation = {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                ...additionalHeaders,
+            },
+            body: JSON.stringify(bodyData),
+        };
+        const response = await fetch(`${baseURL}/${url}`, PutOperation);
+        if (!response.ok) {
+            const errorMessage = await getErrorMessage(response);
+            throw new HTTPError(response.status, errorMessage);
+        }
+    };
+
+    const getErrorMessage = async (response: Response): Promise<string> => {
+        let errorMessage;
+        const text = await response.text();
+        if (text) {
+            errorMessage = text;
+        } else {
+            errorMessage = `Server responded with http error code ${response.status}. ${response.statusText}`;
+        }
+        console.error('Error occured on server call.', errorMessage);
+        return errorMessage;
+    };
+
     const getPlants = async (): Promise<Plant[]> => {
-        const { data } = await axios.get(
+        const plants = await getByFetch(
             `Plants?includePlantsWithoutAccess=false${apiVersion}`
         );
-        const plantsWithoutSlug = data as Plant[];
-        return plantsWithoutSlug.map((plant: Plant) => ({
+        if (!isArrayOfType<Plant>(plants, 'title')) {
+            throw new Error(typeGuardErrorMessage('plants'));
+        }
+        const plantsWithSlug: Plant[] = plants.map((plant: Plant) => ({
             ...plant,
-            slug: plant.id.substr(4),
+            slug: plant.id.substring(4),
         }));
+        return plantsWithSlug;
     };
 
     const getProjectsForPlant = async (plantId: string): Promise<Project[]> => {
-        const { data } = await axios.get(
+        const data = await getByFetch(
             `Projects?plantId=${plantId}${apiVersion}`
         );
-        return data as Project[];
+        if (!isArrayOfType<Project>(data, 'title')) {
+            throw new Error(typeGuardErrorMessage('projects'));
+        }
+        return data;
     };
 
     const getPermissionsForPlant = async (
         plantId: string
     ): Promise<string[]> => {
-        const { data } = await axios.get(
+        const data = await getByFetch(
             `Permissions?plantId=${plantId}${apiVersion}`
         );
         return data as string[];
@@ -81,7 +280,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         projectId: number,
         plantId: string,
         searchType: string,
-        cancelToken?: CancelToken
+        abortSignal: AbortSignal
     ): Promise<SearchResults> => {
         let url = '';
         if (searchType === SearchType.Comm) {
@@ -95,7 +294,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         } else {
             throw new Error('An error occurred, please try again.');
         }
-        const { data } = await axios.get(url, { cancelToken });
+        const data = await getByFetch(url, abortSignal);
         if (!isOfType<SearchResults>(data, 'maxAvailable')) {
             throw new Error(typeGuardErrorMessage('search results'));
         }
@@ -106,7 +305,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         searchType: SearchType,
         entityId: string,
-        cancelToken: CancelToken
+        abortSignal: AbortSignal
     ): Promise<CommPkg | Tag> => {
         let url = '';
         if (searchType === SearchType.Comm) {
@@ -116,7 +315,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         } else {
             throw new Error('The chosen scope type is not supported.');
         }
-        const { data } = await axios.get(url, { cancelToken });
+        const data = await getByFetch(url, abortSignal);
         if (!isCorrectDetails(data, searchType)) {
             throw new Error(typeGuardErrorMessage('details'));
         }
@@ -124,12 +323,13 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     };
 
     const getAttachments = async (
-        cancelToken: CancelToken,
+        abortSignal: AbortSignal,
         endpoint: string
     ): Promise<Attachment[]> => {
-        const { data } = await axios.get(`${endpoint}${apiVersion}`, {
-            cancelToken: cancelToken,
-        });
+        const { data } = await getByFetch(
+            `${endpoint}${apiVersion}`,
+            abortSignal
+        );
         return data as Attachment[];
     };
 
@@ -141,7 +341,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         searchType: SearchType,
         entityId: string,
-        cancelToken: CancelToken
+        abortSignal?: AbortSignal
     ): Promise<ChecklistPreview[]> => {
         let url = '';
         if (searchType === SearchType.Comm) {
@@ -151,7 +351,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         } else {
             throw new Error('The chosen entity type is not supported.');
         }
-        const { data } = await axios.get(url, { cancelToken });
+        const data = await getByFetch(url, abortSignal);
         if (!isArrayOfType<ChecklistPreview>(data, 'hasElectronicForm')) {
             throw new Error(typeGuardErrorMessage('checklist preview'));
         }
@@ -164,23 +364,23 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     const getChecklist = async (
         plantId: string,
         checklistId: string,
-        cancelToken: CancelToken
+        abortSignal?: AbortSignal
     ): Promise<ChecklistResponse> => {
-        const { data } = await axios.get(
-            `Checklist/Comm?plantId=PCS$${plantId}&checklistId=${checklistId}${apiVersion}`,
-            { cancelToken }
+        const data = await getByFetch(
+            `CheckList/MC?plantId=PCS$${plantId}&checklistId=${checklistId}${apiVersion}`,
+            abortSignal
         );
-        return data as ChecklistResponse;
+        return data;
     };
 
     const getChecklistPunchList = async (
         plantId: string,
         checklistId: string,
-        cancelToken: CancelToken
+        abortSignal?: AbortSignal
     ): Promise<PunchPreview[]> => {
-        const { data } = await axios.get(
+        const { data } = await getByFetch(
             `CheckList/PunchList?plantId=PCS$${plantId}&checklistId=${checklistId}${apiVersion}`,
-            { cancelToken }
+            abortSignal
         );
         if (!isArrayOfType<PunchPreview>(data, 'cleared')) {
             throw new Error('An error occurred, please try again.');
@@ -193,7 +393,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         checklistId: string,
         checkItemId: number
     ): Promise<void> => {
-        await axios.post(
+        await postByFetch(
             `CheckList/Item/SetOk?plantId=PCS$${plantId}${apiVersion}`,
             {
                 CheckListId: checklistId,
@@ -207,7 +407,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         checklistId: string,
         checkItemId: number
     ): Promise<void> => {
-        await axios.post(
+        await postByFetch(
             `CheckList/Item/SetNA?plantId=PCS$${plantId}${apiVersion}`,
             {
                 CheckListId: checklistId,
@@ -221,7 +421,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         checklistId: string,
         checkItemId: number
     ): Promise<void> => {
-        await axios.post(
+        await postByFetch(
             `CheckList/Item/Clear?plantId=PCS$${plantId}${apiVersion}`,
             {
                 CheckListId: checklistId,
@@ -238,7 +438,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         rowId: number,
         value: string
     ): Promise<void> => {
-        await axios.put(
+        await putByFetch(
             `CheckList/Item/MetaTableCell?plantId=PCS$${plantId}${apiVersion}`,
             {
                 CheckListId: checklistId,
@@ -258,7 +458,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         rowId: number,
         value: string
     ): Promise<void> => {
-        await axios.put(
+        await putByFetch(
             `CheckList/Item/MetaTableCellDate?plantId=PCS$${plantId}${apiVersion}`,
             {
                 CheckListId: checklistId,
@@ -275,7 +475,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         checklistId: string,
         Comment: string
     ): Promise<void> => {
-        await axios.put(
+        await putByFetch(
             `CheckList/Comm/Comment?plantId=PCS$${plantId}${apiVersion}`,
             { CheckListId: checklistId, Comment: Comment }
         );
@@ -285,10 +485,9 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         checklistId: string
     ): Promise<void> => {
-        await axios.post(
+        await postByFetch(
             `CheckList/Comm/Sign?plantId=PCS$${plantId}${apiVersion}`,
-            checklistId,
-            { headers: { 'Content-Type': 'application/json' } }
+            checklistId
         );
     };
 
@@ -296,10 +495,9 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         checklistId: string
     ): Promise<void> => {
-        await axios.post(
+        await postByFetch(
             `CheckList/Comm/Unsign?plantId=PCS$${plantId}${apiVersion}`,
-            checklistId,
-            { headers: { 'Content-Type': 'application/json' } }
+            checklistId
         );
     };
 
@@ -307,34 +505,26 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         checklistId: string
     ): Promise<Attachment[]> => {
-        const { data } = await axios.get(
+        const { data } = await getByFetch(
             `CheckList/Attachments?plantId=PCS$${plantId}&checkListId=${checklistId}&thumbnailSize=32${apiVersion}`
         );
         return data as Attachment[];
     };
 
     const getChecklistAttachment = async (
-        cancelToken: CancelToken,
         plantId: string,
         checklistId: string,
-        attachmentId: number
+        attachmentId: number,
+        abortSignal?: AbortSignal
     ): Promise<Blob> => {
-        const { data } = await axios.get(
+        const data = await getAttachmentByFetch(
             `CheckList/Attachment?plantId=PCS$${plantId}&checkListId=${checklistId}&attachmentId=${attachmentId}${apiVersion}`,
-            {
-                cancelToken: cancelToken,
-                responseType: 'blob',
-                headers: {
-                    'Content-Disposition':
-                        'attachment; filename="filename.jpg"',
-                },
-            }
+            abortSignal
         );
         return data as Blob;
     };
 
     const deleteChecklistAttachment = async (
-        cancelToken: CancelToken,
         plantId: string,
         checklistId: string,
         attachmentId: number
@@ -343,26 +533,22 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
             CheckListId: parseInt(checklistId),
             AttachmentId: attachmentId,
         };
-        await axios.delete(
+        await deleteByFetch(
             `CheckList/Attachment?plantId=PCS$${plantId}&api-version=4.1`,
-            { data: dto, cancelToken: cancelToken }
+            dto
         );
     };
 
     const postChecklistAttachment = async (
         plantId: string,
-        parentId: number,
-        formData: FormData,
-        title: string
+        checklistId: string,
+        data: FormData,
+        title?: string
     ): Promise<void> => {
-        await axios.post(
-            `CheckList/Attachment?plantId=PCS$${plantId}&checkListId=${parentId}&title=${title}${apiVersion}`,
-            formData,
-            {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            }
+        await postAttachmentByFetch(
+            `CheckList/Attachment?plantId=PCS$${plantId}&checkListId=${checklistId}&title=${title}${apiVersion}`,
+            data,
+            false
         );
     };
 
@@ -374,7 +560,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         searchType: SearchType,
         entityId: string,
-        cancelToken: CancelToken
+        abortSignal: AbortSignal
     ): Promise<PunchPreview[]> => {
         let url = '';
         if (searchType === SearchType.Comm) {
@@ -384,7 +570,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         } else {
             throw new Error('The chosen scope type is not supported.');
         }
-        const { data } = await axios.get(url, { cancelToken });
+        const { data } = await getByFetch(url, abortSignal);
         if (!isArrayOfType<PunchPreview>(data, 'isRestrictedForUser')) {
             throw new Error(typeGuardErrorMessage('punch preview'));
         }
@@ -393,44 +579,53 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
 
     const getPunchCategories = async (
         plantId: string,
-        cancelToken: CancelToken
+        abortSignal: AbortSignal
     ): Promise<PunchCategory[]> => {
-        const { data } = await axios.get(
+        const data = await getByFetch(
             `PunchListItem/Categories?plantId=PCS$${plantId}${apiVersion}`,
-            { cancelToken }
+            abortSignal
         );
-        return data as PunchCategory[];
+        if (!isArrayOfType<PunchCategory>(data, 'code')) {
+            throw new Error(typeGuardErrorMessage('punch categories'));
+        }
+        return data;
     };
 
     const getPunchTypes = async (
         plantId: string,
-        cancelToken: CancelToken
+        abortSignal: AbortSignal
     ): Promise<PunchType[]> => {
-        const { data } = await axios.get(
+        const data = await getByFetch(
             `PunchListItem/Types?plantId=PCS$${plantId}${apiVersion}`,
-            { cancelToken }
+            abortSignal
         );
-        return data as PunchType[];
+        if (!isArrayOfType<PunchType>(data, 'code')) {
+            throw new Error(typeGuardErrorMessage('punch types'));
+        }
+        return data;
     };
 
     const getPunchOrganizations = async (
         plantId: string,
-        cancelToken: CancelToken
+        abortSignal: AbortSignal
     ): Promise<PunchOrganization[]> => {
-        const { data } = await axios.get(
+        const data = await getByFetch(
             `PunchListItem/Organizations?plantId=PCS$${plantId}${apiVersion}`,
-            { cancelToken }
+            abortSignal
         );
-        return data as PunchOrganization[];
+        if (!isArrayOfType<PunchOrganization>(data, 'code')) {
+            throw new Error(typeGuardErrorMessage('punch organizations'));
+        }
+        return data;
     };
 
     const getPunchSorts = async (
         plantId: string,
-        cancelToken: CancelToken
+        abortSignal: AbortSignal
     ): Promise<PunchSort[]> => {
-        const { data } = await axios.get(
+        const data = await getByFetch(
             `PunchListItem/Sorts?plantId=PCS$${plantId}${apiVersion}`,
-            { cancelToken }
+            abortSignal
         );
         if (!isArrayOfType<PunchSort>(data, 'code')) {
             throw new Error(typeGuardErrorMessage('punch sorts'));
@@ -440,11 +635,11 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
 
     const getPunchPriorities = async (
         plantId: string,
-        cancelToken: CancelToken
+        abortSignal: AbortSignal
     ): Promise<PunchPriority[]> => {
-        const { data } = await axios.get(
+        const data = await getByFetch(
             `PunchListItem/Priorities?plantId=PCS$${plantId}${apiVersion}`,
-            { cancelToken }
+            abortSignal
         );
         if (!isArrayOfType<PunchPriority>(data, 'code')) {
             throw new Error(typeGuardErrorMessage('punch priorities'));
@@ -455,13 +650,13 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     const getPersonsByName = async (
         plantId: string,
         searchString: string,
-        cancelToken: CancelToken
+        abortSignal: AbortSignal
     ): Promise<Person[]> => {
-        const { data } = await axios.get(
+        const data = await getByFetch(
             `Person/PersonSearch?plantId=${plantId}&searchString=${searchString}${apiVersion}`,
-            { cancelToken }
+            abortSignal
         );
-        if (!isArrayOfType<Person>(data, 'username')) {
+        if (!isArrayofPerson(data)) {
             throw new Error('An error occurred, please try again.');
         }
         return data;
@@ -470,21 +665,27 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     const postNewPunch = async (
         plantId: string,
         newPunchData: NewPunch
-    ): Promise<void> => {
-        await axios.post(
+    ): Promise<EntityId> => {
+        const punchId = await postByFetch(
             `PunchListItem?plantId=PCS$${plantId}${apiVersion}`,
             newPunchData
         );
+        return punchId;
     };
 
     const getPunchItem = async (
         plantId: string,
-        punchItemId: string
+        punchItemId: string,
+        abortSignal?: AbortSignal
     ): Promise<PunchItem> => {
-        const { data } = await axios.get(
-            `PunchListItem?plantId=PCS$${plantId}&punchItemId=${punchItemId}${apiVersion}`
+        const data = await getByFetch(
+            `PunchListItem?plantId=PCS$${plantId}&punchItemId=${punchItemId}${apiVersion}`,
+            abortSignal
         );
-        return data as PunchItem;
+        if (!isOfType<PunchItem>(data, 'raisedByCode')) {
+            throw new Error(typeGuardErrorMessage('punchItem'));
+        }
+        return data;
     };
 
     const putUpdatePunch = async (
@@ -494,9 +695,10 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         endpoint: string
     ): Promise<void> => {
         const dto = { PunchItemId: punchItemId, ...updateData };
-        await axios.put(
+        await putByFetch(
             `PunchListItem/${endpoint}?plantId=PCS$${plantId}${apiVersion}`,
-            dto
+            dto,
+            { 'Content-Type': 'application/json' }
         );
     };
 
@@ -506,10 +708,9 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         punchItemId: string,
         punchAction: PunchAction
     ): Promise<void> => {
-        await axios.post(
+        await postByFetch(
             `PunchListItem/${punchAction}?plantId=PCS$${plantId}${apiVersion}`,
-            punchItemId,
-            { headers: { 'Content-Type': 'application/json' } }
+            punchItemId
         );
     };
 
@@ -520,77 +721,65 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     const getTasks = async (
         plantId: string,
         commPkgId: string,
-        cancelToken: CancelToken
+        abortSignal?: AbortSignal
     ): Promise<TaskPreview[]> => {
-        const { data } = await axios.get(
+        const { data } = await getByFetch(
             `CommPkg/Tasks?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}`,
-            { cancelToken: cancelToken }
+            abortSignal
         );
         return data as TaskPreview[];
     };
 
     const getTask = async (
-        cancelToken: CancelToken,
         plantId: string,
-        taskId: string
+        taskId: string,
+        abortSignal?: AbortSignal
     ): Promise<Task> => {
-        const { data } = await axios.get(
+        const { data } = await getByFetch(
             `CommPkg/Task?plantId=PCS$${plantId}&taskId=${taskId}${apiVersion}`,
-            { cancelToken: cancelToken }
+            abortSignal
         );
         return data as Task;
     };
 
     const postTaskSign = async (
-        cancelToken: CancelToken,
         plantId: string,
         taskId: string
     ): Promise<void> => {
-        await axios.post(
+        await postByFetch(
             `CommPkg/Task/Sign?plantId=PCS$${plantId}${apiVersion}`,
-            taskId,
-            {
-                cancelToken: cancelToken,
-                headers: { 'Content-Type': 'application/json' },
-            }
+            taskId
         );
     };
 
     const postTaskUnsign = async (
-        cancelToken: CancelToken,
         plantId: string,
         taskId: string
     ): Promise<void> => {
-        await axios.post(
+        await postByFetch(
             `CommPkg/Task/Unsign?plantId=PCS$${plantId}${apiVersion}`,
-            taskId,
-            {
-                cancelToken: cancelToken,
-                headers: { 'Content-Type': 'application/json' },
-            }
+            taskId
         );
     };
 
     const putTaskComment = async (
-        cancelToken: CancelToken,
         plantId: string,
         dto: TaskCommentDto
     ): Promise<void> => {
-        await axios.put(
+        await putByFetch(
             `CommPkg/Task/Comment?plantId=PCS$${plantId}${apiVersion}`,
-            dto,
-            { cancelToken: cancelToken }
+            dto
         );
     };
 
     const getTaskParameters = async (
-        cancelToken: CancelToken,
         plantId: string,
-        taskId: string
+        taskId: string,
+        abortSignal?: AbortSignal
     ): Promise<TaskParameter[]> => {
-        const { data } = await axios.get(
+        const { data } = await getByFetch(
             `CommPkg/Task/Parameters?plantId=PCS$${plantId}&taskId=${taskId}${apiVersion}`,
-            { cancelToken: cancelToken }
+            abortSignal
         );
         return data as TaskParameter[];
     };
@@ -599,40 +788,33 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         plantId: string,
         dto: TaskParameterDto
     ): Promise<void> => {
-        await axios.put(
+        await putByFetch(
             `CommPkg/Task/Parameters/Parameter?plantId=PCS$${plantId}${apiVersion}`,
             dto
         );
     };
 
     const getTaskAttachments = async (
-        cancelToken: CancelToken,
         plantId: string,
-        taskId: string
+        taskId: string,
+        abortSignal?: AbortSignal
     ): Promise<Attachment[]> => {
-        const { data } = await axios.get(
+        const { data } = await getByFetch(
             `CommPkg/Task/Attachments?plantId=PCS$${plantId}&taskId=${taskId}&thumbnailSize=32${apiVersion}`,
-            { cancelToken: cancelToken }
+            abortSignal
         );
         return data as Attachment[];
     };
 
     const getTaskAttachment = async (
-        cancelToken: CancelToken,
         plantId: string,
         taskId: string,
-        attachmentId: number
+        attachmentId: number,
+        abortSignal?: AbortSignal
     ): Promise<Blob> => {
-        const { data } = await axios.get(
+        const { data } = await getByFetch(
             `CommPkg/Task/Attachment?plantId=PCS$${plantId}&taskId=${taskId}&attachmentId=${attachmentId}${apiVersion}`,
-            {
-                cancelToken: cancelToken,
-                responseType: 'blob',
-                headers: {
-                    'Content-Disposition':
-                        'attachment; filename="filename.jpg"',
-                },
-            }
+            abortSignal
         );
         return data as Blob;
     };
@@ -640,33 +822,24 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     const getPunchAttachments = async (
         plantId: string,
         punchItemId: number,
-        cancelToken: CancelToken
+        abortSignal?: AbortSignal
     ): Promise<Attachment[]> => {
-        const { data } = await axios.get(
+        const data = await getByFetch(
             `PunchListItem/Attachments?plantId=PCS$${plantId}&punchItemId=${punchItemId}&thumbnailSize=128${apiVersion}`,
-            {
-                cancelToken: cancelToken,
-            }
+            abortSignal
         );
         return data as Attachment[];
     };
 
     const getPunchAttachment = async (
-        cancelToken: CancelToken,
         plantId: string,
         punchItemId: number,
-        attachmentId: number
+        attachmentId: number,
+        abortSignal?: AbortSignal
     ): Promise<Blob> => {
-        const { data } = await axios.get(
+        const { data } = await getByFetch(
             `PunchListItem/Attachment?plantId=PCS$${plantId}&punchItemId=${punchItemId}&attachmentId=${attachmentId}${apiVersion}`,
-            {
-                cancelToken: cancelToken,
-                responseType: 'blob',
-                headers: {
-                    'Content-Disposition':
-                        'attachment; filename="filename.jpg"',
-                },
-            }
+            abortSignal
         );
         return data as Blob;
     };
@@ -680,51 +853,36 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
             PunchItemId: punchItemId,
             AttachmentId: attachmentId,
         };
-        await axios.delete(
+        await deleteByFetch(
             `PunchListItem/Attachment?plantId=PCS$${plantId}${apiVersion}`,
-            { data: dto }
+            dto
         );
     };
 
     const postTempPunchAttachment = async (
         plantId: string,
-        formData: FormData,
+        file: FormData,
         title: string
     ): Promise<string> => {
-        const { data } = await axios.post(
+        const data = await postAttachmentByFetch(
             `PunchListItem/TempAttachment?plantId=PCS$${plantId}${apiVersion}`,
-            formData,
-            {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            }
+            file,
+            true
         );
-        type TempAttachmentReturn = { id: string };
-        function dataHasId(data: unknown): data is TempAttachmentReturn {
-            return (data as TempAttachmentReturn)['id'] !== undefined;
-        }
-        if (dataHasId(data)) {
-            return data.id as string;
-        } else {
-            throw new Error('Unable to upload attachment');
-        }
+        console.log('data: ', data);
+        return data.id as string;
     };
 
     const postPunchAttachment = async (
         plantId: string,
-        parentId: number,
-        formData: FormData,
+        punchId: number,
+        file: FormData,
         title: string
     ): Promise<void> => {
-        await axios.post(
-            `PunchListItem/Attachment?plantId=PCS$${plantId}&punchItemId=${parentId}&title=${title}${apiVersion}`,
-            formData,
-            {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            }
+        await postAttachmentByFetch(
+            `PunchListItem/Attachment?plantId=PCS$${plantId}&punchItemId=${punchId}&title=${title}${apiVersion}`,
+            file,
+            false
         );
     };
 
