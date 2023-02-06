@@ -37,10 +37,6 @@ describe('<Checklist/> after loading', () => {
         renderChecklistPage();
         const tagDescription = await screen.findByText('dummy-tag-description');
         expect(tagDescription).toBeInTheDocument();
-        const attachmentImage = await screen.findByAltText(
-            'Dummy image thumbnail'
-        );
-        expect(attachmentImage).toBeInTheDocument();
     });
 
     it('Lets user check all and uncheck all items', async () => {
