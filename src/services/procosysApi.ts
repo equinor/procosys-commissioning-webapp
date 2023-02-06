@@ -2,6 +2,7 @@ import {
     isArrayOfType,
     isOfType,
     PunchAction,
+    Document,
     UpdatePunchData,
 } from '@equinor/procosys-webapp-components';
 import { AxiosInstance, CancelToken } from 'axios';
@@ -728,6 +729,42 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         );
     };
 
+    //---------
+    // Documents
+    //---------
+
+    const getDocuments = async (
+        plantId: string,
+        commPkgId: string,
+        cancelToken: CancelToken
+    ): Promise<Document[]> => {
+        const { data } = await axios.get(
+            `CommPkg/DocumentsWithAttachments?plantId=PCS$${plantId}&commPkgId=${commPkgId}${apiVersion}`,
+            { cancelToken: cancelToken }
+        );
+        return data as Document[];
+    };
+
+    const getDocumentAttachment = async (
+        cancelToken: CancelToken,
+        plantId: string,
+        revisionId: string,
+        attachmentId: number
+    ): Promise<Blob> => {
+        const { data } = await axios.get(
+            `CommPkg/DocumentsWithAttachments/Attachment?plantId=PCS$${plantId}&revisionId=${revisionId}&attachmentId=${attachmentId}${apiVersion}`,
+            {
+                cancelToken: cancelToken,
+                responseType: 'blob',
+                headers: {
+                    'Content-Disposition':
+                        'attachment; filename="filename.jpg"',
+                },
+            }
+        );
+        return data as Blob;
+    };
+
     return {
         deleteChecklistAttachment,
         deletePunchAttachment,
@@ -757,6 +794,8 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         getTasks,
         getScope,
         getTaskParameters,
+        getDocuments,
+        getDocumentAttachment,
         postClear,
         postSetOk,
         postSetNA,

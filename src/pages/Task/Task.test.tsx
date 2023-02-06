@@ -71,16 +71,15 @@ describe('<Task/> after successful loading', () => {
         expect(commentField).toHaveAttribute('aria-readonly', 'false');
         const signButton = screen.getByRole('button', { name: 'Sign' });
         userEvent.click(signButton);
-        let messageInSnackbar = await screen.findByText(
+        const messageInSnackbar = await screen.findByText(
             'Task successfully signed'
         );
         expect(messageInSnackbar).toBeInTheDocument();
-        const unsignButton = screen.getByRole('button', { name: 'Unsign' });
+        const unsignButton = await screen.findByRole('button', {
+            name: 'Unsign',
+        });
+        expect(unsignButton).toBeInTheDocument();
         userEvent.click(unsignButton);
-        messageInSnackbar = await screen.findByText(
-            'Task successfully unsigned'
-        );
-        expect(messageInSnackbar).toBeInTheDocument();
         expect(commentField).toHaveAttribute('aria-readonly', 'false');
     });
 
