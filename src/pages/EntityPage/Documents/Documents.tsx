@@ -2,6 +2,7 @@ import {
     AsyncStatus,
     Document as DocumentType,
     DocumentFilter,
+    useSnackbar,
 } from '@equinor/procosys-webapp-components';
 import React, { useEffect, useState } from 'react';
 import AsyncPage from '../../../components/AsyncPage';
@@ -19,6 +20,7 @@ const Documents = ({
     const [filteredDocuments, setFilteredDocuments] = useState<
         DocumentType[] | undefined
     >();
+    const { snackbar, setSnackbarText } = useSnackbar();
 
     useEffect(() => {
         setFilteredDocuments(documents);
@@ -27,6 +29,7 @@ const Documents = ({
         <AsyncPage
             fetchStatus={fetchDocumentsStatus}
             errorMessage={"Couldn't get the documents"}
+            emptyContentMessage={'No documents for this comm package'}
         >
             <>
                 <DocumentFilter
@@ -34,8 +37,13 @@ const Documents = ({
                     documents={documents}
                 />
                 {filteredDocuments?.map((document) => (
-                    <Document key={document.documentId} document={document} />
+                    <Document
+                        key={document.documentId}
+                        document={document}
+                        setSnackbar={setSnackbarText}
+                    />
                 ))}
+                {snackbar}
             </>
         </AsyncPage>
     );

@@ -745,6 +745,26 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         return data as Document[];
     };
 
+    const getDocumentAttachment = async (
+        cancelToken: CancelToken,
+        plantId: string,
+        revisionId: string,
+        attachmentId: number
+    ): Promise<Blob> => {
+        const { data } = await axios.get(
+            `CommPkg/DocumentsWithAttachments/Attachment?plantId=PCS$${plantId}&revisionId=${revisionId}&attachmentId=${attachmentId}${apiVersion}`,
+            {
+                cancelToken: cancelToken,
+                responseType: 'blob',
+                headers: {
+                    'Content-Disposition':
+                        'attachment; filename="filename.jpg"',
+                },
+            }
+        );
+        return data as Blob;
+    };
+
     return {
         deleteChecklistAttachment,
         deletePunchAttachment,
@@ -775,6 +795,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         getScope,
         getTaskParameters,
         getDocuments,
+        getDocumentAttachment,
         postClear,
         postSetOk,
         postSetNA,
