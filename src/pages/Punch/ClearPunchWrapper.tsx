@@ -178,6 +178,8 @@ const ClearPunchWrapper = ({
             }}
             postPunchAttachment={api.postPunchAttachment}
             deletePunchAttachment={api.deletePunchAttachment}
+            getPunchComments={api.getPunchComments}
+            postPunchComment={api.postPunchComment}
             snackbar={snackbar}
             setSnackbarText={setSnackbarText}
             hits={hits}
