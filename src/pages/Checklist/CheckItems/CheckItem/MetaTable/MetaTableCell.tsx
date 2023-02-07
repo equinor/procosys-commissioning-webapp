@@ -155,11 +155,7 @@ const MetaTableCell = ({
                         (submitStatus === AsyncStatus.SUCCESS && 'success') ||
                         'default'
                     }
-                    onBlur={(
-                        e: React.FocusEvent<
-                            HTMLTextAreaElement | HTMLInputElement
-                        >
-                    ): void => {
+                    onBlur={(): void => {
                         submitData(putStringCellApiCall);
                     }}
                     onChange={(
