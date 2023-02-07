@@ -95,6 +95,7 @@ const VerifyPunchWrapper = ({
                     attachmentId
                 );
             }}
+            getPunchComments={api.getPunchComments}
             snackbar={snackbar}
             setSnackbarText={setSnackbarText}
         />
