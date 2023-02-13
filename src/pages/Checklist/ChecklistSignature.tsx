@@ -131,7 +131,7 @@ const ChecklistSignature = ({
             }
             setLoadingStatus(AsyncStatus.SUCCESS);
             setSnackbarText(
-                isVerified ? 'Unverify complete.' : 'Verfying complete.'
+                isVerified ? 'Unverify complete.' : 'Verifying complete.'
             );
             reloadChecklist((reloadStatus) => !reloadStatus);
         } catch (error) {
@@ -171,15 +171,17 @@ const ChecklistSignature = ({
                     'This checklist is unsigned.'
                 )}
             </p>
-
-            {details.verifiedAt ? (
-                <p>
-                    Verified by {details.verifiedByFirstName}{' '}
-                    {details.verifiedByLastName} at{' '}
-                    {new Date(details.verifiedAt).toLocaleDateString('en-GB')}
-                </p>
-            ) : null}
-
+            <p>
+                {details.verifiedAt ? (
+                    <>
+                        Verified by {details.verifiedByFirstName}{' '}
+                        {details.verifiedByLastName} at{' '}
+                        {new Date(details.verifiedAt).toLocaleDateString(
+                            'en-GB'
+                        )}
+                    </>
+                ) : null}
+            </p>
             <TextField
                 id={'comment-field'}
                 maxLength={500}

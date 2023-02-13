@@ -87,7 +87,7 @@ const ChecklistPage = (): JSX.Element => {
             loadingMessage={'Loading checklist'}
         >
             <>
-                {isSigned && (
+                {isSigned && !isVerified && (
                     <Banner>
                         <Banner.Icon variant={'info'}>
                             <EdsIcon name={'info_circle'} />
@@ -103,8 +103,7 @@ const ChecklistPage = (): JSX.Element => {
                             <EdsIcon name={'info_circle'} />
                         </Banner.Icon>
                         <Banner.Message>
-                            This checklist is verified. Unverify to make
-                            changes.
+                            This checklist is verified.
                         </Banner.Message>
                     </Banner>
                 )}
