@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { AsyncStatus } from '../../contexts/CommAppContext';
 import { CheckItem, ChecklistDetails } from '../../typings/apiTypes';
 import CheckItems from './CheckItems/CheckItems';
@@ -13,6 +13,7 @@ import useSnackbar from '../../utils/useSnackbar';
 import AsyncPage from '../../components/AsyncPage';
 import { Banner } from '@equinor/eds-core-react';
 import { Attachment, Attachments } from '@equinor/procosys-webapp-components';
+import PlantContext from '../../contexts/PlantContext';
 
 const ChecklistWrapper = styled.div`
     padding: 0 4%;
@@ -38,6 +39,7 @@ export const BottomSpacer = styled.div`
 `;
 
 const ChecklistPage = (): JSX.Element => {
+    const { permissions } = useContext(PlantContext);
     const { params, api } = useCommonHooks();
     const { snackbar, setSnackbarText } = useSnackbar();
     const [fetchChecklistStatus, setFetchChecklistStatus] = useState(
@@ -47,6 +49,7 @@ const ChecklistPage = (): JSX.Element => {
     const [checklistDetails, setChecklistDetails] =
         useState<ChecklistDetails>();
     const [isSigned, setIsSigned] = useState(false);
+    const [isVerified, setIsVerified] = useState(false);
     const [allItemsCheckedOrNA, setAllItemsCheckedOrNA] = useState(true);
     const [reloadChecklist, setReloadChecklist] = useState(false);
     const source = axios.CancelToken.source();
@@ -60,6 +63,9 @@ const ChecklistPage = (): JSX.Element => {
                     source.token
                 );
                 setIsSigned(!!checklistResponse.checkList.signedByFirstName);
+                setIsVerified(
+                    !!checklistResponse.checkList.verifiedByFirstName
+                );
                 setCheckItems(checklistResponse.checkItems);
                 setChecklistDetails(checklistResponse.checkList);
                 setFetchChecklistStatus(AsyncStatus.SUCCESS);
@@ -88,6 +94,17 @@ const ChecklistPage = (): JSX.Element => {
                         </Banner.Icon>
                         <Banner.Message>
                             This checklist is signed. Unsign to make changes.
+                        </Banner.Message>
+                    </Banner>
+                )}
+                {isVerified && (
+                    <Banner>
+                        <Banner.Icon variant={'info'}>
+                            <EdsIcon name={'info_circle'} />
+                        </Banner.Icon>
+                        <Banner.Message>
+                            This checklist is verified. Unverify to make
+                            changes.
                         </Banner.Message>
                     </Banner>
                 )}
@@ -156,8 +173,12 @@ const ChecklistPage = (): JSX.Element => {
                                 reloadChecklist={setReloadChecklist}
                                 allItemsCheckedOrNA={allItemsCheckedOrNA}
                                 isSigned={isSigned}
+                                isVerified={isVerified}
+                                canSign={permissions.includes('CPCL/SIGN')}
+                                canVerify={permissions.includes('CPCL/VERIFY')}
                                 details={checklistDetails}
                                 setIsSigned={setIsSigned}
+                                setIsVerified={setIsVerified}
                             />
                         </AsyncCard>
                         {!isSigned && !allItemsCheckedOrNA && (
