@@ -19,7 +19,8 @@ const ButtonWrapper = styled.div`
     display: flex;
     margin-bottom: 12px;
     justify-content: flex-end;
-    & button {
+    & button,
+    button:disabled {
         margin-left: 12px;
     }
 `;
