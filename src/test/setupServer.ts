@@ -41,6 +41,8 @@ export const ENDPOINTS = {
     postClear: `${baseURL}/CheckList/Item/Clear`,
     postSign: `${baseURL}/CheckList/Comm/Sign`,
     postUnsign: `${baseURL}/CheckList/Comm/Unsign`,
+    postVerify: `${baseURL}/CheckList/Comm/Verify`,
+    postUnverify: `${baseURL}/CheckList/Comm/Unverify`,
     getScope: `${baseURL}/CommPkg/CheckLists`,
     getChecklistPunchList: `${baseURL}/CheckList/PunchList`,
 
@@ -135,6 +137,12 @@ export const server = setupServer(
         return response(context.status(200));
     }),
     rest.post(ENDPOINTS.postUnsign, (_, response, context) => {
+        return response(context.status(200));
+    }),
+    rest.post(ENDPOINTS.postVerify, (_, response, context) => {
+        return response(context.status(200));
+    }),
+    rest.post(ENDPOINTS.postUnverify, (_, response, context) => {
         return response(context.status(200));
     }),
     rest.get(ENDPOINTS.getScope, (_, response, context) => {

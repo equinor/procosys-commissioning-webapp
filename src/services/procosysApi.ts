@@ -308,6 +308,28 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         );
     };
 
+    const postVerify = async (
+        plantId: string,
+        checklistId: string
+    ): Promise<void> => {
+        await axios.post(
+            `CheckList/Comm/Verify?plantId=PCS$${plantId}${apiVersion}`,
+            checklistId,
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+    };
+
+    const postUnverify = async (
+        plantId: string,
+        checklistId: string
+    ): Promise<void> => {
+        await axios.post(
+            `CheckList/Comm/Unverify?plantId=PCS$${plantId}${apiVersion}`,
+            checklistId,
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+    };
+
     const getChecklistAttachments = async (
         plantId: string,
         checklistId: string
@@ -830,6 +852,8 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         postPunchAttachment,
         postSign,
         postUnsign,
+        postVerify,
+        postUnverify,
         postTempPunchAttachment,
         postChecklistAttachment,
         putChecklistComment,

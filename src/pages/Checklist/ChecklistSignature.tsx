@@ -13,12 +13,15 @@ const ChecklistSignatureWrapper = styled.div<{ helperTextVisible: boolean }>`
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+`;
+
+const ButtonWrapper = styled.div`
+    display: flex;
+    margin-bottom: 12px;
+    justify-content: flex-end;
     & button,
     button:disabled {
-        width: fit-content;
-        margin-left: auto;
-        margin-top: ${(props): string =>
-            props.helperTextVisible ? '0' : '24px'};
+        margin-left: 12px;
     }
 `;
 
@@ -35,10 +38,27 @@ const determineSignButtonText = (
     }
 };
 
+const determineVerifyButtonText = (
+    isVerified: boolean,
+    status: AsyncStatus
+): string => {
+    if (status === AsyncStatus.LOADING) {
+        if (isVerified) return 'Unverifying...';
+        return 'Verifying...';
+    } else {
+        if (isVerified) return 'Unverify';
+        return 'Verify';
+    }
+};
+
 type ChecklistSignatureProps = {
     details: ChecklistDetails;
     setIsSigned: React.Dispatch<React.SetStateAction<boolean>>;
     isSigned: boolean;
+    canSign: boolean;
+    setIsVerified: React.Dispatch<React.SetStateAction<boolean>>;
+    isVerified: boolean;
+    canVerify: boolean;
     allItemsCheckedOrNA: boolean;
     reloadChecklist: React.Dispatch<React.SetStateAction<boolean>>;
     setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
@@ -48,6 +68,10 @@ const ChecklistSignature = ({
     details,
     setIsSigned,
     isSigned,
+    canSign,
+    setIsVerified,
+    isVerified,
+    canVerify,
     allItemsCheckedOrNA,
     reloadChecklist,
     setSnackbarText,
@@ -58,6 +82,7 @@ const ChecklistSignature = ({
         AsyncStatus.INACTIVE
     );
     const [signStatus, setSignStatus] = useState(AsyncStatus.INACTIVE);
+    const [verifyStatus, setVerifyStatus] = useState(AsyncStatus.INACTIVE);
     let commentBeforeFocus = '';
     const putComment = async (): Promise<void> => {
         if (comment === commentBeforeFocus) return;
@@ -95,6 +120,29 @@ const ChecklistSignature = ({
             setSnackbarText(error.toString());
         }
     };
+
+    const handleVerifyClick = async (): Promise<void> => {
+        setVerifyStatus(AsyncStatus.LOADING);
+        try {
+            if (isVerified) {
+                await api.postUnverify(params.plant, params.checklistId);
+                setIsVerified(false);
+            } else {
+                await api.postVerify(params.plant, params.checklistId);
+                setIsVerified(true);
+            }
+            setVerifyStatus(AsyncStatus.SUCCESS);
+            setSnackbarText(
+                isVerified ? 'Unverify complete.' : 'Verifying complete.'
+            );
+            reloadChecklist((reloadStatus) => !reloadStatus);
+        } catch (error) {
+            if (!(error instanceof Error)) return;
+            setVerifyStatus(AsyncStatus.ERROR);
+            setSnackbarText(error.toString());
+        }
+    };
+
     const updatedByText = (): string => {
         return `Updated by ${details.updatedByFirstName} ${
             details.updatedByLastName
@@ -125,7 +173,17 @@ const ChecklistSignature = ({
                     'This checklist is unsigned.'
                 )}
             </p>
-
+            <p>
+                {details.verifiedAt ? (
+                    <>
+                        Verified by {details.verifiedByFirstName}{' '}
+                        {details.verifiedByLastName} at{' '}
+                        {new Date(details.verifiedAt).toLocaleDateString(
+                            'en-GB'
+                        )}
+                    </>
+                ) : null}
+            </p>
             <TextField
                 id={'comment-field'}
                 maxLength={500}
@@ -147,15 +205,36 @@ const ChecklistSignature = ({
                 onFocus={(): string => (commentBeforeFocus = comment)}
                 onBlur={putComment}
             />
+            <ButtonWrapper>
+                {isVerified ? null : (
+                    <Button
+                        variant={isSigned ? 'outlined' : 'contained'}
+                        onClick={handleSignClick}
+                        disabled={
+                            !canSign ||
+                            signStatus === AsyncStatus.LOADING ||
+                            verifyStatus === AsyncStatus.LOADING ||
+                            !allItemsCheckedOrNA
+                        }
+                    >
+                        {determineSignButtonText(isSigned, signStatus)}
+                    </Button>
+                )}
 
-            <Button
-                onClick={handleSignClick}
-                disabled={
-                    signStatus === AsyncStatus.LOADING || !allItemsCheckedOrNA
-                }
-            >
-                {determineSignButtonText(isSigned, signStatus)}
-            </Button>
+                {isSigned ? (
+                    <Button
+                        variant={isVerified ? 'outlined' : 'contained'}
+                        onClick={handleVerifyClick}
+                        disabled={
+                            !canVerify ||
+                            verifyStatus === AsyncStatus.LOADING ||
+                            signStatus === AsyncStatus.LOADING
+                        }
+                    >
+                        {determineVerifyButtonText(isVerified, verifyStatus)}
+                    </Button>
+                ) : null}
+            </ButtonWrapper>
         </ChecklistSignatureWrapper>
     );
 };

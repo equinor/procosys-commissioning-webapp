@@ -118,6 +118,10 @@ export interface ChecklistDetails {
     signedByFirstName: string;
     signedByLastName: string;
     signedAt: Date;
+    verifiedByUser: string;
+    verifiedByFirstName: string;
+    verifiedByLastName: string;
+    verifiedAt: Date;
     updatedAt: Date;
     updatedByUser: string;
     updatedByFirstName: string;
