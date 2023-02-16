@@ -80,7 +80,8 @@ const ChecklistSignature = ({
     const [putCommentStatus, setPutCommentStatus] = useState(
         AsyncStatus.INACTIVE
     );
-    const [loadingStatus, setLoadingStatus] = useState(AsyncStatus.INACTIVE);
+    const [signStatus, setSignStatus] = useState(AsyncStatus.INACTIVE);
+    const [verifyStatus, setVerifyStatus] = useState(AsyncStatus.INACTIVE);
     let commentBeforeFocus = '';
     const putComment = async (): Promise<void> => {
         if (comment === commentBeforeFocus) return;
@@ -98,7 +99,7 @@ const ChecklistSignature = ({
         }
     };
     const handleSignClick = async (): Promise<void> => {
-        setLoadingStatus(AsyncStatus.LOADING);
+        setSignStatus(AsyncStatus.LOADING);
         try {
             if (isSigned) {
                 await api.postUnsign(params.plant, params.checklistId);
@@ -107,20 +108,20 @@ const ChecklistSignature = ({
                 await api.postSign(params.plant, params.checklistId);
                 setIsSigned(true);
             }
-            setLoadingStatus(AsyncStatus.SUCCESS);
+            setSignStatus(AsyncStatus.SUCCESS);
             setSnackbarText(
                 isSigned ? 'Unsign complete.' : 'Signing complete.'
             );
             reloadChecklist((reloadStatus) => !reloadStatus);
         } catch (error) {
             if (!(error instanceof Error)) return;
-            setLoadingStatus(AsyncStatus.ERROR);
+            setSignStatus(AsyncStatus.ERROR);
             setSnackbarText(error.toString());
         }
     };
 
     const handleVerifyClick = async (): Promise<void> => {
-        setLoadingStatus(AsyncStatus.LOADING);
+        setVerifyStatus(AsyncStatus.LOADING);
         try {
             if (isVerified) {
                 await api.postUnverify(params.plant, params.checklistId);
@@ -129,14 +130,14 @@ const ChecklistSignature = ({
                 await api.postVerify(params.plant, params.checklistId);
                 setIsVerified(true);
             }
-            setLoadingStatus(AsyncStatus.SUCCESS);
+            setVerifyStatus(AsyncStatus.SUCCESS);
             setSnackbarText(
                 isVerified ? 'Unverify complete.' : 'Verifying complete.'
             );
             reloadChecklist((reloadStatus) => !reloadStatus);
         } catch (error) {
             if (!(error instanceof Error)) return;
-            setLoadingStatus(AsyncStatus.ERROR);
+            setVerifyStatus(AsyncStatus.ERROR);
             setSnackbarText(error.toString());
         }
     };
@@ -210,11 +211,12 @@ const ChecklistSignature = ({
                         onClick={handleSignClick}
                         disabled={
                             !canSign ||
-                            loadingStatus === AsyncStatus.LOADING ||
+                            signStatus === AsyncStatus.LOADING ||
+                            verifyStatus === AsyncStatus.LOADING ||
                             !allItemsCheckedOrNA
                         }
                     >
-                        {determineSignButtonText(isSigned, loadingStatus)}
+                        {determineSignButtonText(isSigned, signStatus)}
                     </Button>
                 )}
 
@@ -223,10 +225,12 @@ const ChecklistSignature = ({
                         variant={isVerified ? 'outlined' : 'contained'}
                         onClick={handleVerifyClick}
                         disabled={
-                            !canVerify || loadingStatus === AsyncStatus.LOADING
+                            !canVerify ||
+                            verifyStatus === AsyncStatus.LOADING ||
+                            signStatus === AsyncStatus.LOADING
                         }
                     >
-                        {determineVerifyButtonText(isVerified, loadingStatus)}
+                        {determineVerifyButtonText(isVerified, verifyStatus)}
                     </Button>
                 ) : null}
             </ButtonWrapper>
