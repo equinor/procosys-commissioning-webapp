@@ -293,6 +293,10 @@ export interface Task {
     signedByFirstName: string;
     signedByLastName: string;
     signedAt: Date;
+    verifiedByUser: string;
+    verifiedByFirstName: string;
+    verifiedByLastName: string;
+    verifiedAt: Date;
 }
 
 export interface TaskParameter {

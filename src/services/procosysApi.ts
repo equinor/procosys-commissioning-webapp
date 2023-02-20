@@ -598,6 +598,36 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         );
     };
 
+    const postTaskVerify = async (
+        cancelToken: CancelToken,
+        plantId: string,
+        taskId: string
+    ): Promise<void> => {
+        await axios.post(
+            `CommPkg/Task/Verify?plantId=PCS$${plantId}${apiVersion}`,
+            taskId,
+            {
+                cancelToken: cancelToken,
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
+    };
+
+    const postTaskUnverify = async (
+        cancelToken: CancelToken,
+        plantId: string,
+        taskId: string
+    ): Promise<void> => {
+        await axios.post(
+            `CommPkg/Task/Unverify?plantId=PCS$${plantId}${apiVersion}`,
+            taskId,
+            {
+                cancelToken: cancelToken,
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
+    };
+
     const putTaskComment = async (
         cancelToken: CancelToken,
         plantId: string,
@@ -849,6 +879,8 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         postPunchAction,
         postTaskSign,
         postTaskUnsign,
+        postTaskVerify,
+        postTaskUnverify,
         postPunchAttachment,
         postSign,
         postUnsign,
