@@ -46,8 +46,10 @@ const TaskSignature = ({
     refreshTask,
 }: TaskSignatureProps): JSX.Element => {
     const { api, params } = useCommonHooks();
-    const [taskSignStatus, setTaskSignStatus] = useState(AsyncStatus.INACTIVE);
-    const [taskVerifyStatus, setTaskVerifyStatus] = useState(
+    const [taskSignStatus, setTaskSignStatus] = useState<AsyncStatus>(
+        AsyncStatus.INACTIVE
+    );
+    const [taskVerifyStatus, setTaskVerifyStatus] = useState<AsyncStatus>(
         AsyncStatus.INACTIVE
     );
     const cancelTokenSource = Axios.CancelToken.source();
@@ -140,30 +142,29 @@ const TaskSignature = ({
                         task.verifiedByFirstName
                     } ${task.verifiedByLastName} (${task.verifiedByUser})`}</p>
                 </>
-            ) : (
+            ) : task.signedAt ? (
                 <>
                     <p>This task is not verified.</p>
                 </>
-            )}
+            ) : null}
 
             <ButtonWrapper>
-                <Button
-                    disabled={
-                        taskSignStatus === AsyncStatus.LOADING || isVerified
-                    }
-                    onClick={handleSign}
-                >
-                    {isSigned ? 'Unsign' : 'Sign'}
-                </Button>
-
-                <Button
-                    disabled={
-                        taskVerifyStatus === AsyncStatus.LOADING || !isSigned
-                    }
-                    onClick={handleVerify}
-                >
-                    {isVerified ? 'Unverify' : 'Verify'}
-                </Button>
+                {isVerified ? null : (
+                    <Button
+                        disabled={taskSignStatus === AsyncStatus.LOADING}
+                        onClick={handleSign}
+                    >
+                        {isSigned ? 'Unsign' : 'Sign'}
+                    </Button>
+                )}
+                {isSigned ? (
+                    <Button
+                        disabled={taskVerifyStatus === AsyncStatus.LOADING}
+                        onClick={handleVerify}
+                    >
+                        {isVerified ? 'Unverify' : 'Verify'}
+                    </Button>
+                ) : null}
             </ButtonWrapper>
         </TaskSignatureWrapper>
     );
