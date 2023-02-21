@@ -15,9 +15,21 @@ const TaskSignatureWrapper = styled.div`
     }
 `;
 
+const ButtonWrapper = styled.div`
+    display: flex;
+    margin-bottom: 12px;
+    justify-content: flex-end;
+    & button,
+    button:disabled {
+        margin-left: 12px;
+    }
+`;
+
 type TaskSignatureProps = {
     isSigned: boolean;
     setIsSigned: React.Dispatch<React.SetStateAction<boolean>>;
+    isVerified: boolean;
+    setIsVerified: React.Dispatch<React.SetStateAction<boolean>>;
     setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
     task: Task;
     fetchTaskStatus: AsyncStatus;
@@ -27,12 +39,19 @@ type TaskSignatureProps = {
 const TaskSignature = ({
     isSigned,
     setIsSigned,
+    isVerified,
+    setIsVerified,
     task,
     setSnackbarText,
     refreshTask,
 }: TaskSignatureProps): JSX.Element => {
     const { api, params } = useCommonHooks();
-    const [taskSignStatus, setTaskSignStatus] = useState(AsyncStatus.INACTIVE);
+    const [taskSignStatus, setTaskSignStatus] = useState<AsyncStatus>(
+        AsyncStatus.INACTIVE
+    );
+    const [taskVerifyStatus, setTaskVerifyStatus] = useState<AsyncStatus>(
+        AsyncStatus.INACTIVE
+    );
     const cancelTokenSource = Axios.CancelToken.source();
 
     const handleSign = async (): Promise<void> => {
@@ -64,6 +83,35 @@ const TaskSignature = ({
         }
     };
 
+    const handleVerify = async (): Promise<void> => {
+        setTaskVerifyStatus(AsyncStatus.LOADING);
+        try {
+            if (isVerified) {
+                await api.postTaskUnverify(
+                    cancelTokenSource.token,
+                    params.plant,
+                    params.taskId
+                );
+                setIsVerified(false);
+                setSnackbarText('Task successfully unverified');
+            } else {
+                await api.postTaskVerify(
+                    cancelTokenSource.token,
+                    params.plant,
+                    params.taskId
+                );
+                setIsVerified(true);
+                setSnackbarText('Task successfully verified');
+            }
+            refreshTask((prev) => !prev);
+            setTaskVerifyStatus(AsyncStatus.SUCCESS);
+        } catch (error) {
+            if (!(error instanceof Error)) return;
+            setTaskVerifyStatus(AsyncStatus.ERROR);
+            setSnackbarText(error.toString());
+        }
+    };
+
     useEffect(() => {
         return (): void => {
             cancelTokenSource.cancel();
@@ -85,12 +133,39 @@ const TaskSignature = ({
                     <p>This task is not signed.</p>
                 </>
             )}
-            <Button
-                disabled={taskSignStatus === AsyncStatus.LOADING}
-                onClick={handleSign}
-            >
-                {isSigned ? 'Unsign' : 'Sign'}
-            </Button>
+
+            {task.verifiedAt ? (
+                <>
+                    <p>{`Verified at ${new Date(
+                        task.verifiedAt
+                    ).toLocaleDateString('en-GB')} by ${
+                        task.verifiedByFirstName
+                    } ${task.verifiedByLastName} (${task.verifiedByUser})`}</p>
+                </>
+            ) : task.signedAt ? (
+                <>
+                    <p>This task is not verified.</p>
+                </>
+            ) : null}
+
+            <ButtonWrapper>
+                {isVerified ? null : (
+                    <Button
+                        disabled={taskSignStatus === AsyncStatus.LOADING}
+                        onClick={handleSign}
+                    >
+                        {isSigned ? 'Unsign' : 'Sign'}
+                    </Button>
+                )}
+                {isSigned ? (
+                    <Button
+                        disabled={taskVerifyStatus === AsyncStatus.LOADING}
+                        onClick={handleVerify}
+                    >
+                        {isVerified ? 'Unverify' : 'Verify'}
+                    </Button>
+                ) : null}
+            </ButtonWrapper>
         </TaskSignatureWrapper>
     );
 };

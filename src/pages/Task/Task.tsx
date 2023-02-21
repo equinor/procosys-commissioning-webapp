@@ -64,6 +64,7 @@ const Task = (): JSX.Element => {
     const [fetchParametersStatus, setFetchParametersStatus] =
         useState<AsyncStatus>(AsyncStatus.LOADING);
     const [isSigned, setIsSigned] = useState(false);
+    const [isVerified, setIsVerified] = useState(false);
     const [refreshTask, setRefreshTask] = useState(false);
     const { snackbar, setSnackbarText } = useSnackbar();
     const source = Axios.CancelToken.source();
@@ -96,6 +97,7 @@ const Task = (): JSX.Element => {
                     ? setFetchParametersStatus(AsyncStatus.SUCCESS)
                     : setFetchParametersStatus(AsyncStatus.EMPTY_RESPONSE);
                 setIsSigned(!!taskFromApi.signedByUser);
+                setIsVerified(!!taskFromApi.verifiedByUser);
             } catch (error) {
                 if (!Axios.isCancel(error)) {
                     setFetchTaskStatus(AsyncStatus.ERROR);
@@ -139,7 +141,7 @@ const Task = (): JSX.Element => {
     return (
         <>
             <Navbar noBorder leftContent={<BackButton />} />
-            {isSigned ? (
+            {isSigned && !isVerified ? (
                 <Banner>
                     <Banner.Icon variant={'info'}>
                         <EdsIcon name={'info_circle'} />
@@ -149,6 +151,17 @@ const Task = (): JSX.Element => {
                     </Banner.Message>
                 </Banner>
             ) : null}
+            {isVerified ? (
+                <Banner>
+                    <Banner.Icon variant={'info'}>
+                        <EdsIcon name={'info_circle'} />
+                    </Banner.Icon>
+                    <Banner.Message>
+                        This task is verified. Unverify to make changes.
+                    </Banner.Message>
+                </Banner>
+            ) : null}
+
             <TaskWrapper>
                 <AsyncCard
                     cardTitle={task ? `Task ${task.number}` : 'Task'}
@@ -170,8 +183,10 @@ const Task = (): JSX.Element => {
                         <TaskSignature
                             fetchTaskStatus={fetchTaskStatus}
                             isSigned={isSigned}
+                            isVerified={isVerified}
                             task={task}
                             setIsSigned={setIsSigned}
+                            setIsVerified={setIsVerified}
                             setSnackbarText={setSnackbarText}
                             refreshTask={setRefreshTask}
                         />
