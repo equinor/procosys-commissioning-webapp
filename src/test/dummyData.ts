@@ -445,6 +445,30 @@ export const dummyTaskResponse = {
     SignedByFirstName: null,
     SignedByLastName: null,
     SignedAt: null,
+    VerifiedByUser: null,
+    VerifiedByFirstName: null,
+    VerifiedByLastName: null,
+    VerifiedAt: null,
+};
+
+export const dummySignedTaskResponse = {
+    Id: 111,
+    Number: '1.2-3',
+    Title: 'dummy-task-title',
+    DescriptionAsHtml: '<p>dummy-task-description</p>',
+    CommentAsHtml: '<p>dummy-task-comment</p>',
+    UpdatedByUser: 'dummy-task-user',
+    UpdatedAt: '2021-03-04T10:53:25Z',
+    UpdatedByFirstName: 'dummy-task-first-name',
+    UpdatedByLastName: 'dummy-task-last-name',
+    SignedByUser: 'i82084',
+    SignedByFirstName: 'Jane',
+    SignedByLastName: 'Doe',
+    SignedAt: '2021-02-05T09:05:09Z',
+    VerifiedByUser: null,
+    VerifiedByFirstName: null,
+    VerifiedByLastName: null,
+    VerifiedAt: null,
 };
 
 export const dummyTaskParametersResponse = [

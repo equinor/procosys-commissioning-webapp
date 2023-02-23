@@ -3,7 +3,11 @@ import { withPlantContext } from '../../test/contexts';
 import Task from './Task';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
-import { causeApiError, ENDPOINTS } from '../../test/setupServer';
+import { causeApiError, ENDPOINTS, rest, server } from '../../test/setupServer';
+import {
+    dummySignedTaskResponse,
+    dummyTaskResponse,
+} from '../../test/dummyData';
 
 const renderTask = async (): Promise<void> => {
     render(withPlantContext({ Component: <Task /> }));
@@ -67,6 +71,14 @@ describe('<Task/> after successful loading', () => {
     });
 
     it('Allows user to sign and unsign the task, enabling and disabling the comment button', async () => {
+        server.use(
+            rest.get(ENDPOINTS.getTask, (request, response, context) => {
+                return response(
+                    context.json(dummySignedTaskResponse),
+                    context.status(200)
+                );
+            })
+        );
         const commentField = screen.getByTestId('commentField');
         expect(commentField).toHaveAttribute('aria-readonly', 'false');
         const signButton = screen.getByRole('button', { name: 'Sign' });
@@ -75,11 +87,24 @@ describe('<Task/> after successful loading', () => {
             'Task successfully signed'
         );
         expect(messageInSnackbar).toBeInTheDocument();
+        expect(commentField).toHaveAttribute('aria-readonly', 'true');
         const unsignButton = await screen.findByRole('button', {
             name: 'Unsign',
         });
         expect(unsignButton).toBeInTheDocument();
+        server.use(
+            rest.get(ENDPOINTS.getTask, (request, response, context) => {
+                return response(
+                    context.json(dummyTaskResponse),
+                    context.status(200)
+                );
+            })
+        );
         userEvent.click(unsignButton);
+        const messageInSnackbar2 = await screen.findByText(
+            'Task successfully unsigned'
+        );
+        expect(messageInSnackbar2).toBeInTheDocument();
         expect(commentField).toHaveAttribute('aria-readonly', 'false');
     });
 
@@ -87,19 +112,6 @@ describe('<Task/> after successful loading', () => {
         causeApiError(ENDPOINTS.postTaskSign, 'post');
         const signButton = screen.getByRole('button', { name: 'Sign' });
         userEvent.click(signButton);
-        const errorMessageInSnackbar = await screen.findByText(
-            'Error: dummy error'
-        );
-        expect(errorMessageInSnackbar).toBeInTheDocument();
-    });
-
-    it('Renders error message when task unsigning fails', async () => {
-        causeApiError(ENDPOINTS.postTaskUnsign, 'post');
-        const signButton = screen.getByRole('button', { name: 'Sign' });
-        userEvent.click(signButton);
-        await screen.findByText('Task successfully signed');
-        const unsignButton = screen.getByRole('button', { name: 'Unsign' });
-        userEvent.click(unsignButton);
         const errorMessageInSnackbar = await screen.findByText(
             'Error: dummy error'
         );
