@@ -85,7 +85,7 @@ export const server = setupServer(
     //General
     rest.get(ENDPOINTS.getCommPkgDetails, (_, response, context) => {
         return response(
-            context.json(objectToCamelCase(dummyCommPkgDetailsResponse)),
+            context.json(dummyCommPkgDetailsResponse),
             context.status(200)
         );
     }),
@@ -110,14 +110,14 @@ export const server = setupServer(
     }),
     rest.get(ENDPOINTS.getChecklist, (_, response, context) => {
         return response(
-            context.json(objectToCamelCase(dummyChecklistResponse)),
+            context.json(dummyChecklistResponse),
             context.status(200)
         );
     }),
     rest.get(ENDPOINTS.getChecklistAttachments, (_, response, context) => {
         return response(
             context.delay(10),
-            context.json(objectToCamelCase(dummyAttachmentsResponse)),
+            context.json(dummyAttachmentsResponse),
             context.status(200)
         );
     }),
@@ -146,24 +146,18 @@ export const server = setupServer(
         return response(context.status(200));
     }),
     rest.get(ENDPOINTS.getScope, (_, response, context) => {
-        return response(
-            context.json(objectToCamelCase(dummyScopeResponse)),
-            context.status(200)
-        );
+        return response(context.json(dummyScopeResponse), context.status(200));
     }),
     rest.get(ENDPOINTS.getChecklistPunchList, (_, response, context) => {
         return response(
-            context.json(objectToCamelCase(dummyPunchListResponse)),
+            context.json(dummyPunchListResponse),
             context.status(200)
         );
     }),
 
     // Task
     rest.get(ENDPOINTS.getTasks, (_, response, context) => {
-        return response(
-            context.json(objectToCamelCase(dummyTasksResponse)),
-            context.status(200)
-        );
+        return response(context.json(dummyTasksResponse), context.status(200));
     }),
     rest.get(ENDPOINTS.getTask, (_, response, context) => {
         return response(context.json(dummyTaskResponse), context.status(200));
@@ -199,7 +193,7 @@ export const server = setupServer(
     // PUNCH
     rest.get(ENDPOINTS.getPunchList, (_, response, context) => {
         return response(
-            context.json(objectToCamelCase(dummyPunchListResponse)),
+            context.json(dummyPunchListResponse),
             context.status(200)
         );
     }),
