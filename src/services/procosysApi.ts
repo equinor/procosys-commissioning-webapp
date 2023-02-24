@@ -5,6 +5,7 @@ import {
     Document,
     UpdatePunchData,
 } from '@equinor/procosys-webapp-components';
+import { CustomCheckItemDto } from '@equinor/procosys-webapp-components/dist/modules/Checklist/CheckItems/CustomCheckItems';
 import {
     APIComment,
     PunchComment,
@@ -841,6 +842,73 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         return data as Blob;
     };
 
+    const postCustomCheckItem = async (
+        plantId: string,
+        checklistId: string,
+        dto: CustomCheckItemDto
+    ): Promise<number> => {
+        const { data } = await axios.post(
+            `CheckList/CustomItem?plantId=PCS$${plantId}${apiVersion}`,
+            { ...dto, ChecklistId: checklistId }
+        );
+        return data.id;
+    };
+
+    const getNextCustomItemNumber = async (
+        plantId: string,
+        checklistId: string,
+        cancelToken: CancelToken
+    ): Promise<string> => {
+        const { data } = await axios.get(
+            `CheckList/CustomItem/NextItemNo?plantId=PCS$${plantId}&checkListId=${checklistId}${apiVersion}`,
+            { cancelToken }
+        );
+        return data;
+    };
+
+    const deleteCustomCheckItem = async (
+        plantId: string,
+        checklistId: string,
+        customCheckItemId: number
+    ): Promise<void> => {
+        await axios.delete(
+            `CheckList/CustomItem?plantId=PCS$${plantId}${apiVersion}`,
+            {
+                data: {
+                    CustomCheckItemId: customCheckItemId,
+                    ChecklistId: checklistId,
+                },
+            }
+        );
+    };
+    const postCustomClear = async (
+        plantId: string,
+        checklistId: string,
+        customCheckItemId: number
+    ): Promise<void> => {
+        await axios.post(
+            `CheckList/CustomItem/Clear?plantId=PCS$${plantId}${apiVersion}`,
+            {
+                CheckListId: checklistId,
+                CustomCheckItemId: customCheckItemId,
+            }
+        );
+    };
+
+    const postCustomSetOk = async (
+        plantId: string,
+        checklistId: string,
+        customCheckItemId: number
+    ): Promise<void> => {
+        await axios.post(
+            `CheckList/CustomItem/SetOk?plantId=PCS$${plantId}${apiVersion}`,
+            {
+                CheckListId: checklistId,
+                CustomCheckItemId: customCheckItemId,
+            }
+        );
+    };
+
     return {
         deleteChecklistAttachment,
         deletePunchAttachment,
@@ -897,6 +965,11 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         getSearchResults,
         getPunchComments,
         postPunchComment,
+        postCustomCheckItem,
+        getNextCustomItemNumber,
+        deleteCustomCheckItem,
+        postCustomClear,
+        postCustomSetOk,
     };
 };
 

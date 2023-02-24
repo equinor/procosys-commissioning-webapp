@@ -7,6 +7,8 @@ import { AsyncStatus } from '../../../../contexts/CommAppContext';
 import EdsIcon from '../../../../components/icons/EdsIcon';
 import useCommonHooks from '../../../../utils/useCommonHooks';
 import { COLORS } from '../../../../style/GlobalStyles';
+import updateCheck from '../updateCheck';
+import updateNA from '../updateNA';
 
 const CheckItemWrapper = styled.div<{ disabled: boolean }>`
     background-color: ${(props): string =>
@@ -63,8 +65,7 @@ const CheckboxGroup = styled.div`
 
 type CheckItemProps = {
     item: CheckItemType;
-    updateNA: (value: boolean, checkItemId: number) => void;
-    updateOk: (value: boolean, checkItemId: number) => void;
+    setCheckItems: React.Dispatch<React.SetStateAction<CheckItemType[]>>;
     checklistId: number;
     isSigned: boolean;
     setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
@@ -72,9 +73,8 @@ type CheckItemProps = {
 
 const CheckItem = ({
     item,
+    setCheckItems,
     isSigned,
-    updateNA,
-    updateOk,
     setSnackbarText,
 }: CheckItemProps): JSX.Element => {
     const { api, params } = useCommonHooks();
@@ -87,8 +87,16 @@ const CheckItem = ({
     const clearCheckmarks = async (): Promise<void> => {
         try {
             await api.postClear(params.plant, params.checklistId, item.id);
-            updateOk(false, item.id);
-            updateNA(false, item.id);
+            updateCheck({
+                value: false,
+                checkItemId: item.id,
+                setItems: setCheckItems,
+            });
+            updateNA({
+                value: false,
+                checkItemId: item.id,
+                setItems: setCheckItems,
+            });
             setSnackbarText('Change saved.');
             setPostNAStatus(AsyncStatus.SUCCESS);
         } catch (error) {
@@ -106,8 +114,16 @@ const CheckItem = ({
         }
         try {
             await api.postSetNA(params.plant, params.checklistId, item.id);
-            updateOk(false, item.id);
-            updateNA(true, item.id);
+            updateCheck({
+                value: false,
+                checkItemId: item.id,
+                setItems: setCheckItems,
+            });
+            updateNA({
+                value: true,
+                checkItemId: item.id,
+                setItems: setCheckItems,
+            });
             setSnackbarText('Change saved.');
             setPostNAStatus(AsyncStatus.SUCCESS);
         } catch (error) {
@@ -122,8 +138,16 @@ const CheckItem = ({
         setPostCheckStatus(AsyncStatus.LOADING);
         try {
             await api.postSetOk(params.plant, params.checklistId, item.id);
-            updateNA(false, item.id);
-            updateOk(true, item.id);
+            updateNA({
+                value: false,
+                checkItemId: item.id,
+                setItems: setCheckItems,
+            });
+            updateCheck({
+                value: true,
+                checkItemId: item.id,
+                setItems: setCheckItems,
+            });
             setSnackbarText('Change saved.');
             setPostCheckStatus(AsyncStatus.SUCCESS);
         } catch (error) {

@@ -6,7 +6,6 @@ import {
 } from '../../../typings/apiTypes';
 import CheckItem from './CheckItem/CheckItem';
 import CheckHeader from './CheckHeader';
-import CheckAllButton from './CheckAllButton';
 
 const CheckItemsWrapper = styled.div`
     display: flex;
@@ -21,18 +20,11 @@ const CheckItemsWrapper = styled.div`
     }
 `;
 
-const determineIfAllAreCheckedOrNA = (
-    itemsToDetermine: CheckItemType[]
-): boolean => {
-    return itemsToDetermine.every((item) => item.isOk || item.isNotApplicable);
-};
-
 type CheckItemsProps = {
     checkItems: CheckItemType[];
     details: ChecklistDetails;
     isSigned: boolean;
-    setAllItemsCheckedOrNA: React.Dispatch<React.SetStateAction<boolean>>;
-    allItemsCheckedOrNA: boolean;
+    setCheckItems: React.Dispatch<React.SetStateAction<CheckItemType[]>>;
     setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
 };
 
@@ -40,36 +32,9 @@ const CheckItems = ({
     checkItems,
     details,
     isSigned,
-    allItemsCheckedOrNA,
-    setAllItemsCheckedOrNA,
+    setCheckItems,
     setSnackbarText,
 }: CheckItemsProps): JSX.Element => {
-    const [items, setItems] = useState(checkItems);
-
-    useEffect(() => {
-        setAllItemsCheckedOrNA(determineIfAllAreCheckedOrNA(items));
-    }, [items, setAllItemsCheckedOrNA]);
-
-    const updateNA = (value: boolean, checkItemId: number): void => {
-        setItems((items) =>
-            items.map((existingItem) =>
-                existingItem.id === checkItemId
-                    ? { ...existingItem, isNotApplicable: value }
-                    : existingItem
-            )
-        );
-    };
-
-    const updateOk = (value: boolean, checkItemId: number): void => {
-        setItems((items) =>
-            items.map((existingItem) =>
-                existingItem.id === checkItemId
-                    ? { ...existingItem, isOk: value }
-                    : existingItem
-            )
-        );
-    };
-
     const determineCheckItem = (
         item: CheckItemType,
         index: number,
@@ -92,19 +57,18 @@ const CheckItems = ({
                 {index === 0 ? <CheckHeader text="" /> : null}
                 <CheckItem
                     item={item}
-                    updateNA={updateNA}
-                    updateOk={updateOk}
                     checklistId={details.id}
                     isSigned={isSigned}
+                    setCheckItems={setCheckItems}
                     setSnackbarText={setSnackbarText}
                 />
             </>
         );
     };
 
-    const itemsToDisplay = items.map((item, index) => {
-        const nextItemIsHeading = items[index + 1]
-            ? items[index + 1].isHeading
+    const itemsToDisplay = checkItems.map((item, index) => {
+        const nextItemIsHeading = checkItems[index + 1]
+            ? checkItems[index + 1].isHeading
             : true;
         return (
             <React.Fragment key={item.id}>
@@ -113,19 +77,7 @@ const CheckItems = ({
         );
     });
 
-    return (
-        <CheckItemsWrapper>
-            {!isSigned && (
-                <CheckAllButton
-                    setSnackbarText={setSnackbarText}
-                    allItemsCheckedOrNA={allItemsCheckedOrNA}
-                    items={items}
-                    updateOk={updateOk}
-                />
-            )}
-            {itemsToDisplay}
-        </CheckItemsWrapper>
-    );
+    return <CheckItemsWrapper>{itemsToDisplay}</CheckItemsWrapper>;
 };
 
 export default CheckItems;
