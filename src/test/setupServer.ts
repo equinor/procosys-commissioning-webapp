@@ -45,6 +45,11 @@ export const ENDPOINTS = {
     postUnverify: `${baseURL}/CheckList/Comm/Unverify`,
     getScope: `${baseURL}/CommPkg/CheckLists`,
     getChecklistPunchList: `${baseURL}/CheckList/PunchList`,
+    postCustomCheckItem: `${baseURL}/CheckList/CustomItem`,
+    getNextCustomItemNumber: `${baseURL}/CheckList/CustomItem/NextItemNo`,
+    deleteCustomCheckItem: `${baseURL}/CheckList/CustomItem`,
+    postCustomClear: `${baseURL}/CheckList/CustomItem/Clear`,
+    postCustomSetOk: `${baseURL}/CheckList/CustomItem/SetOk`,
 
     //Task
     getTasks: `${baseURL}/CommPkg/Tasks`,
@@ -130,6 +135,7 @@ export const server = setupServer(
     rest.post(ENDPOINTS.postClear, (_, response, context) => {
         return response(context.status(200));
     }),
+
     rest.put(ENDPOINTS.putChecklistComment, (_, response, context) => {
         return response(context.status(200));
     }),
@@ -156,6 +162,21 @@ export const server = setupServer(
             context.json(objectToCamelCase(dummyPunchListResponse)),
             context.status(200)
         );
+    }),
+    rest.post(ENDPOINTS.postCustomCheckItem, (_, response, context) => {
+        return response(context.status(200));
+    }),
+    rest.post(ENDPOINTS.getNextCustomItemNumber, (_, response, context) => {
+        return response(context.status(200));
+    }),
+    rest.post(ENDPOINTS.deleteCustomCheckItem, (_, response, context) => {
+        return response(context.status(200));
+    }),
+    rest.post(ENDPOINTS.postCustomClear, (_, response, context) => {
+        return response(context.status(200));
+    }),
+    rest.post(ENDPOINTS.postCustomSetOk, (_, response, context) => {
+        return response(context.status(200));
     }),
 
     // Task

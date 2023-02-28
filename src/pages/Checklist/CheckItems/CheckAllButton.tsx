@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Button } from '@equinor/eds-core-react';
 import styled from 'styled-components';
-import { CheckItem } from '../../../typings/apiTypes';
+import { CheckItem, CustomCheckItem } from '../../../typings/apiTypes';
 import EdsIcon from '../../../components/icons/EdsIcon';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
 import useCommonHooks from '../../../utils/useCommonHooks';
+import updateCheck from './updateCheck';
+import updateCustomCheck from './updateCustomCheck';
+import updateNA from './updateNA';
 
 const StyledCheckAllButton = styled(Button)`
     :disabled {
@@ -14,25 +17,38 @@ const StyledCheckAllButton = styled(Button)`
 `;
 
 type CheckAllButtonProps = {
-    items: CheckItem[];
-    updateOk: (value: boolean, checkItemId: number) => void;
+    checkItems: CheckItem[];
+    customCheckItems: CustomCheckItem[];
+    setCheckItems: React.Dispatch<React.SetStateAction<CheckItem[]>>;
+    setCustomCheckItems: React.Dispatch<
+        React.SetStateAction<CustomCheckItem[]>
+    >;
     allItemsCheckedOrNA: boolean;
     setSnackbarText: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const CheckAllButton = ({
-    items,
-    updateOk,
+    checkItems,
+    customCheckItems,
+    setCheckItems,
+    setCustomCheckItems,
     allItemsCheckedOrNA,
     setSnackbarText,
 }: CheckAllButtonProps): JSX.Element => {
     const { api, params } = useCommonHooks();
     const [checkAllStatus, setCheckAllStatus] = useState(AsyncStatus.INACTIVE);
+
     const checkAll = async (): Promise<void> => {
         setCheckAllStatus(AsyncStatus.LOADING);
-        const itemsToCheck = items.filter(
+
+        const itemsToCheck = checkItems.filter(
             (item) => !item.isOk && !item.isNotApplicable
         );
+
+        const customItemsToCheck = customCheckItems.filter(
+            (item) => !item.isOk
+        );
+
         try {
             await Promise.all(
                 itemsToCheck.map((item) => {
@@ -43,7 +59,30 @@ const CheckAllButton = ({
                     );
                 })
             );
-            itemsToCheck.forEach((item) => updateOk(true, item.id));
+            await Promise.all(
+                customItemsToCheck.map((item) => {
+                    return api.postCustomSetOk(
+                        params.plant,
+                        params.checklistId,
+                        item.id
+                    );
+                })
+            );
+            itemsToCheck.forEach((item) => {
+                updateCheck({
+                    value: true,
+                    checkItemId: item.id,
+                    setItems: setCheckItems,
+                });
+            });
+            customItemsToCheck.forEach((item) => {
+                updateCustomCheck({
+                    value: true,
+                    checkItemId: item.id,
+                    setItems: setCustomCheckItems,
+                });
+            });
+
             setCheckAllStatus(AsyncStatus.SUCCESS);
             setSnackbarText('Changes saved.');
         } catch (error) {
@@ -54,12 +93,14 @@ const CheckAllButton = ({
 
     const uncheckAll = async (): Promise<void> => {
         setCheckAllStatus(AsyncStatus.LOADING);
-        const itemsToCheck = items.filter(
+        const itemsToClear = checkItems.filter(
             (item) => item.isOk && !item.isNotApplicable
         );
+        const customItemsToClear = customCheckItems.filter((item) => item.isOk);
+
         try {
             await Promise.all(
-                itemsToCheck.map((item) => {
+                itemsToClear.map((item) => {
                     return api.postClear(
                         params.plant,
                         params.checklistId,
@@ -67,7 +108,38 @@ const CheckAllButton = ({
                     );
                 })
             );
-            itemsToCheck.forEach((item) => updateOk(false, item.id));
+
+            await Promise.all(
+                customItemsToClear.map((item) => {
+                    return api.postCustomClear(
+                        params.plant,
+                        params.checklistId,
+                        item.id
+                    );
+                })
+            );
+
+            itemsToClear.forEach((item) => {
+                updateCheck({
+                    value: false,
+                    checkItemId: item.id,
+                    setItems: setCheckItems,
+                });
+                updateNA({
+                    value: false,
+                    checkItemId: item.id,
+                    setItems: setCheckItems,
+                });
+            });
+
+            customItemsToClear.forEach((item) =>
+                updateCustomCheck({
+                    value: false,
+                    checkItemId: item.id,
+                    setItems: setCustomCheckItems,
+                })
+            );
+
             setCheckAllStatus(AsyncStatus.SUCCESS);
             setSnackbarText('Uncheck complete.');
         } catch (error) {
