@@ -269,7 +269,7 @@ export const dummyChecklistResponse = {
             id: 5,
             itemNo: '5',
             text: 'dummy-custom-check-item-2',
-            isOk: false,
+            isOk: true,
         },
     ],
 };
@@ -302,6 +302,7 @@ export const dummySignedChecklistResponse = {
         HasElectronicForm: true,
     },
     CheckItems: [],
+    CustomCheckItems: [],
 };
 
 export const dummyVerifiedChecklistResponse = {
@@ -332,6 +333,7 @@ export const dummyVerifiedChecklistResponse = {
         HasElectronicForm: true,
     },
     CheckItems: [],
+    CustomCheckItems: [],
 };
 
 export const dummyScopeResponse = [

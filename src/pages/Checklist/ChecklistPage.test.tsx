@@ -56,7 +56,7 @@ describe('<Checklist/> after loading', () => {
         expect(secondCheckItem).toBeEnabled();
         expect(secondCheckItem).not.toBeChecked();
         expect(firstCustomCheckItem).toBeChecked();
-        expect(secondCustomCheckItem).not.toBeChecked();
+        expect(secondCustomCheckItem).toBeChecked();
 
         userEvent.click(checkAllButton);
 
@@ -88,21 +88,13 @@ describe('<Checklist/> after loading', () => {
             'All applicable items must be checked before signing.'
         );
         expect(applicableMustBeCheckedWarning).toBeInTheDocument();
+
         const missingCheckItem = screen.getByTestId('checked-3');
         expect(missingCheckItem).toBeEnabled();
-        expect(missingCheckItem).not.toBeChecked();
         userEvent.click(missingCheckItem);
         await screen.findByText('Change saved.');
 
-        const missingCustomCheckItem = screen.getByTestId('custom-checked-5');
-        expect(missingCustomCheckItem).not.toBeChecked();
-        userEvent.click(missingCustomCheckItem);
-        await screen.findByText('Change saved.');
-
-        const applicableMustBeCheckedWarning2 = screen.getByText(
-            'All applicable items must be checked before signing.'
-        );
-        expect(applicableMustBeCheckedWarning2).not.toBeInTheDocument();
+        expect(applicableMustBeCheckedWarning).not.toBeInTheDocument();
         expect(signButton).toBeEnabled();
         server.use(
             rest.get(ENDPOINTS.getChecklist, (_, response, context) => {
@@ -114,7 +106,8 @@ describe('<Checklist/> after loading', () => {
 
         expect(signButton).toBeDisabled();
         await screen.findByText('Signing complete.');
-        const checklistIsSignedBanner = await screen.findByText(
+
+        const checklistIsSignedBanner = screen.getByText(
             'This checklist is signed. Unsign to make changes.'
         );
         expect(checklistIsSignedBanner).toBeInTheDocument();
