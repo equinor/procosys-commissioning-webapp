@@ -1,5 +1,4 @@
 import { Button, Checkbox, Scrim, TextField } from '@equinor/eds-core-react';
-import { CustomCheckItem } from '@equinor/procosys-webapp-components';
 import axios from 'axios';
 import React, { useState } from 'react';
 import styled from 'styled-components';
@@ -7,6 +6,7 @@ import EdsIcon from '../../../components/icons/EdsIcon';
 import { AsyncStatus } from '../../../contexts/CommAppContext';
 import { ProcosysApiService } from '../../../services/procosysApi';
 import { COLORS, SHADOW } from '../../../style/GlobalStyles';
+import { CustomCheckItem } from '../../../typings/apiTypes';
 import CheckHeader from './CheckHeader';
 import updateCustomCheck from './updateCustomCheck';
 

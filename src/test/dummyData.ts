@@ -258,6 +258,20 @@ export const dummyChecklistResponse = {
             IsNotApplicable: false,
         },
     ],
+    customCheckItems: [
+        {
+            id: 4,
+            itemNo: '4',
+            text: 'dummy-custom-check-item-1',
+            isOk: true,
+        },
+        {
+            id: 5,
+            itemNo: '5',
+            text: 'dummy-custom-check-item-2',
+            isOk: false,
+        },
+    ],
 };
 
 export const dummySignedChecklistResponse = {

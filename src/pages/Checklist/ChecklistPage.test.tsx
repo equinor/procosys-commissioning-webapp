@@ -46,16 +46,29 @@ describe('<Checklist/> after loading', () => {
         const checkAllButton = screen.getByRole('button', {
             name: 'Check all',
         });
+
         const firstCheckItem = screen.getByTestId('checked-2');
         const secondCheckItem = screen.getByTestId('checked-3');
+        const firstCustomCheckItem = screen.getByTestId('custom-checked-4');
+        const secondCustomCheckItem = screen.getByTestId('custom-checked-5');
+
         expect(firstCheckItem).toBeDisabled();
         expect(secondCheckItem).toBeEnabled();
         expect(secondCheckItem).not.toBeChecked();
+        expect(firstCustomCheckItem).toBeChecked();
+        expect(secondCustomCheckItem).not.toBeChecked();
+
         userEvent.click(checkAllButton);
+
         expect(checkAllButton).toBeDisabled();
+
         await screen.findByText('Changes saved.');
+
         expect(firstCheckItem).toBeDisabled();
         expect(secondCheckItem).toBeChecked();
+        expect(firstCustomCheckItem).toBeChecked();
+        expect(secondCustomCheckItem).toBeChecked();
+
         const uncheckAllButton = screen.getByRole('button', {
             name: 'Uncheck all',
         });
@@ -63,6 +76,8 @@ describe('<Checklist/> after loading', () => {
         await screen.findByText('Uncheck complete.');
         expect(firstCheckItem).toBeDisabled();
         expect(secondCheckItem).not.toBeChecked();
+        expect(firstCustomCheckItem).not.toBeChecked();
+        expect(secondCustomCheckItem).not.toBeChecked();
     });
 
     it('Lets user sign/unsign a checklist, showing relevant messages', async () => {
@@ -78,7 +93,16 @@ describe('<Checklist/> after loading', () => {
         expect(missingCheckItem).not.toBeChecked();
         userEvent.click(missingCheckItem);
         await screen.findByText('Change saved.');
-        expect(applicableMustBeCheckedWarning).not.toBeInTheDocument();
+
+        const missingCustomCheckItem = screen.getByTestId('custom-checked-5');
+        expect(missingCustomCheckItem).not.toBeChecked();
+        userEvent.click(missingCustomCheckItem);
+        await screen.findByText('Change saved.');
+
+        const applicableMustBeCheckedWarning2 = screen.getByText(
+            'All applicable items must be checked before signing.'
+        );
+        expect(applicableMustBeCheckedWarning2).not.toBeInTheDocument();
         expect(signButton).toBeEnabled();
         server.use(
             rest.get(ENDPOINTS.getChecklist, (_, response, context) => {
