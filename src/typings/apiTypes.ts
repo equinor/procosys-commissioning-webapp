@@ -170,9 +170,17 @@ export interface CheckItem {
     isNotApplicable: boolean;
 }
 
+export interface CustomCheckItem {
+    id: number;
+    itemNo: string;
+    text: string;
+    isOk: boolean;
+}
+
 export interface ChecklistResponse {
     checkList: ChecklistDetails;
     checkItems: CheckItem[];
+    customCheckItems: CustomCheckItem[];
 }
 
 export interface PunchCategory {

@@ -1,6 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AsyncStatus } from '../../contexts/CommAppContext';
-import { CheckItem, ChecklistDetails } from '../../typings/apiTypes';
+import {
+    CheckItem,
+    ChecklistDetails,
+    CustomCheckItem,
+} from '../../typings/apiTypes';
 import CheckItems from './CheckItems/CheckItems';
 import ChecklistSignature from './ChecklistSignature';
 import styled from 'styled-components';
@@ -14,6 +18,8 @@ import AsyncPage from '../../components/AsyncPage';
 import { Banner } from '@equinor/eds-core-react';
 import { Attachment, Attachments } from '@equinor/procosys-webapp-components';
 import PlantContext from '../../contexts/PlantContext';
+import CustomCheckItems from './CheckItems/CustomCheckItems';
+import CheckAllButton from './CheckItems/CheckAllButton';
 
 const ChecklistWrapper = styled.div`
     padding: 0 4%;
@@ -38,6 +44,19 @@ export const BottomSpacer = styled.div`
     height: 70px;
 `;
 
+const determineIfAllAreCheckedOrNA = (
+    checkItemsToDetermine: CheckItem[],
+    customCheckItemsToDetermine: CustomCheckItem[]
+): boolean => {
+    return (
+        checkItemsToDetermine.every(
+            (item) => item.isOk || item.isNotApplicable
+        ) &&
+        customCheckItemsToDetermine.every((item) => item.isOk) &&
+        !checkItemsToDetermine.every((item) => item.isNotApplicable)
+    );
+};
+
 const ChecklistPage = (): JSX.Element => {
     const { permissions } = useContext(PlantContext);
     const { params, api } = useCommonHooks();
@@ -48,6 +67,10 @@ const ChecklistPage = (): JSX.Element => {
     const [checkItems, setCheckItems] = useState<CheckItem[]>([]);
     const [checklistDetails, setChecklistDetails] =
         useState<ChecklistDetails>();
+    const [customCheckItems, setCustomCheckItems] = useState<CustomCheckItem[]>(
+        []
+    );
+
     const [isSigned, setIsSigned] = useState(false);
     const [isVerified, setIsVerified] = useState(false);
     const [allItemsCheckedOrNA, setAllItemsCheckedOrNA] = useState(true);
@@ -67,6 +90,7 @@ const ChecklistPage = (): JSX.Element => {
                     !!checklistResponse.checkList.verifiedByFirstName
                 );
                 setCheckItems(checklistResponse.checkItems);
+                setCustomCheckItems(checklistResponse.customCheckItems);
                 setChecklistDetails(checklistResponse.checkList);
                 setFetchChecklistStatus(AsyncStatus.SUCCESS);
             } catch (err) {
@@ -77,6 +101,12 @@ const ChecklistPage = (): JSX.Element => {
             source.cancel('Checklist component unmounted');
         };
     }, [params.checklistId, params.plant, reloadChecklist, api]);
+
+    useEffect(() => {
+        setAllItemsCheckedOrNA(
+            determineIfAllAreCheckedOrNA(checkItems, customCheckItems)
+        );
+    }, [checkItems, customCheckItems]);
 
     return (
         <AsyncPage
@@ -109,14 +139,36 @@ const ChecklistPage = (): JSX.Element => {
                 )}
                 {checklistDetails && (
                     <ChecklistWrapper>
+                        {!isSigned && (
+                            <CheckAllButton
+                                setSnackbarText={setSnackbarText}
+                                allItemsCheckedOrNA={allItemsCheckedOrNA}
+                                checkItems={checkItems}
+                                customCheckItems={customCheckItems}
+                                setCheckItems={setCheckItems}
+                                setCustomCheckItems={setCustomCheckItems}
+                            />
+                        )}
+
                         <CheckItems
-                            setAllItemsCheckedOrNA={setAllItemsCheckedOrNA}
-                            allItemsCheckedOrNA={allItemsCheckedOrNA}
+                            setCheckItems={setCheckItems}
                             checkItems={checkItems}
                             details={checklistDetails}
                             isSigned={isSigned}
                             setSnackbarText={setSnackbarText}
                         />
+                        <CustomCheckItems
+                            plantId={params.plant}
+                            checklistId={params.checklistId}
+                            customCheckItems={customCheckItems}
+                            setCustomCheckItems={setCustomCheckItems}
+                            isSigned={isSigned}
+                            setSnackbarText={setSnackbarText}
+                            api={api}
+                            canEdit={permissions.includes('CPCL/WRITE')}
+                            canCheck={permissions.includes('CPCL/SIGN')}
+                        />
+
                         <AttachmentsHeader>Attachments</AttachmentsHeader>
                         <AttachmentsWrapper>
                             <Attachments

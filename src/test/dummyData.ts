@@ -258,6 +258,20 @@ export const dummyChecklistResponse = {
             isNotApplicable: false,
         },
     ],
+    customCheckItems: [
+        {
+            id: 4,
+            itemNo: '4',
+            text: 'dummy-custom-check-item-1',
+            isOk: true,
+        },
+        {
+            id: 5,
+            itemNo: '5',
+            text: 'dummy-custom-check-item-2',
+            isOk: true,
+        },
+    ],
 };
 
 export const dummySignedChecklistResponse = {
@@ -288,6 +302,7 @@ export const dummySignedChecklistResponse = {
         HasElectronicForm: true,
     },
     CheckItems: [],
+    CustomCheckItems: [],
 };
 
 export const dummyVerifiedChecklistResponse = {
@@ -318,6 +333,7 @@ export const dummyVerifiedChecklistResponse = {
         HasElectronicForm: true,
     },
     CheckItems: [],
+    CustomCheckItems: [],
 };
 
 export const dummyScopeResponse = [
