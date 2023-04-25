@@ -825,7 +825,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     const getDocumentAttachment = async (
         cancelToken: CancelToken,
         plantId: string,
-        revisionId: string,
+        revisionId: number,
         attachmentId: number
     ): Promise<Blob> => {
         const { data } = await axios.get(
