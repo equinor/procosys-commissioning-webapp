@@ -10,16 +10,19 @@ import baseApiService from './services/baseApi';
 import procosysApiService from './services/procosysApi';
 import { getAppConfig, getAuthConfig } from './services/appConfiguration';
 import initializeAppInsights from './services/appInsights';
+import { createRoot } from 'react-dom/client';
 
 const render = (content: JSX.Element): void => {
-    ReactDOM.render(
+    const container = document.getElementById('root');
+    const root = createRoot(container!);
+
+    root.render(
         <React.StrictMode>
             <>
                 <GlobalStyles />
                 {content}
             </>
-        </React.StrictMode>,
-        document.getElementById('root')
+        </React.StrictMode>
     );
 };
 
