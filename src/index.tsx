@@ -2,7 +2,6 @@ import ErrorPage from './components/error/ErrorPage';
 import LoadingPage from './components/loading/LoadingPage';
 import GlobalStyles from './style/GlobalStyles';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import App from './App';
 import authService from './services/authService';
 import * as MSAL from '@azure/msal-browser';
@@ -12,10 +11,9 @@ import { getAppConfig, getAuthConfig } from './services/appConfiguration';
 import initializeAppInsights from './services/appInsights';
 import { createRoot } from 'react-dom/client';
 
+const container = document.getElementById('root');
+const root = createRoot(container!);
 const render = (content: JSX.Element): void => {
-    const container = document.getElementById('root');
-    const root = createRoot(container!);
-
     root.render(
         <React.StrictMode>
             <>
