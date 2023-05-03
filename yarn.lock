@@ -1268,10 +1268,10 @@
     "@popperjs/core" "2.9.2"
     react-popper "2.2.5"
 
-"@equinor/procosys-webapp-components@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@equinor/procosys-webapp-components/-/procosys-webapp-components-3.1.1.tgz#b639049e6ef1c6c2125d12a64cc707e93b0341f7"
-  integrity sha512-IUaSo+LkW0rjNmg8gVdWgP9iMDvPCp8ddTK2lNmVTH4zNXzyck86q1qLH4K4kF39AXfQDGgsAsGDFReEQU9pmQ==
+"@equinor/procosys-webapp-components@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@equinor/procosys-webapp-components/-/procosys-webapp-components-4.0.0.tgz#c7f5e969937c19fbc6e6b268c9186063e6fa3cb4"
+  integrity sha512-3Ua47erXdjKmWvqG1/SI6OaVXVBwYGGsmirUQr1jbQUrSupooc0R0CvFDXZhOPbP36moVEO5C9iM9SEm5HAg+w==
 
 "@eslint-community/eslint-utils@^4.2.0":
   version "4.4.0"
