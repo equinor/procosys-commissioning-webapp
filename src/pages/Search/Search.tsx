@@ -5,6 +5,7 @@ import {
     Navbar,
     ProcosysButton,
     SearchTypeButton,
+    useSnackbar,
 } from '@equinor/procosys-webapp-components';
 import Bookmarks from './Bookmarks/Bookmarks';
 import SearchArea from './Searching/SearchArea';
@@ -29,6 +30,7 @@ export enum SearchType {
 
 const Search = (): JSX.Element => {
     const [searchType, setSearchType] = useState<string | undefined>(undefined);
+    const { snackbar, setSnackbarText } = useSnackbar();
 
     return (
         <>
@@ -51,10 +53,14 @@ const Search = (): JSX.Element => {
                     />
                 </ButtonsWrapper>
                 {searchType ? (
-                    <SearchArea searchType={searchType} />
+                    <SearchArea
+                        searchType={searchType}
+                        setSnackbarText={setSnackbarText}
+                    />
                 ) : (
                     <Bookmarks />
                 )}
+                {snackbar}
             </SearchPageWrapper>
         </>
     );

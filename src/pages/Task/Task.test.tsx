@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { withPlantContext } from '../../test/contexts';
 import Task from './Task';
 import React from 'react';
@@ -25,10 +25,13 @@ describe('<Task/> loading errors', () => {
     it('Renders error message if unable to load task', async () => {
         causeApiError(ENDPOINTS.getTask, 'get');
         render(withPlantContext({ Component: <Task /> }));
-        const errorMessageInSnackbar = await screen.findByText(
-            'Unable to load task'
-        );
-        expect(errorMessageInSnackbar).toBeInTheDocument();
+
+        await waitFor(async () => {
+            const errorMessageInSnackbar = await screen.findByText(
+                'Unable to load task'
+            );
+            expect(errorMessageInSnackbar).toBeInTheDocument();
+        });
     });
 
     it('Renders error message if unable to load task attachments', async () => {
