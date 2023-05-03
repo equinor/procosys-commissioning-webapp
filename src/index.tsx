@@ -2,7 +2,6 @@ import ErrorPage from './components/error/ErrorPage';
 import LoadingPage from './components/loading/LoadingPage';
 import GlobalStyles from './style/GlobalStyles';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import App from './App';
 import authService from './services/authService';
 import * as MSAL from '@azure/msal-browser';
@@ -10,6 +9,7 @@ import baseApiService from './services/baseApi';
 import procosysApiService from './services/procosysApi';
 import { getAppConfig, getAuthConfig } from './services/appConfiguration';
 import initializeAppInsights from './services/appInsights';
+import ReactDOM from 'react-dom';
 
 const render = (content: JSX.Element): void => {
     ReactDOM.render(

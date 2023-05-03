@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import useCommonHooks from '../../../../../utils/useCommonHooks';
 import { Cell } from '@equinor/procosys-webapp-components/dist/typings/apiTypes';
 import { COLORS } from '../../../../../style/GlobalStyles';
+import { determineVariant } from '../../../../../utils/textFieldHelpers';
 
 const HelperText = styled.div`
     height: 12px;
@@ -150,11 +151,7 @@ const MetaTableCell = ({
                     label={label}
                     value={inputValueString ? inputValueString : ''}
                     disabled={disabled}
-                    variant={
-                        (submitStatus === AsyncStatus.ERROR && 'error') ||
-                        (submitStatus === AsyncStatus.SUCCESS && 'success') ||
-                        'default'
-                    }
+                    variant={determineVariant(submitStatus)}
                     onBlur={(): void => {
                         submitData(putStringCellApiCall);
                     }}
