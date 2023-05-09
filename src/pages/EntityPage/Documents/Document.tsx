@@ -51,7 +51,7 @@ const Document = ({ document, setSnackbar }: DocumentProps): JSX.Element => {
                         return api.getDocumentAttachment(
                             source.token,
                             params.plant,
-                            document.revisionNo,
+                            document.revisionId,
                             attachmentId
                         );
                     }}
