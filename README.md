@@ -10,7 +10,7 @@ Features include:
 `yarn install`
 
 * Make a copy of "settings.template.json" and place it in the src/ folder. 
-* Rename the file to "settings.json"
+* Rename the file to "settings.json".
 * Set the auth settings endpoint to a valid Azure function app endpoint.
 
 #### Run
