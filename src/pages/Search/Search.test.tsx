@@ -19,9 +19,7 @@ describe('<Search/>', () => {
         });
         expect(searchButton).toBeInTheDocument();
         userEvent.click(searchButton);
-        const searchField = await screen.findByRole('search', {
-            name: 'Searchbar',
-        });
+        const searchField = await screen.findByLabelText('Searchbar');
         expect(searchField).toBeInTheDocument();
         userEvent.type(searchField, 'test');
         expect(
@@ -34,9 +32,8 @@ describe('<Search/>', () => {
         });
         expect(searchButton).toBeInTheDocument();
         userEvent.click(searchButton);
-        const searchField = await screen.findByRole('search', {
-            name: 'Searchbar',
-        });
+        const searchField = await screen.findByLabelText('Searchbar');
+
         expect(searchField).toBeInTheDocument();
         userEvent.type(searchField, 'test');
         expect(
