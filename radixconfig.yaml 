@@ -11,14 +11,13 @@ spec:
     - name: prod
   components:
     - name: "server"
-    - environment: dev
-    src: "./.docker"
-    dockerfileName: "Dockerfile"
-    ports:
-      - name: http
-        port: 3000
-    public: true
-    environmentConfig:
+      src: "./.docker"
+      dockerfileName: "Dockerfile"
+      ports:
+        - name: http
+          port: 3000
+      public: true
+      environmentConfig:
     # Development environment
     - environment: dev
       identity:
