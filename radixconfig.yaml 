@@ -1,0 +1,32 @@
+apiVersion: radix.equinor.com/v1
+kind: RadixApplication
+metadata:
+  name: procosys-commissioning-webapp
+spec: 
+  environments:
+    - name: dev
+    - name: test
+    - name: prod
+  components:
+    - name: "server"
+    - environment: dev
+    src: "./.docker"
+    dockerfileName: "Dockerfile"
+    ports:
+      - name: http
+        port: 3000
+    public: true
+    environmentConfig:
+    # Development environment
+    - environment: dev
+      identity:
+        azure:
+          clientId: fb57fb35-f927-4271-9976-342070cb9f54
+    - environment: test
+      identity:
+        azure:
+          clientId: 88ea24df-ef2a-4f85-b9c0-dfb7ddffd4e3
+    - environment: prod
+      identity:
+        azure:
+          clientId: 76c09c7d-9570-4920-a2b3-87dabc06447f
