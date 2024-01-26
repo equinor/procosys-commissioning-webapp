@@ -11,7 +11,7 @@ spec:
     - name: prod
   components:
     - name: "server"
-      src: "./.docker"
+      src: "."
       dockerfileName: "Dockerfile"
       ports:
         - name: http
