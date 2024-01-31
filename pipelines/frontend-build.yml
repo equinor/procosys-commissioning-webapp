@@ -84,7 +84,7 @@ stages:
               # Deploy to Radix
               - template: templates/radix-deploy.yml
                 parameters:
-                  frontend: '${{ variables.versionNumber }}$(Build.BuildId)'
+                  imageTagNamesFrontend: '${{ variables.versionNumber }}$(Build.BuildId)'
 
 
 # Deploy to Test

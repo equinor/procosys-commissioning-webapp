@@ -13,7 +13,7 @@ parameters:
     default: 'procosys - non-prod'
     displayName: 'Service Connection'
 
-  - name: frontend
+  - name: imageTagNamesFrontend
     type: string
     displayName: 'Image tag name for frontend'
 
@@ -33,7 +33,7 @@ steps:
 
       ## Get current branch
       $body = ConvertTo-Json @{ 
-        imageTagNames = @{ 'frontend'='${{ parameters.frontend }}'; }  
+        imageTagNames = @{ 'frontend'='${{ parameters.imageTagNamesFrontend }}'; }  
         toEnvironment = 'dev'     
         triggeredBy = 'Azure-Devops ($(Build.RequestedFor))'
       } 
