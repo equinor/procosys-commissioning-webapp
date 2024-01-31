@@ -73,7 +73,7 @@ stages:
 
   jobs:
     - deployment: Deploy
-      displayName: Migrate DB & deploy
+      displayName: Deploy Frontend
       environment: '${{ variables.envGroupName }}'
       pool:
         vmImage: 'windows-latest'
@@ -84,9 +84,7 @@ stages:
               # Deploy to Radix
               - template: templates/radix-deploy.yml
                 parameters:
-                  server: '${{ variables.versionNumber }}$(Build.BuildId)'
-
-
+                  frontend: '${{ variables.versionNumber }}$(Build.BuildId)'
 
 
 # Deploy to Test

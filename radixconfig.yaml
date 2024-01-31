@@ -10,7 +10,7 @@ spec:
     - name: test
     - name: prod
   components:
-    - name: "server"
+    - name: frontend
       src: "."
       dockerfileName: "Dockerfile"
       ports:
