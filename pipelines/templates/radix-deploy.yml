@@ -33,7 +33,7 @@ steps:
 
       ## Get current branch
       $body = ConvertTo-Json @{ 
-        imageTagNames = @{ 'frontend'='${{ parameters.imageTagNamesFrontend }}'; }  
+        imageTagNamesFrontend = @{ 'frontend'='${{ parameters.imageTagNamesFrontend }}'; }  
         toEnvironment = 'dev'     
         triggeredBy = 'Azure-Devops ($(Build.RequestedFor))'
       } 
