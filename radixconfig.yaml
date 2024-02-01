@@ -10,7 +10,7 @@ spec:
 
   components:
   - name: frontend
-    image: procosys.azurecr.io/completion/api:{imageTagName}
+    image: procosys.azurecr.io/procosys/comm-webapp:{imageTagName}
     ports:
     - name: http
       port: 5000
