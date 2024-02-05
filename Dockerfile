@@ -17,8 +17,8 @@ COPY  .docker/scripts/ /etc/scripts/
 # Create non-root user. Set ui to 9999 to avoid conflicts with host OS just in case
 RUN adduser --disabled-password --uid 9999 --gecos "" apprunner
  
-# Create the folder and set the non-root as owner
-RUN mkdir /app && chown apprunner.apprunner /app
+#Set the non-root as owner
+RUN chown apprunner.apprunner /usr/share/nginx/html/comm
  
 # Change the user from root to non-root- From now on, all Docker commands are run as non-root user (except for COPY)
 USER 9999
