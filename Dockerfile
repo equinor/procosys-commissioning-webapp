@@ -6,11 +6,13 @@ RUN yarn install
 RUN yarn build --mode=production
 
 # production environment
-FROM nginx:1.21.6-alpine
+FROM docker.io/nginxinc/nginx-unprivileged:1.21.6-alpine
+user 0
 ## add permissions for nginx user
 RUN apk add python3
+WORKDIR /comm
 
-COPY --from=build /app/build /usr/share/nginx/html/comm
+COPY --from=build /app/build /comm
 COPY .docker/nginx/ /etc/nginx/
 COPY  .docker/scripts/ /etc/scripts/
 
@@ -18,7 +20,8 @@ COPY  .docker/scripts/ /etc/scripts/
 RUN adduser --disabled-password --uid 9999 --gecos "" apprunner
  
 #Set the non-root as owner
-RUN chown apprunner.apprunner /usr/share/nginx/html/comm
+RUN chown -R apprunner.apprunner /comm \
+    && chown -R apprunner:apprunner /etc/nginx/conf.d
  
 # Change the user from root to non-root- From now on, all Docker commands are run as non-root user (except for COPY)
 USER 9999
