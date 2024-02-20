@@ -43,9 +43,15 @@ type AppConfigResponse = {
 };
 
 export const getAuthConfig = async () => {
+
+    console.log("AUTH SETTINGS ENDPOINT: " + Settings.authSettingsEndpoint);
+
     const { data } = await axios.get<AuthConfigResponse>(
         Settings.authSettingsEndpoint
     );
+
+    console.log('DATA: ' + data);
+    console.log('REDIRECTURL: ' + window.location.origin + '/comm');
     // Todo: TypeGuard authsettings
     const clientSettings = {
         auth: {
