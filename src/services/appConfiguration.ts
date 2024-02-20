@@ -44,7 +44,7 @@ type AppConfigResponse = {
 
 export const getAuthConfig = async () => {
 
-    console.log("AUTH SETTINGS ENDPOINT: " + Settings.authSettingsEndpoint);
+    console.log('AUTH SETTINGS ENDPOINT: ' + Settings.authSettingsEndpoint);
 
     const { data } = await axios.get<AuthConfigResponse>(
         Settings.authSettingsEndpoint
