@@ -35,10 +35,9 @@ spec:
     - environment: test
       identity:
         azure:
-          clientId: 88ea24df-ef2a-4f85-b9c0-dfb7ddffd4e3
+          clientId: fd33ade5-557b-41c2-aea8-8c24f983ffcb
       variables:
-        procosysWebApi: '{"baseUrl":"https://pcs-main-api-dev.azurewebsites.net/api","apiVersion":"&api-version=4.1","scope":["api://dd38f169-bccf-4d0e-a4ad-d830893cfa75/web_api"]}'
-        ocrFunctionEndpoint: 'https://pcs-mc-webapp-non-prod-funcs.azurewebsites.net/api/pcs_ocr?'
+        pcs_authSettingsEndpoint: 'https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Auth'
       resources:
         requests:
           memory: '256Mi'
@@ -49,10 +48,9 @@ spec:
     - environment: prod
       identity:
         azure:
-          clientId: 76c09c7d-9570-4920-a2b3-87dabc06447f
+          clientId: 12b79e84-1ebe-4e81-83cb-61dd2febfee9
       variables:
-        procosysWebApi: '{"baseUrl":"https://pcs-main-api-dev.azurewebsites.net/api","apiVersion":"&api-version=4.1","scope":["api://dd38f169-bccf-4d0e-a4ad-d830893cfa75/web_api"]}'
-        ocrFunctionEndpoint: 'https://pcs-mc-webapp-non-prod-funcs.azurewebsites.net/api/pcs_ocr?'
+        pcs_authSettingsEndpoint: 'https://pcs-config-prod-func.azurewebsites.net/api/CommWebApp/Auth'
       resources:
         requests:
           memory: '256Mi'
