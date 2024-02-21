@@ -91,7 +91,7 @@ stages:
   variables:
     envName: 'test'
     envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
-    radixPromoteFromEnv: 'DeployDev'
+    radixPromoteFromEnv: 'dev'
     radixJobName: $[ stageDependencies.DeployDev.Deploy.outputs['Deploy.RADIXJOB.radixJobName'] ] # This variable must have been set by previous step
 
   jobs:
