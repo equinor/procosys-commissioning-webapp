@@ -15,9 +15,6 @@ spec:
     - name: http
       port: 5000
     publicPort: http
-    secrets:
-    - auth
-    - appInsights
     environmentConfig:
     # Development environment
     - environment: dev
@@ -27,8 +24,6 @@ spec:
       imageTagName: latest  
       variables:
         pcs_authSettingsEndpoint: 'https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Auth'
-        procosysWebApi: '{"baseUrl":"https://pcs-main-api-dev.azurewebsites.net/api","apiVersion":"&api-version=4.1","scope":["api://dd38f169-bccf-4d0e-a4ad-d830893cfa75/web_api"]}'
-        ocrFunctionEndpoint: 'https://pcs-mc-webapp-non-prod-funcs.azurewebsites.net/api/pcs_ocr?'
       monitoring: true
       resources:
         requests:
