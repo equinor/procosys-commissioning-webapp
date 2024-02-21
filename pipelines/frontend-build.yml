@@ -84,7 +84,7 @@ stages:
 
 # Deploy to Test
 - stage: test
-  displayName: 'Deploy to Test'
+  displayName: 'Promote to Test'
   dependsOn: 'dev'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/104956-radix')) #todo
 
@@ -92,11 +92,11 @@ stages:
     envName: 'test'
     envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
     radixPromoteFromEnv: 'dev'
-    radixJobName: $[ stageDependencies.DeployDev.Deploy.outputs['Deploy.RADIXJOB.radixJobName'] ] # This variable must have been set by previous step
+    radixJobName: $[ stageDependencies.env.Deploy.outputs['Deploy.RADIXJOB.radixJobName'] ] # This variable must have been set by previous step
 
   jobs:
     - deployment: Deploy
-      displayName: Migrate DB & promote
+      displayName: Promote
       environment: '${{ variables.envGroupName }}'
       pool:
         vmImage: 'windows-latest'
@@ -113,18 +113,18 @@ stages:
 
 # Deploy to Prod
 - stage: prod
-  displayName: 'Deploy to Prod'
+  displayName: 'Promote to Prod'
   dependsOn: 'test'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/104956-radix')) #todo
   variables:
     envName: 'prod'
     envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
     radixPromoteFromEnv: 'dev'
-    radixJobName: $[ stageDependencies.DeployDev.Deploy.outputs['Deploy.RADIXJOB.radixJobName'] ] # This variable must have been set by previous step
+    radixJobName: $[ stageDependencies.test.Deploy.outputs['Deploy.RADIXJOB.radixJobName'] ] # This variable must have been set by previous step
 
   jobs:
     - deployment: Deploy
-      displayName: Migrate DB & promote
+      displayName: Promote
       environment: '${{ variables.envGroupName }}'
       pool:
         vmImage: 'windows-latest'
