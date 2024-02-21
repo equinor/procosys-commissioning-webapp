@@ -65,11 +65,6 @@ stages:
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/104956-radix'))
   variables:
     envName: 'dev'
-    envLabel: 'non-prod'
-    envRg: '${{ variables.envRgName }}'
-    envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
-    serviceConnection: '${{ variables.nonProdServiceConnection }}'
-    containerRegistry: '${{ variables.containerRegistryName }}'
 
   jobs:
     - deployment: Deploy
@@ -86,62 +81,57 @@ stages:
                 parameters:
                   imageTagNamesFrontend: '${{ variables.versionNumber }}$(Build.BuildId)'
 
-
 # Deploy to Test
 - stage: test
   displayName: 'Deploy to Test'
   dependsOn: 'dev'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/104956-radix')) #todo
+
   variables:
     envName: 'test'
-    envLabel: 'non-prod'
-    envRg: '${{ variables.envRgName }}'
-    envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
-    serviceConnection: '${{ variables.nonProdServiceConnection }}'
-    containerRegistry: '${{ variables.containerRegistryName }}'
+    radixPromoteFromEnv: 'dev'
+    radixJobName: $[ stageDependencies.DeployDev.Deploy.outputs['Deploy.RADIXJOB.radixJobName'] ] # This variable must have been set by previous step
 
   jobs:
-  # Deploy to AKS
-  - template: /templates/pipelines/kubernetes/comm-webapp-deploy.yml@templates
-    parameters:
-      deploymentName: 'deploy_to_k8s'
-      dependsOn: ''
-      serviceConnection: '${{ variables.serviceConnection }}'
-      env: '${{ variables.envName }}'
-      envRg: '${{ variables.aksRgName }}'
-      envGroup: '${{ variables.envGroupName }}'
-      dockerImage: '${{ variables.containerRegistry }}.azurecr.io/${{ variables.repositoryName }}:$(Build.BuildId)'
-      clusterName: '${{ variables.aksTestName }}'
-      kvName: '${{ variables.kvName }}'
-      kvRgName: '${{ variables.kvRgName }}'
-      replicas: 2
+    - deployment: Deploy
+      displayName: Migrate DB & promote
+      environment: '${{ variables.envGroupName }}'
+      pool:
+        vmImage: 'windows-latest'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              # Promote to test
+              - template: templates/radix-promote-env.yml
+                parameters:
+                  fromEnvironment: $(radixPromoteFromEnv)
+                  toEnvironment: $(envName)
+                  deploymentName: $(radixJobName)
 
 # Deploy to Prod
 - stage: prod
   displayName: 'Deploy to Prod'
   dependsOn: 'test'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/104956-radix'))
   variables:
     envName: 'prod'
-    envLabel: 'prod'
-    envRg: '${{ variables.envRgName }}'
-    envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
-    serviceConnection: '${{ variables.prodServiceConnection }}'
-    containerRegistry: '${{ variables.containerRegistryName }}'
-    
+    radixPromoteFromEnv: 'dev'
+    radixJobName: $[ stageDependencies.DeployDev.Deploy.outputs['Deploy.RADIXJOB.radixJobName'] ] # This variable must have been set by previous step
 
   jobs:
-  # Deploy to AKS
-  - template: /templates/pipelines/kubernetes/comm-webapp-deploy.yml@templates
-    parameters:
-      deploymentName: 'deploy_to_k8s'
-      dependsOn: ''
-      serviceConnection: '${{ variables.serviceConnection }}'
-      env: '${{ variables.envName }}'
-      envRg: '${{ variables.aksRgName }}'
-      envGroup: '${{ variables.envGroupName }}'
-      dockerImage: '${{ variables.containerRegistry }}.azurecr.io/${{ variables.repositoryName }}:$(Build.BuildId)'
-      clusterName: '${{ variables.aksProdName }}'
-      kvName: '${{ variables.kvName }}'
-      kvRgName: '${{ variables.kvRgName }}'
-      replicas: 3
+    - deployment: Deploy
+      displayName: Migrate DB & promote
+      environment: '${{ variables.envGroupName }}'
+      pool:
+        vmImage: 'windows-latest'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              # Promote to test
+              - template: templates/radix-promote-env.yml
+                parameters:
+                  fromEnvironment: $(radixPromoteFromEnv)
+                  toEnvironment: $(envName)
+                  deploymentName: $(radixJobName)

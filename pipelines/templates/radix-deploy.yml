@@ -17,7 +17,6 @@ parameters:
     type: string
     displayName: 'Image tag name for frontend'
 
-
 steps:
 - task: AzureCLI@2
   displayName: Trigger deploy to radix
