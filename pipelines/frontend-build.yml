@@ -59,7 +59,7 @@ stages:
       dockerRegistryServiceConnection: '$(dockerRegistryServiceConnectionName)'
 
 # Deploy to Dev
-- stage: dev
+- stage: DeployDev
   displayName: 'Deploy to Dev'
   dependsOn: 'build'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/104956-radix')) #todo
@@ -83,16 +83,16 @@ stages:
                   imageTagNamesFrontend: '${{ variables.versionNumber }}$(Build.BuildId)'
 
 # Deploy to Test
-- stage: test
+- stage: DeployTest
   displayName: 'Promote to Test'
-  dependsOn: 'dev'
+  dependsOn: 'DeployDev'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/104956-radix')) #todo
 
   variables:
     envName: 'test'
     envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
-    radixPromoteFromEnv: 'dev'
-    radixJobName: $[ stageDependencies.env.Deploy.outputs['Deploy.RADIXJOB.radixJobName'] ] # This variable must have been set by previous step
+    radixPromoteFromEnv: 'DeployDev'
+    radixJobName: $[ stageDependencies.DeployDev.Deploy.outputs['Deploy.RADIXJOB.radixJobName'] ] # This variable must have been set by previous step
 
   jobs:
     - deployment: Deploy
@@ -112,15 +112,15 @@ stages:
                   deploymentName: $(radixJobName)
 
 # Deploy to Prod
-- stage: prod
+- stage: DeployProd
   displayName: 'Promote to Prod'
-  dependsOn: 'test'
+  dependsOn: 'DeployTest'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/104956-radix')) #todo
   variables:
     envName: 'prod'
     envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
-    radixPromoteFromEnv: 'dev'
-    radixJobName: $[ stageDependencies.test.Deploy.outputs['Deploy.RADIXJOB.radixJobName'] ] # This variable must have been set by previous step
+    radixPromoteFromEnv: 'test'
+    radixJobName: $[ stageDependencies.DeployTest.Deploy.outputs['Deploy.RADIXJOB.radixJobName'] ] # This variable must have been set by previous step
 
   jobs:
     - deployment: Deploy
