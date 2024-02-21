@@ -62,9 +62,10 @@ stages:
 - stage: dev
   displayName: 'Deploy to Dev'
   dependsOn: 'build'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/104956-radix'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/104956-radix')) #todo
   variables:
     envName: 'dev'
+    envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
 
   jobs:
     - deployment: Deploy
@@ -89,6 +90,7 @@ stages:
 
   variables:
     envName: 'test'
+    envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
     radixPromoteFromEnv: 'dev'
     radixJobName: $[ stageDependencies.DeployDev.Deploy.outputs['Deploy.RADIXJOB.radixJobName'] ] # This variable must have been set by previous step
 
@@ -113,9 +115,10 @@ stages:
 - stage: prod
   displayName: 'Deploy to Prod'
   dependsOn: 'test'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/104956-radix'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/104956-radix')) #todo
   variables:
     envName: 'prod'
+    envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
     radixPromoteFromEnv: 'dev'
     radixJobName: $[ stageDependencies.DeployDev.Deploy.outputs['Deploy.RADIXJOB.radixJobName'] ] # This variable must have been set by previous step
 
