@@ -1,7 +1,7 @@
 trigger:
   branches:
     include:
-    - main
+    - 104956-radix
 
 resources:
   repositories:
@@ -62,7 +62,7 @@ stages:
 - stage: DeployDev
   displayName: 'Deploy to Dev'
   dependsOn: 'build'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/104956-radix'))
   variables:
     envName: 'dev'
     envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
@@ -86,7 +86,7 @@ stages:
 - stage: DeployTest
   displayName: 'Promote to Test'
   dependsOn: 'DeployDev'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main')) 
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/104956-radix')) 
 
   variables:
     envName: 'test'
@@ -115,7 +115,7 @@ stages:
 - stage: DeployProd
   displayName: 'Promote to Prod'
   dependsOn: 'DeployTest'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/104956-radix'))
   variables:
     envName: 'prod'
     envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
