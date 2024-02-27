@@ -143,7 +143,7 @@ const Attachment = ({
             if (!(error instanceof Error)) return;
             if (!Axios.isCancel(error)) {
                 setDeleteStatus(AsyncStatus.ERROR);
-                setSnackbarText(error.toString());
+                setSnackbarText((error as Error).message);
             }
         }
     };

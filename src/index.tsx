@@ -33,6 +33,7 @@ const initialize = async () => {
         configurationEndpoint,
     } = await getAuthConfig();
     const authClient = new MSAL.PublicClientApplication(clientSettings);
+    await authClient.initialize();
     const authInstance = authService({
         MSAL: authClient,
         scopes: scopes,
