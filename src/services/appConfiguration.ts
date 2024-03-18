@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import axios from 'axios';
-
-const Settings = require('../settings.json');
+import * as Settings from '../settings.json'
 
 export type AuthSettings = {
     clientId: string;
@@ -23,7 +22,7 @@ type AuthConfigResponse = {
     clientId: string;
     authority: string;
     scopes: string[];
-    configurationScope: string[];
+        configurationScope: string[];
     configurationEndpoint: string;
 };
 
