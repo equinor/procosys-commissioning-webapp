@@ -26,8 +26,8 @@ describe('<Task/> loading errors', () => {
         causeApiError(ENDPOINTS.getTask, 'get');
         render(withPlantContext({ Component: <Task /> }));
 
-        await waitFor(async () => {
-            const errorMessageInSnackbar = await screen.findByText(
+        await waitFor(() => {
+            const errorMessageInSnackbar = screen.getByText(
                 'Unable to load task'
             );
             expect(errorMessageInSnackbar).toBeInTheDocument();
@@ -147,10 +147,11 @@ describe('<Task/> after successful loading', () => {
     });
 
     it('Shows a list of attachments', async () => {
-        const attachmentImage = await screen.findByAltText(
+        await renderTask();
+        const attachmentImages = await screen.findAllByAltText(
             'Dummy image thumbnail'
         );
-        expect(attachmentImage).toBeInTheDocument();
+        expect(attachmentImages.length).toBeGreaterThan(0);
     });
 
     it('Shows message if current task is the last task', async () => {
