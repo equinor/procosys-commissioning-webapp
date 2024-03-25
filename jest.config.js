@@ -1,7 +1,7 @@
 module.exports = {
     collectCoverageFrom: ['src/**/*.{ts,tsx}'],
     verbose: true,
-    preset: 'ts-jest',
+    preset: 'ts-jest/presets/js-with-ts',
     testEnvironment: 'jsdom',
     transformIgnorePatterns: [
         '/node_modules/(?!(@equinor/eds-tokens|@equinor/eds-icons))',

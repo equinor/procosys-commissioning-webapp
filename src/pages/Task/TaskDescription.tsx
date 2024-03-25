@@ -72,7 +72,7 @@ const TaskDescription = ({
             if (!(error instanceof Error)) return;
             if (!Axios.isCancel(error)) {
                 setPutCommentStatus(AsyncStatus.ERROR);
-                setSnackbarText(error.toString());
+                setSnackbarText((error as Error).message);
             }
         }
     };
