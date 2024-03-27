@@ -4,7 +4,8 @@ import useCommonHooks from '../../utils/useCommonHooks';
 import TaskDescription from './TaskDescription';
 import TaskParameters from './TaskParameters/TaskParameters';
 import TaskSignature from './TaskSignature';
-import Attachment, { AttachmentsWrapper } from '../../components/Attachment';
+import { Attachment, Attachments } from '@equinor/procosys-webapp-components';
+
 import {
     Task as TaskType,
     TaskParameter,
@@ -34,6 +35,9 @@ const NextTaskButton = styled(TaskPreviewButton)`
 
 const TaskWrapper = styled.main`
     padding: 16px 4%;
+`;
+const AttachmentsWrapper = styled.div`
+    padding: 16px 0;
 `;
 
 const findNextTask = (
@@ -205,23 +209,27 @@ const Task = (): JSX.Element => {
                         cardTitle={'Attachments'}
                     >
                         <AttachmentsWrapper>
-                            {attachments?.map((attachment) => (
-                                <Attachment
-                                    setSnackbarText={setSnackbarText}
-                                    attachment={attachment}
-                                    key={attachment.id}
-                                    getAttachment={(
-                                        cancelToken: CancelToken
-                                    ): Promise<Blob> =>
-                                        api.getTaskAttachment(
-                                            cancelToken,
-                                            params.plant,
-                                            params.taskId,
-                                            attachment.id
-                                        )
-                                    }
-                                />
-                            ))}
+                            <Attachments
+                                getAttachments={(): Promise<Attachment[]> =>
+                                    api.getTaskAttachments(
+                                        source.token,
+                                        params.plant,
+                                        params.taskId
+                                    )
+                                }
+                                getAttachment={(
+                                    attachmentId: number
+                                ): Promise<Blob> =>
+                                    api.getTaskAttachment(
+                                        source.token,
+                                        params.plant,
+                                        params.taskId,
+                                        attachmentId
+                                    )
+                                }
+                                setSnackbarText={setSnackbarText}
+                                readOnly
+                            />
                         </AttachmentsWrapper>
                     </AsyncCard>
                 ) : null}
