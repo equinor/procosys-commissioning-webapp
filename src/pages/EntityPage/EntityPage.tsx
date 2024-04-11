@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Tasks from './Tasks/Tasks';
 import styled from 'styled-components';
@@ -47,9 +47,20 @@ const CommPkg = (): JSX.Element => {
     const [fetchPunchListStatus, setFetchPunchListStatus] = useState(
         AsyncStatus.LOADING
     );
+
     const [fetchDocumentsStatus, setFetchDocumentsStatus] =
         useState<AsyncStatus>(AsyncStatus.LOADING);
     const source = Axios.CancelToken.source();
+
+    const fetchTasks = useCallback(
+        (cancelToken: CancelToken) =>
+            api.getTasks(params.plant, params.entityId, cancelToken),
+        [api, params.plant, params.entityId]
+    );
+
+    const { response: tasks1, fetchStatus: fetchTaskStatus } =
+        useAsyncGet(fetchTasks);
+
     const isOnScopePage =
         !history.location.pathname.includes('/punch-list') &&
         !history.location.pathname.includes('/documents') &&
@@ -102,6 +113,7 @@ const CommPkg = (): JSX.Element => {
                     ),
                 ]);
                 setScope(scopeFromApi);
+
                 if (scopeFromApi.length > 0) {
                     setFetchScopeStatus(AsyncStatus.SUCCESS);
                 } else {
@@ -157,7 +169,16 @@ const CommPkg = (): JSX.Element => {
                             />
                         )}
                     />
-                    <Route exact path={`${path}/tasks`} component={Tasks} />
+                    <Route
+                        exact
+                        path={`${path}/tasks`}
+                        render={(): JSX.Element => (
+                            <Tasks
+                                fetchStatus={fetchTaskStatus}
+                                tasks={tasks1}
+                            />
+                        )}
+                    />
                     <Route
                         exact
                         path={`${path}/punch-list`}

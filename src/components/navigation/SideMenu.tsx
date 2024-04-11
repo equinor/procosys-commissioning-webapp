@@ -7,7 +7,7 @@ import useCommonHooks from '../../utils/useCommonHooks';
 import { COLORS } from '../../style/GlobalStyles';
 import { StorageKey } from '@equinor/procosys-webapp-components';
 
-const SideMenuWrapper = styled.aside<{ isActive: boolean }>`
+const SideMenuWrapper = styled.aside<{ $isActive: boolean }>`
     width: 297px;
     position: fixed;
     top: 0;
@@ -17,9 +17,9 @@ const SideMenuWrapper = styled.aside<{ isActive: boolean }>`
     background-color: ${COLORS.white};
     border-right: 2px solid ${COLORS.fadedBlue};
     overflow-y: auto;
-    opacity: ${(props): string => (props.isActive ? '1' : '0')};
+    opacity: ${(props): string => (props.$isActive ? '1' : '0')};
     transform: ${(props): string =>
-        props.isActive ? 'translateX(0)' : 'translateX(-300px)'};
+        props.$isActive ? 'translateX(0)' : 'translateX(-300px)'};
     transition: transform 0.4s ease-in;
 `;
 
@@ -48,7 +48,7 @@ const UserNameText = styled.p`
     color: ${COLORS.darkGrey};
 `;
 
-const Backdrop = styled.div<{ isActive: boolean }>`
+const Backdrop = styled.div<{ $isActive: boolean }>`
     width: 100vw;
     height: 100vh;
     position: fixed;
@@ -58,8 +58,8 @@ const Backdrop = styled.div<{ isActive: boolean }>`
     backdrop-filter: blur(1px);
     z-index: 500;
     transition: transform 0.4s ease-in;
-    opacity: ${(props): string => (props.isActive ? '0.6' : '0')};
-    display: ${(props): string => (props.isActive ? 'block' : 'none')};
+    opacity: ${(props): string => (props.$isActive ? '0.6' : '0')};
+    display: ${(props): string => (props.$isActive ? 'block' : 'none')};
 `;
 
 const PlantInfo = styled.div`
@@ -91,10 +91,10 @@ const SideMenu = (): JSX.Element => {
                 Menu
             </Button>
             <Backdrop
-                isActive={drawerIsOpen}
+                $isActive={drawerIsOpen}
                 onClick={(): void => setDrawerIsOpen(false)}
             />
-            <SideMenuWrapper isActive={drawerIsOpen}>
+            <SideMenuWrapper $isActive={drawerIsOpen}>
                 <TopContent>
                     <h2>Welcome</h2>
                     <Button

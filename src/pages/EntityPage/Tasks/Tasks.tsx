@@ -4,8 +4,6 @@ import { Typography } from '@equinor/eds-core-react';
 import CompletionStatusIcon from '../../../components/icons/CompletionStatusIcon';
 import useCommonHooks from '../../../utils/useCommonHooks';
 import AsyncPage from '../../../components/AsyncPage';
-import useAsyncGet from '../../../utils/useAsyncGet';
-import { CancelToken } from 'axios';
 import { Link } from 'react-router-dom';
 import { CompletionStatus } from '@equinor/procosys-webapp-components';
 
@@ -34,12 +32,8 @@ export const TaskPreviewButton = styled(Link)`
     }
 `;
 
-const Tasks = (): JSX.Element => {
-    const { params, api, url } = useCommonHooks();
-    const { response: tasks, fetchStatus } = useAsyncGet(
-        (cancelToken: CancelToken) =>
-            api.getTasks(params.plant, params.entityId, cancelToken)
-    );
+const Tasks = ({ fetchStatus, tasks }): JSX.Element => {
+    const { url } = useCommonHooks();
 
     return (
         <AsyncPage

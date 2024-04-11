@@ -11,8 +11,9 @@ import { getAppConfig, getAuthConfig } from './services/appConfiguration';
 import initializeAppInsights from './services/appInsights';
 import ReactDOM from 'react-dom/client';
 
+const root = ReactDOM.createRoot(document.getElementById('root')!);
+
 const render = (content: JSX.Element): void => {
-    const root = ReactDOM.createRoot(document.getElementById('root')!);
     root.render(
         <React.StrictMode>
             <>
