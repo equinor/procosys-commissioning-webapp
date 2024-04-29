@@ -58,7 +58,7 @@ const CommPkg = (): JSX.Element => {
         [api, params.plant, params.entityId]
     );
 
-    const { response: tasks1, fetchStatus: fetchTaskStatus } =
+    const { response: tasksList, fetchStatus: fetchTaskStatus } =
         useAsyncGet(fetchTasks);
 
     const isOnScopePage =
@@ -175,7 +175,7 @@ const CommPkg = (): JSX.Element => {
                         render={(): JSX.Element => (
                             <Tasks
                                 fetchStatus={fetchTaskStatus}
-                                tasks={tasks1}
+                                tasks={tasksList}
                             />
                         )}
                     />

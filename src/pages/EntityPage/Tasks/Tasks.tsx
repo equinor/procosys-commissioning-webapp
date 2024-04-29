@@ -6,6 +6,8 @@ import useCommonHooks from '../../../utils/useCommonHooks';
 import AsyncPage from '../../../components/AsyncPage';
 import { Link } from 'react-router-dom';
 import { CompletionStatus } from '@equinor/procosys-webapp-components';
+import { AsyncStatus } from '../../../contexts/CommAppContext';
+import { TaskPreview } from '../../../typings/apiTypes';
 
 export const TaskPreviewButton = styled(Link)`
     display: flex;
@@ -32,7 +34,12 @@ export const TaskPreviewButton = styled(Link)`
     }
 `;
 
-const Tasks = ({ fetchStatus, tasks }): JSX.Element => {
+interface TasksProps {
+    fetchStatus: AsyncStatus;
+    tasks: TaskPreview[] | undefined;
+}
+
+const Tasks: React.FC<TasksProps> = ({ fetchStatus, tasks }): JSX.Element => {
     const { url } = useCommonHooks();
 
     return (
