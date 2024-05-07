@@ -53,7 +53,7 @@ const initialize = async () => {
   );
   const baseApiInstance = baseApiService({
     authInstance,
-    baseURL: "https://pcs-main-api-dev.azurewebsites.net/api",
+    baseURL: "https://pcs-main-api-dev-pr.azurewebsites.net/api",
     scope: appConfig.procosysWebApi.scope
   });
   const completionBaseApiInstance = baseApiService({

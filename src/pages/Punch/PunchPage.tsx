@@ -35,10 +35,10 @@ const PunchPage = (): JSX.Element => {
   const { permissions } = useContext(PlantContext);
 
   const getPunchItem = useCallback(async () => {
-    const punchFromApi = await api
+    const punchFromApi = await completionApi
       .getPunchItem(params.plant, params.punchItemId)
       .catch(() => setFetchPunchStatus(AsyncStatus.ERROR));
-    if (isOfType<PunchItem>(punchFromApi, "id")) {
+    if (isOfType<PunchItem>(punchFromApi, "guid")) {
       setPunch(punchFromApi);
       setFetchPunchStatus(AsyncStatus.SUCCESS);
     }
