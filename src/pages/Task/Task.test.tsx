@@ -8,6 +8,7 @@ import {
     dummySignedTaskResponse,
     dummyTaskResponse,
 } from '../../test/dummyData';
+import { act } from 'react-dom/test-utils';
 
 const renderTask = async (): Promise<void> => {
     render(withPlantContext({ Component: <Task /> }));
@@ -60,7 +61,9 @@ describe('<Task/> loading errors', () => {
 
 describe('<Task/> after successful loading', () => {
     beforeEach(async () => {
-        await renderTask();
+        await act(async () => {
+            renderTask();
+        });
     });
 
     it('Allows user to edit and save a comment', async () => {
@@ -77,6 +80,7 @@ describe('<Task/> after successful loading', () => {
         await editAndSaveComment();
 
         const messageInSnackbar = await screen.findByText('Error: dummy error');
+
         await waitFor(async () => {
             expect(messageInSnackbar).toBeInTheDocument();
         });

@@ -21,9 +21,10 @@ const baseApiService = ({
             if (request.headers) {
                 request.headers['Authorization'] = `Bearer ${token}`;
             }
-            return request;
+            return request!;
         } catch (error) {
-            if (error instanceof Error) throw new Error(error.message);
+            const pcsError = error as Error;
+            throw new Error(pcsError.message);
         }
     });
     axiosInstance.interceptors.response.use(
