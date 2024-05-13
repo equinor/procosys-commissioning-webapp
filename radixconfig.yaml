@@ -1,0 +1,64 @@
+apiVersion: radix.equinor.com/v1
+kind: RadixApplication
+metadata:
+  name: procosys-commissioning-webapp
+spec: 
+  environments:
+  - name: dev
+  - name: test
+  - name: prod
+
+  components:
+  - name: frontend
+    image: procosys.azurecr.io/procosys/comm-webapp:{imageTagName}
+    ports:
+    - name: http
+      port: 5000
+    publicPort: http
+    environmentConfig:
+    # Development environment
+    - environment: dev
+      identity:
+        azure:
+          clientId: fb57fb35-f927-4271-9976-342070cb9f54
+      imageTagName: latest  
+      variables:
+        pcs_authSettingsEndpoint: 'https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Auth'
+      monitoring: true
+      resources:
+        requests:
+          memory: '256Mi'
+          cpu: '100m'
+        limits:
+          memory: '256Mi'
+          cpu: '100m'      
+    - environment: test
+      identity:
+        azure:
+          clientId: fd33ade5-557b-41c2-aea8-8c24f983ffcb
+      variables:
+        pcs_authSettingsEndpoint: 'https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Auth'
+      resources:
+        requests:
+          memory: '256Mi'
+          cpu: '100m'
+        limits:
+          memory: '256Mi'
+          cpu: '100m'      
+    - environment: prod
+      identity:
+        azure:
+          clientId: 12b79e84-1ebe-4e81-83cb-61dd2febfee9
+      variables:
+        pcs_authSettingsEndpoint: 'https://pcs-config-prod-func.azurewebsites.net/api/CommWebApp/Auth'
+      resources:
+        requests:
+          memory: '256Mi'
+          cpu: '100m'
+        limits:
+          memory: '256Mi'
+          cpu: '100m'      
+  privateImageHubs:
+    procosys.azurecr.io:
+      username: 9d3898e4-730f-4fb5-8ddf-a5de51537896
+
