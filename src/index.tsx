@@ -13,6 +13,7 @@ import ReactDOM from 'react-dom/client';
 import { StyleSheetManager } from 'styled-components';
 import isPropValid from '@emotion/is-prop-valid';
 
+
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 
 const render = (content: JSX.Element): void => {

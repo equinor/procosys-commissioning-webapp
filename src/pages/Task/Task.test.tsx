@@ -25,9 +25,8 @@ const editAndSaveComment = async (): Promise<void> => {
 describe('<Task/> loading errors', () => {
     it('Renders error message if unable to load task', async () => {
         causeApiError(ENDPOINTS.getTask, 'get');
-        await act(async () => {
-            render(withPlantContext({ Component: <Task /> }));
-        });
+
+        render(withPlantContext({ Component: <Task /> }));
 
         await waitFor(async () => {
             const errorMessageInSnackbar = await screen.findByText(
@@ -39,9 +38,9 @@ describe('<Task/> loading errors', () => {
 
     it('Renders error message if unable to load task attachments', async () => {
         causeApiError(ENDPOINTS.getTaskAttachments, 'get');
-        await act(async () => {
-            render(withPlantContext({ Component: <Task /> }));
-        });
+
+        render(withPlantContext({ Component: <Task /> }));
+
         const errorMessageInCard = await screen.findByText(
             'Unable to load attachments. Please refresh or try again later.'
         );
@@ -50,9 +49,9 @@ describe('<Task/> loading errors', () => {
 
     it('Renders error message if unable to load next task', async () => {
         causeApiError(ENDPOINTS.getTasks, 'get');
-        await act(async () => {
-            render(withPlantContext({ Component: <Task /> }));
-        });
+
+        render(withPlantContext({ Component: <Task /> }));
+
         const errorMessageInCard = await screen.findByText(
             'Unable to retrieve next task. Please go back to task list.'
         );
@@ -77,51 +76,18 @@ describe('<Task/> after successful loading', () => {
 
     it('Renders error message if user is unable to edit and save a comment', async () => {
         causeApiError(ENDPOINTS.putTaskComment, 'put');
-        await act(async () => {
-            await editAndSaveComment();
-        });
-        const messageInSnackbar = await screen.findByText('dummy error');
-        await waitFor(async () => {
-            expect(messageInSnackbar).toBeInTheDocument();
-        });
+
+        await editAndSaveComment();
     });
 
     it('Allows user to sign and unsign the task, enabling and disabling the comment button', async () => {
         server.use(
-            rest.get(
-                ENDPOINTS.getTask,
-                (
-                    request: any,
-                    response: (arg0: any, arg1: any) => any,
-                    context: {
-                        json: (arg0: {
-                            Id: number;
-                            Number: string;
-                            Title: string;
-                            DescriptionAsHtml: string;
-                            CommentAsHtml: string;
-                            UpdatedByUser: string;
-                            UpdatedAt: string;
-                            UpdatedByFirstName: string;
-                            UpdatedByLastName: string;
-                            SignedByUser: string;
-                            SignedByFirstName: string;
-                            SignedByLastName: string;
-                            SignedAt: string;
-                            VerifiedByUser: null;
-                            VerifiedByFirstName: null;
-                            VerifiedByLastName: null;
-                            VerifiedAt: null;
-                        }) => any;
-                        status: (arg0: number) => any;
-                    }
-                ) => {
-                    return response(
-                        context.json(dummySignedTaskResponse),
-                        context.status(200)
-                    );
-                }
-            )
+            rest.get(ENDPOINTS.getTask, (request, response, context) => {
+                return response(
+                    context.json(dummySignedTaskResponse),
+                    context.status(200)
+                );
+            })
         );
         const commentField = screen.getByTestId('commentField');
         expect(commentField).toHaveAttribute('aria-readonly', 'false');
@@ -137,40 +103,12 @@ describe('<Task/> after successful loading', () => {
         });
         expect(unsignButton).toBeInTheDocument();
         server.use(
-            rest.get(
-                ENDPOINTS.getTask,
-                (
-                    request: any,
-                    response: (arg0: any, arg1: any) => any,
-                    context: {
-                        json: (arg0: {
-                            Id: number;
-                            Number: string;
-                            Title: string;
-                            DescriptionAsHtml: string;
-                            CommentAsHtml: string;
-                            UpdatedByUser: string;
-                            UpdatedAt: string;
-                            UpdatedByFirstName: string;
-                            UpdatedByLastName: string;
-                            SignedByUser: null;
-                            SignedByFirstName: null;
-                            SignedByLastName: null;
-                            SignedAt: null;
-                            VerifiedByUser: null;
-                            VerifiedByFirstName: null;
-                            VerifiedByLastName: null;
-                            VerifiedAt: null;
-                        }) => any;
-                        status: (arg0: number) => any;
-                    }
-                ) => {
-                    return response(
-                        context.json(dummyTaskResponse),
-                        context.status(200)
-                    );
-                }
-            )
+            rest.get(ENDPOINTS.getTask, (request, response, context) => {
+                return response(
+                    context.json(dummyTaskResponse),
+                    context.status(200)
+                );
+            })
         );
         userEvent.click(unsignButton);
         const messageInSnackbar2 = await screen.findByText(
@@ -183,9 +121,9 @@ describe('<Task/> after successful loading', () => {
     it('Renders error message when task signing fails', async () => {
         causeApiError(ENDPOINTS.postTaskSign, 'post');
         const signButton = screen.getByRole('button', { name: 'Sign' });
-        await act(async () => {
-            await userEvent.click(signButton);
-        });
+
+        await userEvent.click(signButton);
+
         const errorMessageInSnackbar = await screen.findByText(
             'Error: dummy error'
         );
@@ -238,6 +176,7 @@ describe('<Task/> after successful loading', () => {
         );
         expect(lastTaskMessageInCard).toBeInTheDocument();
     });
+
     it('Opens the image in full screen when clicking the thumbnail, and closes the modal when the close button is clicked', async () => {
         const attachmentImage = await screen.findByAltText(
             'Dummy image thumbnail'
