@@ -4,7 +4,7 @@ import useCommonHooks from '../../utils/useCommonHooks';
 import TaskDescription from './TaskDescription';
 import TaskParameters from './TaskParameters/TaskParameters';
 import TaskSignature from './TaskSignature';
-import Attachment, { AttachmentsWrapper } from '../../components/Attachment';
+import { Attachment, Attachments } from '@equinor/procosys-webapp-components';
 import {
     Task as TaskType,
     TaskParameter,
@@ -34,6 +34,9 @@ const NextTaskButton = styled(TaskPreviewButton)`
 
 const TaskWrapper = styled.main`
     padding: 16px 4%;
+`;
+const AttachmentsWrapper = styled.div`
+    padding: 16px 0;
 `;
 
 const findNextTask = (
@@ -70,7 +73,9 @@ const Task = (): JSX.Element => {
     const source = Axios.CancelToken.source();
 
     useEffect(() => {
-        (async (): Promise<void> => {
+        const source = Axios.CancelToken.source();
+
+        const fetchData = async () => {
             try {
                 const [taskFromApi, attachmentsFromApi, parametersFromApi] =
                     await Promise.all([
@@ -106,14 +111,19 @@ const Task = (): JSX.Element => {
                     setSnackbarText('Unable to load task');
                 }
             }
-        })();
-        return (): void => {
-            source.cancel();
+        };
+
+        fetchData();
+
+        return () => {
+            source.cancel('Operation canceled by the user.');
         };
     }, [api, params.plant, params.taskId, refreshTask]);
 
     useEffect(() => {
-        (async (): Promise<void> => {
+        const source = Axios.CancelToken.source();
+
+        const fetchNextTask = async () => {
             try {
                 const tasksFromApi = await api.getTasks(
                     params.plant,
@@ -132,9 +142,12 @@ const Task = (): JSX.Element => {
                     setSnackbarText('Unable to load next task.');
                 }
             }
-        })();
-        return (): void => {
-            source.cancel();
+        };
+
+        fetchNextTask();
+
+        return () => {
+            source.cancel('Operation canceled by the user.');
         };
     }, [api, params.taskId, params.plant, params.entityId]);
 
@@ -205,23 +218,48 @@ const Task = (): JSX.Element => {
                         cardTitle={'Attachments'}
                     >
                         <AttachmentsWrapper>
-                            {attachments?.map((attachment) => (
-                                <Attachment
-                                    setSnackbarText={setSnackbarText}
-                                    attachment={attachment}
-                                    key={attachment.id}
-                                    getAttachment={(
-                                        cancelToken: CancelToken
-                                    ): Promise<Blob> =>
-                                        api.getTaskAttachment(
-                                            cancelToken,
-                                            params.plant,
-                                            params.taskId,
-                                            attachment.id
-                                        )
-                                    }
-                                />
-                            ))}
+                            <Attachments
+                                getAttachments={(): Promise<Attachment[]> =>
+                                    api.getTaskAttachments(
+                                        source.token,
+                                        params.plant,
+                                        params.taskId
+                                    )
+                                }
+                                getAttachment={(
+                                    attachmentId: number
+                                ): Promise<Blob> =>
+                                    api.getTaskAttachment(
+                                        source.token,
+                                        params.plant,
+                                        params.taskId,
+                                        attachmentId
+                                    )
+                                }
+                                postAttachment={(
+                                    file: FormData,
+                                    title: string
+                                ): Promise<void> =>
+                                    api.postTaskAttachment(
+                                        params.plant,
+                                        parseInt(params.taskId),
+                                        file,
+                                        title
+                                    )
+                                }
+                                deleteAttachment={(
+                                    attachmentId: number
+                                ): Promise<void> =>
+                                    api.deleteTaskAttachment(
+                                        source.token,
+                                        params.plant,
+                                        params.taskId,
+                                        attachmentId
+                                    )
+                                }
+                                setSnackbarText={setSnackbarText}
+                                readOnly={isSigned}
+                            />
                         </AttachmentsWrapper>
                     </AsyncCard>
                 ) : null}

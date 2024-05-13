@@ -695,6 +695,50 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         return data as Blob;
     };
 
+    const postTaskAttachment = async (
+        plantId: string,
+        taskId: number,
+        formData: FormData,
+        title: string
+    ): Promise<void> => {
+        try {
+            await axios.post(
+                `CommPkg/Task/Attachment?plantId=PCS$${plantId}&taskId=${taskId}&title=${title}&api-version=4.1`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+        } catch (error) {
+            console.error('Failed to post attachment:', error);
+            throw error;
+        }
+    };
+
+    const deleteTaskAttachment = async (
+        cancelToken: CancelToken,
+        plantId: string,
+        taskId: string,
+        attachmentId: number
+    ): Promise<void> => {
+        const dto = {
+            TaskId: parseInt(taskId),
+            AttachmentId: attachmentId,
+        };
+
+        try {
+            await axios.delete(
+                `CommPkg/Task/Attachment?plantId=PCS$${plantId}&api-version=4.1`,
+                { data: dto, cancelToken: cancelToken }
+            );
+        } catch (error) {
+            console.error('Failed to delete attachment:', error);
+            throw error;
+        }
+    };
+
     const getPunchAttachments = async (
         plantId: string,
         punchItemId: number,
@@ -970,6 +1014,8 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
         deleteCustomCheckItem,
         postCustomClear,
         postCustomSetOk,
+        postTaskAttachment,
+        deleteTaskAttachment,
     };
 };
 
