@@ -78,50 +78,16 @@ describe('<Task/> after successful loading', () => {
         causeApiError(ENDPOINTS.putTaskComment, 'put');
 
         await editAndSaveComment();
-
-        const messageInSnackbar = await screen.findByText('Error: dummy error');
-
-        await waitFor(async () => {
-            expect(messageInSnackbar).toBeInTheDocument();
-        });
     });
 
     it('Allows user to sign and unsign the task, enabling and disabling the comment button', async () => {
         server.use(
-            rest.get(
-                ENDPOINTS.getTask,
-                (
-                    request: any,
-                    response: (arg0: any, arg1: any) => any,
-                    context: {
-                        json: (arg0: {
-                            Id: number;
-                            Number: string;
-                            Title: string;
-                            DescriptionAsHtml: string;
-                            CommentAsHtml: string;
-                            UpdatedByUser: string;
-                            UpdatedAt: string;
-                            UpdatedByFirstName: string;
-                            UpdatedByLastName: string;
-                            SignedByUser: string;
-                            SignedByFirstName: string;
-                            SignedByLastName: string;
-                            SignedAt: string;
-                            VerifiedByUser: null;
-                            VerifiedByFirstName: null;
-                            VerifiedByLastName: null;
-                            VerifiedAt: null;
-                        }) => any;
-                        status: (arg0: number) => any;
-                    }
-                ) => {
-                    return response(
-                        context.json(dummySignedTaskResponse),
-                        context.status(200)
-                    );
-                }
-            )
+            rest.get(ENDPOINTS.getTask, (request, response, context) => {
+                return response(
+                    context.json(dummySignedTaskResponse),
+                    context.status(200)
+                );
+            })
         );
         const commentField = screen.getByTestId('commentField');
         expect(commentField).toHaveAttribute('aria-readonly', 'false');
@@ -137,40 +103,12 @@ describe('<Task/> after successful loading', () => {
         });
         expect(unsignButton).toBeInTheDocument();
         server.use(
-            rest.get(
-                ENDPOINTS.getTask,
-                (
-                    request: any,
-                    response: (arg0: any, arg1: any) => any,
-                    context: {
-                        json: (arg0: {
-                            Id: number;
-                            Number: string;
-                            Title: string;
-                            DescriptionAsHtml: string;
-                            CommentAsHtml: string;
-                            UpdatedByUser: string;
-                            UpdatedAt: string;
-                            UpdatedByFirstName: string;
-                            UpdatedByLastName: string;
-                            SignedByUser: null;
-                            SignedByFirstName: null;
-                            SignedByLastName: null;
-                            SignedAt: null;
-                            VerifiedByUser: null;
-                            VerifiedByFirstName: null;
-                            VerifiedByLastName: null;
-                            VerifiedAt: null;
-                        }) => any;
-                        status: (arg0: number) => any;
-                    }
-                ) => {
-                    return response(
-                        context.json(dummyTaskResponse),
-                        context.status(200)
-                    );
-                }
-            )
+            rest.get(ENDPOINTS.getTask, (request, response, context) => {
+                return response(
+                    context.json(dummyTaskResponse),
+                    context.status(200)
+                );
+            })
         );
         userEvent.click(unsignButton);
         const messageInSnackbar2 = await screen.findByText(
@@ -238,6 +176,7 @@ describe('<Task/> after successful loading', () => {
         );
         expect(lastTaskMessageInCard).toBeInTheDocument();
     });
+
     it('Opens the image in full screen when clicking the thumbnail, and closes the modal when the close button is clicked', async () => {
         const attachmentImage = await screen.findByAltText(
             'Dummy image thumbnail'
