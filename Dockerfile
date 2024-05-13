@@ -6,13 +6,10 @@ RUN yarn install
 RUN yarn build --mode=production
 
 # production environment
-FROM docker.io/nginxinc/nginx-unprivileged:1.21.6-alpine
-user 0
+FROM nginx:1.21.6-alpine
 ## add permissions for nginx user
 RUN apk add python3
-WORKDIR /comm
-
-COPY --from=build /app/build /comm
+COPY --from=build /app/dist /usr/share/nginx/html/comm
 COPY .docker/nginx/ /etc/nginx/
 COPY  .docker/scripts/ /etc/scripts/
 
