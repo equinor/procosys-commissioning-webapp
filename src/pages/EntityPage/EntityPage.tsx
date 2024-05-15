@@ -48,6 +48,9 @@ const CommPkg = (): JSX.Element => {
   const [fetchDocumentsStatus, setFetchDocumentsStatus] = useState<AsyncStatus>(
     AsyncStatus.LOADING
   );
+  const [fetchTasksStatus, setFetchTasksStatus] = useState<AsyncStatus>(
+    AsyncStatus.LOADING
+  );
   const source = Axios.CancelToken.source();
   const isOnScopePage =
     !history.location.pathname.includes("/punch-list") &&
@@ -61,6 +64,11 @@ const CommPkg = (): JSX.Element => {
       .catch(() => setFetchFooterDataStatus(AsyncStatus.ERROR));
     if (isArrayOfType<TaskPreview>(tasksFromApi, "id")) {
       setTasks(tasksFromApi);
+      if (tasksFromApi.length) {
+        setFetchTasksStatus(AsyncStatus.SUCCESS);
+      } else {
+        setFetchTasksStatus(AsyncStatus.EMPTY_RESPONSE);
+      }
     }
     const documents = await api
       .getDocuments(params.plant, params.entityId, source.token)
@@ -73,7 +81,7 @@ const CommPkg = (): JSX.Element => {
         setFetchDocumentsStatus(AsyncStatus.SUCCESS);
       }
     }
-  }, [api, params.entityId]);
+  }, [params.plant, params.searchType, params.entityId]);
 
   const getScopeAndPunchList = useCallback(async () => {
     const scopeFromApi = await api
@@ -108,7 +116,7 @@ const CommPkg = (): JSX.Element => {
     if (fetchFooterDataStatus != AsyncStatus.ERROR) {
       setFetchFooterDataStatus(AsyncStatus.SUCCESS);
     }
-  }, [params.plant, params.searchType, params.entityId, source.token]);
+  }, [params.plant, params.searchType, params.entityId]);
 
   useEffect(() => {
     getScopeAndPunchList();
@@ -116,7 +124,7 @@ const CommPkg = (): JSX.Element => {
     return (): void => {
       source.cancel();
     };
-  }, [api, params.entityId]);
+  }, [params.plant, params.entityId, params.searchType]);
 
   return (
     <main>
@@ -148,7 +156,13 @@ const CommPkg = (): JSX.Element => {
               />
             )}
           />
-          <Route exact path={`${path}/tasks`} component={Tasks} />
+          <Route
+            exact
+            path={`${path}/tasks`}
+            render={(): JSX.Element => (
+              <Tasks fetchStatus={fetchTasksStatus} tasks={tasks} />
+            )}
+          />
           <Route
             exact
             path={`${path}/punch-list`}

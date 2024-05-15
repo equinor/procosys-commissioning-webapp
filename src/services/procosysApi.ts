@@ -647,7 +647,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     cancelToken: CancelToken,
     plantId: string,
     taskId: string,
-    attachmentId: number
+    attachmentId: string
   ): Promise<Blob> => {
     const { data } = await axios.get(
       `CommPkg/Task/Attachment?plantId=PCS$${plantId}&taskId=${taskId}&attachmentId=${attachmentId}${apiVersion}`,
@@ -792,7 +792,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     cancelToken: CancelToken,
     plantId: string,
     revisionId: number,
-    attachmentId: number
+    attachmentId: string
   ): Promise<Blob> => {
     const { data } = await axios.get(
       `CommPkg/DocumentsWithAttachments/Attachment?plantId=PCS$${plantId}&revisionId=${revisionId}&attachmentId=${attachmentId}${apiVersion}`,

@@ -91,7 +91,7 @@ const PunchPage = (): JSX.Element => {
           ]}
           headerText={punch.tagNo}
           description={punch.tagDescription}
-          attachments={1}
+          attachments={punch.attachmentCount}
           chips={[punch.itemNo.toString()]}
         />
       );
