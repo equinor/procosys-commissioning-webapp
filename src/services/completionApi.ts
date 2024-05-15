@@ -1,10 +1,13 @@
 import {
+  APIComment,
   PunchAction,
   UpdatePunchData,
   isArrayOfType
 } from "@equinor/procosys-webapp-components";
 import { AxiosInstance, CancelToken } from "axios";
 import {
+  Attachment,
+  LibrayTypes,
   NewPunch,
   PunchItem,
   PunchOrganization,
@@ -37,6 +40,19 @@ const completionApiService = ({ axios }: ProcosysApiServiceProps) => {
     if (!isArrayOfType<PunchPreview>(data, "isRestrictedForUser")) {
       throw new Error(typeGuardErrorMessage("punch preview"));
     }
+    return data;
+  };
+
+  const getLibraryTypes = async (
+    plantId: string,
+    cancelToken: CancelToken
+  ): Promise<LibrayTypes[]> => {
+    const { data } = await axios.get(
+      `LibraryItems?libraryTypes=PUNCHLIST_TYPE&libraryTypes=COMPLETION_ORGANIZATION&libraryTypes=PUNCHLIST_SORTING&libraryTypes=PUNCHLIST_PRIORITY`,
+      {
+        ...headers(plantId, cancelToken)
+      }
+    );
     return data;
   };
 
@@ -110,24 +126,82 @@ const completionApiService = ({ axios }: ProcosysApiServiceProps) => {
 
   const putUpdatePunch = async (
     plantId: string,
-    punchItemId: string,
-    updateData: UpdatePunchData,
-    endpoint: string
+    punchItemGuid: string,
+    value: UpdatePunchData,
+    path: string,
+    rowVersion: string
   ): Promise<void> => {
-    const dto = { PunchItemId: punchItemId, ...updateData };
-    await axios.put(`PunchItems/${endpoint}`, dto, { ...headers(plantId) });
+    const dto = {
+      rowVersion,
+      patchDocument: [{ value, path, op: "replace" }]
+    };
+    await axios.patch(`PunchItems/${punchItemGuid}`, dto, {
+      headers: {
+        "Content-Type": "application/json-patch+json",
+        "x-plant": `PCS$${plantId}`
+      }
+    });
   };
 
   // Used for clearing, unclearing, rejecting and verifying a
   const postPunchAction = async (
     plantId: string,
-    punchItemId: string,
-    punchAction: PunchAction
-  ): Promise<void> => {
-    await axios.post(`PunchListItem/${punchAction}`, { ...headers(plantId) });
+    punchGuid: string,
+    punchAction: PunchAction,
+    rowVersion: string
+  ): Promise<string> => {
+    const { data } = await axios.post(
+      `PunchItems/${punchGuid}/${punchAction}`,
+      { rowVersion },
+      {
+        ...headers(plantId)
+      }
+    );
+    return data;
+  };
+
+  const getPunchAttachments = async (
+    plantId: string,
+    guid: string
+  ): Promise<Attachment[]> => {
+    const { data } = await axios.get(`PunchItems/${guid}/Attachments`, {
+      ...headers(plantId)
+    });
+    return data;
+  };
+
+  const getPunchAttachment = async (
+    cancelToken: CancelToken,
+    plantId: string,
+    punchGuid: string,
+    attachmentGuid: string
+  ): Promise<Blob> => {
+    const { data } = await axios.get(
+      `PunchItems/${punchGuid}/Attachments/${attachmentGuid}`,
+      {
+        cancelToken: cancelToken,
+        responseType: "blob",
+        headers: {
+          "x-plant": `PCS$${plantId}`,
+          "Content-Disposition": 'attachment; filename="filename.jpg"'
+        }
+      }
+    );
+    return data;
+  };
+
+  const getPunchComments = async (
+    plantId: string,
+    guid: string
+  ): Promise<APIComment[]> => {
+    const { data } = await axios.get(`PunchItems/${guid}/Comments`, {
+      ...headers(plantId)
+    });
+    return data;
   };
 
   return {
+    getLibraryTypes,
     getPunchList,
     getPunchTypes,
     getPunchOrganizations,
@@ -136,7 +210,10 @@ const completionApiService = ({ axios }: ProcosysApiServiceProps) => {
     postNewPunch,
     putUpdatePunch,
     getPunchItem,
-    postPunchAction
+    postPunchAction,
+    getPunchAttachments,
+    getPunchAttachment,
+    getPunchComments
   };
 };
 

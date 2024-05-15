@@ -1,4 +1,8 @@
-import { CompletionStatus } from "@equinor/procosys-webapp-components";
+import {
+  CompletionStatus,
+  DocumentAttachment,
+  DocumentRelationType
+} from "@equinor/procosys-webapp-components";
 
 export type Project = {
   description: string;
@@ -196,7 +200,12 @@ export interface PunchType {
   code: string;
   description: string;
 }
-
+export interface LibrayTypes {
+  guid: string;
+  libraryType: string;
+  code: string;
+  description: string;
+}
 export interface PunchOrganization {
   id: number;
   parentId: number;
@@ -291,11 +300,17 @@ type Guid = string;
 type DateTimeString = string; // Assuming ISO 8601 format for dates
 
 interface User {
-  guid: Guid;
+  id: number;
+  userName: string;
   firstName: string;
   lastName: string;
-  userName: string;
-  email: string;
+  emailAddress: string;
+  officePhoneNo: null;
+  mobilePhoneNo: null;
+  isVoided: boolean;
+  nameAndUserNameAsString: string;
+  fullName: string;
+  fullNameFormal: string;
 }
 
 interface OrganizationDetail {
@@ -309,8 +324,16 @@ interface PriorityAndSorting {
   code: string;
   description: string;
 }
-
-export interface Document {
+export interface Document extends DocumentData {
+  documentId: number;
+  documentNo: string;
+  title: string;
+  revisionNo: string;
+  revisionId: number;
+  relationType: DocumentRelationType;
+  attachments: DocumentAttachment[];
+}
+export interface DocumentData {
   guid: Guid;
   no: string;
 }
@@ -359,7 +382,7 @@ export interface PunchItem {
   document: Document;
   swcr: SWCR;
   rowVersion: string;
-  attachments?: AttachmentData[];
+  attachments?: Attachment[];
 }
 export type WorkOrder = {
   no: string;
@@ -369,7 +392,7 @@ export interface AttachmentData {
   parentGuid: string;
   guid: string;
   fullBlobPath: string;
-  sasUri: string;
+  sasUri?: string;
   fileName: string;
   description: string;
   labels: string[];
@@ -392,17 +415,17 @@ export interface AttachmentData {
   rowVersion: string;
 }
 interface User {
-  Id: number;
-  UserName: string;
-  FirstName: string;
-  LastName: string;
-  EmailAddress: string;
-  OfficePhoneNo: null;
-  MobilePhoneNo: null;
-  IsVoided: boolean;
-  NameAndUserNameAsString: string;
-  FullName: string;
-  FullNameFormal: string;
+  id: number;
+  userName: string;
+  firstName: string;
+  lastName: string;
+  emailAddress: string;
+  officePhoneNo: null;
+  mobilePhoneNo: null;
+  isVoided: boolean;
+  nameAndUserNameAsString: string;
+  fullName: string;
+  fullNameFormal: string;
 }
 
 export interface Task {
@@ -433,7 +456,7 @@ export interface TaskParameter {
   referenceUnit: string;
 }
 
-export interface Attachment {
+export interface Attachment extends AttachmentData {
   id: number;
   uri: string;
   title: string;

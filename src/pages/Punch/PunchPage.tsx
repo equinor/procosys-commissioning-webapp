@@ -26,8 +26,9 @@ import ClearPunchWrapper from "./ClearPunchWrapper";
 import VerifyPunchWrapper from "./VerifyPunchWrapper";
 
 const PunchPage = (): JSX.Element => {
-  const { api, params, path, history, url, completionApi } = useCommonHooks();
+  const { params, path, history, url, completionApi } = useCommonHooks();
   const [punch, setPunch] = useState<PunchItem>();
+  const [rowVersion, setRowVersion] = useState<string>();
   const [fetchPunchStatus, setFetchPunchStatus] = useState<AsyncStatus>(
     AsyncStatus.LOADING
   );
@@ -38,6 +39,7 @@ const PunchPage = (): JSX.Element => {
     const punchFromApi = await completionApi
       .getPunchItem(params.plant, params.punchItemId)
       .catch(() => setFetchPunchStatus(AsyncStatus.ERROR));
+
     if (isOfType<PunchItem>(punchFromApi, "guid")) {
       setPunch(punchFromApi);
       setFetchPunchStatus(AsyncStatus.SUCCESS);
@@ -49,16 +51,17 @@ const PunchPage = (): JSX.Element => {
     return (): void => {
       source.cancel();
     };
-  }, []);
+  }, [rowVersion]);
 
   const determineComponentToRender = (): JSX.Element => {
     if (punch === undefined) return <SkeletonLoadingPage />;
-    if (punch.clearedAt != null) {
+    if (punch.clearedAtUtc != null) {
       return (
         <VerifyPunchWrapper
           punchItem={punch}
           canUnclear={permissions.includes("PUNCHLISTITEM/CLEAR")}
           canVerify={permissions.includes("PUNCHLISTITEM/VERIFY")}
+          setRowVersion={setRowVersion}
         />
       );
     } else {
@@ -70,6 +73,7 @@ const PunchPage = (): JSX.Element => {
           }
           canEdit={permissions.includes("PUNCHLISTITEM/WRITE")}
           canClear={permissions.includes("PUNCHLISTITEM/CLEAR")}
+          setRowVersion={setRowVersion}
         />
       );
     }
@@ -82,13 +86,13 @@ const PunchPage = (): JSX.Element => {
           isDetailsCard
           status={punch.status}
           statusLetters={[
-            punch.clearedByFirstName ? "C" : null,
-            punch.verifiedByFirstName ? "V" : null
+            punch.clearedBy?.firstName ? "C" : null,
+            punch.verifiedBy?.firstName ? "V" : null
           ]}
           headerText={punch.tagNo}
           description={punch.tagDescription}
-          attachments={punch.attachmentCount}
-          chips={[punch.id.toString(), punch.formularType]}
+          attachments={1}
+          chips={[punch.itemNo.toString()]}
         />
       );
     } else if (fetchPunchStatus === AsyncStatus.LOADING) {
