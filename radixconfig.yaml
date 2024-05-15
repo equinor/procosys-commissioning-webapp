@@ -4,25 +4,24 @@ metadata:
   name: procosys-commissioning-webapp
 spec:
   environments:
-    environments:
-    - name: dev-test
-      build:
-        from: refactor-api-calls
-    - name: dev
-      build:
-        from: main
-    - name: test
-      build:
-        from: main
-    - name: prod
-      build:
-        from: main
+  - name: dev-test
+    build:
+      from: refactor-api-calls
+  - name: dev
+    build:
+      from: main
+  - name: test
+    build:
+      from: main
+  - name: prod
+    build:
+      from: main
   components:
   - name: frontend
     publicPort: http
     ports:
-      - name: http
-        port: 8080
+    - name: http
+      port: 8080
     environmentConfig:
     # Development environment
     - environment: dev
