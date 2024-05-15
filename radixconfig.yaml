@@ -16,13 +16,13 @@ spec:
         from: main
     - name: prod
       build:
-          from: main
+        from: main
   components:
-    - name: web
-      publicPort: http
-      ports:
-        - name: http
-          port: 8080
+  - name: frontend
+    publicPort: http
+    ports:
+      - name: http
+        port: 8080
     environmentConfig:
     # Development environment
     - environment: dev
