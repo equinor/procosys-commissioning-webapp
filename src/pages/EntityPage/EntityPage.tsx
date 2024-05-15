@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Tasks from './Tasks/Tasks';
 import styled from 'styled-components';
@@ -34,10 +34,10 @@ const ContentWrapper = styled.div`
 
 const CommPkg = (): JSX.Element => {
     const { api, params, path, url, history } = useCommonHooks();
-    const [scope, setScope] = useState<ChecklistPreview[]>();
-    const [tasks, setTasks] = useState<TaskPreview[]>();
-    const [punchList, setPunchList] = useState<PunchPreview[]>();
-    const [documents, setDocuments] = useState<Document[]>();
+    const [scope, setScope] = useState<ChecklistPreview[]>([]);
+    const [tasks, setTasks] = useState<TaskPreview[]>([]);
+    const [punchList, setPunchList] = useState<PunchPreview[]>([]);
+    const [documents, setDocuments] = useState<Document[]>([]);
     const [fetchFooterDataStatus, setFetchFooterDataStatus] = useState(
         AsyncStatus.LOADING
     );
@@ -47,45 +47,77 @@ const CommPkg = (): JSX.Element => {
     const [fetchPunchListStatus, setFetchPunchListStatus] = useState(
         AsyncStatus.LOADING
     );
+
     const [fetchDocumentsStatus, setFetchDocumentsStatus] =
         useState<AsyncStatus>(AsyncStatus.LOADING);
     const source = Axios.CancelToken.source();
+
+    const fetchTasks = useCallback(
+        (cancelToken: CancelToken) =>
+            api.getTasks(params.plant, params.entityId, cancelToken),
+        [api, params.plant, params.entityId]
+    );
+
+    const { response: tasksList, fetchStatus: fetchTaskStatus } =
+        useAsyncGet(fetchTasks);
+
     const isOnScopePage =
         !history.location.pathname.includes('/punch-list') &&
         !history.location.pathname.includes('/documents') &&
         !history.location.pathname.includes('/tasks');
 
     useEffect(() => {
-        (async (): Promise<void> => {
+        const source = Axios.CancelToken.source();
+
+        const fetchTasks = async () => {
             try {
-                if (params.searchType != SearchType.Comm) return;
                 const tasksFromApi = await api.getTasks(
                     params.plant,
                     params.entityId,
                     source.token
                 );
                 setTasks(tasksFromApi);
-                const documents = await api.getDocuments(
+            } catch (error) {
+                if (!Axios.isCancel(error)) {
+                    console.error('Failed to fetch tasks:', error);
+                }
+            }
+        };
+
+        const fetchDocuments = async () => {
+            try {
+                const documentsFromApi = await api.getDocuments(
                     params.plant,
                     params.entityId,
                     source.token
                 );
-                setDocuments(documents);
-                if (documents.length < 1)
+                setDocuments(documentsFromApi);
+
+                if (documentsFromApi.length === 0) {
+                    setFetchFooterDataStatus(AsyncStatus.EMPTY_RESPONSE);
                     setFetchDocumentsStatus(AsyncStatus.EMPTY_RESPONSE);
-                else setFetchDocumentsStatus(AsyncStatus.SUCCESS);
-            } catch {
-                setFetchFooterDataStatus(AsyncStatus.ERROR);
-                setFetchDocumentsStatus(AsyncStatus.ERROR);
+                } else setFetchDocumentsStatus(AsyncStatus.SUCCESS);
+            } catch (error) {
+                if (!Axios.isCancel(error)) {
+                    setFetchFooterDataStatus(AsyncStatus.ERROR);
+                }
             }
-        })();
+        };
+
+        if (params.searchType === SearchType.Comm) {
+            fetchTasks();
+            fetchDocuments();
+        }
+
         return (): void => {
             source.cancel();
         };
-    }, [api, params.entityId]);
+    }, [params.plant, params.entityId, params.searchType]);
 
     useEffect(() => {
-        (async (): Promise<void> => {
+        const source = Axios.CancelToken.source();
+
+        const fetchData = async () => {
             try {
                 const [scopeFromApi, punchListFromApi] = await Promise.all([
                     api.getScope(
@@ -101,10 +133,15 @@ const CommPkg = (): JSX.Element => {
                         source.token
                     ),
                 ]);
+
                 setScope(scopeFromApi);
-                if (scopeFromApi.length > 0) {
+                setPunchList(punchListFromApi);
+
+                if (scopeFromApi.length > 0 || punchListFromApi.length > 0) {
+                    setFetchFooterDataStatus(AsyncStatus.SUCCESS);
                     setFetchScopeStatus(AsyncStatus.SUCCESS);
                 } else {
+                    setFetchFooterDataStatus(AsyncStatus.EMPTY_RESPONSE);
                     setFetchScopeStatus(AsyncStatus.EMPTY_RESPONSE);
                 }
                 setPunchList(punchListFromApi);
@@ -116,14 +153,19 @@ const CommPkg = (): JSX.Element => {
                 if (fetchFooterDataStatus != AsyncStatus.ERROR) {
                     setFetchFooterDataStatus(AsyncStatus.SUCCESS);
                 }
-            } catch {
-                setFetchFooterDataStatus(AsyncStatus.ERROR);
+            } catch (error) {
+                if (!Axios.isCancel(error)) {
+                    setFetchFooterDataStatus(AsyncStatus.ERROR);
+                }
             }
-        })();
-        return (): void => {
-            source.cancel();
         };
-    }, [api, params.entityId]);
+
+        fetchData();
+
+        return (): void => {
+            source.cancel('Component unmounted or params changed');
+        };
+    }, [params.plant, params.searchType, params.entityId]);
 
     return (
         <main>
@@ -157,7 +199,16 @@ const CommPkg = (): JSX.Element => {
                             />
                         )}
                     />
-                    <Route exact path={`${path}/tasks`} component={Tasks} />
+                    <Route
+                        exact
+                        path={`${path}/tasks`}
+                        render={(): JSX.Element => (
+                            <Tasks
+                                fetchStatus={fetchTaskStatus}
+                                tasks={tasksList}
+                            />
+                        )}
+                    />
                     <Route
                         exact
                         path={`${path}/punch-list`}

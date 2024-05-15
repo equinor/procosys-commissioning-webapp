@@ -46,8 +46,8 @@ const BaseSkeleton = styled(Card)`
     }
 `;
 
-const SkeletonRow = styled(BaseSkeleton)<{ fullWidth: boolean }>`
-    width: ${(props): string => (props.fullWidth ? '100%' : '92%')};
+const SkeletonRow = styled(BaseSkeleton)<{ $fullWidth: boolean }>`
+    width: ${(props): string => (props.$fullWidth ? '100%' : '92%')};
     height: 50px;
     margin: 15px auto 15px auto;
 `;
@@ -73,10 +73,10 @@ const SkeletonLoadingPage = ({
                 <SkeletonRow
                     data-testid="skeleton-row"
                     key={i}
-                    fullWidth={fullWidth ? true : false}
+                    $fullWidth={fullWidth ? true : false}
                 />
             ) : (
-                <SkeletonRow key={i} fullWidth={fullWidth ? true : false} />
+                <SkeletonRow key={i} $fullWidth={fullWidth ? true : false} />
             )
         );
     }

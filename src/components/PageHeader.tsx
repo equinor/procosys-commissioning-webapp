@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const PageHeaderWrapper = styled.div<{ hasSubtitle: boolean }>`
+const PageHeaderWrapper = styled.div<{ $hasSubtitle: boolean }>`
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -11,7 +11,7 @@ const PageHeaderWrapper = styled.div<{ hasSubtitle: boolean }>`
     & h2 {
         text-align: center;
         margin: ${(props): string =>
-            props.hasSubtitle ? '16px 0 0 0' : '16px 0 24px 0'};
+            props.$hasSubtitle ? '16px 0 0 0' : '16px 0 24px 0'};
     }
     & h6 {
         text-align: center;
@@ -25,7 +25,7 @@ type PageHeaderProps = {
 };
 const PageHeader = ({ title, subtitle }: PageHeaderProps): JSX.Element => {
     return (
-        <PageHeaderWrapper hasSubtitle={!!subtitle}>
+        <PageHeaderWrapper $hasSubtitle={!!subtitle}>
             <h2>{title}</h2>
             {subtitle && <h6>{subtitle}</h6>}
         </PageHeaderWrapper>
