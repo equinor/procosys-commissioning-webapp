@@ -212,7 +212,6 @@ export interface PunchOrganization {
   code: string;
   description: string;
 }
-
 export interface PunchSort {
   id: number;
   parentId: number;
@@ -222,6 +221,12 @@ export interface PunchSort {
 
 export interface PunchPriority {
   id: number;
+  code: string;
+  description: string;
+}
+
+export interface Type {
+  guid: Guid;
   code: string;
   description: string;
 }
@@ -236,18 +241,18 @@ export interface Person {
 }
 
 export interface NewPunch {
-  CheckListId: number;
-  CategoryId: number;
-  Description: string;
-  TypeId: number;
-  RaisedByOrganizationId: number;
-  ClearingByOrganizationId: number;
-  SortingId?: number;
-  PriorityId?: number;
-  ActionByPerson?: number | null;
-  DueDate?: string;
-  Estimate?: number;
-  TemporaryFileIds: string[];
+  checkListGuid: string;
+  category: string;
+  description: string;
+  typeGuid: string;
+  raisedByOrgGuid: string;
+  clearingByOrgGuid: string;
+  sortingGuid?: string;
+  priorityGuid?: string;
+  actionByPersonOid?: string;
+  dueTimeUtc?: DateTimeString;
+  estimate?: number;
+  temporaryFileIds?: string[];
 }
 
 type Guid = string;
@@ -468,4 +473,9 @@ export interface AdditionalTagField {
 export interface Tag {
   tag: TagDetails;
   additionalFields: AdditionalTagField[];
+}
+export interface PunchComment {
+  labels: string[];
+  text: string;
+  mentions: string[];
 }

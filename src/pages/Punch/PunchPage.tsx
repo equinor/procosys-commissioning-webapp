@@ -2,6 +2,7 @@ import { DotProgress } from "@equinor/eds-core-react";
 import {
   AsyncStatus,
   BackButton,
+  CompletionStatus,
   FooterButton,
   InfoItem,
   Navbar,
@@ -84,7 +85,7 @@ const PunchPage = (): JSX.Element => {
       return (
         <InfoItem
           isDetailsCard
-          status={punch.status}
+          status={punch.category as CompletionStatus}
           statusLetters={[
             punch.clearedBy?.firstName ? "C" : null,
             punch.verifiedBy?.firstName ? "V" : null

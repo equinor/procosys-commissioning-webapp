@@ -1,4 +1,5 @@
 import { Button } from "@equinor/eds-core-react";
+import { AxiosInstance } from "axios";
 import React, { ReactNode, useEffect, useState } from "react";
 import ErrorPage from "../components/error/ErrorPage";
 import LoadingPage from "../components/loading/LoadingPage";
@@ -13,6 +14,7 @@ type CommAppContextProps = {
   fetchPlantsStatus: AsyncStatus;
   api: ProcosysApiService;
   completionApi: CompletionApiService;
+  completionBaseApiInstance: AxiosInstance;
   auth: IAuthService;
   appConfig: AppConfig;
   featureFlags: FeatureFlags;
@@ -33,6 +35,7 @@ type CommAppContextProviderProps = {
   auth: IAuthService;
   api: ProcosysApiService;
   completionApi: CompletionApiService;
+  completionBaseApiInstance: AxiosInstance;
   appConfig: AppConfig;
   featureFlags: FeatureFlags;
 };
@@ -42,6 +45,7 @@ export const CommAppContextProvider: React.FC<CommAppContextProviderProps> = ({
   auth,
   api,
   completionApi,
+  completionBaseApiInstance,
   appConfig,
   featureFlags
 }: CommAppContextProviderProps) => {
@@ -88,6 +92,7 @@ export const CommAppContextProvider: React.FC<CommAppContextProviderProps> = ({
         fetchPlantsStatus,
         api,
         completionApi,
+        completionBaseApiInstance,
         auth,
         appConfig,
         featureFlags

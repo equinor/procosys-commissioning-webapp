@@ -4,10 +4,6 @@ import {
   isOfType
 } from "@equinor/procosys-webapp-components";
 import { CustomCheckItemDto } from "@equinor/procosys-webapp-components/dist/modules/Checklist/CheckItems/CustomCheckItems";
-import {
-  APIComment,
-  PunchComment
-} from "@equinor/procosys-webapp-components/dist/typings/apiTypes";
 import { AxiosInstance, CancelToken } from "axios";
 import { SearchType } from "../pages/Search/Search";
 import { TaskCommentDto } from "../pages/Task/TaskDescription";
@@ -159,7 +155,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     const filteredChecklists = data.filter(
       (checklist) => checklist.formularGroup != "MCCR"
     );
-    return filteredChecklists;
+    return data;
   };
 
   const getChecklist = async (
@@ -752,26 +748,6 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     );
   };
 
-  const getPunchComments = async (
-    plantId: string,
-    punchItemId: number
-  ): Promise<APIComment[]> => {
-    const { data } = await axios.get(
-      `PunchListItem/Comments?plantId=PCS$${plantId}&punchItemId=${punchItemId}&${apiVersion}`
-    );
-    return data;
-  };
-
-  const postPunchComment = async (
-    plantId: string,
-    comment: PunchComment
-  ): Promise<void> => {
-    await axios.post(
-      `PunchListItem/AddComment?plantId=PCS$${plantId}${apiVersion}`,
-      comment
-    );
-  };
-
   //---------
   // Documents
   //---------
@@ -926,8 +902,6 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     putTaskComment,
     putTaskParameter,
     getSearchResults,
-    getPunchComments,
-    postPunchComment,
     postCustomCheckItem,
     getNextCustomItemNumber,
     deleteCustomCheckItem,

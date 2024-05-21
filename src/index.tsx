@@ -75,6 +75,7 @@ const initialize = async () => {
     authInstance,
     procosysApiInstance,
     completionApiInstance,
+    completionBaseApiInstance,
     appInsightsInstance,
     appInsightsReactPlugin,
     appConfig,
@@ -89,6 +90,7 @@ const initialize = async () => {
       authInstance,
       procosysApiInstance,
       completionApiInstance,
+      completionBaseApiInstance,
       appInsightsInstance,
       appInsightsReactPlugin,
       appConfig,
@@ -99,6 +101,7 @@ const initialize = async () => {
         authInstance={authInstance}
         procosysApiInstance={procosysApiInstance}
         completionApiInstance={completionApiInstance}
+        completionBaseApiInstance={completionBaseApiInstance}
         appInsightsInstance={appInsightsInstance}
         appInsightsReactPlugin={appInsightsReactPlugin}
         appConfig={appConfig}

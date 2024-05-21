@@ -3,6 +3,7 @@ import {
   ReactPlugin
 } from "@microsoft/applicationinsights-react-js";
 import { ApplicationInsights } from "@microsoft/applicationinsights-web";
+import { AxiosInstance } from "axios";
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import GeneralRouter from "./GeneralRouter";
 import ErrorBoundary from "./components/error/ErrorBoundary";
@@ -27,6 +28,7 @@ type AppProps = {
   authInstance: IAuthService;
   procosysApiInstance: ProcosysApiService;
   completionApiInstance: CompletionApiService;
+  completionBaseApiInstance: AxiosInstance;
   appInsightsInstance: ApplicationInsights;
   appInsightsReactPlugin: ReactPlugin;
   appConfig: AppConfig;
@@ -36,6 +38,7 @@ type AppProps = {
 const App = ({
   procosysApiInstance,
   completionApiInstance,
+  completionBaseApiInstance,
   authInstance,
   appInsightsReactPlugin: reactPlugin,
   appConfig,
@@ -47,6 +50,7 @@ const App = ({
         <CommAppContextProvider
           api={procosysApiInstance}
           completionApi={completionApiInstance}
+          completionBaseApiInstance={completionBaseApiInstance}
           auth={authInstance}
           appConfig={appConfig}
           featureFlags={featureFlags}

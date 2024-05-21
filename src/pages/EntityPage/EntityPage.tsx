@@ -97,7 +97,7 @@ const CommPkg = (): JSX.Element => {
         source.token
       )
       .catch(() => setFetchFooterDataStatus(AsyncStatus.ERROR));
-    if (isArrayOfType(scopeFromApi, "id")) {
+    if (isArrayOfType<ChecklistPreview>(scopeFromApi, "id")) {
       setScope(scopeFromApi);
       if (scopeFromApi.length > 0) {
         setFetchScopeStatus(AsyncStatus.SUCCESS);
@@ -105,7 +105,7 @@ const CommPkg = (): JSX.Element => {
         setFetchScopeStatus(AsyncStatus.EMPTY_RESPONSE);
       }
     }
-    if (isArrayOfType(punchListFromApi, "id")) {
+    if (isArrayOfType<PunchPreview>(punchListFromApi, "id")) {
       setPunchList(punchListFromApi);
       if (punchListFromApi.length > 0) {
         setFetchPunchListStatus(AsyncStatus.SUCCESS);

@@ -9,6 +9,7 @@ import {
   Attachment,
   LibrayTypes,
   NewPunch,
+  PunchComment,
   PunchItem,
   PunchOrganization,
   PunchPreview,
@@ -199,6 +200,15 @@ const completionApiService = ({ axios }: ProcosysApiServiceProps) => {
     });
     return data;
   };
+  const postPunchComment = async (
+    plantId: string,
+    guid: string,
+    comment: PunchComment
+  ): Promise<void> => {
+    await axios.post(`PunchItems/${guid}/Comments`, comment, {
+      ...headers(plantId)
+    });
+  };
 
   return {
     getLibraryTypes,
@@ -213,7 +223,8 @@ const completionApiService = ({ axios }: ProcosysApiServiceProps) => {
     postPunchAction,
     getPunchAttachments,
     getPunchAttachment,
-    getPunchComments
+    getPunchComments,
+    postPunchComment
   };
 };
 

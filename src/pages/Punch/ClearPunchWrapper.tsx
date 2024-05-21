@@ -7,7 +7,7 @@ import {
   isArrayOfType,
   useSnackbar
 } from "@equinor/procosys-webapp-components";
-import Axios from "axios";
+import Axios, { AxiosError, AxiosResponse } from "axios";
 import React, { Dispatch, useCallback, useEffect, useState } from "react";
 import {
   Attachment,
@@ -19,7 +19,7 @@ import useCommonHooks from "../../utils/useCommonHooks";
 import usePersonsSearchFacade from "../../utils/usePersonsSearchFacade";
 
 const punchEndpints: PunchEndpoints = {
-  updateCategory: "SetCategory",
+  updateCategory: "UpdateCategory",
   updateDescription: "/Description",
   updateRaisedBy: "/RaisedByOrgGuid",
   updateClearingBy: "/ClearingByOrgGuid",
@@ -38,15 +38,29 @@ type ClearPunchWrapperProps = {
   canClear: boolean;
   setRowVersion: Dispatch<React.SetStateAction<string | undefined>>;
 };
+type Queue = {
+  patchDocument?: UpdatePunchData;
+  rowVersion: string;
+  category?: string;
+};
 
 const ClearPunchWrapper = ({
   punchItem,
   setPunchItem,
   canEdit,
-  canClear,
-  setRowVersion
-}: ClearPunchWrapperProps): JSX.Element => {
-  const { api, params, history, url, completionApi } = useCommonHooks();
+  canClear
+}: // setRowVersion
+ClearPunchWrapperProps): JSX.Element => {
+  const {
+    api,
+    params,
+    history,
+    url,
+    completionApi,
+    completionBaseApiInstance
+  } = useCommonHooks();
+  const [updateQueue, setUpdateQueue] = useState<Queue[]>([]);
+  const [rowVersion, setRowVersion] = useState<string>();
   const { snackbar, setSnackbarText } = useSnackbar();
   const [categories, setCategories] = useState<PunchCategory[]>([]);
   const [types, setTypes] = useState<LibrayTypes[]>([]);
@@ -99,33 +113,67 @@ const ClearPunchWrapper = ({
     };
   }, [params.plant, api, params.punchItemId]);
 
-  const updateDatabase = async (
-    endpoint: string,
-    updateData: UpdatePunchData
-  ): Promise<void> => {
-    setUpdatePunchStatus(AsyncStatus.LOADING);
-    setSnackbarText("Saving change.");
-    try {
-      await completionApi.putUpdatePunch(
-        params.plant,
-        params.punchItemId,
-        updateData,
-        endpoint,
-        punchItem.rowVersion
-      );
-      setUpdatePunchStatus(AsyncStatus.SUCCESS);
-      setSnackbarText("Change successfully saved.");
-      const updatedPunch = await completionApi.getPunchItem(
-        params.plant,
-        punchItem.guid
-      );
-      setPunchItem(updatedPunch);
-    } catch (error) {
-      const pcsError = error as Error;
-      setUpdatePunchStatus(AsyncStatus.ERROR);
-      setSnackbarText(pcsError.toString());
+  useEffect(() => {
+    if (punchItem) setRowVersion(punchItem.rowVersion);
+  }, []);
+
+  const processQueue = useCallback(async () => {
+    if (updatePunchStatus === AsyncStatus.LOADING) {
+      return;
     }
-  };
+    setUpdatePunchStatus(AsyncStatus.LOADING);
+    const { patchDocument, category } = updateQueue[0];
+    const data = category
+      ? { category, rowVersion }
+      : { patchDocument, rowVersion };
+    const updatedData: AxiosResponse<string> | void =
+      await completionBaseApiInstance
+        .patch(
+          `PunchItems/${punchItem?.guid}${
+            category ? `/${punchEndpints.updateCategory}` : ""
+          }`,
+          data,
+          { headers: { "x-plant": `PCS$${params.plant}` } }
+        )
+        .catch((error: AxiosError) => {
+          setUpdatePunchStatus(AsyncStatus.ERROR);
+          setSnackbarText(error.message);
+        })
+        .finally(() => {
+          setUpdatePunchStatus(AsyncStatus.SUCCESS);
+        });
+    setUpdateQueue((prevQueue) => prevQueue.slice(1));
+    if (updatedData?.data) {
+      setRowVersion(updatedData.data);
+    }
+  }, [updatePunchStatus, updateQueue, rowVersion]);
+
+  useEffect(() => {
+    if (
+      updatePunchStatus !== AsyncStatus.ERROR &&
+      updatePunchStatus !== AsyncStatus.LOADING &&
+      updateQueue.length
+    ) {
+      processQueue();
+    }
+  }, [updatePunchStatus, updateQueue, rowVersion]);
+
+  const updateDatabase = useCallback(
+    async (endpoint: string, updateData: UpdatePunchData): Promise<void> => {
+      setUpdateQueue((prev: any) => [
+        ...prev,
+        endpoint === punchEndpints.updateCategory
+          ? { category: updateData, rowVersion }
+          : {
+              patchDocument: [
+                { value: updateData, path: endpoint, op: "replace" }
+              ],
+              rowVersion
+            }
+      ]);
+    },
+    [rowVersion, updatePunchStatus]
+  );
 
   const clearPunch = async (): Promise<void> => {
     setClearPunchStatus(AsyncStatus.LOADING);
@@ -186,7 +234,7 @@ const ClearPunchWrapper = ({
       postPunchAttachment={api.postPunchAttachment}
       deletePunchAttachment={api.deletePunchAttachment}
       getPunchComments={completionApi.getPunchComments}
-      postPunchComment={api.postPunchComment}
+      postPunchComment={completionApi.postPunchComment}
       snackbar={snackbar}
       setSnackbarText={setSnackbarText}
       hits={hits}
