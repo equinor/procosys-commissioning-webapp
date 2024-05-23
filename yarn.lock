@@ -391,10 +391,10 @@
     "@babel/runtime" "^7.23.8"
     "@equinor/eds-tokens" "0.9.2"
 
-"@equinor/procosys-webapp-components@^6.0.5":
-  version "6.0.5"
-  resolved "https://registry.yarnpkg.com/@equinor/procosys-webapp-components/-/procosys-webapp-components-6.0.5.tgz#da84e0d4a8267ae276a2e598ffc5e27b41e6901f"
-  integrity sha512-seekP/KX9s3A52zks/ZgTkGFiEmbtsi494F4qxeeguvDcdleQV/0JFH0zPFhjThPrXFAt1n5/M2Ol2zCM/uRig==
+"@equinor/procosys-webapp-components@^6.0.6":
+  version "6.0.6"
+  resolved "https://registry.yarnpkg.com/@equinor/procosys-webapp-components/-/procosys-webapp-components-6.0.6.tgz#a036667992d6a213bfee3d5e3c40b2a5b40c4e0f"
+  integrity sha512-rbbPAaJI96K2u+iBTXhADgvZ3mbC20YM/SEyursMqlaP83nMvR0rSG/CeuzBU9qbOiJ1hvgw0sC1/0f/3iGKLQ==
 
 "@esbuild/aix-ppc64@0.20.2":
   version "0.20.2"
