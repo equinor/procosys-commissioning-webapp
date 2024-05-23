@@ -1,143 +1,142 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import React from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { withPlantContext } from '../../test/contexts';
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { act } from "react-dom/test-utils";
+import { MemoryRouter, Route } from "react-router-dom";
+import { withPlantContext } from "../../test/contexts";
 import {
-    dummySignedChecklistResponse,
-    dummyVerifiedChecklistResponse,
-} from '../../test/dummyData';
-import { ENDPOINTS, rest, server } from '../../test/setupServer';
-import ChecklistPage from './ChecklistPage';
-import { act } from 'react-dom/test-utils';
+  dummySignedChecklistResponse,
+  dummyVerifiedChecklistResponse
+} from "../../test/dummyData";
+import { ENDPOINTS, rest, server } from "../../test/setupServer";
+import ChecklistPage from "./ChecklistPage";
 
 const renderChecklistPage = (contentType?: string): void => {
-    render(
-        withPlantContext({
-            Component: (
-                <MemoryRouter
-                    initialEntries={[
-                        `/plant-name/project-name/Comm/33/checklist/10${
-                            contentType ? `/${contentType}` : ''
-                        }`,
-                    ]}
-                >
-                    <Route path="/:plant/:project/:searchType/:entityId/checklist/:checklistId">
-                        <ChecklistPage />
-                    </Route>
-                </MemoryRouter>
-            ),
-        })
-    );
+  render(
+    withPlantContext({
+      Component: (
+        <MemoryRouter
+          initialEntries={[
+            `/plant-name/project-name/Comm/33/checklist/10${
+              contentType ? `/${contentType}` : ""
+            }`
+          ]}
+        >
+          <Route path="/:plant/:project/:searchType/:entityId/checklist/:checklistId">
+            <ChecklistPage />
+          </Route>
+        </MemoryRouter>
+      )
+    })
+  );
 };
 
-jest.mock('@equinor/procosys-webapp-components', () => ({
-    ...jest.requireActual('@equinor/procosys-webapp-components'),
-    removeSubdirectories: (url: string, num: number): string => '/',
+jest.mock("@equinor/procosys-webapp-components", () => ({
+  ...jest.requireActual("@equinor/procosys-webapp-components"),
+  removeSubdirectories: (url: string, num: number): string => "/"
 }));
 
-describe('<Checklist/> after loading', () => {
-    beforeEach(async () => {
-        await act(async () => {
-            renderChecklistPage();
-            // const tagDescription = await screen.findByText(
-            //     'dummy-tag-description'
-            // );
-            // expect(tagDescription).toBeInTheDocument();
-        });
+describe("<Checklist/> after loading", () => {
+  beforeEach(async () => {
+    await act(async () => {
+      renderChecklistPage();
+      // const tagDescription = await screen.findByText(
+      //     'dummy-tag-description'
+      // );
+      // expect(tagDescription).toBeInTheDocument();
+    });
+  });
+
+  it("Lets user check all and uncheck all items", async () => {
+    const checkAllButton = screen.getByRole("button", {
+      name: "Check all"
     });
 
-    it('Lets user check all and uncheck all items', async () => {
-        const checkAllButton = screen.getByRole('button', {
-            name: 'Check all',
-        });
+    const firstCheckItem = screen.getByTestId("checked-2");
+    const secondCheckItem = screen.getByTestId("checked-3");
+    const firstCustomCheckItem = screen.getByTestId("custom-checked-4");
+    const secondCustomCheckItem = screen.getByTestId("custom-checked-5");
 
-        const firstCheckItem = screen.getByTestId('checked-2');
-        const secondCheckItem = screen.getByTestId('checked-3');
-        const firstCustomCheckItem = screen.getByTestId('custom-checked-4');
-        const secondCustomCheckItem = screen.getByTestId('custom-checked-5');
+    expect(firstCheckItem).toBeDisabled();
+    expect(secondCheckItem).toBeEnabled();
+    expect(secondCheckItem).not.toBeChecked();
+    expect(firstCustomCheckItem).toBeChecked();
+    expect(secondCustomCheckItem).toBeChecked();
 
-        expect(firstCheckItem).toBeDisabled();
-        expect(secondCheckItem).toBeEnabled();
-        expect(secondCheckItem).not.toBeChecked();
-        expect(firstCustomCheckItem).toBeChecked();
-        expect(secondCustomCheckItem).toBeChecked();
+    userEvent.click(checkAllButton);
 
-        userEvent.click(checkAllButton);
+    await waitFor(() => expect(checkAllButton).toBeDisabled());
 
-        await waitFor(() => expect(checkAllButton).toBeDisabled());
+    await screen.findByText("Changes saved.");
 
-        await screen.findByText('Changes saved.');
+    expect(firstCheckItem).toBeDisabled();
+    expect(secondCheckItem).toBeChecked();
+    expect(firstCustomCheckItem).toBeChecked();
+    expect(secondCustomCheckItem).toBeChecked();
 
-        expect(firstCheckItem).toBeDisabled();
-        expect(secondCheckItem).toBeChecked();
-        expect(firstCustomCheckItem).toBeChecked();
-        expect(secondCustomCheckItem).toBeChecked();
-
-        const uncheckAllButton = screen.getByRole('button', {
-            name: 'Uncheck all',
-        });
-
-        userEvent.click(uncheckAllButton);
-
-        await screen.findByText('Uncheck complete.');
-        expect(firstCheckItem).toBeDisabled();
-        expect(secondCheckItem).not.toBeChecked();
-        expect(firstCustomCheckItem).not.toBeChecked();
-        expect(secondCustomCheckItem).not.toBeChecked();
+    const uncheckAllButton = screen.getByRole("button", {
+      name: "Uncheck all"
     });
 
-    it('Lets user sign/unsign a checklist, showing relevant messages', async () => {
-        const signButton = screen.getByRole('button', { name: 'Sign' });
+    userEvent.click(uncheckAllButton);
 
-        expect(signButton).toBeDisabled();
-        const applicableMustBeCheckedWarning = screen.getByText(
-            'All applicable items must be checked before signing.'
-        );
-        expect(applicableMustBeCheckedWarning).toBeInTheDocument();
+    await screen.findByText("Uncheck complete.");
+    expect(firstCheckItem).toBeDisabled();
+    expect(secondCheckItem).not.toBeChecked();
+    expect(firstCustomCheckItem).not.toBeChecked();
+    expect(secondCustomCheckItem).not.toBeChecked();
+  });
 
-        const missingCheckItem = screen.getByTestId('checked-3');
-        expect(missingCheckItem).toBeEnabled();
-        userEvent.click(missingCheckItem);
-        await screen.findByText('Change saved.');
+  it("Lets user sign/unsign a checklist, showing relevant messages", async () => {
+    const signButton = screen.getByRole("button", { name: "Sign" });
 
-        expect(applicableMustBeCheckedWarning).not.toBeInTheDocument();
-        expect(signButton).toBeEnabled();
-        server.use(
-            rest.get(ENDPOINTS.getChecklist, (_, response, context) => {
-                return response(context.json(dummySignedChecklistResponse));
-            })
-        );
+    expect(signButton).toBeDisabled();
+    const applicableMustBeCheckedWarning = screen.getByText(
+      "All applicable items must be checked before signing."
+    );
+    expect(applicableMustBeCheckedWarning).toBeInTheDocument();
 
-        userEvent.click(signButton);
+    const missingCheckItem = screen.getByTestId("checked-3");
+    expect(missingCheckItem).toBeEnabled();
+    userEvent.click(missingCheckItem);
+    await screen.findByText("Change saved.");
 
-        await waitFor(() => expect(signButton).toBeDisabled());
+    expect(applicableMustBeCheckedWarning).not.toBeInTheDocument();
+    expect(signButton).toBeEnabled();
+    server.use(
+      rest.get(ENDPOINTS.getChecklist, (_, response, context) => {
+        return response(context.json(dummySignedChecklistResponse));
+      })
+    );
 
-        await screen.findByText('Signing complete.');
+    userEvent.click(signButton);
 
-        const checklistIsSignedBanner = screen.getByText(
-            'This checklist is signed. Unsign to make changes.'
-        );
-        expect(checklistIsSignedBanner).toBeInTheDocument();
-        await screen.findByText('Signed by', { exact: false });
+    await waitFor(() => expect(signButton).toBeDisabled());
 
-        const verifyButton = screen.getByRole('button', { name: 'Verify' });
-        expect(verifyButton).toBeEnabled();
-        server.use(
-            rest.get(ENDPOINTS.getChecklist, (_, response, context) => {
-                return response(context.json(dummyVerifiedChecklistResponse));
-            })
-        );
+    await screen.findByText("Signing complete.");
 
-        userEvent.click(verifyButton);
+    const checklistIsSignedBanner = screen.getByText(
+      "This checklist is signed. Unsign to make changes."
+    );
+    expect(checklistIsSignedBanner).toBeInTheDocument();
+    await screen.findByText("Signed by", { exact: false });
 
-        await waitFor(() => expect(verifyButton).toBeDisabled());
+    const verifyButton = screen.getByRole("button", { name: "Verify" });
+    expect(verifyButton).toBeEnabled();
+    server.use(
+      rest.get(ENDPOINTS.getChecklist, (_, response, context) => {
+        return response(context.json(dummyVerifiedChecklistResponse));
+      })
+    );
 
-        await screen.findByText('Verifying complete.');
-        const checklistIsVerifiedBanner = await screen.findByText(
-            'This checklist is verified.'
-        );
-        expect(checklistIsVerifiedBanner).toBeInTheDocument();
-        await screen.findByText('Verified by', { exact: false });
-    });
+    userEvent.click(verifyButton);
+
+    await waitFor(() => expect(verifyButton).toBeDisabled());
+
+    await screen.findByText("Verifying complete.");
+    const checklistIsVerifiedBanner = await screen.findByText(
+      "This checklist is verified."
+    );
+    expect(checklistIsVerifiedBanner).toBeInTheDocument();
+    await screen.findByText("Verified by", { exact: false });
+  });
 });

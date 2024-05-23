@@ -146,11 +146,14 @@ const CommPkg = (): JSX.Element => {
             render={(): JSX.Element => (
               <Scope
                 fetchScopeStatus={fetchScopeStatus}
-                onChecklistClick={(checklistId: number): void =>
+                onChecklistClick={(checklistId: number | string): void => {
+                  const checkListGuid = scope?.find(
+                    (s) => s.id === parseInt(`${checklistId}`)
+                  )?.proCoSysGuid;
                   history.push(
-                    `${history.location.pathname}/checklist/${checklistId}`
-                  )
-                }
+                    `${history.location.pathname}/checklist/${checklistId}?checkListGuid=${checkListGuid}`
+                  );
+                }}
                 scope={scope}
                 hideFilter={params.searchType === SearchType.Comm}
               />

@@ -7,6 +7,7 @@ import {
 export type Project = {
   description: string;
   id: number;
+  proCoSysGuid: string;
   title: string;
 };
 
@@ -63,6 +64,7 @@ export type CommPkg = {
 };
 export interface ChecklistPreview {
   id: number;
+  proCoSysGuid: string;
   tagId: number;
   tagNo: string;
   tagDescription: string;
@@ -109,6 +111,7 @@ export type TaskPreview = {
 // CHECKLIST
 export interface ChecklistDetails {
   id: number;
+  proCoSysGuid: string;
   tagNo: string;
   tagDescription: string;
   tagId: number;
@@ -242,6 +245,7 @@ export interface Person {
 
 export interface NewPunch {
   checkListGuid: string;
+  projectGuid: string;
   category: string;
   description: string;
   typeGuid: string;

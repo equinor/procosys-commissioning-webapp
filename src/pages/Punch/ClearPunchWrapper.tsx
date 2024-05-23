@@ -140,6 +140,7 @@ ClearPunchWrapperProps): JSX.Element => {
           setSnackbarText(error.message);
         })
         .finally(() => {
+          setSnackbarText("Saved successfully");
           setUpdatePunchStatus(AsyncStatus.SUCCESS);
         });
     setUpdateQueue((prevQueue) => prevQueue.slice(1));
@@ -176,15 +177,21 @@ ClearPunchWrapperProps): JSX.Element => {
   );
 
   const clearPunch = async (): Promise<void> => {
+    if (!rowVersion) return;
     setClearPunchStatus(AsyncStatus.LOADING);
     try {
-      const rowVersion = await completionApi.postPunchAction(
+      const data = await completionApi.postPunchAction(
         params.plant,
         params.punchItemId,
         PunchAction.CLEAR,
-        punchItem.rowVersion
+        rowVersion
       );
-      setRowVersion(rowVersion);
+      const clearedPunch = await completionApi.getPunchItem(
+        params.plant,
+        params.punchItemId
+      );
+      setPunchItem(clearedPunch);
+      setRowVersion(data);
       setClearPunchStatus(AsyncStatus.SUCCESS);
     } catch (error) {
       setClearPunchStatus(AsyncStatus.ERROR);

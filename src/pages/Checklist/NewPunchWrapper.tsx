@@ -12,8 +12,9 @@ import {
   PriorityAndSorting
 } from "@equinor/procosys-webapp-components/dist/typings/apiTypes";
 import Axios from "axios";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import AsyncPage from "../../components/AsyncPage";
+import PlantContext from "../../contexts/PlantContext";
 import {
   LibrayTypes,
   NewPunch as NewPunchDtoType,
@@ -38,6 +39,10 @@ const newPunchInitialValues = {
 
 const NewPunchWrapper = (): JSX.Element => {
   const { api, params, url, history, completionApi } = useCommonHooks();
+  const { availableProjects } = useContext(PlantContext);
+  const currentProject = availableProjects?.find(
+    (p) => p.title === params.project
+  );
   const { formFields, createChangeHandler } = useFormFields(
     newPunchInitialValues
   );
@@ -60,6 +65,7 @@ const NewPunchWrapper = (): JSX.Element => {
   const [tempIds, setTempIds] = useState<string[]>([]);
   const source = Axios.CancelToken.source();
   const { hits, searchStatus, query, setQuery } = usePersonsSearchFacade();
+  const checkListGuid = location.search.split("checkListGuid=").at(1);
 
   const getLibraryTypes = useCallback(async () => {
     const categoriesFromApi = await api
@@ -103,8 +109,10 @@ const NewPunchWrapper = (): JSX.Element => {
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
+    if (!currentProject || !checkListGuid) return;
     const NewPunchDTO: NewPunchDtoType = {
-      checkListGuid: params.checklistId,
+      checkListGuid,
+      projectGuid: currentProject.proCoSysGuid,
       category: formFields.category,
       description: formFields.description,
       typeGuid: formFields.type,
@@ -114,7 +122,7 @@ const NewPunchWrapper = (): JSX.Element => {
       priorityGuid: formFields.priority,
       estimate: parseInt(formFields.estimate),
       dueTimeUtc: formFields.dueDate,
-      actionByPersonOid: `${chosenPerson.id}`
+      actionByPersonOid: chosenPerson.id ? `${chosenPerson.id}` : ""
     };
     setSubmitPunchStatus(AsyncStatus.LOADING);
     try {

@@ -30,7 +30,6 @@ const ChecklistPage = (): JSX.Element => {
   const [fetchDetailsStatus, setFetchDetailsStatus] = useState(
     AsyncStatus.LOADING
   );
-
   const source = Axios.CancelToken.source();
   const isOnNewPunchPage = history.location.pathname.includes("/new-punch");
   const isOnPunchListPage = history.location.pathname.includes("/punch-list");
@@ -93,7 +92,9 @@ const ChecklistPage = (): JSX.Element => {
           history.location.pathname.includes("/new-punch") ? undefined : (
             <Button
               variant="ghost"
-              onClick={(): void => history.push(`${url}/punch-list/new-punch`)}
+              onClick={(): void =>
+                history.push(`${url}/punch-list/new-punch${location.search}`)
+              }
             >
               New punch
             </Button>
@@ -147,19 +148,19 @@ const ChecklistPage = (): JSX.Element => {
       <NavigationFooter footerStatus={fetchPunchListStatus}>
         <FooterButton
           active={!(isOnPunchListPage || isOnTagInfoPage)}
-          goTo={(): void => history.push(`${url}`)}
+          goTo={(): void => history.push(`${url}${location.search}`)}
           icon={<EdsIcon name="playlist_added" />}
           label={"Checklist"}
         />
         <FooterButton
           active={isOnTagInfoPage}
-          goTo={(): void => history.push(`${url}/tag-info`)}
+          goTo={(): void => history.push(`${url}/tag-info${location.search}`)}
           icon={<EdsIcon name="tag" />}
           label={"Tag info"}
         />
         <FooterButton
           active={isOnPunchListPage}
-          goTo={(): void => history.push(`${url}/punch-list`)}
+          goTo={(): void => history.push(`${url}/punch-list${location.search}`)}
           icon={<EdsIcon name="warning_outlined" />}
           label={"Punch list"}
           numberOfItems={punchList?.length}

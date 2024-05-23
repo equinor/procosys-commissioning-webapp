@@ -1,4 +1,5 @@
 import * as Msal from "@azure/msal-browser";
+import { AxiosInstance } from "axios";
 import { MemoryRouter } from "react-router-dom";
 import CommAppContext, { AsyncStatus } from "../contexts/CommAppContext";
 import PlantContext from "../contexts/PlantContext";
@@ -33,6 +34,12 @@ const procosysApiInstance = procosysApiService({
 const completionApiInstance = completionApiService({
   axios: baseApiInstance
 });
+
+const completionBaseApi: AxiosInstance = baseApiService({
+  authInstance,
+  baseURL: "https://backend-procosys-completion-api-dev.radix.equinor.com",
+  scope: ["api://e8c158a9-a200-4897-9d5f-660e377bddc1/ReadWrite"]
+});
 const dummyAppConfig: AppConfig = {
   procosysWebApi: {
     baseUrl: "testUrl",
@@ -55,6 +62,7 @@ type WithCommAppContextProps = {
   auth?: IAuthService;
   api?: ProcosysApiService;
   completionApi?: CompletionApiService;
+  completionBaseApiInstance?: AxiosInstance;
 };
 
 export const withCommAppContext = ({
@@ -63,7 +71,8 @@ export const withCommAppContext = ({
   plants = testPlants,
   auth = authInstance,
   api = procosysApiInstance,
-  completionApi = completionApiInstance
+  completionApi = completionApiInstance,
+  completionBaseApiInstance = completionBaseApi
 }: WithCommAppContextProps): JSX.Element => {
   return (
     <MemoryRouter initialEntries={["/test/sub/directory"]}>
@@ -74,6 +83,7 @@ export const withCommAppContext = ({
           auth,
           api,
           completionApi,
+          completionBaseApiInstance,
           appConfig: dummyAppConfig,
           featureFlags: dummyFeatureFlags
         }}
