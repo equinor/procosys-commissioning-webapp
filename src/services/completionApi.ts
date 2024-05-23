@@ -210,6 +210,42 @@ const completionApiService = ({ axios }: ProcosysApiServiceProps) => {
     });
   };
 
+  const postPunchAttachment = async (
+    plantId: string,
+    punchItemId: string,
+    file: FormData,
+    title: string
+  ): Promise<void> => {
+    await axios.post(`PunchItems/${punchItemId}/Attachments`, file, {
+      headers: {
+        "x-plant": `PCS$${plantId}`,
+        "Content-Type": "multipart/form-data",
+        "Content-Disposition": `attachment; filename="${title}"`
+      }
+    });
+  };
+
+  const deletePunchAttachment = async (
+    plantId: string,
+    punchGuid: string,
+    attachmentGuid: string,
+    rowVersion: string
+  ): Promise<void> => {
+    await axios.delete(
+      `PunchItems/${punchGuid}/Attachments/${attachmentGuid}`,
+      {
+        headers: {
+          "x-plant": `PCS$${plantId}`,
+          "Content-Type": "application/json-patch+json",
+          Accept: "application/json"
+        },
+        data: {
+          rowVersion: rowVersion
+        }
+      }
+    );
+  };
+
   return {
     getLibraryTypes,
     getPunchList,
@@ -224,7 +260,9 @@ const completionApiService = ({ axios }: ProcosysApiServiceProps) => {
     getPunchAttachments,
     getPunchAttachment,
     getPunchComments,
-    postPunchComment
+    postPunchComment,
+    deletePunchAttachment,
+    postPunchAttachment
   };
 };
 

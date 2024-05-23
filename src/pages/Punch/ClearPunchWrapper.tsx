@@ -238,8 +238,8 @@ ClearPunchWrapperProps): JSX.Element => {
           attachmentGuid
         );
       }}
-      postPunchAttachment={api.postPunchAttachment}
-      deletePunchAttachment={api.deletePunchAttachment}
+      postPunchAttachment={completionApi.postPunchAttachment}
+      deletePunchAttachment={completionApi.deletePunchAttachment}
       getPunchComments={completionApi.getPunchComments}
       postPunchComment={completionApi.postPunchComment}
       snackbar={snackbar}

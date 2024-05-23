@@ -155,7 +155,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     const filteredChecklists = data.filter(
       (checklist) => checklist.formularGroup != "MCCR"
     );
-    return data;
+    return filteredChecklists;
   };
 
   const getChecklist = async (

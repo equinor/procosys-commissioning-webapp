@@ -6,8 +6,18 @@
       "dom.iterable",
       "esnext"
     ],
+    "baseUrl": "./src",
     "paths": {
-      "react": [ "./node_modules/@types/react" ]
+      "react": [ "./node_modules/@types/react" ],
+      "@models/*": ["./models/*"],
+      "@inputs/*": ["./inputs/*"],
+      "@tests/*": ["./__tests__/*"],
+      "@resolvers/*": ["./resolvers/*"],
+      "@seeds/*": ["./seeds/*"],
+      "@index": ["./index.ts"],
+      "@ormconfig": ["../ormconfig.ts"],
+      "react/jsx-runtime": ["./node_modules/react/jsx-runtime"],
+      "react-router-dom": ["./node_modules/react-router-dom"]
     },
     "types": ["vite/client"],
     "allowJs": true,
@@ -29,3 +39,4 @@
     "src/test/setupTests.ts"
   ]
 }
+

@@ -187,12 +187,14 @@ const ChecklistPage = (): JSX.Element => {
                     title
                   )
                 }
-                deleteAttachment={(attachmentId: number): Promise<void> =>
+                deleteAttachment={(
+                  attachmentId: number | string
+                ): Promise<void> =>
                   api.deleteChecklistAttachment(
                     source.token,
                     params.plant,
                     params.checklistId,
-                    attachmentId
+                    parseInt(`${attachmentId}`)
                   )
                 }
                 setSnackbarText={setSnackbarText}

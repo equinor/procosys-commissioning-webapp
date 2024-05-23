@@ -6,7 +6,7 @@ RUN yarn install
 RUN yarn build --mode=production
 
 # production environment
-FROM nginx:1.21.6-alpine
+FROM nginxinc/nginx-unprivileged
 
 ## add permissions for nginx user
 COPY --from=build /app/dist /usr/share/nginx/html/comm
