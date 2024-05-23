@@ -27,6 +27,9 @@ spec:
     - environment: dev
       variables:
         pcs_authSettingsEndpoint: 'https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Auth'
+    - environment: dev-test
+      variables:
+        pcs_authSettingsEndpoint: 'https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Auth'
     - environment: test
       variables:
         pcs_authSettingsEndpoint: 'https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Auth'
