@@ -15,8 +15,8 @@ COPY  .docker/scripts/ /etc/scripts/
  
 # Change the user from root to non-root- From now on, all Docker commands are run as non-root user (except for COPY)
 USER 0
-RUN chown -R apprunner.apprunner /usr/share/nginx/html/comm \
-    && chown -R apprunner:apprunner /etc/nginx/conf.d
+RUN chown -R /usr/share/nginx/html/comm \
+    && chown -R /etc/nginx/conf.d
 USER 101
 
 EXPOSE 5000
