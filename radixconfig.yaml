@@ -21,7 +21,7 @@ spec:
     publicPort: http
     ports:
     - name: http
-      port: 8080
+      port: 5000
     environmentConfig:
     # Development environment
     - environment: dev
