@@ -103,7 +103,7 @@ const NewPunchWrapper = (): JSX.Element => {
 
   useEffect(() => {
     if (submitPunchStatus === AsyncStatus.SUCCESS) {
-      history.push(removeSubdirectories(url, 1));
+      history.push(`${removeSubdirectories(url, 1)}${location.search}`);
     }
   }, [submitPunchStatus]);
 
