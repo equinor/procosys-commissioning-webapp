@@ -19,5 +19,4 @@ RUN chown -R nginx /usr/share/nginx/html/comm \
     && chown -R nginx /etc/nginx/conf.d
 USER 101
 
-EXPOSE 5000
-CMD ["sh","/etc/scripts/startup.sh"]
+CMD ["nginx", "-g", "daemon off;"]
