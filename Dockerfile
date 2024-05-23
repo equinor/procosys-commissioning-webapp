@@ -1,24 +1,23 @@
-FROM node:lts-alpine as builder
-# Create app directory
+# build environment
+FROM node:20.0.0 as build
 WORKDIR /app
-# copy package.json
-COPY package*.json ./
-# Copy app source code
-COPY . .
+COPY . /app
+RUN yarn install
+RUN yarn build --mode=production
 
-# Install app dependencies
-RUN npm install --legacy-peer-deps
-RUN npm run build-prod
-
-# nginx state for serving content
+# production environment
 FROM nginxinc/nginx-unprivileged
-# Set working directory to nginx asset directory
-WORKDIR /app
-# Copy static assets from builder stage
-COPY --from=builder /app/dist .
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+## add permissions for nginx user
+COPY --from=build /app/dist /usr/share/nginx/html/comm
+COPY .docker/nginx/ /etc/nginx/
+COPY  .docker/scripts/ /etc/scripts/
+ 
+# Change the user from root to non-root- From now on, all Docker commands are run as non-root user (except for COPY)
 USER 0
-RUN chown -R nginx /etc/nginx/conf.d \
-    && chown -R nginx /app
+RUN chown -R apprunner.apprunner /usr/share/nginx/html/comm \
+    && chown -R apprunner:apprunner /etc/nginx/conf.d
 USER 101
-CMD ["nginx", "-g", "daemon off;"]
+
+EXPOSE 5000
+CMD ["sh","/etc/scripts/startup.sh"]
