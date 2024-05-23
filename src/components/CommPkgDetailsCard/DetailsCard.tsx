@@ -13,19 +13,19 @@ import axios from 'axios';
 import { isOfType } from '@equinor/procosys-webapp-components';
 import { SearchType } from '../../pages/Search/Search';
 
-const CommDetailsWrapper = styled.div<{ atBookmarksPage?: boolean }>`
+const CommDetailsWrapper = styled.div<{ $atBookmarksPage?: boolean }>`
     cursor: ${(props): string =>
-        props.atBookmarksPage ? 'pointer' : 'initial'};
+        props.$atBookmarksPage ? 'pointer' : 'initial'};
     display: flex;
     border-top: 1px solid ${COLORS.lightGrey};
     padding: ${(props): string =>
-        props.atBookmarksPage ? '16px 0' : '16px 4%'};
+        props.$atBookmarksPage ? '16px 0' : '16px 4%'};
     margin: 0;
     text-decoration: none;
     background-color: ${(props): string =>
-        props.atBookmarksPage ? COLORS.white : COLORS.fadedBlue};
+        props.$atBookmarksPage ? COLORS.white : COLORS.fadedBlue};
     &:hover {
-        opacity: ${(props): number => (props.atBookmarksPage ? 0.7 : 1)};
+        opacity: ${(props): number => (props.$atBookmarksPage ? 0.7 : 1)};
     }
 `;
 
@@ -44,14 +44,14 @@ const DetailsWrapper = styled.div`
     }
 `;
 
-const HeaderWrapper = styled.div<{ atBookmarksPage: boolean }>`
+const HeaderWrapper = styled.div<{ $atBookmarksPage: boolean }>`
     display: flex;
     align-items: baseline;
     & > h6 {
         margin: 0;
         flex: 1.4;
         color: ${(props): string =>
-            props.atBookmarksPage ? COLORS.mossGreen : COLORS.black};
+            props.$atBookmarksPage ? COLORS.mossGreen : COLORS.black};
     }
 `;
 
@@ -109,7 +109,7 @@ const DetailsCard = ({
     } else if (fetchDetailsStatus === AsyncStatus.SUCCESS && details) {
         return (
             <CommDetailsWrapper
-                atBookmarksPage={atBookmarksPage}
+                $atBookmarksPage={atBookmarksPage}
                 onClick={onClickAction}
             >
                 <StatusImageWrapper>
@@ -119,7 +119,7 @@ const DetailsCard = ({
                     />
                 </StatusImageWrapper>
                 <DetailsWrapper>
-                    <HeaderWrapper atBookmarksPage={atBookmarksPage}>
+                    <HeaderWrapper $atBookmarksPage={atBookmarksPage}>
                         <h6>{details.commPkgNo}</h6>
                     </HeaderWrapper>
                     <Caption>{details.description}</Caption>

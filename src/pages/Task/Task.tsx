@@ -1,14 +1,19 @@
+import { Attachment, Attachments } from "@equinor/procosys-webapp-components";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
+import useCommonHooks from "../../utils/useCommonHooks";
+import TaskDescription from "./TaskDescription";
+import TaskParameters from "./TaskParameters/TaskParameters";
+import TaskSignature from "./TaskSignature";
+
 import { Banner, Typography } from "@equinor/eds-core-react";
 import {
   BackButton,
   Navbar,
   removeSubdirectories
 } from "@equinor/procosys-webapp-components";
-import Axios, { CancelToken } from "axios";
-import { useEffect, useState } from "react";
-import styled from "styled-components";
+import Axios from "axios";
 import AsyncCard from "../../components/AsyncCard";
-import Attachment, { AttachmentsWrapper } from "../../components/Attachment";
 import EdsIcon from "../../components/icons/EdsIcon";
 import { AsyncStatus } from "../../contexts/CommAppContext";
 import {
@@ -17,12 +22,8 @@ import {
   TaskPreview,
   Task as TaskType
 } from "../../typings/apiTypes";
-import useCommonHooks from "../../utils/useCommonHooks";
 import useSnackbar from "../../utils/useSnackbar";
 import { TaskPreviewButton } from "../EntityPage/Tasks/Tasks";
-import TaskDescription from "./TaskDescription";
-import TaskParameters from "./TaskParameters/TaskParameters";
-import TaskSignature from "./TaskSignature";
 
 const NextTaskButton = styled(TaskPreviewButton)`
   padding: 0;
@@ -34,6 +35,9 @@ const NextTaskButton = styled(TaskPreviewButton)`
 
 const TaskWrapper = styled.main`
   padding: 16px 4%;
+`;
+const AttachmentsWrapper = styled.div`
+  padding: 16px 0;
 `;
 
 const findNextTask = (
@@ -197,21 +201,25 @@ const Task = (): JSX.Element => {
             cardTitle={"Attachments"}
           >
             <AttachmentsWrapper>
-              {attachments?.map((attachment) => (
-                <Attachment
-                  setSnackbarText={setSnackbarText}
-                  attachment={attachment}
-                  key={attachment.id}
-                  getAttachment={(cancelToken: CancelToken): Promise<Blob> =>
-                    api.getTaskAttachment(
-                      cancelToken,
-                      params.plant,
-                      params.taskId,
-                      `${attachment.id}`
-                    )
-                  }
-                />
-              ))}
+              <Attachments
+                getAttachments={(): Promise<Attachment[]> =>
+                  api.getTaskAttachments(
+                    source.token,
+                    params.plant,
+                    params.taskId
+                  )
+                }
+                getAttachment={(attachmentId: number | string): Promise<Blob> =>
+                  api.getTaskAttachment(
+                    source.token,
+                    params.plant,
+                    params.taskId,
+                    attachmentId
+                  )
+                }
+                setSnackbarText={setSnackbarText}
+                readOnly
+              />
             </AttachmentsWrapper>
           </AsyncCard>
         ) : null}

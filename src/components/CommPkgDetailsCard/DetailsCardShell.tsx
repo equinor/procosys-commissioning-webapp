@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import React from 'react';
 import { COLORS, SHADOW } from '../../style/GlobalStyles';
 
-const DetailsCardShellWrapper = styled.div<{ atBookmarksPage: boolean }>`
+const DetailsCardShellWrapper = styled.div<{ $atBookmarksPage: boolean }>`
     padding: 16px 4%;
     box-shadow: ${SHADOW};
     background-color: ${COLORS.fadedBlue};
@@ -14,11 +14,11 @@ const DetailsCardShellWrapper = styled.div<{ atBookmarksPage: boolean }>`
     justify-content: center;
     align-items: center;
     background-color: ${(props): any =>
-        props.atBookmarksPage ? COLORS.white : COLORS.fadedBlue};
-    box-shadow: ${(props): string => (props.atBookmarksPage ? SHADOW : 'none')};
+        props.$atBookmarksPage ? COLORS.white : COLORS.fadedBlue};
+    box-shadow: ${(props): string => (props.$atBookmarksPage ? SHADOW : 'none')};
     border-radius: 5px;
     margin: ${(props): string =>
-        props.atBookmarksPage ? '0 4% 10px 4%' : '0'};
+        props.$atBookmarksPage ? '0 4% 10px 4%' : '0'};
 `;
 
 type DetailsCardSkeletonProps = {
@@ -31,7 +31,7 @@ const DetailsCardShell = ({
     children,
 }: DetailsCardSkeletonProps): JSX.Element => {
     return (
-        <DetailsCardShellWrapper atBookmarksPage={atBookmarksPage}>
+        <DetailsCardShellWrapper $atBookmarksPage={atBookmarksPage}>
             {children}
         </DetailsCardShellWrapper>
     );
