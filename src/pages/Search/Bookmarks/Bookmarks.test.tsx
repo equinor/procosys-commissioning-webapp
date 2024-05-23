@@ -1,15 +1,8 @@
+import { StorageKey } from "@equinor/procosys-webapp-components";
 import { render, screen } from "@testing-library/react";
 import { withPlantContext } from "../../../test/contexts";
 import { testProjects } from "../../../test/dummyData";
 import Bookmarks from "./Bookmarks";
-
-export declare enum StorageKey {
-  PLANT = "currentPlant",
-  PROJECT = "currentProject",
-  BOOKMARK = "Procosys Bookmark",
-  MC_REDIRECTPATH = "ProCoSys-MCWA-redirectPath",
-  COMM_REDIRECTPATH = "ProCoSys-CWA-redirectPath"
-}
 
 const renderBookmarks = (): void => {
   window.localStorage.clear();

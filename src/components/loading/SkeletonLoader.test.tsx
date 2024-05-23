@@ -2,8 +2,8 @@ import { render } from "@testing-library/react";
 import SkeletonLoader from "./SkeletonLoader";
 
 describe("<SkeletonLoader/>", () => {
-  it("Renders component with loading text passed in", () => {
+  it("Renders component with loading text passed in", async () => {
     const { getByText } = render(<SkeletonLoader text="Test loading text" />);
-    expect(getByText("Test loading text")).toBeInTheDocument();
+    expect(await getByText("Test loading text")).toBeInTheDocument();
   });
 });

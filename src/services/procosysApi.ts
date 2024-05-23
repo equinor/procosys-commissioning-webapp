@@ -14,17 +14,11 @@ import {
   ChecklistPreview,
   ChecklistResponse,
   CommPkg,
-  NewPunch,
   Person,
   Plant,
   Project,
   PunchCategory,
-  PunchItem,
-  PunchOrganization,
   PunchPreview,
-  PunchPriority,
-  PunchSort,
-  PunchType,
   SearchResults,
   Tag,
   Task,
@@ -420,56 +414,6 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     return data as PunchCategory[];
   };
 
-  const getPunchTypes = async (
-    plantId: string,
-    cancelToken: CancelToken
-  ): Promise<PunchType[]> => {
-    const { data } = await axios.get(
-      `PunchListItem/Types?plantId=PCS$${plantId}${apiVersion}`,
-      { cancelToken }
-    );
-    return data as PunchType[];
-  };
-
-  const getPunchOrganizations = async (
-    plantId: string,
-    cancelToken: CancelToken
-  ): Promise<PunchOrganization[]> => {
-    const { data } = await axios.get(
-      `PunchListItem/Organizations?plantId=PCS$${plantId}${apiVersion}`,
-      { cancelToken }
-    );
-    return data as PunchOrganization[];
-  };
-
-  const getPunchSorts = async (
-    plantId: string,
-    cancelToken: CancelToken
-  ): Promise<PunchSort[]> => {
-    const { data } = await axios.get(
-      `PunchListItem/Sorts?plantId=PCS$${plantId}${apiVersion}`,
-      { cancelToken }
-    );
-    if (!isArrayOfType<PunchSort>(data, "code")) {
-      throw new Error(typeGuardErrorMessage("punch sorts"));
-    }
-    return data;
-  };
-
-  const getPunchPriorities = async (
-    plantId: string,
-    cancelToken: CancelToken
-  ): Promise<PunchPriority[]> => {
-    const { data } = await axios.get(
-      `PunchListItem/Priorities?plantId=PCS$${plantId}${apiVersion}`,
-      { cancelToken }
-    );
-    if (!isArrayOfType<PunchPriority>(data, "code")) {
-      throw new Error(typeGuardErrorMessage("punch priorities"));
-    }
-    return data;
-  };
-
   const getPersonsByName = async (
     plantId: string,
     searchString: string,
@@ -483,26 +427,6 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
       throw new Error("An error occurred, please try again.");
     }
     return data;
-  };
-
-  const postNewPunch = async (
-    plantId: string,
-    newPunchData: NewPunch
-  ): Promise<void> => {
-    await axios.post(
-      `PunchListItem?plantId=PCS$${plantId}${apiVersion}`,
-      newPunchData
-    );
-  };
-
-  const getPunchItem = async (
-    plantId: string,
-    punchItemId: string
-  ): Promise<PunchItem> => {
-    const { data } = await axios.get(
-      `PunchListItem?plantId=PCS$${plantId}&punchItemId=${punchItemId}${apiVersion}`
-    );
-    return data as PunchItem;
   };
 
   //---------
@@ -658,54 +582,6 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     return data as Blob;
   };
 
-  const getPunchAttachments = async (
-    plantId: string,
-    punchItemId: number,
-    cancelToken: CancelToken
-  ): Promise<Attachment[]> => {
-    const { data } = await axios.get(
-      `PunchListItem/Attachments?plantId=PCS$${plantId}&punchItemId=${punchItemId}&thumbnailSize=128${apiVersion}`,
-      {
-        cancelToken: cancelToken
-      }
-    );
-    return data as Attachment[];
-  };
-
-  const getPunchAttachment = async (
-    cancelToken: CancelToken,
-    plantId: string,
-    punchItemId: number,
-    attachmentId: number
-  ): Promise<Blob> => {
-    const { data } = await axios.get(
-      `PunchListItem/Attachment?plantId=PCS$${plantId}&punchItemId=${punchItemId}&attachmentId=${attachmentId}${apiVersion}`,
-      {
-        cancelToken: cancelToken,
-        responseType: "blob",
-        headers: {
-          "Content-Disposition": 'attachment; filename="filename.jpg"'
-        }
-      }
-    );
-    return data as Blob;
-  };
-
-  const deletePunchAttachment = async (
-    plantId: string,
-    punchItemId: number,
-    attachmentId: number
-  ): Promise<void> => {
-    const dto = {
-      PunchItemId: punchItemId,
-      AttachmentId: attachmentId
-    };
-    await axios.delete(
-      `PunchListItem/Attachment?plantId=PCS$${plantId}${apiVersion}`,
-      { data: dto }
-    );
-  };
-
   const postTempPunchAttachment = async (
     plantId: string,
     formData: FormData,
@@ -729,23 +605,6 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     } else {
       throw new Error("Unable to upload attachment");
     }
-  };
-
-  const postPunchAttachment = async (
-    plantId: string,
-    parentId: number,
-    formData: FormData,
-    title: string
-  ): Promise<void> => {
-    await axios.post(
-      `PunchListItem/Attachment?plantId=PCS$${plantId}&punchItemId=${parentId}&title=${title}${apiVersion}`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      }
-    );
   };
 
   //---------
@@ -852,28 +711,20 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
 
   return {
     deleteChecklistAttachment,
-    deletePunchAttachment,
     getVersion,
     getAttachments,
-    getPunchAttachment,
-    getPunchAttachments,
     getChecklistAttachments,
     getChecklistAttachment,
     getTaskAttachments,
     getTaskAttachment,
-    getPunchItem,
     getPlants,
     getProjectsForPlant,
     getPermissionsForPlant,
     getChecklist,
     getChecklistPunchList,
     getEntityDetails,
-    getPunchOrganizations,
-    getPunchSorts,
-    getPunchPriorities,
     getPersonsByName,
     getPunchList,
-    getPunchTypes,
     getPunchCategories,
     getTask,
     getTasks,
@@ -884,12 +735,10 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     postClear,
     postSetOk,
     postSetNA,
-    postNewPunch,
     postTaskSign,
     postTaskUnsign,
     postTaskVerify,
     postTaskUnverify,
-    postPunchAttachment,
     postSign,
     postUnsign,
     postVerify,
