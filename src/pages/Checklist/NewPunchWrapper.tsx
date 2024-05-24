@@ -121,7 +121,7 @@ const NewPunchWrapper = (): JSX.Element => {
       sortingGuid: formFields.sorting,
       priorityGuid: formFields.priority,
       estimate: parseInt(formFields.estimate),
-      dueTimeUtc: formFields.dueDate,
+      dueTimeUtc: new Date(formFields.dueDate).toISOString(),
       actionByPersonOid: chosenPerson.id ? `${chosenPerson.id}` : ""
     };
     setSubmitPunchStatus(AsyncStatus.LOADING);
