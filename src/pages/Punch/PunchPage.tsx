@@ -114,7 +114,9 @@ const PunchPage = (): JSX.Element => {
       <Navbar
         noBorder
         leftContent={
-          <BackButton to={`${removeSubdirectories(url, 2)}/punch-list`} />
+          <BackButton
+            to={`${removeSubdirectories(url, 2)}/punch-list${location.search}`}
+          />
         }
         midContent="Punch Item"
       />
@@ -127,7 +129,11 @@ const PunchPage = (): JSX.Element => {
           <Route
             exact
             path={`${path}/tag-info`}
-            render={(): JSX.Element => <TagInfoWrapper tagId={punch?.tagId} />}
+            render={(): JSX.Element => (
+              <TagInfoWrapper
+                tagId={parseInt(location.search.split("tagId=")[1])}
+              />
+            )}
           />
           <Route exact path={`${path}`} render={determineComponentToRender} />
         </Switch>
@@ -135,13 +141,13 @@ const PunchPage = (): JSX.Element => {
       <NavigationFooter>
         <FooterButton
           active={!history.location.pathname.includes("/tag-info")}
-          goTo={(): void => history.push(url)}
+          goTo={(): void => history.push(`${url}${location.search}`)}
           icon={<EdsIcon name="warning_filled" color={COLORS.mossGreen} />}
           label="Punch item"
         />
         <FooterButton
           active={history.location.pathname.includes("/tag-info")}
-          goTo={(): void => history.push(`${url}/tag-info`)}
+          goTo={(): void => history.push(`${url}/tag-info${location.search}`)}
           icon={<EdsIcon name="tag" />}
           label={"Tag info"}
         />

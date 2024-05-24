@@ -64,7 +64,9 @@ const PunchList = ({
         fetchPunchListStatus={fetchPunchListStatus}
         onPunchClick={(punch: PunchPreview): void =>
           history.push(
-            `${removeSubdirectories(url)}/punch-item/${punch.proCoSysGuid}`
+            `${removeSubdirectories(url)}/punch-item/${
+              punch.proCoSysGuid
+            }?tagId=${punch.tagId}`
           )
         }
         punchList={punchList}
@@ -82,7 +84,7 @@ const PunchList = ({
             <PreviewButton
               to={`${removeSubdirectories(url)}/punch-item/${
                 punch.proCoSysGuid
-              }`}
+              }?tagId=${punch.tagId}`}
               key={punch.id}
             >
               <CompletionStatusIcon status={punch.status} />

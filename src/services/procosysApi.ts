@@ -136,7 +136,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
   ): Promise<ChecklistPreview[]> => {
     let url = "";
     if (searchType === SearchType.Comm) {
-      url = `CommPkg/Checklists?plantId=PCS$${plantId}&commPkgId=${entityId}${apiVersion}`;
+      url = `CommPkg/CheckLists?plantId=PCS$${plantId}&commPkgId=${entityId}${apiVersion}`;
     } else if (searchType === SearchType.Tag) {
       url = `Tag/CheckLists?plantId=PCS$${plantId}&tagId=${entityId}${apiVersion}`;
     } else {

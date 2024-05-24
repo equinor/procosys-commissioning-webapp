@@ -5,10 +5,12 @@ import {
   Navbar,
   NavigationFooter,
   PunchList,
+  isArrayOfType,
+  isOfType,
   removeSubdirectories
 } from "@equinor/procosys-webapp-components";
 import Axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Route, Switch } from "react-router-dom";
 import TagInfoWrapper from "../../components/TagInfoWrapper";
 import EdsIcon from "../../components/icons/EdsIcon";
@@ -34,50 +36,48 @@ const ChecklistPage = (): JSX.Element => {
   const isOnNewPunchPage = history.location.pathname.includes("/new-punch");
   const isOnPunchListPage = history.location.pathname.includes("/punch-list");
   const isOnTagInfoPage = history.location.pathname.includes("/tag-info");
-  const goBackToPunchListPage = removeSubdirectories(history.location.pathname);
+  const goBackToPunchListPage = `${removeSubdirectories(
+    history.location.pathname
+  )}${location.search}`;
+
   const goBackToEntityPage = removeSubdirectories(url, 2);
 
   useEffect(() => {
+    getPunchList();
+    getCheckList();
     return (): void => {
       source.cancel();
     };
-  }, []);
+  }, [history.location.pathname]);
 
-  useEffect(() => {
-    (async (): Promise<void> => {
-      try {
-        const detailsFromApi = await api.getChecklist(
-          params.plant,
-          params.checklistId,
-          source.token
-        );
-        setDetails(detailsFromApi);
-        setFetchDetailsStatus(AsyncStatus.SUCCESS);
-      } catch {
+  const getCheckList = useCallback(async () => {
+    const detailsFromApi = await api
+      .getChecklist(params.plant, params.checklistId, source.token)
+      .catch(() => {
         setFetchDetailsStatus(AsyncStatus.ERROR);
-      }
-    })();
-  }, [api, params]);
+      });
 
-  useEffect(() => {
-    (async (): Promise<void> => {
-      try {
-        const punchListFromApi = await api.getChecklistPunchList(
-          params.plant,
-          params.checklistId,
-          source.token
-        );
-        setPunchList(punchListFromApi);
-        if (punchListFromApi.length === 0) {
-          setFetchPunchListStatus(AsyncStatus.EMPTY_RESPONSE);
-        } else {
-          setFetchPunchListStatus(AsyncStatus.SUCCESS);
-        }
-      } catch {
+    if (detailsFromApi && isOfType(detailsFromApi, "checkList")) {
+      setDetails(detailsFromApi);
+      setFetchDetailsStatus(AsyncStatus.SUCCESS);
+    }
+  }, [api, params.checklistId, params.plant]);
+
+  const getPunchList = useCallback(async () => {
+    const punchListFromApi = await api
+      .getChecklistPunchList(params.plant, params.checklistId, source.token)
+      .catch(() => {
         setFetchPunchListStatus(AsyncStatus.ERROR);
+      });
+    if (isArrayOfType(punchListFromApi, "proCoSysGuid")) {
+      setPunchList(punchListFromApi);
+      if (punchListFromApi.length === 0) {
+        setFetchPunchListStatus(AsyncStatus.EMPTY_RESPONSE);
+      } else {
+        setFetchPunchListStatus(AsyncStatus.SUCCESS);
       }
-    })();
-  }, [api, params]);
+    }
+  }, [api, params.checklistId, params.plant, history.location.pathname]);
 
   return (
     <main>
@@ -129,7 +129,9 @@ const ChecklistPage = (): JSX.Element => {
                   history.push(
                     `${removeSubdirectories(
                       history.location.pathname
-                    )}/punch-item/${punch.id}`
+                    )}/punch-item/${punch.proCoSysGuid}${
+                      location.search
+                    }&tagId=${details?.checkList.tagId}`
                   )
                 }
                 punchList={punchList}

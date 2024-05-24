@@ -217,7 +217,9 @@ const CommPkg = (): JSX.Element => {
         )}
         <FooterButton
           active={history.location.pathname.includes("/punch-list")}
-          goTo={(): void => history.push(`${url}/punch-list`)}
+          goTo={(): void =>
+            history.push(`${url}/punch-list?tagId=${punchList?.at(0)?.tagId}`)
+          }
           icon={<EdsIcon name="list" color={COLORS.mossGreen} />}
           label="Punch list"
           numberOfItems={punchList?.length}
