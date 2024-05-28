@@ -4,7 +4,6 @@ WORKDIR /app
 COPY package*.json ./
 COPY . .
 RUN yarn install
-RUN yarn build --mode=production
 
 ENV VITE_AUTH_CLIENT = fb57fb35-f927-4271-9976-342070cb9f54
 ENV VITE_AUTHORITY = https://login.microsoftonline.com/3aa4a235-b6e2-48d5-9195-7fcf05b459b0
@@ -16,6 +15,10 @@ ENV VITE_WEBAPI_SCOPE = api://dd38f169-bccf-4d0e-a4ad-d830893cfa75/web_api
 ENV VITE_COMP_SCOPE = api://e8c158a9-a200-4897-9d5f-660e377bddc1/ReadWrite
 ENV VITE_APP_INSIGHTS = cf22f65-a717-421f-935d-4853dbcbe8e5
 ENV VITE_API_VERSION = "&api-version=4.1"
+
+RUN yarn build --mode=production
+
+
 # production environment
 FROM nginxinc/nginx-unprivileged
 
