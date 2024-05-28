@@ -1,5 +1,6 @@
 import * as MSAL from "@azure/msal-browser";
 import isPropValid from "@emotion/is-prop-valid";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import { StyleSheetManager } from "styled-components";
 import App from "./App";
@@ -12,6 +13,7 @@ import baseApiService from "./services/baseApi";
 import completionApiService from "./services/completionApi";
 import procosysApiService from "./services/procosysApi";
 import GlobalStyles from "./style/GlobalStyles";
+const ENV = import.meta.env;
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -19,12 +21,12 @@ const root = ReactDOM.createRoot(
 
 const render = (content: JSX.Element): void => {
   root.render(
-    // <React.StrictMode>
-    <StyleSheetManager shouldForwardProp={shouldForwardProp}>
-      <GlobalStyles />
-      {content}
-    </StyleSheetManager>
-    // </React.StrictMode>
+    <React.StrictMode>
+      <StyleSheetManager shouldForwardProp={shouldForwardProp}>
+        <GlobalStyles />
+        {content}
+      </StyleSheetManager>
+    </React.StrictMode>
   );
 };
 
@@ -43,9 +45,9 @@ const initialize = async () => {
   if (isRedirecting) return Promise.reject("redirecting");
 
   // Get config from App Configuration
-  const configurationAccessToken = await authInstance.getAccessToken(
+  const configurationAccessToken = await authInstance.getAccessToken([
     configurationScope
-  );
+  ]);
 
   const { appConfig, featureFlags } = await getAppConfig(
     configurationEndpoint,
@@ -53,23 +55,23 @@ const initialize = async () => {
   );
   const baseApiInstance = baseApiService({
     authInstance,
-    baseURL: "https://pcs-main-api-dev-pr.azurewebsites.net/api",
-    scope: appConfig.procosysWebApi.scope
+    baseURL: ENV.VITE_BASE_URL_MAIN,
+    scope: [ENV.VITE_WEBAPI_SCOPE]
   });
   const completionBaseApiInstance = baseApiService({
     authInstance,
-    baseURL: "https://backend-procosys-completion-api-dev.radix.equinor.com",
-    scope: ["api://e8c158a9-a200-4897-9d5f-660e377bddc1/ReadWrite"]
+    baseURL: ENV.VITE_BASE_URL_COMP,
+    scope: [ENV.VITE_COMP_SCOPE]
   });
   const procosysApiInstance = procosysApiService({
     axios: baseApiInstance,
-    apiVersion: appConfig.procosysWebApi.apiVersion
+    apiVersion: ENV.VITE_API_VERSION
   });
   const completionApiInstance = completionApiService({
     axios: completionBaseApiInstance
   });
   const { appInsightsInstance, appInsightsReactPlugin } = initializeAppInsights(
-    appConfig.appInsights.instrumentationKey
+    ENV.VITE_APP_INSIGHTS
   );
   return {
     authInstance,
