@@ -13,7 +13,11 @@ import baseApiService from "./services/baseApi";
 import completionApiService from "./services/completionApi";
 import procosysApiService from "./services/procosysApi";
 import GlobalStyles from "./style/GlobalStyles";
-const ENV = import.meta.env;
+let ENV = import.meta.env;
+
+if (!ENV) {
+  ENV = process.env as any;
+}
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
