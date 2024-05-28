@@ -4,15 +4,12 @@ metadata:
   name: procosys-commissioning-webapp
 spec:
   environments:
-  - name: dev-test
-    build:
-      from: refactor-api-calls
   - name: dev
     build:
-      from: main
+      from: develop
   - name: test
     build:
-      from: main
+      from: test
   - name: prod
     build:
       from: main
@@ -25,9 +22,6 @@ spec:
     environmentConfig:
     # Development environment
     - environment: dev
-      variables:
-        pcs_authSettingsEndpoint: 'https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Auth'
-    - environment: dev-test
       variables:
         pcs_authSettingsEndpoint: 'https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Auth'
     - environment: test
