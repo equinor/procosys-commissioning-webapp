@@ -19,22 +19,24 @@ spec:
     ports:
     - name: http
       port: 5000
-    environmentConfig:
-    - environment: dev
-      variables:
-        VITE_AUTH_CLIENT: "fb57fb35-f927-4271-9976-342070cb9f54"
-        VITE_AUTHORITY: "https://login.microsoftonline.com/3aa4a235-b6e2-48d5-9195-7fcf05b459b0"
-        VITE_CONFIG_SCOPE: "[api://0708e202-b5ad-4d95-9735-a631c715d6a9/Read]"
-        VITE_BASE_URL_MAIN: "https://pcs-main-api-dev-pr.azurewebsites.net/api"
-        VITE_BASE_URL_COMP: "https://backend-procosys-completion-api-dev.radix.equinor.com"
-        VITE_CONFIG_ENDPOINT: https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Configuration?
-        VITE_WEBAPI_SCOPE: api://dd38f169-bccf-4d0e-a4ad-d830893cfa75/web_api
-        VITE_COMP_SCOPE: api://e8c158a9-a200-4897-9d5f-660e377bddc1/ReadWrite
-        VITE_APP_INSIGHTS: cf22f65-a717-421f-935d-4853dbcbe8e5
-        VITE_API_VERSION: "&api-version=4.1"
-    - environment: test
-      variables:
-        authSettingsEndpoint: 'https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Auth'
-    - environment: prod
-      variables:
-        authSettingsEndpoint: 'https://pcs-config-prod-func.azurewebsites.net/api/CommWebApp/Auth'
+    env:
+      - name: VITE_AUTH_CLIENT
+        value: "fb57fb35-f927-4271-9976-342070cb9f54"
+      - name: VITE_AUTHORITY
+        value: "https://login.microsoftonline.com/3aa4a235-b6e2-48d5-9195-7fcf05b459b0"
+      - name: VITE_CONFIG_SCOPE
+        value: api://0708e202-b5ad-4d95-9735-a631c715d6a9/Read
+      - name: VITE_CONFIG_ENDPOINT
+        value: "https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Configuration?"
+      - name: VITE_WEBAPI_SCOPE
+        value: "api://dd38f169-bccf-4d0e-a4ad-d830893cfa75/web_api"
+      - name: VITE_COMP_SCOPE
+        value: "api://e8c158a9-a200-4897-9d5f-660e377bddc1/ReadWrite"
+      - name: VITE_APP_INSIGHTS
+        value: cf22f65-a717-421f-935d-4853dbcbe8e5
+      - name: VITE_API_VERSION
+        value: "&api-version=4.1"
+      - name: VITE_BASE_URL_MAIN
+        value: "https://pcs-main-api-dev-pr.azurewebsites.net/api"
+      - name: VITE_BASE_URL_COMP
+        value: "https://backend-procosys-completion-api-dev.radix.equinor.com"
