@@ -48,7 +48,7 @@ const ChecklistPage = (): JSX.Element => {
     return (): void => {
       source.cancel();
     };
-  }, [history.location.pathname]);
+  }, []);
 
   const getCheckList = useCallback(async () => {
     const detailsFromApi = await api
@@ -61,7 +61,7 @@ const ChecklistPage = (): JSX.Element => {
       setDetails(detailsFromApi);
       setFetchDetailsStatus(AsyncStatus.SUCCESS);
     }
-  }, [api, params.checklistId, params.plant]);
+  }, [api, params.checklistId, params.plant, history.location.pathname]);
 
   const getPunchList = useCallback(async () => {
     const punchListFromApi = await api

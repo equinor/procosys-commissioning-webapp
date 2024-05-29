@@ -20,13 +20,15 @@ spec:
     - name: http
       port: 5000
     environmentConfig:
-    # Development environment
     - environment: dev
+      dockerfileName: Dockerfile.dev
       variables:
-        pcs_authSettingsEndpoint: 'https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Auth'
+        authSettingsEndpoint: 'https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Auth'
     - environment: test
+      dockerfileName: Dockerfile.test
       variables:
-        pcs_authSettingsEndpoint: 'https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Auth'
+        authSettingsEndpoint: 'https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Auth'
     - environment: prod
+      dockerfileName: Dockerfile.prod
       variables:
-        pcs_authSettingsEndpoint: 'https://pcs-config-prod-func.azurewebsites.net/api/CommWebApp/Auth'
+        authSettingsEndpoint: 'https://pcs-config-prod-func.azurewebsites.net/api/CommWebApp/Auth'
