@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import axios from "axios";
 
-let ENV = import.meta.env;
-if (!ENV) {
-  ENV = process.env as any;
-}
+const ENV = import.meta.env;
+
 export type AuthSettings = {
   clientId: string;
   authority: string;
