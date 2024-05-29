@@ -18,6 +18,7 @@ let ENV = import.meta.env;
 if (!ENV) {
   ENV = process.env as any;
 }
+console.log(import.meta.env);
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
