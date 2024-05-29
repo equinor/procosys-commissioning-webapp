@@ -3,6 +3,7 @@
   "version": "0.1.1",
   "homepage": "https://apps.procosys.com/comm",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@azure/msal-browser": "^3.10.0",
     "@equinor/eds-core-react": "^0.36.1",
