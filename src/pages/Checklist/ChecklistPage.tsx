@@ -48,7 +48,7 @@ const ChecklistPage = (): JSX.Element => {
     return (): void => {
       source.cancel();
     };
-  }, []);
+  }, [location.pathname]);
 
   const getCheckList = useCallback(async () => {
     const detailsFromApi = await api
