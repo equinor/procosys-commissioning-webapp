@@ -166,6 +166,7 @@ const NewPunchWrapper = (): JSX.Element => {
           searchStatus={searchStatus}
           query={query}
           setQuery={setQuery}
+          disableAttahments
         />
       </AsyncPage>
       {snackbar}
