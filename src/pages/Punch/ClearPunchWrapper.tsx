@@ -15,6 +15,7 @@ import {
   PunchCategory,
   PunchItem
 } from "../../typings/apiTypes";
+import { hasErrors, renderErrors } from "../../utils/renderError";
 import useCommonHooks from "../../utils/useCommonHooks";
 import usePersonsSearchFacade from "../../utils/usePersonsSearchFacade";
 
@@ -136,8 +137,12 @@ ClearPunchWrapperProps): JSX.Element => {
           { headers: { "x-plant": `PCS$${params.plant}` } }
         )
         .catch((error: AxiosError) => {
+          setSnackbarText(
+            hasErrors(error)
+              ? renderErrors(error)
+              : "Something went wrong while saving the punch"
+          );
           setUpdatePunchStatus(AsyncStatus.ERROR);
-          setSnackbarText(error.message);
         })
         .finally(() => {
           setSnackbarText("Saved successfully");
