@@ -143,14 +143,12 @@ ClearPunchWrapperProps): JSX.Element => {
               : "Something went wrong while saving the punch"
           );
           setUpdatePunchStatus(AsyncStatus.ERROR);
-        })
-        .finally(() => {
-          setSnackbarText("Saved successfully");
-          setUpdatePunchStatus(AsyncStatus.SUCCESS);
         });
     setUpdateQueue((prevQueue) => prevQueue.slice(1));
     if (updatedData?.data) {
       setRowVersion(updatedData.data);
+      setSnackbarText("Saved successfully");
+      setUpdatePunchStatus(AsyncStatus.SUCCESS);
     }
   }, [updatePunchStatus, updateQueue, rowVersion]);
 
