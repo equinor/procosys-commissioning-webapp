@@ -37,18 +37,10 @@ const completionApiInstance = completionApiService({
 
 const completionBaseApi: AxiosInstance = baseApiService({
   authInstance,
-  baseURL: "https://backend-procosys-completion-api-dev.radix.equinor.com",
-  scope: ["api://e8c158a9-a200-4897-9d5f-660e377bddc1/ReadWrite"]
+  baseURL: baseURL,
+  scope: ["testscope"]
 });
 const dummyAppConfig: AppConfig = {
-  procosysWebApi: {
-    baseUrl: "testUrl",
-    scope: [""],
-    apiVersion: ""
-  },
-  appInsights: {
-    instrumentationKey: ""
-  },
   ocrFunctionEndpoint: "https://dummy-org-endpoint.com"
 };
 const dummyFeatureFlags: FeatureFlags = {

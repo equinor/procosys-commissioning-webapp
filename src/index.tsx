@@ -34,8 +34,7 @@ const render = (content: JSX.Element): void => {
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const initialize = async () => {
   // Get auth config, setup auth client and handle login
-  const { clientSettings, scopes, configurationScope, configurationEndpoint } =
-    await getAuthConfig();
+  const { clientSettings, scopes } = await getAuthConfig();
   const authClient = new MSAL.PublicClientApplication(clientSettings);
   await authClient.initialize();
   const authInstance = authService({
@@ -45,15 +44,7 @@ const initialize = async () => {
   const isRedirecting = await authInstance.handleLogin();
   if (isRedirecting) return Promise.reject("redirecting");
 
-  // Get config from App Configuration
-  const configurationAccessToken = await authInstance.getAccessToken([
-    configurationScope
-  ]);
-
-  const { appConfig, featureFlags } = await getAppConfig(
-    configurationEndpoint,
-    configurationAccessToken
-  );
+  const { appConfig, featureFlags } = await getAppConfig();
   const baseApiInstance = baseApiService({
     authInstance,
     baseURL: ENV.VITE_BASE_URL_MAIN,
