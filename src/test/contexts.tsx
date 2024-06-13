@@ -41,14 +41,6 @@ const completionBaseApi: AxiosInstance = baseApiService({
   scope: ["api://e8c158a9-a200-4897-9d5f-660e377bddc1/ReadWrite"]
 });
 const dummyAppConfig: AppConfig = {
-  procosysWebApi: {
-    baseUrl: "testUrl",
-    scope: [""],
-    apiVersion: ""
-  },
-  appInsights: {
-    instrumentationKey: ""
-  },
   ocrFunctionEndpoint: "https://dummy-org-endpoint.com"
 };
 const dummyFeatureFlags: FeatureFlags = {

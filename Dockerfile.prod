@@ -15,6 +15,7 @@ ENV VITE_WEBAPI_SCOPE="api://47641c40-0135-459b-8ab4-459e68dc8d08/web_api"
 ENV VITE_COMP_SCOPE="api://dee65816-6e0b-4816-bafe-ebd7179d5933/ReadWrite"
 ENV VITE_APP_INSIGHTS="dfa0c6c9-7034-496d-8991-c0777a6d0d19"
 ENV VITE_API_VERSION="&api-version=4.1"
+ENV VITE_OCR_ENDPOINT="https://pcs-mc-webapp-prod-funcs.azurewebsites.net/api/pcs_ocr?"
 
 RUN yarn build --mode=production
 
