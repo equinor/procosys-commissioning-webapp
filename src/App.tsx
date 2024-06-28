@@ -1,65 +1,56 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { CommAppContextProvider } from './contexts/CommAppContext';
-import GeneralRouter from './GeneralRouter';
-import ErrorBoundary from './components/error/ErrorBoundary';
-import { IAuthService } from './services/authService';
-import { ProcosysApiService } from './services/procosysApi';
-import { ApplicationInsights } from '@microsoft/applicationinsights-web';
-import {
-    AppInsightsContext,
-    ReactPlugin,
-} from '@microsoft/applicationinsights-react-js';
-import { AppConfig, FeatureFlags } from './services/appConfiguration';
-import { SearchType } from './pages/Search/Search';
+import { Button, Typography } from '@equinor/eds-core-react';
+import styled from 'styled-components';
 
-export type CommParams = {
-    plant: string;
-    project: string;
-    searchType: SearchType;
-    entityId: string;
-    taskId: string;
-    checklistId: string;
-    punchItemId: string;
-};
+const LandingPageWrapper = styled.main`
+    width: 100vw;
+    & h4 {
+        margin-top: 0;
+        margin-bottom: 12px;
+    }
+`;
+const AppSection = styled.section`
+    height: 50vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`;
+const CommAppSection = styled(AppSection)`
+    background-color: #ffecf0;
+`;
 
-type AppProps = {
-    authInstance: IAuthService;
-    procosysApiInstance: ProcosysApiService;
-    appInsightsInstance: ApplicationInsights;
-    appInsightsReactPlugin: ReactPlugin;
-    appConfig: AppConfig;
-    featureFlags: FeatureFlags;
-};
-
-const App = ({
-    procosysApiInstance,
-    authInstance,
-    appInsightsReactPlugin: reactPlugin,
-    appConfig,
-    featureFlags,
-}: AppProps): JSX.Element => {
+const App = () => {
     return (
-        <AppInsightsContext.Provider value={reactPlugin}>
-            <ErrorBoundary appInsights={reactPlugin}>
-                <CommAppContextProvider
-                    api={procosysApiInstance}
-                    auth={authInstance}
-                    appConfig={appConfig}
-                    featureFlags={featureFlags}
+        <LandingPageWrapper>
+            <CommAppSection>
+                <div
+                    style={{
+                        display: 'flex',
+                        textAlign: 'center',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        padding: 36,
+                        backgroundColor: 'white',
+                        borderRadius: '10px',
+                    }}
                 >
-                    <Router basename={'/comm'}>
-                        <Switch>
-                            <Route
-                                path="/:plant?/:project?"
-                                component={GeneralRouter}
-                            />
-                            <Route render={(): JSX.Element => <h1>404</h1>} />
-                        </Switch>
-                    </Router>
-                </CommAppContextProvider>
-            </ErrorBoundary>
-        </AppInsightsContext.Provider>
+                    <Typography variant={'h4'}>
+                        This domain has been retired, click on the button below
+                        to be redirected to the new page
+                    </Typography>
+                    <Typography variant={'h4'}>
+                        If you have this page as a favorite, please change it to
+                        the new URL
+                    </Typography>
+                    <a href={'https://apps.procosys.equinor.com'}>
+                        <Button color={'danger'}>
+                            Go to apps.procosys.equinor.com
+                        </Button>
+                    </a>
+                </div>
+            </CommAppSection>
+        </LandingPageWrapper>
     );
 };
 
