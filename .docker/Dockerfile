@@ -4,7 +4,6 @@ WORKDIR /app
 COPY . /app
 RUN yarn install
 
-# Uruchom testy
 RUN yarn test
 
 RUN yarn build --mode=production
