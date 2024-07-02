@@ -7,7 +7,7 @@ module.exports = {
         '/node_modules/(?!(@equinor/eds-tokens|@equinor/eds-icons))',
     ],
     transform: {
-        '^.+\\.(js|ts|tsx)$': 'ts-jest',
+        '^.+\\.(js|jsx|ts|tsx)$': 'ts-jest',
         '^.+\\.(svg|png)$': '<rootDir>/src/test/imgTransform.js',
     },
     globals: {
