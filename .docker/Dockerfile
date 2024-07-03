@@ -11,8 +11,7 @@ FROM nginx:1.21.6-alpine
 RUN apk add python3
 COPY --from=build /app/dist /usr/share/nginx/html/comm
 COPY .docker/nginx/ /etc/nginx/
-COPY  .docker/scripts/ /etc/scripts/
-
+COPY .docker/scripts/ /etc/scripts/
 
 EXPOSE 5000
 CMD ["sh","/etc/scripts/startup.sh"]
