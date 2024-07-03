@@ -4,7 +4,7 @@ module.exports = {
     preset: 'ts-jest/presets/js-with-ts',
     testEnvironment: 'jsdom',
     transformIgnorePatterns: [
-        '/node_modules/(?!(@equinor/eds-tokens|@equinor/eds-icons))',
+        '/node_modules/(?!(@equinor/eds-tokens|@equinor/eds-icons|@equinor/procosys-webapp-components))',
     ],
     transform: {
         '^.+\\.(js|jsx|ts|tsx)$': 'ts-jest',

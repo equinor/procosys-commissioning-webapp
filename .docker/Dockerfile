@@ -3,6 +3,11 @@ FROM node:22 as build
 WORKDIR /app
 COPY . /app
 RUN yarn install
+
+# Run tests
+RUN yarn test
+
+# If tests pass, proceed with the build
 RUN yarn build --mode=production
 
 # production environment
