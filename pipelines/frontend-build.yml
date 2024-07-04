@@ -82,14 +82,3 @@ stages:
       toNamespace: 'test'
       deploymentName: $[ stageDependencies.deployToDev.KUBERNETESDEPLOY.outputs['KUBERNETESDEPLOY.deploymentName'] ]
 
-# Promote to Prod Stage
-# - stage: promoteToProd
-#   displayName: 'Promote to Prod'
-#   dependsOn: promoteToTest
-#   jobs:
-#   - template: /pipelines/templates/radix-promote-env.yml@templates
-#     parameters:
-#       serviceConnection: 'procosys - non-prod'
-#       fromNamespace: 'test'
-#       toNamespace: 'prod'
-#       deploymentName: $[ stageDependencies.promoteToTest.KUBERNETESPROMOTE.outputs['KUBERNETESPROMOTE.deploymentName'] ]
