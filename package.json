@@ -29,7 +29,7 @@
     "start": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "test:debug": "jest --runInBand --no-cache",
     "lint-all": "./node_modules/.bin/eslint --ext .ts,.tsx src/"
   },
