@@ -17,32 +17,30 @@ parameters:
   default: 'procosys - non-prod'
   displayName: 'Service Connection'
     
-- name: fromEnvironment
+- name: fromNamespace
   type: string
-  displayName: RADIX environment to promote artifact from
+  displayName: Kubernetes namespace to promote artifact from
 
-- name: toEnvironment
+- name: toNamespace
   type: string
-  displayName: RADIX environment to promote artifact to
+  displayName: Kubernetes namespace to promote artifact to
 
 - name: deploymentName
   type: string
   displayName: The deployment job name from the previous stage
 
-- name: radixResource
+- name: kubernetesResource
   default: 6dae42f8-4368-4678-94ff-3960e28e3630
-
-- name: radixApplication
+- name: kubernetesApplication
   default: procosys-commissioning-webapp
 
-- name: radixUrl
-  default: https://api.radix.equinor.com/api/v1
-
+- name: kubernetesUrl
+  default: https://kubernetes.default.svc
 
 steps:
 - task: AzureCLI@2
-  displayName: Trigger deploy to radix
-  name: RADIXJOB
+  displayName: Promote deployment in Kubernetes
+  name: KUBERNETESPROMOTE
   inputs:
     azureSubscription: ${{ parameters.serviceConnection }}
     addSpnToEnvironment: true
@@ -50,57 +48,46 @@ steps:
     scriptLocation: 'inlineScript'
     FailOnStandardError: true
     inlineScript: |
-      $token = az account get-access-token --resource ${{ parameters.radixResource }} --query=accessToken -otsv
+      $token = az account get-access-token --resource ${{ parameters.kubernetesResource }} --query=accessToken -otsv
 
-      $body = ConvertTo-Json @{ 
-        "triggeredBy" = "Azure-Devops ($(Build.RequestedFor))"
-        fromEnvironment = "${{ parameters.fromEnvironment }}"
-        toEnvironment = "${{ parameters.toEnvironment }}"
-        deploymentName = "${{ parameters.deploymentName }}"
-      }
-      Write-Host "Sending payload: $body"
+      ## Get deployment from source namespace
+      $getUrl = "${{ parameters.kubernetesUrl }}/apis/apps/v1/namespaces/${{ parameters.fromNamespace }}/deployments/${{ parameters.deploymentName }}"
 
-      $radixUrl = "${{ parameters.radixUrl }}/applications/${{ parameters.radixApplication }}/pipelines/promote"
+      Write-Host "Sending GET to $getUrl"
+      $deployment = Invoke-RestMethod -Method Get -Uri $getUrl -Headers @{"Authorization" = "Bearer $token" }
+      
+      ## Update namespace in the deployment
+      $deployment.metadata.namespace = "${{ parameters.toNamespace }}"
+      $deployment.spec.template.metadata.namespace = "${{ parameters.toNamespace }}"
 
-      Write-Host "Sending POST to $radixUrl"
-      $resp = Invoke-RestMethod -Method Post -Uri $radixUrl -Headers @{"Authorization" = "Bearer $token"; "Content-Type" = "application/json" } -Body $body
+      ## Promote to target namespace
+      $postUrl = "${{ parameters.kubernetesUrl }}/apis/apps/v1/namespaces/${{ parameters.toNamespace }}/deployments"
+
+      Write-Host "Sending POST to $postUrl"
+      $resp = Invoke-RestMethod -Method Post -Uri $postUrl -Headers @{"Authorization" = "Bearer $token"; "Content-Type" = "application/json" } -Body ($deployment | ConvertTo-Json -Depth 10)
       Write-Host $resp
 
-      $jobName = $resp.name
-
-      $checkUrl = "${{ parameters.radixUrl }}/applications/${{ parameters.radixApplication }}/jobs/$jobName"
+      ## Verify promotion status
+      $checkUrl = "${{ parameters.kubernetesUrl }}/apis/apps/v1/namespaces/${{ parameters.toNamespace }}/deployments/${{ parameters.deploymentName }}/status"
 
       $checkStarted = Get-Date
 
       while ($true) {
-        Write-Host "Checking status..."
+        Write-Host "Checking promotion status..."
         $checkResp = Invoke-RestMethod -Uri $checkUrl -Headers @{"Authorization" = "Bearer $token" }                        
         
         Write-Host (ConvertTo-Json $checkResp -Depth 10 -Compress)
-        ## We want to stop when status -not Running || Waiting
 
-        if ($checkResp.status -ne "Running" -and $checkResp.status -ne "Waiting") {              
+        if ($checkResp.status.conditions[0].status -eq "True") {              
           break;
         }
         
         if ( ((Get-Date) - $checkStarted).Seconds -gt 600) {
           Write-Host "Timeout..."
-          throw "Radix job took over 600 seconds, aborting..."
+          throw "Kubernetes promotion took over 600 seconds, aborting..."
         }
 
         Start-Sleep -Seconds 10
       }
 
-
-      ## Do a last check for status -> If failed, write ERROR using #VSO commands 
-      Write-Host "Final status check..."
-      $checkResp = Invoke-RestMethod -Uri $checkUrl -Headers @{"Authorization" = "Bearer $token" }   
-      if ($checkResp.status -ne "Succeeded") {              
-        Write-Host "##vso[task.logissue type=error]Deployment to Radix failed."
-        throw "Radix deployment failed"
-      }
-
-      ## The deployment in Radix will have an id (or deployment name). This id is needed later to be able to promote to the next environment. We set a variable called radixJobName here, that is used next time the promote script is called.  
-      $deploymentName = $checkResp.deployments | select -Property name | select -First 1 -ExpandProperty name
-      Write-Host "Setting deployment name: $deploymentName"
-      Write-Host "##vso[task.setvariable variable=radixJobName;isOutput=true;]$deploymentName"
+      Write-Host "Promotion in Kubernetes succeeded."

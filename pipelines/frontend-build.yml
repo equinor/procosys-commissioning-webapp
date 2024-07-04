@@ -57,3 +57,39 @@ stages:
       buildContext: '$(Build.SourcesDirectory)'
       repository: '${{ variables.repositoryName }}'
       dockerRegistryServiceConnection: '$(dockerRegistryServiceConnectionName)'
+
+# Deploy to Dev Stage
+- stage: deployToDev
+  displayName: 'Deploy to Dev'
+  dependsOn: build
+  variables:
+    imageTagNamesFrontend: '$(Build.BuildId)' 
+  jobs:
+  - template: /templates/pipelines/radix-deploy.yml@templates
+    parameters:
+      serviceConnection: 'procosys - non-prod'
+      imageTagNamesFrontend: '$(Build.BuildId)'  
+
+# Promote to Test Stage
+- stage: promoteToTest
+  displayName: 'Promote to Test'
+  dependsOn: deployToDev
+  jobs:
+  - template: /templates/pipelines/radix-promote-env.yml@templates
+    parameters:
+      serviceConnection: 'procosys - non-prod'
+      fromNamespace: 'dev'
+      toNamespace: 'test'
+      deploymentName: $[ stageDependencies.deployToDev.KUBERNETESDEPLOY.outputs['KUBERNETESDEPLOY.deploymentName'] ]
+
+# Promote to Prod Stage
+# - stage: promoteToProd
+#   displayName: 'Promote to Prod'
+#   dependsOn: promoteToTest
+#   jobs:
+#   - template: /templates/pipelines/radix-promote-env.yml@templates
+#     parameters:
+#       serviceConnection: 'procosys - non-prod'
+#       fromNamespace: 'test'
+#       toNamespace: 'prod'
+#       deploymentName: $[ stageDependencies.promoteToTest.KUBERNETESPROMOTE.outputs['KUBERNETESPROMOTE.deploymentName'] ]
