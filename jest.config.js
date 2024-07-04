@@ -1,17 +1,15 @@
 module.exports = {
-    collectCoverageFrom: ['src/**/*.{ts,tsx}'],
-    verbose: true,
-    preset: 'ts-jest/presets/js-with-ts',
+    preset: 'ts-jest',
     testEnvironment: 'jsdom',
-    transformIgnorePatterns: [
-        '/node_modules/(?!(@equinor/eds-tokens|@equinor/eds-icons|@equinor/procosys-webapp-components))',
-    ],
-    transform: {
-        '^.+\\.(js|jsx|ts|tsx)$': 'ts-jest',
-        '^.+\\.(svg|png)$': '<rootDir>/src/test/imgTransform.js',
-    },
-    globals: {
-        crypto: require('crypto'),
-    },
     setupFilesAfterEnv: ['<rootDir>/src/test/setupTests.ts'],
+    transform: {
+        '^.+\\.tsx?$': 'ts-jest',
+        '^.+\\.jsx?$': 'babel-jest',
+    },
+    transformIgnorePatterns: [
+        '/node_modules/(?!@equinor/procosys-webapp-components).+\\.js$',
+    ],
+    moduleNameMapper: {
+        '\\.(css|less)$': '<rootDir>/__mocks__/styleMock.js',
+    },
 };
