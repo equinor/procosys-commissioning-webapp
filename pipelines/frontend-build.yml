@@ -33,7 +33,7 @@ stages:
 
   jobs:
   # Docker Build
-  - template: /templates/pipelines/dockerbuild-comm-webapp.yml@templates
+  - template: /pipelines/templates/dockerbuild-comm-webapp.yml@templates
     parameters:
       dependsOn: ''
       deploymentName: 'docker_build'
@@ -46,7 +46,7 @@ stages:
       dockerRegistryServiceConnection: '$(dockerRegistryServiceConnectionName)'
 
   # Docker Build and Push
-  - template: /templates/pipelines/dockerbuild-comm-webapp.yml@templates
+  - template: /pipelines/templates/dockerbuild-comm-webapp.yml@templates
     parameters:
       dependsOn: ''
       deploymentName: 'docker_build_push'
@@ -65,7 +65,7 @@ stages:
   variables:
     imageTagNamesFrontend: '$(Build.BuildId)' 
   jobs:
-  - template: /templates/pipelines/radix-deploy.yml@templates
+  - template: /pipelines/templates/radix-deploy.yml@templates
     parameters:
       serviceConnection: 'procosys - non-prod'
       imageTagNamesFrontend: '$(Build.BuildId)'  
@@ -75,7 +75,7 @@ stages:
   displayName: 'Promote to Test'
   dependsOn: deployToDev
   jobs:
-  - template: /templates/pipelines/radix-promote-env.yml@templates
+  - template: /pipelines/templates/radix-promote-env.yml@templates
     parameters:
       serviceConnection: 'procosys - non-prod'
       fromNamespace: 'dev'
@@ -87,7 +87,7 @@ stages:
 #   displayName: 'Promote to Prod'
 #   dependsOn: promoteToTest
 #   jobs:
-#   - template: /templates/pipelines/radix-promote-env.yml@templates
+#   - template: /pipelines/templates/radix-promote-env.yml@templates
 #     parameters:
 #       serviceConnection: 'procosys - non-prod'
 #       fromNamespace: 'test'
