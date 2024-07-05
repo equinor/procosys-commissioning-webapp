@@ -1,115 +1,100 @@
 trigger:
   branches:
     include:
-      - domain-retired
+    - domain-retired
 
 resources:
   repositories:
-    - repository: self
-    - repository: templates
-      type: github
-      name: equinor/procosys-infra
-      endpoint: 'equinor'
+  - repository: self
+  - repository: templates
+    type: github
+    name: equinor/procosys-infra
+    endpoint: 'equinor'
 
 # Global variables for the pipeline
 variables:
   - template: templates/variables/procosys-web-variables.yml@templates
   - template: templates/variables/procosys-global-variables.yml@templates
   - template: templates/variables/comm-webapp-variables.yml@templates
+
   - name: 'repositoryName'
     value: procosys-commissioning-webapp
 
 stages:
-  # Build Stage
-  - stage: build
-    displayName: 'Build'
-    variables:
-      envName: 'build'
-      serviceConnection: '${{ variables.nonProdServiceConnection }}'
-      containerRegistry: '${{ variables.containerRegistryName }}'
-      envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
-      dockerfilePath: '/.docker/Dockerfile'
-      dockerRegistryServiceConnection: '$(dockerRegistryServiceConnectionName)'
+# Build Stage
+- stage: build
+  displayName: 'Build'
+  variables:
+    envName: 'build'
+    serviceConnection: '${{ variables.nonProdServiceConnection }}'
+    containerRegistry: '${{ variables.containerRegistryName }}'
+    envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
+    dockerfilePath: '/.docker/Dockerfile'
+    dockerRegistryServiceConnection: '$(dockerRegistryServiceConnectionName)'
 
-    jobs:
-      - template: templates/pipelines/dockerbuild-frontend.yml@templates
-        parameters:
-          deploymentName: 'docker_build_push'
-          dependsOn: ''
-          env: '${{ variables.envName }}'
-          envGroup: '${{ variables.envGroupName }}'
-          dockerfilePath: ${{ variables.dockerfilePath }}
-          buildContext: '$(Build.SourcesDirectory)'
-          repository: ${{ variables.repositoryName }}
-          dockerRegistryServiceConnection: $(dockerRegistryServiceConnectionName)
+  jobs:
+  # Docker Build and Push
+  - template: /templates/pipelines/dockerbuild-frontend.yml@templates
+    parameters:
+      deploymentName: 'docker_build_push'
+      dependsOn: ''
+      env: '${{ variables.envName }}'
+      envGroup: '${{ variables.envGroupName }}'
+      dockerfilePath: ${{ variables.dockerfilePath }}
+      buildContext: '$(Build.SourcesDirectory)'
+      repository: ${{ variables.repositoryName }}
+      dockerRegistryServiceConnection: $(dockerRegistryServiceConnectionName)
 
-  # Deploy to Dev Stage
-  - stage: dev
-    displayName: 'Deploy to dev'
-    dependsOn: build
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-    variables:
-      envName: 'dev'
-      envRg: '${{ variables.envRgName }}'
-      envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
-      serviceConnection: '${{ variables.nonProdServiceConnection }}'
-      containerRegistry: '${{ variables.containerRegistryName }}'
+# Deploy to Dev Stage
+- stage: dev
+  displayName: 'Deploy to dev'
+  dependsOn: build
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  variables:
+    envName: 'dev'
+    envRg: '${{ variables.envRgName }}'
+    envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
+    serviceConnection: '${{ variables.nonProdServiceConnection }}'
+    containerRegistry: '${{ variables.containerRegistryName }}'
 
-    jobs:
-      - template: templates/pipelines/kubernetes/frontend-deploy.yml@templates
-        parameters:
-          deploymentName: 'deploy_to_k8s'
-          dependsOn: ''
-          serviceConnection: '${{ variables.serviceConnection }}'
-          env: '${{ variables.envName }}'
-          envRg: 'pcs-hosting-rg'
-          envGroup: '${{ variables.envGroupName }}'
-          dockerImage: 'procosys.azurecr.io/procosys/comm:$(Build.BuildId)'
-          clusterName: 'pcs-aks-test'
-          kvName: 'pcs-frontend-${{ variables.envName }}-kv'
-          kvRgName: 'pcs-frontend-${{ variables.envName }}-rg'
-          replicas: 2
+  jobs:
+  - template: /templates/pipelines/kubernetes/frontend-deploy.yml@templates
+    parameters:
+      deploymentName: 'deploy_to_k8s'
+      dependsOn: ''
+      serviceConnection: '${{ variables.serviceConnection }}'
+      env: '${{ variables.envName }}'
+      envRg: 'pcs-hosting-rg'
+      envGroup: '${{ variables.envGroupName }}'
+      dockerImage: 'procosys.azurecr.io/procosys/comm:$(Build.BuildId)'
+      clusterName: 'pcs-aks-test'
+      kvName: 'pcs-frontend-${{ variables.envName }}-kv'
+      kvRgName: 'pcs-frontend-${{ variables.envName }}-rg'
+      replicas: 2
 
-  # Promote to Test Stage
-  - stage: test
-    displayName: 'Deploy to test'
-    dependsOn: dev
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-    variables:
-      envName: 'test'
-      envRg: '${{ variables.envRgName }}'
-      envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
-      serviceConnection: '${{ variables.nonProdServiceConnection }}'
-      containerRegistry: '${{ variables.containerRegistryName }}'
-
-    jobs:
-      - job: install_dependencies
-        displayName: 'Install dependencies'
-        steps:
-          - script: |
-              yarn install
-            displayName: 'Install dependencies'
+# Promote to Test Stage
+- stage: test
+  displayName: 'Deploy to test'
+  dependsOn: build
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  variables:
+    envName: 'test'
+    envRg: '${{ variables.envRgName }}'
+    envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
+    serviceConnection: '${{ variables.nonProdServiceConnection }}'
+    containerRegistry: '${{ variables.containerRegistryName }}'
     
-      - job: run_tests
-        displayName: 'Run tests'
-        steps:
-          - script: |
-              yarn test
-            displayName: 'Run tests'
-
-      - job: deploy_to_k8s
-        displayName: 'Deploy to Kubernetes'
-        steps:
-          - template: templates/pipelines/kubernetes/frontend-deploy.yml@templates
-            parameters:
-              deploymentName: 'deploy_to_k8s'
-              dependsOn: ''
-              serviceConnection: '${{ variables.serviceConnection }}'
-              env: '${{ variables.envName }}'
-              envRg: 'pcs-hosting-rg'
-              envGroup: '${{ variables.envGroupName }}'
-              dockerImage: 'procosys.azurecr.io/procosys/comm:$(Build.BuildId)'
-              clusterName: 'pcs-aks-test'
-              kvName: 'pcs-frontend-${{ variables.envName }}-kv'
-              kvRgName: 'pcs-frontend-${{ variables.envName }}-rg'
-              replicas: 2
+  jobs:
+  - template: /templates/pipelines/kubernetes/frontend-deploy.yml@templates
+    parameters:
+      deploymentName: 'deploy_to_k8s'
+      dependsOn: ''
+      serviceConnection: '${{ variables.serviceConnection }}'
+      env: '${{ variables.envName }}'
+      envRg: 'pcs-hosting-rg'
+      envGroup: '${{ variables.envGroupName }}'
+      dockerImage: 'procosys.azurecr.io/procosys/comm:$(Build.BuildId)'
+      clusterName: 'pcs-aks-test'
+      kvName: 'pcs-frontend-${{ variables.envName }}-kv'
+      kvRgName: 'pcs-frontend-${{ variables.envName }}-rg'
+      replicas: 2
