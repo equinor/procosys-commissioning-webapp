@@ -17,7 +17,7 @@ variables:
   - template: templates/variables/comm-webapp-variables.yml@templates
 
   - name: 'repositoryName'
-    value: procosys/comm-webapp
+    value: equinor/procosys-commissioning-webapp
 
 stages:
 # Build Stage
@@ -65,7 +65,7 @@ stages:
   variables:
     imageTagNamesFrontend: '$(Build.BuildId)' 
   jobs:
-  - template: pipelines/templates/radix-deploy.yml@templates
+  - template: pipelines/templates/radix-deploy.yml@self
     parameters:
       serviceConnection: 'procosys - non-prod'
       imageTagNamesFrontend: '$(Build.BuildId)'  
