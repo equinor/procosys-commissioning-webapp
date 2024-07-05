@@ -83,24 +83,33 @@ stages:
       containerRegistry: '${{ variables.containerRegistryName }}'
 
     jobs:
-      - script: |
-          yarn install
+      - job: install_dependencies
         displayName: 'Install dependencies'
-
-      - script: |
-          yarn test
+        steps:
+          - script: |
+              yarn install
+            displayName: 'Install dependencies'
+    
+      - job: run_tests
         displayName: 'Run tests'
+        steps:
+          - script: |
+              yarn test
+            displayName: 'Run tests'
 
-      - template: /templates/pipelines/kubernetes/frontend-deploy.yml@templates
-        parameters:
-          deploymentName: 'deploy_to_k8s'
-          dependsOn: ''
-          serviceConnection: '${{ variables.serviceConnection }}'
-          env: '${{ variables.envName }}'
-          envRg: 'pcs-hosting-rg'
-          envGroup: '${{ variables.envGroupName }}'
-          dockerImage: 'procosys.azurecr.io/procosys/comm:$(Build.BuildId)'
-          clusterName: 'pcs-aks-test'
-          kvName: 'pcs-frontend-${{ variables.envName }}-kv'
-          kvRgName: 'pcs-frontend-${{ variables.envName }}-rg'
-          replicas: 2
+      - job: deploy_to_k8s
+        displayName: 'Deploy to Kubernetes'
+        steps:
+          - template: /templates/pipelines/kubernetes/frontend-deploy.yml@templates
+            parameters:
+              deploymentName: 'deploy_to_k8s'
+              dependsOn: ''
+              serviceConnection: '${{ variables.serviceConnection }}'
+              env: '${{ variables.envName }}'
+              envRg: 'pcs-hosting-rg'
+              envGroup: '${{ variables.envGroupName }}'
+              dockerImage: 'procosys.azurecr.io/procosys/comm:$(Build.BuildId)'
+              clusterName: 'pcs-aks-test'
+              kvName: 'pcs-frontend-${{ variables.envName }}-kv'
+              kvRgName: 'pcs-frontend-${{ variables.envName }}-rg'
+              replicas: 2
