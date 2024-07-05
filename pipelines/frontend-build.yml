@@ -33,46 +33,23 @@ stages:
       dockerRegistryServiceConnection: '$(dockerRegistryServiceConnectionName)'
 
 jobs:
-  # Docker Build
-  # - template: /templates/pipelines/dockerbuild-comm-webapp.yml@templates
-  #   parameters:
-  #     dependsOn: ''
-  #     deploymentName: 'docker_build'
-  #     condition: and(always(), eq(variables['Build.Reason'], 'PullRequest'))
-  #     buildCommand: build
-  #     envGroup: '${{ variables.envGroupName }}'
-  #     dockerfilePath: '${{ variables.dockerfilePath }}'
-  #     buildContext: '$(Build.SourcesDirectory)'
-  #     repository: '${{ variables.repositoryName }}'
-  #     dockerRegistryServiceConnection: '$(dockerRegistryServiceConnectionName)'
   - template: /templates/pipelines/dockerbuild-frontend.yml@templates
 
-  # Docker Build and Push
-  # - template: /templates/pipelines/dockerbuild-comm-webapp.yml@templates
+# Docker Build and Push
   parameters:
     deploymentName: 'docker_build_push'
     dependsOn: ''
     env: '${{ variables.envName }}'
-
-      # deploymentName: 'docker_build_push'
-      # condition: and(always(), ne(variables['Build.Reason'], 'PullRequest'))
-      # buildCommand: buildAndPush
     envGroup: '${{ variables.envGroupName }}'
     dockerfilePath: ${{ variables.dockerfilePath }}
-    # dockerfilePath: '${{ variables.dockerfilePath }}'
     buildContext: '$(Build.SourcesDirectory)'
     repository: ${{ variables.repositoryName }}
     dockerRegistryServiceConnection: $(dockerRegistryServiceConnectionName)
-    # repository: '${{ variables.repositoryName }}'
-    # dockerRegistryServiceConnection: '$(dockerRegistryServiceConnectionName)'
 
 # Deploy to Dev Stage
   - stage: dev
     displayName: 'Deploy to dev'
     dependsOn: 'build_and_test'
-# - stage: deployToDev
-#   displayName: 'Deploy to Dev'
-#   dependsOn: build
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   variables:
     envName: 'dev'
@@ -80,8 +57,6 @@ jobs:
     envGroupName: '$(globalPrefix)-$(fullAppName)-${{ variables.envName }}'
     serviceConnection: '${{ variables.nonProdServiceConnection }}'
     containerRegistry: '${{ variables.containerRegistryName }}'
-  # variables:
-  #   imageTagNamesFrontend: '$(Build.BuildId)' 
   jobs:
     - template: /templates/pipelines/kubernetes/frontend-deploy.yml@templates
     parameters:
@@ -96,10 +71,6 @@ jobs:
       kvName: 'pcs-frontend-${{ variables.envName }}-kv'
       kvRgName: 'pcs-frontend-${{ variables.envName }}-rg'
       replicas: 2
-  # - template: templates/radix-deploy.yml@self
-  #   parameters:
-  #     serviceConnection: 'procosys - non-prod'
-  #     imageTagNamesFrontend: '$(Build.BuildId)'  
 
 # Promote to Test Stage
 - stage: test
@@ -126,10 +97,3 @@ jobs:
       kvName: 'pcs-frontend-${{ variables.envName }}-kv'
       kvRgName: 'pcs-frontend-${{ variables.envName }}-rg'
       replicas: 2
-  # - template: templates/radix-promote-env.yml@self
-  #   parameters:
-  #     serviceConnection: 'procosys - non-prod'
-  #     fromNamespace: 'dev'
-  #     toNamespace: 'test'
-  #     deploymentName: $[ stageDependencies.deployToDev.KUBERNETESDEPLOY.outputs['KUBERNETESDEPLOY.deploymentName'] ]
-
