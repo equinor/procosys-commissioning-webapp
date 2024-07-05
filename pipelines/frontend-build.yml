@@ -33,7 +33,6 @@ stages:
     dockerRegistryServiceConnection: '$(dockerRegistryServiceConnectionName)'
 
   jobs:
-  # Docker Build and Push
   - template: /templates/pipelines/dockerbuild-frontend.yml@templates
     parameters:
       deploymentName: 'docker_build_push'
@@ -75,7 +74,7 @@ stages:
 # Promote to Test Stage
 - stage: test
   displayName: 'Deploy to test'
-  dependsOn: build
+  dependsOn: dev
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   variables:
     envName: 'test'
@@ -85,6 +84,14 @@ stages:
     containerRegistry: '${{ variables.containerRegistryName }}'
     
   jobs:
+  - script: |
+      yarn install
+    displayName: 'Install dependencies'
+    
+  - script: |
+      yarn test
+    displayName: 'Run tests'
+
   - template: /templates/pipelines/kubernetes/frontend-deploy.yml@templates
     parameters:
       deploymentName: 'deploy_to_k8s'
