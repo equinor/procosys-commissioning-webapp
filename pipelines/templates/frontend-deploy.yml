@@ -1,0 +1,19 @@
+steps:
+  - task: Kubernetes@1
+    displayName: 'Deploy to Kubernetes'
+    inputs:
+      connectionType: 'Azure Resource Manager'
+      azureSubscriptionEndpoint: '$(serviceConnection)'
+      azureResourceGroup: '$(envRg)'
+      kubernetesCluster: '$(clusterName)'
+      namespace: 'default'
+      command: 'apply'
+      useConfigurationFile: true
+      configuration: '$(Build.SourcesDirectory)/manifests/deployment.yaml'
+      secretType: 'dockerRegistry'
+      dockerRegistryEndpoint: '$(dockerRegistryServiceConnection)'
+      containerRegistry: '$(containerRegistry)'
+      imagePullSecret: '$(imagePullSecret)'
+      containerName: 'procosys-frontend'
+      imageName: '$(dockerImage)'
+      imagePullPolicy: 'Always'
