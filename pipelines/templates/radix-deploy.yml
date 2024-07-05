@@ -18,84 +18,84 @@ parameters:
     displayName: 'Image tag name for frontend'
 
 steps:
-- task: AzureCLI@2
-  displayName: Trigger deploy to Kubernetes
-  name: KUBERNETESDEPLOY
-  inputs:
-    azureSubscription: ${{ parameters.serviceConnection }}
-    addSpnToEnvironment: true
-    scriptType: pscore
-    scriptLocation: 'inlineScript'
-    FailOnStandardError: true
-    inlineScript: |
-      $token = az account get-access-token --resource ${{ parameters.kubernetesResource }} --query=accessToken -otsv
+  - task: AzureCLI@2
+    displayName: Trigger deploy to Kubernetes
+    name: KUBERNETESDEPLOY
+    inputs:
+      azureSubscription: ${{ parameters.serviceConnection }}
+      addSpnToEnvironment: true
+      scriptType: pscore
+      scriptLocation: 'inlineScript'
+      FailOnStandardError: true
+      inlineScript: |
+        $token = az account get-access-token --resource ${{ parameters.kubernetesResource }} --query=accessToken -otsv
 
-      ## Define Kubernetes deployment payload
-      $body = ConvertTo-Json @{ 
-        "apiVersion" = "apps/v1"
-        "kind" = "Deployment"
-        "metadata" = @{ 
-          "name" = "frontend-deployment"
-          "namespace" = "${{ parameters.kubernetesNamespace }}"
-        }
-        "spec" = @{
-          "replicas" = 1
-          "selector" = @{
-            "matchLabels" = @{
-              "app" = "frontend"
-            }
+        ## Define Kubernetes deployment payload
+        $body = ConvertTo-Json @{ 
+          "apiVersion" = "apps/v1"
+          "kind" = "Deployment"
+          "metadata" = @{ 
+            "name" = "frontend-deployment"
+            "namespace" = "${{ parameters.kubernetesNamespace }}"
           }
-          "template" = @{
-            "metadata" = @{
-              "labels" = @{
+          "spec" = @{
+            "replicas" = 1
+            "selector" = @{
+              "matchLabels" = @{
                 "app" = "frontend"
               }
             }
-            "spec" = @{
-              "containers" = @(
-                @{
-                  "name" = "frontend"
-                  "image" = "myregistry.azurecr.io/frontend:${{ parameters.imageTagNamesFrontend }}"
-                  "ports" = @(
-                    @{
-                      "containerPort" = 80
-                    }
-                  )
+            "template" = @{
+              "metadata" = @{
+                "labels" = @{
+                  "app" = "frontend"
                 }
-              )
+              }
+              "spec" = @{
+                "containers" = @(
+                  @{
+                    "name" = "frontend"
+                    "image" = "myregistry.azurecr.io/frontend:${{ parameters.imageTagNamesFrontend }}"
+                    "ports" = @(
+                      @{
+                        "containerPort" = 80
+                      }
+                    )
+                  }
+                )
+              }
             }
           }
         }
-      }
 
-      ## Deploy to Kubernetes
-      $kubernetesUrl = "${{ parameters.kubernetesUrl }}/apis/apps/v1/namespaces/${{ parameters.kubernetesNamespace }}/deployments"
+        ## Deploy to Kubernetes
+        $kubernetesUrl = "${{ parameters.kubernetesUrl }}/apis/apps/v1/namespaces/${{ parameters.kubernetesNamespace }}/deployments"
 
-      Write-Host "Sending POST to $kubernetesUrl"
-      $resp = Invoke-RestMethod -Method Post -Uri $kubernetesUrl -Headers @{"Authorization" = "Bearer $token"; "Content-Type" = "application/json" } -Body $body
-      Write-Host $resp
+        Write-Host "Sending POST to $kubernetesUrl"
+        $resp = Invoke-RestMethod -Method Post -Uri $kubernetesUrl -Headers @{"Authorization" = "Bearer $token"; "Content-Type" = "application/json" } -Body $body
+        Write-Host $resp
 
-      ## Verify deployment status
-      $checkUrl = "${{ parameters.kubernetesUrl }}/apis/apps/v1/namespaces/${{ parameters.kubernetesNamespace }}/deployments/frontend-deployment/status"
+        ## Verify deployment status
+        $checkUrl = "${{ parameters.kubernetesUrl }}/apis/apps/v1/namespaces/${{ parameters.kubernetesNamespace }}/deployments/frontend-deployment/status"
 
-      $checkStarted = Get-Date
+        $checkStarted = Get-Date
 
-      while ($true) {
-        Write-Host "Checking deployment status..."
-        $checkResp = Invoke-RestMethod -Uri $checkUrl -Headers @{"Authorization" = "Bearer $token" }                        
-        
-        Write-Host (ConvertTo-Json $checkResp -Depth 10 -Compress)
+        while ($true) {
+          Write-Host "Checking deployment status..."
+          $checkResp = Invoke-RestMethod -Uri $checkUrl -Headers @{"Authorization" = "Bearer $token" }                        
+          
+          Write-Host (ConvertTo-Json $checkResp -Depth 10 -Compress)
 
-        if ($checkResp.status.conditions[0].status -eq "True") {              
-          break;
+          if ($checkResp.status.conditions[0].status -eq "True") {              
+            break;
+          }
+          
+          if ( ((Get-Date) - $checkStarted).Seconds -gt 600) {
+            Write-Host "Timeout..."
+            throw "Kubernetes deployment took over 600 seconds, aborting..."
+          }
+
+          Start-Sleep -Seconds 10
         }
-        
-        if ( ((Get-Date) - $checkStarted).Seconds -gt 600) {
-          Write-Host "Timeout..."
-          throw "Kubernetes deployment took over 600 seconds, aborting..."
-        }
 
-        Start-Sleep -Seconds 10
-      }
-
-      Write-Host "Deployment to Kubernetes succeeded."
+        Write-Host "Deployment to Kubernetes succeeded."
