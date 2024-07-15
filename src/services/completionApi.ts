@@ -49,7 +49,7 @@ const completionApiService = ({ axios }: ProcosysApiServiceProps) => {
     cancelToken: CancelToken
   ): Promise<LibrayTypes[]> => {
     const { data } = await axios.get(
-      `LibraryItems?libraryTypes=PUNCHLIST_TYPE&libraryTypes=COMPLETION_ORGANIZATION&libraryTypes=PUNCHLIST_SORTING&libraryTypes=PUNCHLIST_PRIORITY`,
+      `LibraryItems?libraryTypes=PUNCHLIST_TYPE&libraryTypes=COMPLETION_ORGANIZATION&libraryTypes=PUNCHLIST_SORTING&libraryTypes=COMM_PRIORITY`,
       {
         ...headers(plantId, cancelToken)
       }
@@ -100,7 +100,7 @@ const completionApiService = ({ axios }: ProcosysApiServiceProps) => {
     cancelToken: CancelToken
   ): Promise<PunchPriority[]> => {
     const { data } = await axios.get(
-      `LibraryItems?libraryTypes=PUNCHLIST_PRIORITY`,
+      `LibraryItems?libraryTypes=COMM_PRIORITY`,
       { ...headers(plantId, cancelToken) }
     );
     if (!isArrayOfType<PunchPriority>(data, "code")) {
