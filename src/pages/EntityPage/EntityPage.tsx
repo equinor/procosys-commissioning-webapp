@@ -136,6 +136,7 @@ const CommPkg = (): JSX.Element => {
             ? "Comm Package"
             : params.searchType
         }
+        testColor
       />
       <EntityPageDetailsCard />
       <ContentWrapper>
