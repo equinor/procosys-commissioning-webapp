@@ -119,6 +119,7 @@ const PunchPage = (): JSX.Element => {
           />
         }
         midContent="Punch Item"
+        testColor
       />
       {determineDetailsCard()}
       <AsyncPage

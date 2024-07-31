@@ -100,6 +100,7 @@ const ChecklistPage = (): JSX.Element => {
             </Button>
           )
         }
+        testColor
       />
       <ChecklistDetailsCard
         fetchDetailsStatus={fetchDetailsStatus}
