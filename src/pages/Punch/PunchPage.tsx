@@ -112,6 +112,7 @@ const PunchPage = (): JSX.Element => {
   return (
     <main>
       <Navbar
+        testColor
         noBorder
         leftContent={
           <BackButton

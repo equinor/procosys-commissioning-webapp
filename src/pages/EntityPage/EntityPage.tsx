@@ -129,6 +129,7 @@ const CommPkg = (): JSX.Element => {
   return (
     <main>
       <Navbar
+        testColor
         noBorder
         leftContent={<BackButton to={removeSubdirectories(url, 2)} />}
         midContent={

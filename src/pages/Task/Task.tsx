@@ -136,7 +136,7 @@ const Task = (): JSX.Element => {
 
   return (
     <>
-      <Navbar noBorder leftContent={<BackButton />} />
+      <Navbar testColor noBorder leftContent={<BackButton />} />
       {isSigned && !isVerified ? (
         <Banner>
           <Banner.Icon variant={"info"}>

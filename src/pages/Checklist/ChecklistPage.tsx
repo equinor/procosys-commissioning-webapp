@@ -82,6 +82,7 @@ const ChecklistPage = (): JSX.Element => {
   return (
     <main>
       <Navbar
+        testColor
         leftContent={
           <BackButton
             to={isOnNewPunchPage ? goBackToPunchListPage : goBackToEntityPage}
