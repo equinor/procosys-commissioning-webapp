@@ -22,13 +22,7 @@ spec:
     environmentConfig:
     - environment: dev
       dockerfileName: Dockerfile.dev
-      variables:
-        authSettingsEndpoint: 'https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Auth'
     - environment: test
       dockerfileName: Dockerfile.test
-      variables:
-        authSettingsEndpoint: 'https://pcs-config-non-prod-func.azurewebsites.net/api/CommWebApp/Auth'
     - environment: prod
       dockerfileName: Dockerfile.prod
-      variables:
-        authSettingsEndpoint: 'https://pcs-config-prod-func.azurewebsites.net/api/CommWebApp/Auth'
