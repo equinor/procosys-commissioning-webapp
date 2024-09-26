@@ -9,12 +9,8 @@ import {
 } from "@equinor/procosys-webapp-components";
 import Axios, { AxiosError, AxiosResponse } from "axios";
 import React, { Dispatch, useCallback, useEffect, useState } from "react";
-import {
-  Attachment,
-  LibrayTypes,
-  PunchCategory,
-  PunchItem
-} from "../../typings/apiTypes";
+import { Attachment, LibrayTypes, PunchItem } from "../../typings/apiTypes";
+import { categories } from "../../utils/constants";
 import { hasErrors, renderErrors } from "../../utils/renderError";
 import useCommonHooks from "../../utils/useCommonHooks";
 import usePersonsSearchFacade from "../../utils/usePersonsSearchFacade";
@@ -63,7 +59,6 @@ ClearPunchWrapperProps): JSX.Element => {
   const [updateQueue, setUpdateQueue] = useState<Queue[]>([]);
   const [rowVersion, setRowVersion] = useState<string>();
   const { snackbar, setSnackbarText } = useSnackbar();
-  const [categories, setCategories] = useState<PunchCategory[]>([]);
   const [types, setTypes] = useState<LibrayTypes[]>([]);
   const [organizations, setOrganizations] = useState<LibrayTypes[]>([]);
   const [sortings, setSortings] = useState<LibrayTypes[]>([]);
@@ -81,10 +76,6 @@ ClearPunchWrapperProps): JSX.Element => {
   const { hits, searchStatus, query, setQuery } = usePersonsSearchFacade();
 
   const getLibraryTypes = useCallback(async () => {
-    const categoriesFromApi = await api
-      .getPunchCategories(params.plant, source.token)
-      .catch(() => setFetchOptionsStatus(AsyncStatus.ERROR));
-
     const libraryTypes = await completionApi
       .getLibraryTypes(params.plant, source.token)
       .catch(() => setFetchOptionsStatus(AsyncStatus.ERROR));
@@ -100,9 +91,6 @@ ClearPunchWrapperProps): JSX.Element => {
       setTypes(types.get("PUNCHLIST_TYPE"));
       setSortings(types.get("PUNCHLIST_SORTING"));
       setPriorities(types.get("COMM_PRIORITY"));
-    }
-    if (isArrayOfType<PunchCategory>(categoriesFromApi, "id")) {
-      setCategories(categoriesFromApi);
     }
     setFetchOptionsStatus(AsyncStatus.SUCCESS);
   }, [params.plant]);
