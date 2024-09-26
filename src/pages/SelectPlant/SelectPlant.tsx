@@ -8,6 +8,7 @@ import EdsIcon from "../../components/icons/EdsIcon";
 import SideMenu from "../../components/navigation/SideMenu";
 import CommAppContext from "../../contexts/CommAppContext";
 import { COLORS } from "../../style/GlobalStyles";
+import useCommonHooks from "../../utils/useCommonHooks";
 
 export const SelectPlantWrapper = styled.main`
   display: flex;
@@ -39,6 +40,7 @@ export const SelectorButton = styled(Link)`
 
 const SelectPlant = (): JSX.Element => {
   const { availablePlants } = useContext(CommAppContext);
+  const { useTestColorIfOnTest } = useCommonHooks();
 
   const content = (): JSX.Element => {
     if (availablePlants.length < 1) {
@@ -66,7 +68,7 @@ const SelectPlant = (): JSX.Element => {
   return (
     <>
       <Navbar
-        testColor
+        testColor={useTestColorIfOnTest}
         rightContent={<SideMenu />}
         leftContent={<ProcosysButton />}
       />

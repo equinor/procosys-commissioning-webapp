@@ -16,6 +16,9 @@ const useCommonHooks = () => {
   const { pathname } = useLocation();
   const history = useHistory();
   const { url, path } = useRouteMatch();
+  const useTestColorIfOnTest = window.location.hostname.includes(
+    "frontend-procosys-commissioning-webapp-test"
+  );
   return {
     api,
     completionApi,
@@ -26,7 +29,8 @@ const useCommonHooks = () => {
     url,
     path,
     pathname,
-    appConfig
+    appConfig,
+    useTestColorIfOnTest
   };
 };
 

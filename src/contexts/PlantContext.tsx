@@ -21,7 +21,7 @@ const PlantContext = React.createContext({} as PlantContextProps);
 export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
   children
 }) => {
-  const { params, api, history } = useCommonHooks();
+  const { params, api, history, useTestColorIfOnTest } = useCommonHooks();
   const [currentPlant, setCurrentPlant] = useState<Plant | undefined>();
   const { availablePlants } = useContext(CommAppContext);
   const [availableProjects, setAvailableProjects] = useState<Project[]>([]);
@@ -117,7 +117,7 @@ export const PlantContextProvider: React.FC<{ children: ReactNode }> = ({
     if (fetchProjectsAndPermissionsStatus === AsyncStatus.ERROR) {
       return (
         <>
-          <Navbar testColor />
+          <Navbar testColor={useTestColorIfOnTest} />
           <ErrorPage
             title={"Unable to obtain permissions."}
             description={
