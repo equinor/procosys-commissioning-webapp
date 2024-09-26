@@ -1,58 +1,56 @@
-import React, { useState, useEffect } from 'react';
 import {
-    TagInfo,
-    AsyncStatus,
-    isOfType,
-} from '@equinor/procosys-webapp-components';
-import axios from 'axios';
-import { AdditionalTagField, Tag, TagDetails } from '../typings/apiTypes';
-import useCommonHooks from '../utils/useCommonHooks';
-import { SearchType } from '../pages/Search/Search';
+  AsyncStatus,
+  TagInfo,
+  isOfType
+} from "@equinor/procosys-webapp-components";
+import axios from "axios";
+import { useCallback, useEffect, useState } from "react";
+import { SearchType } from "../pages/Search/Search";
+import { AdditionalTagField, Tag, TagDetails } from "../typings/apiTypes";
+import useCommonHooks from "../utils/useCommonHooks";
 
 type TagInfoWrapperProps = {
-    tagId?: number;
+  tagId?: number;
 };
 
 const TagInfoWrapper = ({ tagId }: TagInfoWrapperProps): JSX.Element => {
-    const { api, params } = useCommonHooks();
-    const [fetchTagStatus, setFetchTagStatus] = useState(AsyncStatus.LOADING);
-    const [tagInfo, setTagInfo] = useState<TagDetails>();
-    const [additionalFields, setAdditionalFields] = useState<
-        AdditionalTagField[]
-    >([]);
-    const { token, cancel } = axios.CancelToken.source();
+  const { api, params } = useCommonHooks();
+  const [fetchTagStatus, setFetchTagStatus] = useState(AsyncStatus.INACTIVE);
+  const [tagInfo, setTagInfo] = useState<TagDetails>();
+  const [additionalFields, setAdditionalFields] = useState<
+    AdditionalTagField[]
+  >([]);
+  const { token, cancel } = axios.CancelToken.source();
 
-    useEffect(() => {
-        if (!tagId) return;
-        (async (): Promise<void> => {
-            try {
-                const tagResponse = await api.getEntityDetails(
-                    params.plant,
-                    SearchType.Tag,
-                    tagId.toString(),
-                    token
-                );
-                if (isOfType<Tag>(tagResponse, 'tag')) {
-                    setTagInfo(tagResponse.tag);
-                    setAdditionalFields(tagResponse.additionalFields);
-                    setFetchTagStatus(AsyncStatus.SUCCESS);
-                }
-            } catch (error) {
-                setFetchTagStatus(AsyncStatus.ERROR);
-            }
-        })();
-        return (): void => {
-            cancel('Tag info component unmounted');
-        };
-    }, [tagId]);
+  const getTagDetails = useCallback(async () => {
+    if (!tagId) return;
+    setFetchTagStatus(AsyncStatus.LOADING);
+    const tagResponse = await api
+      .getEntityDetails(params.plant, SearchType.Tag, tagId.toString(), token)
+      .catch(() => {
+        setFetchTagStatus(AsyncStatus.ERROR);
+      });
+    if (isOfType<Tag>(tagResponse, "tag")) {
+      setTagInfo(tagResponse.tag);
+      setAdditionalFields(tagResponse.additionalFields);
+      setFetchTagStatus(AsyncStatus.SUCCESS);
+    }
+  }, [tagId]);
 
-    return (
-        <TagInfo
-            tagInfo={tagInfo}
-            fetchTagStatus={fetchTagStatus}
-            additionalFields={additionalFields}
-        />
-    );
+  useEffect(() => {
+    getTagDetails();
+    return (): void => {
+      cancel("Tag info component unmounted");
+    };
+  }, [tagId]);
+
+  return (
+    <TagInfo
+      tagInfo={tagInfo}
+      fetchTagStatus={fetchTagStatus}
+      additionalFields={additionalFields}
+    />
+  );
 };
 
 export default TagInfoWrapper;

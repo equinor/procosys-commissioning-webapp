@@ -1,17 +1,28 @@
+const { pathsToModuleNameMapper } = require("ts-jest");
+const { compilerOptions } = require("./tsconfig");
+
 module.exports = {
-    collectCoverageFrom: ['src/**/*.{ts,tsx}'],
-    verbose: true,
-    preset: 'ts-jest/presets/js-with-ts',
-    testEnvironment: 'jsdom',
-    transformIgnorePatterns: [
-        '/node_modules/(?!(@equinor/eds-tokens|@equinor/eds-icons))',
-    ],
-    transform: {
-        '^.+\\.(js|ts|tsx)$': 'ts-jest',
-        '^.+\\.(svg|png)$': '<rootDir>/src/test/imgTransform.js',
-    },
-    globals: {
-        crypto: require('crypto'),
-    },
-    setupFilesAfterEnv: ['<rootDir>/src/test/setupTests.ts'],
+  collectCoverageFrom: ["src/**/*.{ts,tsx}"],
+  verbose: true,
+  preset: "ts-jest",
+  testEnvironment: "jsdom",
+  moduleNameMapper: {
+    ...pathsToModuleNameMapper(compilerOptions.paths || {}, {
+      prefix: "<rootDir>/"
+    }),
+    "^react$": "<rootDir>/node_modules/react",
+    "^react-dom$": "<rootDir>/node_modules/react-dom",
+    "^react-router-dom$": "<rootDir>/node_modules/react-router-dom"
+  },
+  transformIgnorePatterns: [
+    "/node_modules/(?!(@equinor/eds-tokens|@equinor/eds-icons|axios)/)"
+  ],
+  transform: {
+    "^.+\\.(js|ts|tsx)$": "ts-jest",
+    "^.+\\.(svg|png)$": "<rootDir>/src/test/imgTransform.js"
+  },
+  globals: {
+    crypto: require("crypto")
+  },
+  setupFilesAfterEnv: ["<rootDir>/src/test/setupTests.ts"]
 };

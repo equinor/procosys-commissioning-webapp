@@ -1,22 +1,22 @@
 # build environment
 FROM node:22 as build
 WORKDIR /app
-
 COPY package*.json ./
 COPY . .
 RUN yarn install
 
-ENV VITE_AUTH_CLIENT="12b79e84-1ebe-4e81-83cb-61dd2febfee9"
+ENV VITE_AUTH_CLIENT="fb57fb35-f927-4271-9976-342070cb9f54"
 ENV VITE_AUTHORITY="https://login.microsoftonline.com/3aa4a235-b6e2-48d5-9195-7fcf05b459b0"
-ENV VITE_BASE_URL_MAIN="https://pcs-main-api-prod.azurewebsites.net/api"
-ENV VITE_BASE_URL_COMP="https://backend-procosys-completion-api.radix.equinor.com"
-ENV VITE_WEBAPI_SCOPE="api://47641c40-0135-459b-8ab4-459e68dc8d08/web_api"
-ENV VITE_COMP_SCOPE="api://dee65816-6e0b-4816-bafe-ebd7179d5933/ReadWrite"
-ENV VITE_APP_INSIGHTS="dfa0c6c9-7034-496d-8991-c0777a6d0d19"
+ENV VITE_BASE_URL_MAIN="https://pcs-main-api-dev-pr.azurewebsites.net/api"
+ENV VITE_BASE_URL_COMP="https://backend-procosys-completion-api-dev.radix.equinor.com"
+ENV VITE_WEBAPI_SCOPE="api://dd38f169-bccf-4d0e-a4ad-d830893cfa75/web_api"
+ENV VITE_COMP_SCOPE="api://e8c158a9-a200-4897-9d5f-660e377bddc1/ReadWrite"
+ENV VITE_APP_INSIGHTS="cf22f65-a717-421f-935d-4853dbcbe8e5"
 ENV VITE_API_VERSION="&api-version=4.1"
-ENV VITE_OCR_ENDPOINT="https://pcs-mc-webapp-prod-funcs.azurewebsites.net/api/pcs_ocr?"
+ENV VITE_OCR_ENDPOINT="https://pcs-mc-webapp-non-prod-funcs.azurewebsites.net/api/pcs_ocr?"
 
 RUN yarn build --mode=production
+
 
 # production environment
 FROM docker.io/nginxinc/nginx-unprivileged:alpine
@@ -25,7 +25,6 @@ WORKDIR /app
 ## add permissions for nginx user
 COPY --from=build /app/dist /usr/share/nginx/html/comm
 COPY .docker/nginx/ /etc/nginx/
-
 COPY .docker/scripts/ /etc/scripts/
  
 # Change the user from root to non-root- From now on, all Docker commands are run as non-root user (except for COPY)
