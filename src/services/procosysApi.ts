@@ -17,7 +17,6 @@ import {
   Person,
   Plant,
   Project,
-  PunchCategory,
   PunchPreview,
   SearchResults,
   Tag,
@@ -403,16 +402,16 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     return data;
   };
 
-  const getPunchCategories = async (
-    plantId: string,
-    cancelToken: CancelToken
-  ): Promise<PunchCategory[]> => {
-    const { data } = await axios.get(
-      `PunchListItem/Categories?plantId=PCS$${plantId}${apiVersion}`,
-      { cancelToken }
-    );
-    return data as PunchCategory[];
-  };
+  // const getPunchCategories = async (
+  //   plantId: string,
+  //   cancelToken: CancelToken
+  // ): Promise<PunchCategory[]> => {
+  //   const { data } = await axios.get(
+  //     `PunchListItem/Categories?plantId=PCS$${plantId}${apiVersion}`,
+  //     { cancelToken }
+  //   );
+  //   return data as PunchCategory[];
+  // };
 
   const getPersonsByName = async (
     plantId: string,
@@ -725,7 +724,7 @@ const procosysApiService = ({ axios, apiVersion }: ProcosysApiServiceProps) => {
     getEntityDetails,
     getPersonsByName,
     getPunchList,
-    getPunchCategories,
+    // getPunchCategories,
     getTask,
     getTasks,
     getScope,

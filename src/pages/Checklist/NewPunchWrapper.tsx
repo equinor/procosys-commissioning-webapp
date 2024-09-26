@@ -18,9 +18,9 @@ import PlantContext from "../../contexts/PlantContext";
 import {
   LibrayTypes,
   NewPunch as NewPunchDtoType,
-  PunchCategory,
   Type
 } from "../../typings/apiTypes";
+import { categories } from "../../utils/constants";
 import useCommonHooks from "../../utils/useCommonHooks";
 import usePersonsSearchFacade from "../../utils/usePersonsSearchFacade";
 
@@ -46,7 +46,6 @@ const NewPunchWrapper = (): JSX.Element => {
   const { formFields, createChangeHandler } = useFormFields(
     newPunchInitialValues
   );
-  const [categories, setCategories] = useState<PunchCategory[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
   const [organizations, setOrganizations] = useState<OrganizationDetail[]>([]);
   const [sortings, setSortings] = useState<PriorityAndSorting[]>([]);
@@ -68,10 +67,6 @@ const NewPunchWrapper = (): JSX.Element => {
   const checkListGuid = location.search.split("checkListGuid=").at(1);
 
   const getLibraryTypes = useCallback(async () => {
-    const categoriesFromApi = await api
-      .getPunchCategories(params.plant, source.token)
-      .catch(() => setFetchNewPunchStatus(AsyncStatus.ERROR));
-
     const libraryTypes = await completionApi
       .getLibraryTypes(params.plant, source.token)
       .catch(() => setFetchNewPunchStatus(AsyncStatus.ERROR));
@@ -87,9 +82,6 @@ const NewPunchWrapper = (): JSX.Element => {
       setTypes(types.get("PUNCHLIST_TYPE"));
       setSortings(types.get("PUNCHLIST_SORTING"));
       setPriorities(types.get("COMM_PRIORITY"));
-    }
-    if (isArrayOfType<PunchCategory>(categoriesFromApi, "id")) {
-      setCategories(categoriesFromApi);
     }
     setFetchNewPunchStatus(AsyncStatus.SUCCESS);
   }, [params.plant]);
