@@ -8,6 +8,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import SideMenu from "../../components/navigation/SideMenu";
 import withAccessControl from "../../services/withAccessControl";
+import useCommonHooks from "../../utils/useCommonHooks";
 import Bookmarks from "./Bookmarks/Bookmarks";
 import SearchArea from "./Searching/SearchArea";
 
@@ -31,11 +32,12 @@ export enum SearchType {
 const Search = (): JSX.Element => {
   const [searchType, setSearchType] = useState<string | undefined>(undefined);
   const { snackbar, setSnackbarText } = useSnackbar();
+  const { useTestColorIfOnTest } = useCommonHooks();
 
   return (
     <>
       <Navbar
-        testColor
+        testColor={useTestColorIfOnTest}
         leftContent={<ProcosysButton />}
         rightContent={<SideMenu />}
       />
