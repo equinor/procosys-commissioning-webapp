@@ -5,6 +5,7 @@ import PageHeader from "../../components/PageHeader";
 import EdsIcon from "../../components/icons/EdsIcon";
 import SideMenu from "../../components/navigation/SideMenu";
 import PlantContext from "../../contexts/PlantContext";
+import useCommonHooks from "../../utils/useCommonHooks";
 import { SelectPlantWrapper, SelectorButton } from "../SelectPlant/SelectPlant";
 
 const SelectProject = (): JSX.Element => {
@@ -14,10 +15,11 @@ const SelectProject = (): JSX.Element => {
     fetchProjectsAndPermissionsStatus
   } = useContext(PlantContext);
 
+  const { useTestColorIfOnTest } = useCommonHooks();
   return (
     <>
       <Navbar
-        testColor
+        testColor={useTestColorIfOnTest}
         rightContent={<SideMenu />}
         leftContent={<ProcosysButton />}
       />

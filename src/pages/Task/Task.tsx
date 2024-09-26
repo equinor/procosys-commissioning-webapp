@@ -54,7 +54,7 @@ const findNextTask = (
 };
 
 const Task = (): JSX.Element => {
-  const { url, api, params } = useCommonHooks();
+  const { url, api, params, useTestColorIfOnTest } = useCommonHooks();
   const [attachments, setAttachments] = useState<IAttachment[]>();
   const [parameters, setParameters] = useState<TaskParameter[]>();
   const [task, setTask] = useState<TaskType>();
@@ -136,7 +136,11 @@ const Task = (): JSX.Element => {
 
   return (
     <>
-      <Navbar testColor noBorder leftContent={<BackButton />} />
+      <Navbar
+        testColor={useTestColorIfOnTest}
+        noBorder
+        leftContent={<BackButton />}
+      />
       {isSigned && !isVerified ? (
         <Banner>
           <Banner.Icon variant={"info"}>

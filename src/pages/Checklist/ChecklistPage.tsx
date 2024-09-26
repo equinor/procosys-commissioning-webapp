@@ -23,7 +23,8 @@ import ChecklistDetailsCard from "./ChecklistDetailsCard";
 import NewPunchWrapper from "./NewPunchWrapper";
 
 const ChecklistPage = (): JSX.Element => {
-  const { history, url, path, api, params } = useCommonHooks();
+  const { history, url, path, api, params, useTestColorIfOnTest } =
+    useCommonHooks();
   const [punchList, setPunchList] = useState<PunchPreview[]>();
   const [details, setDetails] = useState<ChecklistResponse>();
   const [fetchPunchListStatus, setFetchPunchListStatus] = useState(
@@ -82,7 +83,7 @@ const ChecklistPage = (): JSX.Element => {
   return (
     <main>
       <Navbar
-        testColor
+        testColor={useTestColorIfOnTest}
         leftContent={
           <BackButton
             to={isOnNewPunchPage ? goBackToPunchListPage : goBackToEntityPage}

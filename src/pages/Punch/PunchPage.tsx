@@ -27,7 +27,8 @@ import ClearPunchWrapper from "./ClearPunchWrapper";
 import VerifyPunchWrapper from "./VerifyPunchWrapper";
 
 const PunchPage = (): JSX.Element => {
-  const { params, path, history, url, completionApi } = useCommonHooks();
+  const { params, path, history, url, completionApi, useTestColorIfOnTest } =
+    useCommonHooks();
   const [punch, setPunch] = useState<PunchItem>();
   const [rowVersion, setRowVersion] = useState<string>();
   const [fetchPunchStatus, setFetchPunchStatus] = useState<AsyncStatus>(
@@ -112,7 +113,7 @@ const PunchPage = (): JSX.Element => {
   return (
     <main>
       <Navbar
-        testColor
+        testColor={useTestColorIfOnTest}
         noBorder
         leftContent={
           <BackButton

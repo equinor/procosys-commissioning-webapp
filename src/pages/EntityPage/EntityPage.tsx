@@ -33,7 +33,8 @@ const ContentWrapper = styled.div`
 `;
 
 const CommPkg = (): JSX.Element => {
-  const { api, params, path, url, history } = useCommonHooks();
+  const { api, params, path, url, history, useTestColorIfOnTest } =
+    useCommonHooks();
   const [scope, setScope] = useState<ChecklistPreview[]>();
   const [tasks, setTasks] = useState<TaskPreview[]>();
   const [punchList, setPunchList] = useState<PunchPreview[]>();
@@ -129,7 +130,7 @@ const CommPkg = (): JSX.Element => {
   return (
     <main>
       <Navbar
-        testColor
+        testColor={useTestColorIfOnTest}
         noBorder
         leftContent={<BackButton to={removeSubdirectories(url, 2)} />}
         midContent={
