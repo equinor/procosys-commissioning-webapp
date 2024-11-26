@@ -12,7 +12,7 @@
     "@microsoft/applicationinsights-react-js": "^17.1.0",
     "@microsoft/applicationinsights-web": "^3.1.0",
     "@vitejs/plugin-react": "^4.2.1",
-    "axios": "1.6.8",
+    "axios": "1.7.8",
     "braces": "3.0.3",
     "markdown-to-jsx": "7.4.7",
     "micromatch": "4.0.6",
@@ -20,7 +20,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "5.3.4",
     "styled-components": "^6.1.8",
-    "vite": "^5.1.6",
+    "vite": "^6.0.0",
     "vite-tsconfig-paths": "^4.3.2",
     "ws": "8.17.1"
   },
