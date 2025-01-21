@@ -20,7 +20,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "5.3.4",
     "styled-components": "^6.1.8",
-    "vite": "^5.1.6",
+    "vite": "^5.4.12",
     "vite-tsconfig-paths": "^4.3.2",
     "ws": "8.17.1"
   },
