@@ -12,7 +12,7 @@
     "@microsoft/applicationinsights-react-js": "^17.1.0",
     "@microsoft/applicationinsights-web": "^3.1.0",
     "@vitejs/plugin-react": "^4.2.1",
-    "axios": "1.6.8",
+    "axios": "1.8.2",
     "braces": "3.0.3",
     "markdown-to-jsx": "7.4.7",
     "micromatch": "4.0.6",
